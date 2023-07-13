@@ -1,3 +1,6 @@
+# This app is copyrighted © by Julien Föhn.
+# Sulzer & Schmid may use this app for internal activities but are not allowed to sell or distribute it.
+
 import ctypes
 import os
 import re
@@ -165,7 +168,7 @@ class Application(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         self.geometry("520x520")
         self.center_window()
-        self.title("Scripts & Options - (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.title("Scripts & Options - SSL Edition (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ - ©Julien Föhn")
 
         self.main_frame = ttk.Frame(self)
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
@@ -336,6 +339,79 @@ class Application(tk.Tk):
             print(f"Executing command: {cmd}")
             subprocess.run(cmd, shell=True)
 
+    def kill_revive_network_adapters(self):
+        pass
+        if messagebox.askyesno("Kill/Revive Network Adapters",
+                               "Yes --> Disable all Network Adapters\nNo --> Enable all Network Adapters"):
+            # Disable all network adapters
+            try:
+                subprocess.run(["netsh", "interface", "set", "interface", "admin=disable"], check=True, shell=True)
+                messagebox.showinfo("Kill/Revive Network Adapters", "All network adapters have been disabled.")
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Kill/Revive Network Adapters",
+                                     f"Error occurred while disabling network adapters:\n{e}")
+        else:
+            # Enable all network adapters
+            try:
+                subprocess.run(["netsh", "interface", "set", "interface", "admin=enable"], check=True, shell=True)
+                messagebox.showinfo("Kill/Revive Network Adapters", "All network adapters have been enabled.")
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Kill/Revive Network Adapters",
+                                     f"Error occurred while enabling network adapters:\n{e}")
+
+    def delete_json(self):
+        if messagebox.askyesno("Delete CS User", "Are you sure you want to delete the saved ControlStation user?"):
+            json_file_path = os.path.join(os.environ["APPDATA"], "SSL3DX", "ControlStation", "ControlStation.json")
+            if os.path.exists(json_file_path):
+                os.remove(json_file_path)
+                messagebox.showinfo("Delete CS User", "ControlStation.json has been deleted.")
+            else:
+                messagebox.showinfo("Delete CS User", "ControlStation.json does not exist.")
+
+
+    def rename_file(self):
+        if messagebox.askyesno("Zip to Apk",
+                               "Are you sure you want to convert .zip to .apk?\n\nINFO: Make sure the .zip file is in the 'Downloads' folder.\n\nWARNING: This process applies to all .zip files in the 'Downloads' folder!"):
+            download_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+            for file_name in os.listdir(download_folder):
+                if file_name.endswith(".zip"):
+                    base_name = os.path.splitext(file_name)[0]
+                    new_name = base_name + ".apk"
+                    old_path = os.path.join(download_folder, file_name)
+                    new_path = os.path.join(download_folder, new_name)
+                    os.rename(old_path, new_path)
+            print("Files renamed successfully.")
+
+    folders = [
+        r"C:\Users\Public\Documents\SSL3DX\BackupData",
+        r"C:\Users\Public\Documents\SSL3DX\Picture\Tower",
+        r"C:\Users\Public\Documents\SSL3DX\SmartPilotData",
+        r"C:\Users\Public\Documents\SSL3DX\Logs",
+        r"C:\Users\Public\Documents\SSL3DX_Insp\Jobs",
+        r"C:\Users\Public\Documents\SSL3DX_Insp\Tmp\Parc Cynog and Pendine\InspectionData"
+    ]
+
+    def delete_files_and_folders(self):
+        # Combine all folder names into a single string
+        folder_names = "\n".join(f"'{folder}'" for folder in self.folders)
+
+        # Prompt for confirmation to delete files and folders
+        confirmation = messagebox.askyesno("Delete backup files/folders",
+                                           f"Do you want to delete all backup files in the following folders?\n\n{folder_names}\n\nThis action cannot be undone.")
+
+        if confirmation:
+            # Iterate over the folders
+            for folder in self.folders:
+                # Delete all files and folders within the specified path
+                for root, dirs, files in os.walk(folder, topdown=False):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        os.remove(file_path)
+                    for dir in dirs:
+                        dir_path = os.path.join(root, dir)
+                        shutil.rmtree(dir_path)
+
+            messagebox.showinfo("Deletion Complete", "All backup files have been deleted.")
 
     def create_widgets(self):
         self.tabs = ttk.Notebook(self.main_frame)
@@ -355,6 +431,12 @@ class Application(tk.Tk):
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
         create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
+        delete_json_btn = ttk.Button(self.functions_frame, text="Delete CS user", command=self.delete_json)
+        rename_file_btn = ttk.Button(self.functions_frame, text="Convert to .apk", command=self.rename_file)
+        delete_files_and_folders_btn = ttk.Button(self.functions_frame, text="Delete Backups", command=self.delete_files_and_folders)
+        #open_checklist_btn = ttk.Button(self.functions_frame, text="GSSSL Checklist", command=self.open_checklist)
+        #on_button_press_btn = ttk.Button(self.functions_frame, text="SSL URL's", command=self.on_button_press)
+        #kill_revive_network_adapters_btn = ttk.Button(self.functions_frame, text="Kill Network (WIP)", command=self.kill_revive_network_adapters)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)  # Define ip_text as an instance variable using 'self'
@@ -364,6 +446,12 @@ class Application(tk.Tk):
         kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=10, sticky="we")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=10, sticky="we")
         create_user_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
+        delete_json_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
+        rename_file_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
+        delete_files_and_folders_btn.grid(row=2, column=3, padx=10, pady=10, sticky="w")
+        #open_checklist_btn.grid(row=2, column=3, padx=10, pady=10, sticky="w")
+        #on_button_press_btn.grid(row=2, column=3, padx=10, pady=10, sticky="w")
+        #kill_revive_network_adapters_btn.grid(row=2, column=0, padx=10, pady=10, sticky="w")
 
         # Options tab
         options = [
