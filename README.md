@@ -29,11 +29,11 @@ WinFunct is a Python application that provides various scripts and options to en
 1. Clone the repository: `git clone https://github.com/df8819/WinFunct.git`
 2. Navigate to the project directory: `cd WinFunct`
 3. Install the required libraries: `pip install -r requirements.txt`
-4. Run the app: `python app.py`
+4. Run the app: `python winfunct.py`
 
 ## Usage
 
-1. Launch the app by executing `app.py`.
+1. Launch the app by executing `winfunct.py`.
 2. Select the desired function or option from the available tabs.
 3. Follow the on-screen instructions to perform the selected task.
 4. Enjoy the enhanced functionality and convenience provided by WinFunct!
