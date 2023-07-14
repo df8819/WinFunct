@@ -45,3 +45,4 @@ WinFunct is a Python application that provides various scripts and options to en
 - _Some features require administrative privileges to function properly. Make sure to run the app with administrator rights._
 - _The "Kill Bloatware" script still needs a little love._
 
+[Image](\1689346780.png)
