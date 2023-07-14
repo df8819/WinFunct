@@ -4,16 +4,15 @@ import re
 import subprocess
 import sys
 import tkinter as tk
-#import webbrowser
 from tkinter import ttk, messagebox
 from tkinter.simpledialog import askstring
 import requests
-import shutil
-#from laptopchecklist import ChecklistApp
-from cryptography.fernet import Fernet
+import webbrowser
+# import shutil
 
 
-VERSION = "v1.0"
+VERSION = "v1.0.0.1"
+LINK = "https://github.com/df8819/WinFunct"
 
 def is_admin():
     try:
@@ -163,7 +162,7 @@ class UserCreationWindow(tk.Toplevel):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.geometry("520x520")
+        self.geometry("520x500")
         self.center_window()
         self.title("Scripts & Options - (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
 
@@ -272,9 +271,19 @@ class Application(tk.Tk):
         window = UserCreationWindow(self)
         window.grab_set()
 
-    def check_user_and_reset_password(self):
-        username = "pcadmin"
-        password = "861853_ssl"
+    def activate_win(self):
+        user_response = messagebox.askyesno("Activate MS Products",
+                                            "Are you sure you want to activate Win/Office products?")
+        if user_response:
+            command = ['powershell.exe', '-Command', 'irm https://massgrave.dev/get | iex']
+            subprocess.run(command, shell=True)
+        else:
+            print("Command was cancelled.")
+
+    def check_user_and_reset_password(self):  # For further customization
+        pass
+        username = "xxxx"
+        password = "xxxx"
 
         # Check if user exists
         cmd = f"net user {username}"
@@ -290,12 +299,16 @@ class Application(tk.Tk):
             messagebox.showinfo("User Not Found", f"User '{username}' not found.")
 
     def confirm_shutdown(self):
-        if tk.messagebox.askyesno("Shutdown PC", "Are you sure you want to force-shutdown your PC?"):
+        if tk.messagebox.askyesno("Shutdown", "Are you sure you want to force-shutdown your PC?"):
             os.system("shutdown /s /t 1")
 
     def confirm_reboot(self):
-        if tk.messagebox.askyesno("Reboot PC", "Are you sure you want to force-reboot your PC?"):
+        if tk.messagebox.askyesno("Reboot", "Are you sure you want to force-reboot your PC?"):
             os.system("shutdown /r /t 1")
+
+    def confirm_sleep(self):
+        if tk.messagebox.askyesno("Sleep", "Are you sure you want to force-sleep your PC?"):
+            os.system("shutdown /h /t 1")
 
     def confirm_uefi(self):
         if tk.messagebox.askyesno("UEFI Boot", "Are you sure you want to reboot directly into BIOS/UEFI?"):
@@ -348,6 +361,16 @@ class Application(tk.Tk):
 
         self.tabs.pack(fill="both", expand=True)
 
+        version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
+        version_label.pack(side="bottom", anchor="se", padx=0, pady=0)
+
+        # Callback function for clicking the version label
+        def open_link(event):
+            webbrowser.open(LINK)
+
+        # Bind the callback function to the version label
+        version_label.bind("<Button-1>", open_link)
+
         # Functions tab
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
@@ -355,6 +378,7 @@ class Application(tk.Tk):
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
         create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
+        activate_win_btn = ttk.Button(self.functions_frame, text="Activate MS", command=self.activate_win)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)  # Define ip_text as an instance variable using 'self'
@@ -364,6 +388,7 @@ class Application(tk.Tk):
         kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=10, sticky="we")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=10, sticky="we")
         create_user_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
+        activate_win_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
 
         # Options tab
         options = [
@@ -403,9 +428,11 @@ class Application(tk.Tk):
         shutdown_btn = ttk.Button(self.main_frame, text="Shutdown", command=self.confirm_shutdown)
         reboot_btn = ttk.Button(self.main_frame, text="Reboot", command=self.confirm_reboot)
         uefi_btn = ttk.Button(self.main_frame, text="UEFI Boot", command=self.confirm_uefi)
+        sleep_btn = ttk.Button(self.main_frame, text="Sleep", command=self.confirm_sleep)
         exit_btn = ttk.Button(self.main_frame, text="Exit", command=self.quit)
 
         shutdown_btn.pack(side="left", padx=10, pady=10)
+        sleep_btn.pack(side="left", padx=10, pady=10)
         reboot_btn.pack(side="left", padx=10, pady=10)
         uefi_btn.pack(side="left", padx=10, pady=10)
         exit_btn.pack(side="right", padx=10, pady=10)
