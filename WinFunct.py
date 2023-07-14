@@ -162,7 +162,10 @@ class UserCreationWindow(tk.Toplevel):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.geometry("520x500")
+        self.ip_text = None
+        self.functions_frame = None
+        self.bottom_frame = None
+        self.geometry("520x520")
         self.center_window()
         self.title("Scripts & Options - (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
 
@@ -299,16 +302,16 @@ class Application(tk.Tk):
             messagebox.showinfo("User Not Found", f"User '{username}' not found.")
 
     def confirm_shutdown(self):
-        if tk.messagebox.askyesno("Shutdown", "Are you sure you want to force-shutdown your PC?"):
+        if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
             os.system("shutdown /s /t 1")
 
     def confirm_reboot(self):
-        if tk.messagebox.askyesno("Reboot", "Are you sure you want to force-reboot your PC?"):
+        if tk.messagebox.askyesno("Reboot", "Are you sure you want to reboot your PC?"):
             os.system("shutdown /r /t 1")
 
     def confirm_sleep(self):
-        if tk.messagebox.askyesno("Sleep", "Are you sure you want to force-sleep your PC?"):
-            os.system("shutdown /h /t 1")
+        if tk.messagebox.askyesno("Hibernate", "Are you sure you want to hibernate your PC?"):
+            os.system("shutdown /h")
 
     def confirm_uefi(self):
         if tk.messagebox.askyesno("UEFI Boot", "Are you sure you want to reboot directly into BIOS/UEFI?"):
@@ -424,19 +427,25 @@ class Application(tk.Tk):
             btn = ttk.Button(self.options_frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
             btn.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="we")
 
-        # Bottom buttons
-        shutdown_btn = ttk.Button(self.main_frame, text="Shutdown", command=self.confirm_shutdown)
-        reboot_btn = ttk.Button(self.main_frame, text="Reboot", command=self.confirm_reboot)
-        uefi_btn = ttk.Button(self.main_frame, text="UEFI Boot", command=self.confirm_uefi)
-        sleep_btn = ttk.Button(self.main_frame, text="Sleep", command=self.confirm_sleep)
-        exit_btn = ttk.Button(self.main_frame, text="Exit", command=self.quit)
+        # New frame for bottom buttons
+        self.bottom_frame = ttk.Frame(self.main_frame)
+        self.bottom_frame.pack(fill="x", padx=10, pady=10)
 
-        shutdown_btn.pack(side="left", padx=10, pady=10)
-        sleep_btn.pack(side="left", padx=10, pady=10)
-        reboot_btn.pack(side="left", padx=10, pady=10)
-        uefi_btn.pack(side="left", padx=10, pady=10)
-        exit_btn.pack(side="right", padx=10, pady=10)
+        # Adjusting the button parent frame to bottom_frame and using grid
+        shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown)
+        shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
+        reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot)
+        reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
+
+        uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi)
+        uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
+
+        sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep)
+        sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
+
+        exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
+        exit_btn.grid(row=1, column=3, padx=200, pady=5, sticky="we")
 
 # Create and run the app
 app = Application()
