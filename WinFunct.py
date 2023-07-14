@@ -8,17 +8,20 @@ from tkinter import ttk, messagebox
 from tkinter.simpledialog import askstring
 import requests
 import webbrowser
+
 # import shutil
 
 
 VERSION = "v1.0.0.1"
 LINK = "https://github.com/df8819/WinFunct"
 
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
+
 
 if is_admin():
     # The script is already running with admin rights.
@@ -28,9 +31,11 @@ else:
     # Re-run the program with admin rights.
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
+
 # Command functions
 def execute_command(cmd):
     subprocess.Popen(cmd, shell=True)
+
 
 # List of non-essential apps to uninstall
 apps_to_uninstall = [
@@ -89,6 +94,7 @@ pwas_to_unregister = [
     # Add other unnecessary PWA shortcuts here
 ]
 
+
 class UserCreationWindow(tk.Toplevel):
     def __init__(self, parent):
         tk.Toplevel.__init__(self, parent)
@@ -99,7 +105,6 @@ class UserCreationWindow(tk.Toplevel):
         # Add the necessary widgets and functionality for user creation
         self.username_label_above = tk.Label(self, text="This will create a new\nWindows user as admin:\n")
         self.username_label_above.pack()
-
 
         # Example: Add a label and an entry field for username
         self.username_label = tk.Label(self, text="Username:")
@@ -347,11 +352,11 @@ class Application(tk.Tk):
         messagebox.showinfo("Bloatware Killer", "Non-essential apps and PWA shortcuts have been uninstalled.")
 
     def renew_ip_config(self):
-        if messagebox.askyesno("Renew IP Configuration", "Are you sure you want to release/renew the IP config and flush DNS?"):
+        if messagebox.askyesno("Renew IP Configuration",
+                               "Are you sure you want to release/renew the IP config and flush DNS?"):
             cmd = "cmd.exe /c ipconfig /release && ipconfig /flushdns && ipconfig /renew"
             print(f"Executing command: {cmd}")
             subprocess.run(cmd, shell=True)
-
 
     def create_widgets(self):
         self.tabs = ttk.Notebook(self.main_frame)
@@ -365,7 +370,7 @@ class Application(tk.Tk):
         self.tabs.pack(fill="both", expand=True)
 
         version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
-        version_label.pack(side="bottom", anchor="se", padx=0, pady=0)
+        version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
 
         # Callback function for clicking the version label
         def open_link(event):
@@ -429,7 +434,7 @@ class Application(tk.Tk):
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
-        self.bottom_frame.pack(fill="x", padx=10, pady=10)
+        self.bottom_frame.pack(fill="x", padx=10, pady=5)
 
         # Adjusting the button parent frame to bottom_frame and using grid
         shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown)
@@ -446,6 +451,7 @@ class Application(tk.Tk):
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
         exit_btn.grid(row=1, column=3, padx=200, pady=5, sticky="we")
+
 
 # Create and run the app
 app = Application()
