@@ -20,7 +20,7 @@ WinFunct is a Python application that provides various scripts and options to en
 
 ## Requirements
 
-- Python 3.x
+- [Python 3.x](https://www.python.org/downloads/)
 - `tkinter` library
 - `requests` library
 
