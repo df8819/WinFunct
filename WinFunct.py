@@ -156,22 +156,21 @@ class UserCreationWindow(tk.Toplevel):
                 messagebox.showerror("User Creation Error", f"User '{username}' already exists.")
             else:
                 # Add the logic to create the user
-                cmd_create = f"net user {username} {password} /add"
+                cmd_create = f'powershell -Command "New-LocalUser -Name {username} -Password (ConvertTo-SecureString ' \
+                             f'-AsPlainText {password} -Force)"'
+                cmd_admin = f'powershell -Command "Add-LocalGroupMember -Group "Administrators" -Member {username}"'
 
                 # Create the user
                 result_create = subprocess.run(cmd_create, shell=True, capture_output=True, text=True)
                 if result_create.returncode == 0:
                     # Set the user as an administrator
-                    cmd_admin = f"net localgroup administrators {username} /add"
                     result_admin = subprocess.run(cmd_admin, shell=True, capture_output=True, text=True)
                     if result_admin.returncode == 0:
                         messagebox.showinfo("User Created",
                                             f"User '{username}' created successfully and set as an administrator.")
                     else:
-                        # Failed to set the user as an administrator
                         messagebox.showerror("User Creation Error", "Failed to set the user as an administrator.")
                 else:
-                    # Failed to create the user
                     messagebox.showerror("User Creation Error", "Failed to create the user.")
         else:
             messagebox.showerror("Missing Information", "Please enter both username and password.")
