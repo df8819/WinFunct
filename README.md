@@ -21,15 +21,22 @@ WinFunct is a Python application that provides various scripts and options to en
 ## Requirements
 
 - [Python 3.x](https://www.python.org/downloads/)
-- `tkinter` library
-- `requests` library
+- [Git for Desktop](https://git-scm.com/downloads)
 
-## Installation
+## Auto Installation
 
-1. Clone the repository: `git clone https://github.com/df8819/WinFunct.git`
-2. Navigate to the project directory: `cd WinFunct`
-3. Install the required libraries: `pip install -r requirements.txt`
-4. Run the app: `python winfunct.py`
+1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
+2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **CMD** Window.
+3. Double click **"Update.bat"**.
+4. For later instances, use **Run.bat**
+
+## Manual Installation
+
+1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
+2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **CMD** Window.
+3. Navigate to the project directory: `cd WinFunct`
+4. Install the required libraries: `pip install -r requirements.txt`
+5. Run the app: `python winfunct.py`
 
 ## Usage
 
