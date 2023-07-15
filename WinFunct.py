@@ -26,7 +26,7 @@ def is_admin():
 if is_admin():
     # The script is already running with admin rights.
     # Replace the line below with your actual script
-    print("I have admin rights")
+    print("Running with admin rights, all green.")
 else:
     # Re-run the program with admin rights.
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
@@ -158,7 +158,7 @@ class UserCreationWindow(tk.Toplevel):
                 # Add the logic to create the user
                 cmd_create = f'powershell -Command "New-LocalUser -Name {username} -Password (ConvertTo-SecureString ' \
                              f'-AsPlainText {password} -Force)"'
-                cmd_admin = f'powershell -Command "Add-LocalGroupMember -Group "Administrators" -Member {username}"'
+                cmd_admin = f'powershell -Command "Add-LocalGroupMember -Group "administrators" -Member {username}"'
 
                 # Create the user
                 result_create = subprocess.run(cmd_create, shell=True, capture_output=True, text=True)
