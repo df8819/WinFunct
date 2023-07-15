@@ -100,32 +100,46 @@ class UserCreationWindow(tk.Toplevel):
     def __init__(self, parent):
         tk.Toplevel.__init__(self, parent)
         self.title("User Creation")
-        self.geometry("250x200")  # Set the window size
+
+        window_width = 250
+        window_height = 220
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+
+        self.geometry(f"{window_width}x{window_height}+{x}+{y}")  # Set window size and position
         self.resizable(False, False)
 
+        self.main_frame = tk.Frame(self)
+        self.main_frame.pack(padx=10, pady=10)
+
         # Add the necessary widgets and functionality for user creation
-        self.username_label_above = tk.Label(self, text="This will create a new\nWindows user as admin:\n")
-        self.username_label_above.pack()
+        username_label_above = tk.Label(self.main_frame, text="This will create a new\nWindows user as admin:\n")
+        username_label_above.pack()
 
-        # Example: Add a label and an entry field for username
-        self.username_label = tk.Label(self, text="Username:")
-        self.username_label.pack()
-        self.username_entry = tk.Entry(self)
-        self.username_entry.pack()
+        username_label = tk.Label(self.main_frame, text="Username:")
+        username_label.pack()
+        self.username_entry = tk.Entry(self.main_frame)
+        self.username_entry.pack(pady=5)
 
-        # Example: Add a label and an entry field for password
-        self.password_label = tk.Label(self, text="Password:")
-        self.password_label.pack()
-        self.password_entry = tk.Entry(self, show="*")  # Mask the password
-        self.password_entry.pack()
+        password_label = tk.Label(self.main_frame, text="Password:")
+        password_label.pack()
+        self.password_entry = tk.Entry(self.main_frame, show="*")
+        self.password_entry.pack(pady=5)
+
+        # Create the buttons frame
+        buttons_frame = tk.Frame(self)
+        buttons_frame.pack()
 
         # Example: Add a button to create the user
-        create_button = tk.Button(self, text="Create User", command=self.create_user)
-        create_button.pack()
+        create_button = tk.Button(buttons_frame, text="Create User", command=self.create_user)
+        create_button.pack(side="left", padx=5, pady=5)
 
         # Example: Add a button to cancel user creation
-        cancel_button = tk.Button(self, text="Cancel", command=self.destroy)
-        cancel_button.pack()
+        cancel_button = tk.Button(buttons_frame, text="Cancel", command=self.destroy)
+        cancel_button.pack(side="left", padx=5, pady=5)
 
     def create_user(self):
         # Retrieve the username and password entered by the user
@@ -143,19 +157,21 @@ class UserCreationWindow(tk.Toplevel):
             else:
                 # Add the logic to create the user
                 cmd_create = f"net user {username} {password} /add"
-                cmd_admin = f"net localgroup administrators {username} /add"
 
                 # Create the user
                 result_create = subprocess.run(cmd_create, shell=True, capture_output=True, text=True)
                 if result_create.returncode == 0:
                     # Set the user as an administrator
+                    cmd_admin = f"net localgroup administrators {username} /add"
                     result_admin = subprocess.run(cmd_admin, shell=True, capture_output=True, text=True)
                     if result_admin.returncode == 0:
                         messagebox.showinfo("User Created",
                                             f"User '{username}' created successfully and set as an administrator.")
                     else:
+                        # Failed to set the user as an administrator
                         messagebox.showerror("User Creation Error", "Failed to set the user as an administrator.")
                 else:
+                    # Failed to create the user
                     messagebox.showerror("User Creation Error", "Failed to create the user.")
         else:
             messagebox.showerror("Missing Information", "Please enter both username and password.")
@@ -203,7 +219,16 @@ class Application(tk.Tk):
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
-            network_window.geometry("300x200")  # Customize the window size (width x height)
+
+            window_width = 300
+            window_height = 200
+            screen_width = network_window.winfo_screenwidth()
+            screen_height = network_window.winfo_screenheight()
+
+            x = (screen_width - window_width) // 2
+            y = (screen_height - window_height) // 2
+
+            network_window.geometry(f"{window_width}x{window_height}+{x}+{y}")  # Set window size and position
             network_window.resizable(False, False)  # Lock the window size
 
             label_text = "Select a Wi-Fi Network in the\ndrop-down menu to copy its password:"  # Text for the label
@@ -223,16 +248,17 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             # Create the "Ok" button
-            ok_button = tk.Button(network_window, text="Ok", command=ok_button_click)
-            ok_button.pack(pady=5)
+            ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10)
+            ok_button.pack(side="left", padx=(50, 5))  # Increase the padding on the left side
 
             # Function to handle the "Cancel" button click
             def cancel_button_click():
                 network_window.destroy()
 
             # Create the "Cancel" button
-            cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click)
-            cancel_button.pack(pady=5)
+            cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
+            cancel_button.pack(side="right", padx=(5, 50))  # Increase the padding on the right side
+
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
 
@@ -244,6 +270,18 @@ class Application(tk.Tk):
             # Create a new window to display the password
             password_window = tk.Toplevel(self)
             password_window.title(f"Password for {network}")
+
+            window_width = 350
+            window_height = 100
+            screen_width = password_window.winfo_screenwidth()
+            screen_height = password_window.winfo_screenheight()
+
+            x = (screen_width - window_width) // 2
+            y = (screen_height - window_height) // 2
+
+            password_window.geometry(f"{window_width}x{window_height}+{x}+{y}")  # Set window size and position
+            password_window.resizable(False, False)
+
             password_frame = tk.Frame(password_window)
             password_frame.pack(padx=10, pady=10)
 
@@ -252,7 +290,7 @@ class Application(tk.Tk):
             password_label.grid(row=0, column=0, padx=5, pady=5)
 
             # Add a text field to display the password
-            password_text = tk.Text(password_frame, height=1, width=30)
+            password_text = tk.Text(password_frame, height=1, width=20)
             password_text.insert(tk.END, password.group(1))
             password_text.grid(row=0, column=1, padx=5, pady=5)
             password_text.config(state="disabled")
@@ -264,7 +302,15 @@ class Application(tk.Tk):
                 self.update()
 
             copy_button = tk.Button(password_frame, text="Copy Password", command=copy_password)
-            copy_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+            copy_button.grid(row=1, column=0, padx=(5, 5), pady=5, sticky="sw")
+
+            # Add a "Cancel" button to close the window
+            def cancel_button_click():
+                password_window.destroy()
+
+            cancel_button = tk.Button(password_frame, text="Cancel", command=cancel_button_click)
+            cancel_button.grid(row=1, column=1, padx=(5, 50), pady=5, sticky="se")
+
         else:
             # No password found
             tk.messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
@@ -281,8 +327,9 @@ class Application(tk.Tk):
         window.grab_set()
 
     def activate_win(self):
-        user_response = messagebox.askyesno("Activate MS Products",
-                                            "Are you sure you want to activate Win/Office products?")
+        user_response = messagebox.askyesno("Activate Microsoft Products",
+                                            "This will open a PowerShell instance and guide the user with "
+                                            "instructions. Proceed?")
         if user_response:
             command = ['powershell.exe', '-Command', 'irm https://massgrave.dev/get | iex']
             subprocess.run(command, shell=True)
@@ -387,7 +434,7 @@ class Application(tk.Tk):
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
         create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
-        activate_win_btn = ttk.Button(self.functions_frame, text="Activate MS", command=self.activate_win)
+        activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)  # Define ip_text as an instance variable using 'self'
@@ -451,7 +498,7 @@ class Application(tk.Tk):
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=3, padx=200, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=3, padx=210, pady=5, sticky="we")
 
 
 # Create and run the app
