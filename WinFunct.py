@@ -30,6 +30,7 @@ if is_admin():
 else:
     # Re-run the program with admin rights.
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+    sys.exit()
 
 
 # Command functions
