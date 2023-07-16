@@ -156,15 +156,23 @@ class UserCreationWindow(tk.Toplevel):
                 messagebox.showerror("User Creation Error", f"User '{username}' already exists.")
             else:
                 # Add the logic to create the user
-                cmd_create = f'powershell -Command "New-LocalUser -Name {username} -Password (ConvertTo-SecureString ' \
-                             f'-AsPlainText {password} -Force)"'
-                cmd_admin = f'powershell -Command "Add-LocalGroupMember -Group "administrators" -Member {username}"'
+                cmd_create = f'New-LocalUser -Name {username} -Password (ConvertTo-SecureString ' \
+                             f'-AsPlainText {password} -Force)'
+                cmd_admin = f'Add-LocalGroupMember -Group Administrators -Member {username}'
 
                 # Create the user
-                result_create = subprocess.run(cmd_create, shell=True, capture_output=True, text=True)
+                result_create = subprocess.run(["powershell.exe", "-Command", cmd_create], capture_output=True,
+                                               text=True)
+                print(result_create.stdout)
+                print(result_create.stderr)
+
                 if result_create.returncode == 0:
                     # Set the user as an administrator
-                    result_admin = subprocess.run(cmd_admin, shell=True, capture_output=True, text=True)
+                    result_admin = subprocess.run(["powershell.exe", "-Command", cmd_admin], capture_output=True,
+                                                  text=True)
+                    print(result_admin.stdout)
+                    print(result_admin.stderr)
+
                     if result_admin.returncode == 0:
                         messagebox.showinfo("User Created",
                                             f"User '{username}' created successfully and set as an administrator.")
@@ -177,7 +185,6 @@ class UserCreationWindow(tk.Toplevel):
 
         # Close the window after user creation attempt
         self.destroy()
-
 
 # App Window
 class Application(tk.Tk):
