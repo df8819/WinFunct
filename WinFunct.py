@@ -451,7 +451,7 @@ class Application(tk.Tk):
         # Bind the callback function to the version label
         version_label.bind("<Button-1>", open_link)
 
-        # Functions tab
+        # Functions tab ("create_user" is excluded due to a bug
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
