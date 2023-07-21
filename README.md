@@ -13,7 +13,7 @@ WinFunct is a Python application that provides various scripts and options to en
 - **Disk Speedtest**: Test the speed of a specific disk drive on your system.
 - **Bloatware Killer**: Uninstall non-essential apps and remove unnecessary PWA shortcuts.
 - **Flush DNS**: Release and renew IP configurations and flush DNS cache.
-- **User Account Creation**: Create a new Windows user account with admin privileges.
+- **User Account Creation**: Create a new Windows user account with admin privileges. _(This is deactivated due to a bug)_
 - **Windows Activation**: Activate Microsoft Windows and Office products.
 - **System Tools**: Quick access to various Windows system tools and settings.
 - **Shutdown, Reboot, UEFI Boot, Sleep**: Perform power-related actions with ease.
