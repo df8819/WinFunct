@@ -99,6 +99,7 @@ pwas_to_unregister = [
 class UserCreationWindow(tk.Toplevel):
     def __init__(self, parent):
         tk.Toplevel.__init__(self, parent)
+        self.root = None
         self.title("User Creation")
 
         window_width = 250
@@ -141,7 +142,11 @@ class UserCreationWindow(tk.Toplevel):
         cancel_button = tk.Button(buttons_frame, text="Cancel", command=self.destroy)
         cancel_button.pack(side="left", padx=5, pady=5)
 
+
     def create_user(self):
+
+        # THIS FUNCTION IS BUGGED AND WILL REMAIN INACTIVE FOR OW
+
         # Retrieve the username and password entered by the user
         username = self.username_entry.get()
         password = self.password_entry.get()
@@ -155,25 +160,36 @@ class UserCreationWindow(tk.Toplevel):
                 # User already exists, display an error message
                 messagebox.showerror("User Creation Error", f"User '{username}' already exists.")
             else:
-                # Add the logic to create the user
-                cmd_create = f'New-LocalUser -Name {username} -Password (ConvertTo-SecureString ' \
-                             f'-AsPlainText {password} -Force)'
-                cmd_admin = f'Add-LocalGroupMember -Group Administrators -Member {username}'
+                # Add the logic to create the user with no password initially
+                cmd_create = f'New-LocalUser -Name "{username}" -NoPassword'
 
-                # Create the user
-                result_create = subprocess.run(["powershell.exe", "-Command", cmd_create], capture_output=True,
+                # Define the path to powershell.exe
+                powershell_path = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+
+                # Create the user with no password
+                result_create = subprocess.run([powershell_path, "-Command", cmd_create], capture_output=True,
                                                text=True)
                 print(result_create.stdout)
                 print(result_create.stderr)
 
                 if result_create.returncode == 0:
+                    # Set the password for the user
+                    cmd_set_password = f'$password = ConvertTo-SecureString "{password}" -AsPlainText -Force; ' \
+                                       f'Set-LocalUser -Name "{username}" -Password $password'
+                    result_set_password = subprocess.run([powershell_path, "-Command", cmd_set_password],
+                                                         capture_output=True,
+                                                         text=True)
+                    print(result_set_password.stdout)
+                    print(result_set_password.stderr)
+
                     # Set the user as an administrator
-                    result_admin = subprocess.run(["powershell.exe", "-Command", cmd_admin], capture_output=True,
+                    cmd_admin = f'Add-LocalGroupMember -Group "Administrators" -Member "{username}"'
+                    result_admin = subprocess.run([powershell_path, "-Command", cmd_admin], capture_output=True,
                                                   text=True)
                     print(result_admin.stdout)
                     print(result_admin.stderr)
 
-                    if result_admin.returncode == 0:
+                    if result_admin.returncode == 0 and result_set_password.returncode == 0:
                         messagebox.showinfo("User Created",
                                             f"User '{username}' created successfully and set as an administrator.")
                     else:
@@ -186,10 +202,12 @@ class UserCreationWindow(tk.Toplevel):
         # Close the window after user creation attempt
         self.destroy()
 
+
 # App Window
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.create_user = None
         self.ip_text = None
         self.functions_frame = None
         self.bottom_frame = None
@@ -439,7 +457,7 @@ class Application(tk.Tk):
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
-        create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
+        # create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
@@ -449,7 +467,7 @@ class Application(tk.Tk):
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=10, sticky="we")
         kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=10, sticky="we")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=10, sticky="we")
-        create_user_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
+        # create_user_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
         activate_win_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
 
         # Options tab
