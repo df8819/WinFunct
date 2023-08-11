@@ -26,7 +26,7 @@ def is_admin():
 if is_admin():
     # The script is already running with admin rights.
     # Replace the line below with your actual script
-    print("Running with admin rights, all green.")
+    print("Running with admin rights.")
 else:
     # Re-run the program with admin rights.
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
