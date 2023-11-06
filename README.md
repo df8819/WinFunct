@@ -17,6 +17,7 @@ WinFunct is a Python application that provides various scripts and options to en
 - **Windows Activation**: Activate Microsoft Windows and Office products.
 - **System Tools**: Quick access to various Windows system tools and settings.
 - **Shutdown, Reboot, UEFI Boot, Sleep**: Perform power-related actions with ease.
+- ...
 
 ## Requirements
 
