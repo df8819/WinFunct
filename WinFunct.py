@@ -12,7 +12,7 @@ import webbrowser
 # import shutil
 
 
-VERSION = "v1.0.0.1"
+VERSION = "v1.0.0.2"
 LINK = "https://github.com/df8819/WinFunct"
 
 
@@ -213,7 +213,7 @@ class Application(tk.Tk):
         self.bottom_frame = None
         self.geometry("520x520")
         self.center_window()
-        self.title("Scripts & Options - (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.title("Scripts & Options --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
 
         self.main_frame = ttk.Frame(self)
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
@@ -360,6 +360,16 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
+    def activate_idm(self):
+        user_response = messagebox.askyesno("Activate Internet Download Manager",
+                                            "This will open a PowerShell instance and guide the user with "
+                                            "instructions. Proceed?")
+        if user_response:
+            command = ['powershell.exe', '-Command', 'irm https://massgrave.dev/ias | iex']
+            subprocess.run(command, shell=True)
+        else:
+            print("Command was cancelled.")
+
     def check_user_and_reset_password(self):  # For further customization
         pass
         username = "xxxx"
@@ -379,19 +389,19 @@ class Application(tk.Tk):
             messagebox.showinfo("User Not Found", f"User '{username}' not found.")
 
     def confirm_shutdown(self):
-        if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
+        # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
             os.system("shutdown /s /t 1")
 
     def confirm_reboot(self):
-        if tk.messagebox.askyesno("Reboot", "Are you sure you want to reboot your PC?"):
+        # if tk.messagebox.askyesno("Reboot", "Are you sure you want to reboot your PC?"):
             os.system("shutdown /r /t 1")
 
     def confirm_sleep(self):
-        if tk.messagebox.askyesno("Hibernate", "Are you sure you want to hibernate your PC?"):
+        # if tk.messagebox.askyesno("Hibernate", "Are you sure you want to hibernate your PC?"):
             os.system("shutdown /h")
 
     def confirm_uefi(self):
-        if tk.messagebox.askyesno("UEFI Boot", "Are you sure you want to reboot directly into BIOS/UEFI?"):
+        # if tk.messagebox.askyesno("UEFI Boot", "Are you sure you want to reboot directly into BIOS/UEFI?"):
             os.system("shutdown /r /fw /t 1")
 
     def bloatware_killer(self):
@@ -457,8 +467,11 @@ class Application(tk.Tk):
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
-        # create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
+        activate_idm_btn = ttk.Button(self.functions_frame, text="Activate IDM", command=self.activate_idm)
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
+        # create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
+
+
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)  # Define ip_text as an instance variable using 'self'
@@ -467,8 +480,10 @@ class Application(tk.Tk):
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=10, sticky="we")
         kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=10, sticky="we")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=10, sticky="we")
-        # create_user_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
+        activate_idm_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
         activate_win_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
+        # create_user_btn.grid(row=4, column=0, padx=10, pady=10, sticky="we")
+
 
         # Options tab
         options = [
