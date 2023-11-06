@@ -9,9 +9,6 @@ from tkinter.simpledialog import askstring
 import requests
 import webbrowser
 
-# import shutil
-
-
 VERSION = "v1.0.0.2"
 LINK = "https://github.com/df8819/WinFunct"
 
@@ -345,19 +342,30 @@ class Application(tk.Tk):
     def open_links_window(self):
         # Define your links here
         links = {
-            "Python download": "https://www.python.org/downloads/",
-            "Git download": "https://git-scm.com/downloads",
-            "GitHub Desktop download": "https://desktop.github.com",
-            "Visual Studio download": "https://code.visualstudio.com/download",
-            "MS/IDM Script website": "https://massgrave.dev/index.html",
-            "AdGuard Home Tutorial YT": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
+            "Python - download": "https://www.python.org/downloads/",
+            "Git - download": "https://git-scm.com/downloads",
+            "GitHub Desktop - download": "https://desktop.github.com",
+            "Visual Studio - download": "https://code.visualstudio.com/download",
+            "MS/IDM Script - website": "https://massgrave.dev/index.html",
+            "AdGuard Home - YT Tutorial": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
+            "TeamViewer - download": "https://www.teamviewer.com/de/download/windows/",
+            "RustDesk - download": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
+            "PyCharm - download": "https://www.jetbrains.com/pycharm/download/?section=windows",
+            "MS PowerToys - download": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
+            "PicPick - download": "https://picpick.app/en/download/",
+            "HWInfo64 - download": "https://www.hwinfo.com/download/",
+            "MSI Afterburner - download": "https://www.msi.com/Landing/afterburner/graphics-cards",
+            "SpaceSniffer - download": "http://www.uderzo.it/main_products/space_sniffer/download.html",
+            "Advanced IP Scanner - download": "https://www.advanced-ip-scanner.com/de/",
+            "Raspberry Pi Imager - download": "https://www.raspberrypi.com/software/",
+
             # Add more items as needed
         }
 
         # Create a new window
         window = tk.Toplevel(self)
         window_width = 380
-        window_height = 240
+        window_height = 400
 
         # Get screen width and height
         screen_width = window.winfo_screenwidth()
