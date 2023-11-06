@@ -8,11 +8,16 @@ from tkinter import ttk, messagebox
 from tkinter.simpledialog import askstring
 import requests
 import webbrowser
+
 # import shutil
 
 
 VERSION = "v1.0.0.2"
 LINK = "https://github.com/df8819/WinFunct"
+
+# The command to copy to the clipboard
+command = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s ' \
+          '-- -v'
 
 
 def is_admin():
@@ -93,113 +98,6 @@ pwas_to_unregister = [
     "Microsoft.MinecraftEducationEdition",
     # Add other unnecessary PWA shortcuts here
 ]
-
-
-class UserCreationWindow(tk.Toplevel):
-    def __init__(self, parent):
-        tk.Toplevel.__init__(self, parent)
-        self.root = None
-        self.title("User Creation")
-
-        window_width = 250
-        window_height = 220
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-
-        x = (screen_width - window_width) // 2
-        y = (screen_height - window_height) // 2
-
-        self.geometry(f"{window_width}x{window_height}+{x}+{y}")  # Set window size and position
-        self.resizable(False, False)
-
-        self.main_frame = tk.Frame(self)
-        self.main_frame.pack(padx=10, pady=10)
-
-        # Add the necessary widgets and functionality for user creation
-        username_label_above = tk.Label(self.main_frame, text="This will create a new\nWindows user as admin:\n")
-        username_label_above.pack()
-
-        username_label = tk.Label(self.main_frame, text="Username:")
-        username_label.pack()
-        self.username_entry = tk.Entry(self.main_frame)
-        self.username_entry.pack(pady=5)
-
-        password_label = tk.Label(self.main_frame, text="Password:")
-        password_label.pack()
-        self.password_entry = tk.Entry(self.main_frame, show="*")
-        self.password_entry.pack(pady=5)
-
-        # Create the buttons frame
-        buttons_frame = tk.Frame(self)
-        buttons_frame.pack()
-
-        # Example: Add a button to create the user
-        create_button = tk.Button(buttons_frame, text="Create User", command=self.create_user)
-        create_button.pack(side="left", padx=5, pady=5)
-
-        # Example: Add a button to cancel user creation
-        cancel_button = tk.Button(buttons_frame, text="Cancel", command=self.destroy)
-        cancel_button.pack(side="left", padx=5, pady=5)
-
-
-    def create_user(self):
-
-        # THIS FUNCTION IS BUGGED AND WILL REMAIN INACTIVE FOR OW
-
-        # Retrieve the username and password entered by the user
-        username = self.username_entry.get()
-        password = self.password_entry.get()
-
-        # Check if both username and password are provided
-        if username and password:
-            # Check if the username already exists
-            cmd_check_user = f"net user {username}"
-            result_check_user = subprocess.run(cmd_check_user, shell=True, capture_output=True, text=True)
-            if result_check_user.returncode == 0:
-                # User already exists, display an error message
-                messagebox.showerror("User Creation Error", f"User '{username}' already exists.")
-            else:
-                # Add the logic to create the user with no password initially
-                cmd_create = f'New-LocalUser -Name "{username}" -NoPassword'
-
-                # Define the path to powershell.exe
-                powershell_path = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-
-                # Create the user with no password
-                result_create = subprocess.run([powershell_path, "-Command", cmd_create], capture_output=True,
-                                               text=True)
-                print(result_create.stdout)
-                print(result_create.stderr)
-
-                if result_create.returncode == 0:
-                    # Set the password for the user
-                    cmd_set_password = f'$password = ConvertTo-SecureString "{password}" -AsPlainText -Force; ' \
-                                       f'Set-LocalUser -Name "{username}" -Password $password'
-                    result_set_password = subprocess.run([powershell_path, "-Command", cmd_set_password],
-                                                         capture_output=True,
-                                                         text=True)
-                    print(result_set_password.stdout)
-                    print(result_set_password.stderr)
-
-                    # Set the user as an administrator
-                    cmd_admin = f'Add-LocalGroupMember -Group "Administrators" -Member "{username}"'
-                    result_admin = subprocess.run([powershell_path, "-Command", cmd_admin], capture_output=True,
-                                                  text=True)
-                    print(result_admin.stdout)
-                    print(result_admin.stderr)
-
-                    if result_admin.returncode == 0 and result_set_password.returncode == 0:
-                        messagebox.showinfo("User Created",
-                                            f"User '{username}' created successfully and set as an administrator.")
-                    else:
-                        messagebox.showerror("User Creation Error", "Failed to set the user as an administrator.")
-                else:
-                    messagebox.showerror("User Creation Error", "Failed to create the user.")
-        else:
-            messagebox.showerror("Missing Information", "Please enter both username and password.")
-
-        # Close the window after user creation attempt
-        self.destroy()
 
 
 # App Window
@@ -345,10 +243,6 @@ class Application(tk.Tk):
             powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/k winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
             subprocess.Popen(powershell_command, shell=True)
 
-    def create_user(self):
-        window = UserCreationWindow(self)
-        window.grab_set()
-
     def activate_win(self):
         user_response = messagebox.askyesno("Activate Microsoft Products",
                                             "This will open a PowerShell instance and guide the user with "
@@ -389,19 +283,19 @@ class Application(tk.Tk):
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
-            os.system("shutdown /s /t 1")
+        os.system("shutdown /s /t 1")
 
     def confirm_reboot(self):
         # if tk.messagebox.askyesno("Reboot", "Are you sure you want to reboot your PC?"):
-            os.system("shutdown /r /t 1")
+        os.system("shutdown /r /t 1")
 
     def confirm_sleep(self):
         # if tk.messagebox.askyesno("Hibernate", "Are you sure you want to hibernate your PC?"):
-            os.system("shutdown /h")
+        os.system("shutdown /h")
 
     def confirm_uefi(self):
         # if tk.messagebox.askyesno("UEFI Boot", "Are you sure you want to reboot directly into BIOS/UEFI?"):
-            os.system("shutdown /r /fw /t 1")
+        os.system("shutdown /r /fw /t 1")
 
     def bloatware_killer(self):
         if not tk.messagebox.askyesno("Bloatware Killer",
@@ -438,6 +332,75 @@ class Application(tk.Tk):
             cmd = "cmd.exe /c ipconfig /release && ipconfig /flushdns && ipconfig /renew"
             print(f"Executing command: {cmd}")
             subprocess.run(cmd, shell=True)
+
+    def agh_curl(self):
+        # Copy the command to the clipboard using the 'clip' command on Windows
+        subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=command.encode())
+        print('Command copied to clipboard!')
+
+    def arp(self):
+        command = 'cmd.exe /c arp -a'
+        subprocess.run(command, shell=True)
+
+    def open_links_window(self):
+        # Define your links here
+        links = {
+            "Python download": "https://www.python.org/downloads/",
+            "Git download": "https://git-scm.com/downloads",
+            "GitHub Desktop download": "https://desktop.github.com",
+            "Visual Studio download": "https://code.visualstudio.com/download",
+            "MS/IDM Script website": "https://massgrave.dev/index.html",
+            "AdGuard Home Tutorial YT": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
+            # Add more items as needed
+        }
+
+        # Create a new window
+        window = tk.Toplevel(self)
+        window_width = 380
+        window_height = 240
+
+        # Get screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+
+        # Calculate position x, y
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+
+        window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        window.resizable(False, False)
+
+        # Create a frame for checkboxes
+        checkbox_frame = tk.Frame(window)
+        checkbox_frame.pack(padx=10, pady=10, expand=True)
+
+        # Dictionary to hold the IntVar linked to each checkbox
+        self.checkbox_vars = {}
+
+        # Create checkboxes
+        for text, link in links.items():
+            var = tk.IntVar()
+            checkbox = ttk.Checkbutton(checkbox_frame, text=text, variable=var)
+            checkbox.pack(anchor='w')
+            self.checkbox_vars[link] = var
+
+        # Create a frame for buttons
+        button_frame = tk.Frame(window)
+        button_frame.pack(pady=10)
+
+        # OK button
+        ok_button = ttk.Button(button_frame, text="OK", command=lambda: self.on_ok(window))
+        ok_button.pack(side='right', padx=5)
+
+        # Cancel button
+        cancel_button = ttk.Button(button_frame, text="Cancel", command=window.destroy)
+        cancel_button.pack(side='right')
+
+    def on_ok(self, window):
+        for link, var in self.checkbox_vars.items():
+            if var.get():
+                webbrowser.open_new_tab(link)
+        window.destroy()  # Close the window
 
     def create_widgets(self):
         self.tabs = ttk.Notebook(self.main_frame)
@@ -531,12 +494,13 @@ class Application(tk.Tk):
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
         activate_idm_btn = ttk.Button(self.functions_frame, text="Activate IDM", command=self.activate_idm)
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
-        # create_user_btn = ttk.Button(self.functions_frame, text="Create Account", command=self.create_user)
-
+        agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
+        arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
+        open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
 
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
-        self.ip_text = tk.Entry(self.functions_frame)  # Define ip_text as an instance variable using 'self'
+        self.ip_text = tk.Entry(self.functions_frame)
         self.ip_text.grid(row=0, column=1, padx=10, pady=10, sticky="we")
         wifi_btn.grid(row=1, column=0, padx=10, pady=10, sticky="we")
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=10, sticky="we")
@@ -544,7 +508,9 @@ class Application(tk.Tk):
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=10, sticky="we")
         activate_idm_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
         activate_win_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
-        # create_user_btn.grid(row=4, column=0, padx=10, pady=10, sticky="we")
+        agh_curl_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
+        arp_btn.grid(row=2, column=3, padx=10, pady=10, sticky="we")
+        open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
 
 
         # New frame for bottom buttons
