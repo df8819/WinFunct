@@ -8,7 +8,6 @@ from tkinter import ttk, messagebox
 from tkinter.simpledialog import askstring
 import requests
 import webbrowser
-
 # import shutil
 
 
@@ -451,6 +450,69 @@ class Application(tk.Tk):
 
         self.tabs.pack(fill="both", expand=True)
 
+        # Options Notebook within the options tab
+        options_notebook = ttk.Notebook(self.options_frame)
+
+        # Category Frames
+        system_tools_frame = ttk.Frame(options_notebook)
+        windows_settings_frame = ttk.Frame(options_notebook)
+        utilities_frame = ttk.Frame(options_notebook)
+
+        # Adding frames to the notebook
+        options_notebook.add(system_tools_frame, text='System Tools')
+        options_notebook.add(windows_settings_frame, text='Windows Settings')
+        options_notebook.add(utilities_frame, text='Utilities')
+
+        # Packing the notebook into the options_frame
+        options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
+
+        # Categorized options lists
+        system_tools_options = [
+            ("GoTo hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
+            ("Run PowerShell as admin", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
+            ("Registry Editor", "regedit"),
+            ("Task Manager", "taskmgr"),
+            ("Disk Management", "diskmgmt.msc"),
+            ("Device Installers", "hdwwiz"),
+            ("Computer Management", "compmgmt.msc"),
+            ("Event Viewer", "eventvwr.msc"),
+            ("Services", "services.msc"),
+            ("Windows Features", "optionalfeatures"),
+            ("Group Policy Editor", "gpedit.msc"),
+            ("Programs and Features", "appwiz.cpl"),
+            ("Windows Version", "winver"),
+        ]
+
+        windows_settings_options = [
+            ("Windows Defender", "start ms-settings:windowsdefender"),
+            ("Advanced System Settings", "SystemPropertiesAdvanced"),
+            ("User Account Control", "useraccountcontrolsettings"),
+            ("Windows Update", "start ms-settings:windowsupdate"),
+            ("Performance Monitor", "perfmon"),
+            ("Power Options", "powercfg.cpl"),
+        ]
+
+        utilities_options = [
+            ("Browser", "start https://www.google.com"),
+            ("File Explorer", "explorer.exe"),
+            ("Control Panel", "control"),
+            ("Device Manager", "devmgmt.msc"),
+            ("Network Connections", "ncpa.cpl"),
+            ("Windows Firewall", "firewall.cpl"),
+            ("System Config (msc)", "msconfig"),
+        ]
+
+        # Function to create buttons within a frame from a list of option tuples
+        def create_option_buttons(frame, options_list):
+            for i, option in enumerate(options_list):
+                btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
+                btn.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="we")
+
+        # Create buttons in their respective categories
+        create_option_buttons(system_tools_frame, system_tools_options)
+        create_option_buttons(windows_settings_frame, windows_settings_options)
+        create_option_buttons(utilities_frame, utilities_options)
+
         version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
 
@@ -484,40 +546,6 @@ class Application(tk.Tk):
         activate_win_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
         # create_user_btn.grid(row=4, column=0, padx=10, pady=10, sticky="we")
 
-
-        # Options tab
-        options = [
-            ("GoTo hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Run PowerShell as admin", "powershell.exe -Command Start-Process powershell.exe -Verb RunAs"),
-            ("Browser", "start https://www.google.com"),
-            ("Windows Defender", "start ms-settings:windowsdefender"),
-            ("Registry Editor", "regedit"),
-            ("File Explorer", "explorer.exe"),
-            ("Control Panel", "control"),
-            ("Device Manager", "devmgmt.msc"),
-            ("Network Connections", "ncpa.cpl"),
-            ("Windows Firewall", "firewall.cpl"),
-            ("System Config (msc)", "msconfig"),
-            ("Advanced System Settings", "SystemPropertiesAdvanced"),
-            ("Task Manager", "taskmgr"),
-            ("Disk Management", "diskmgmt.msc"),
-            ("Device Installers", "hdwwiz"),
-            ("Computer Management", "compmgmt.msc"),
-            ("Event Viewer", "eventvwr.msc"),
-            ("User Account Control", "useraccountcontrolsettings"),
-            ("Windows Update", "start ms-settings:windowsupdate"),
-            ("Performance Monitor", "perfmon"),
-            ("Services", "services.msc"),
-            ("Windows Features", "optionalfeatures"),
-            ("Group Policy Editor", "gpedit.msc"),
-            ("Power Options", "powercfg.cpl"),
-            ("Programs and Features", "appwiz.cpl"),
-            ("Windows Version", "winver"),
-        ]
-
-        for i, option in enumerate(options):
-            btn = ttk.Button(self.options_frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
-            btn.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
