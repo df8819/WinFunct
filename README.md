@@ -50,8 +50,6 @@ WinFunct is a Python application that provides various scripts and options to en
 🌟 Star this repository if you find it helpful!
 
 - _Some features require administrative privileges to function properly. Make sure to run the app with administrator rights._
-- _The "Kill Bloatware" script still needs a little love._
-- _GUI changes slightly from time to time and the picture won't be updated every time_
-- _Create user as admin function doesn't work on all systems (needs to be fixed)_
+- _The "Kill Bloatware" script still needs a little love as it tends to be a quite aggressive_👀
 
 ![Image](1699313329.png)
