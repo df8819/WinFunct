@@ -30,7 +30,7 @@ def is_admin():
 if is_admin():
     # The script is already running with admin rights.
     # Replace the line below with your actual script
-    print("Running with admin rights.")
+    print("Running with admin rights. Nice.")
 else:
     # Re-run the program with admin rights.
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
@@ -436,11 +436,9 @@ class Application(tk.Tk):
             ("Registry Editor", "regedit"),
             ("Task Manager", "taskmgr"),
             ("Disk Management", "diskmgmt.msc"),
-            ("Device Installers", "hdwwiz"),
             ("Computer Management", "compmgmt.msc"),
             ("Event Viewer", "eventvwr.msc"),
             ("Services", "services.msc"),
-            ("Windows Features", "optionalfeatures"),
             ("Group Policy Editor", "gpedit.msc"),
             ("Programs and Features", "appwiz.cpl"),
             ("Windows Version", "winver"),
@@ -451,8 +449,8 @@ class Application(tk.Tk):
             ("Advanced System Settings", "SystemPropertiesAdvanced"),
             ("User Account Control", "useraccountcontrolsettings"),
             ("Windows Update", "start ms-settings:windowsupdate"),
-            ("Performance Monitor", "perfmon"),
             ("Power Options", "powercfg.cpl"),
+            ("System Config (msc)", "msconfig"),
         ]
 
         utilities_options = [
@@ -462,7 +460,9 @@ class Application(tk.Tk):
             ("Device Manager", "devmgmt.msc"),
             ("Network Connections", "ncpa.cpl"),
             ("Windows Firewall", "firewall.cpl"),
-            ("System Config (msc)", "msconfig"),
+            ("Performance Monitor", "perfmon"),
+            ("Device Installers", "hdwwiz"),
+            ("Windows Features", "optionalfeatures"),
         ]
 
         # Function to create buttons within a frame from a list of option tuples

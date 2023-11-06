@@ -54,4 +54,4 @@ WinFunct is a Python application that provides various scripts and options to en
 - _GUI changes slightly from time to time and the picture won't be updated every time_
 - _Create user as admin function doesn't work on all systems (needs to be fixed)_
 
-![Image](1689463910.png)
+![Image](1699313329.png)
