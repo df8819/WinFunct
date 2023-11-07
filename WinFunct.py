@@ -4,7 +4,7 @@ import re
 import subprocess
 import sys
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
 import requests
 import webbrowser
@@ -486,6 +486,8 @@ class Application(tk.Tk):
 
         version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
+
+
 
         # Callback function for clicking the version label
         def open_link(event):
