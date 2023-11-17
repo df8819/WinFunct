@@ -9,10 +9,13 @@ from tkinter.simpledialog import askstring
 import requests
 import webbrowser
 
+# Version of the app
 VERSION = "v1.0.0.2"
+
+# GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
 
-# The command to copy to the clipboard
+# The curl-command to copy to the clipboard
 command = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s ' \
           '-- -v'
 
@@ -347,7 +350,6 @@ class Application(tk.Tk):
             "GitHub Desktop - download": "https://desktop.github.com",
             "Visual Studio - download": "https://code.visualstudio.com/download",
             "MS/IDM Script - website": "https://massgrave.dev/index.html",
-            "AdGuard Home - YT Tutorial": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
             "TeamViewer - download": "https://www.teamviewer.com/de/download/windows/",
             "RustDesk - download": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
             "PyCharm - download": "https://www.jetbrains.com/pycharm/download/?section=windows",
@@ -358,6 +360,9 @@ class Application(tk.Tk):
             "SpaceSniffer - download": "http://www.uderzo.it/main_products/space_sniffer/download.html",
             "Advanced IP Scanner - download": "https://www.advanced-ip-scanner.com/de/",
             "Raspberry Pi Imager - download": "https://www.raspberrypi.com/software/",
+            "PuTTY (SSH) - download": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
+            "Notepad++ - download": "https://notepad-plus-plus.org/downloads/v8.5.8/",
+            "AdGuard Home - YT Tutorial": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
 
             # Add more items as needed
         }
@@ -365,7 +370,7 @@ class Application(tk.Tk):
         # Create a new window
         window = tk.Toplevel(self)
         window_width = 380
-        window_height = 400
+        window_height = 450
 
         # Get screen width and height
         screen_width = window.winfo_screenwidth()
@@ -413,7 +418,8 @@ class Application(tk.Tk):
     def create_widgets(self):
         self.tabs = ttk.Notebook(self.main_frame)
 
-        self.functions_frame = ttk.Frame(self.tabs)
+        # These are your original tabs
+        self.functions_frame = ttk.Frame(self.tabs)  # Renamed from functions_frame for clarity
         self.options_frame = ttk.Frame(self.tabs)
 
         self.tabs.add(self.functions_frame, text="Scripts")
@@ -424,41 +430,42 @@ class Application(tk.Tk):
         # Options Notebook within the options tab
         options_notebook = ttk.Notebook(self.options_frame)
 
-        # Category Frames
+        # New Category Frames inside the Options tab
+        advanced_windows_settings_frame = ttk.Frame(options_notebook)
         system_tools_frame = ttk.Frame(options_notebook)
-        windows_settings_frame = ttk.Frame(options_notebook)
         utilities_frame = ttk.Frame(options_notebook)
 
-        # Adding frames to the notebook
+        # Adding new frames to the options notebook
+        options_notebook.add(advanced_windows_settings_frame, text='Windows Settings')
         options_notebook.add(system_tools_frame, text='System Tools')
-        options_notebook.add(windows_settings_frame, text='Windows Settings')
-        options_notebook.add(utilities_frame, text='Utilities')
+        options_notebook.add(utilities_frame, text='Network')
 
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
 
         # Categorized options lists
-        system_tools_options = [
-            ("GoTo hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Run PowerShell as admin", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
+        # Note: You might need to adjust these lists based on your application's requirements
+        advanced_windows_settings_options = [
             ("Registry Editor", "regedit"),
-            ("Task Manager", "taskmgr"),
-            ("Disk Management", "diskmgmt.msc"),
             ("Computer Management", "compmgmt.msc"),
             ("Event Viewer", "eventvwr.msc"),
             ("Services", "services.msc"),
             ("Group Policy Editor", "gpedit.msc"),
             ("Programs and Features", "appwiz.cpl"),
             ("Windows Version", "winver"),
-        ]
-
-        windows_settings_options = [
             ("Windows Defender", "start ms-settings:windowsdefender"),
             ("Advanced System Settings", "SystemPropertiesAdvanced"),
             ("User Account Control", "useraccountcontrolsettings"),
             ("Windows Update", "start ms-settings:windowsupdate"),
             ("Power Options", "powercfg.cpl"),
             ("System Config (msc)", "msconfig"),
+            ("Disk Management", "diskmgmt.msc"),
+        ]
+
+        system_tools_options = [
+            ("GoTo hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
+            ("Run PowerShell as admin", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
+            ("Task Manager", "taskmgr"),
         ]
 
         utilities_options = [
@@ -469,6 +476,7 @@ class Application(tk.Tk):
             ("Network Connections", "ncpa.cpl"),
             ("Windows Firewall", "firewall.cpl"),
             ("Performance Monitor", "perfmon"),
+            ("Resource Monitor", "resmon"),
             ("Device Installers", "hdwwiz"),
             ("Windows Features", "optionalfeatures"),
         ]
@@ -479,15 +487,13 @@ class Application(tk.Tk):
                 btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
                 btn.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="we")
 
-        # Create buttons in their respective categories
+        # Create buttons in their respective new categories
+        create_option_buttons(advanced_windows_settings_frame, advanced_windows_settings_options)
         create_option_buttons(system_tools_frame, system_tools_options)
-        create_option_buttons(windows_settings_frame, windows_settings_options)
         create_option_buttons(utilities_frame, utilities_options)
 
         version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
-
-
 
         # Callback function for clicking the version label
         def open_link(event):
@@ -508,7 +514,6 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
 
-
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
         self.ip_text.grid(row=0, column=1, padx=10, pady=10, sticky="we")
@@ -521,7 +526,6 @@ class Application(tk.Tk):
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
         arp_btn.grid(row=2, column=3, padx=10, pady=10, sticky="we")
         open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
-
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
