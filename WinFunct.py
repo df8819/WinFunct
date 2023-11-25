@@ -362,6 +362,8 @@ class Application(tk.Tk):
             "Raspberry Pi Imager - download": "https://www.raspberrypi.com/software/",
             "PuTTY (SSH) - download": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
             "Notepad++ - download": "https://notepad-plus-plus.org/downloads/v8.5.8/",
+            "Partition Manager - download": "https://www.paragon-software.com/free/pm-express/#features",
+            "Win10 Creation Tool - download": "https://www.microsoft.com/de-de/software-download/windows10",
             "AdGuard Home - YT Tutorial": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
 
             # Add more items as needed
@@ -370,7 +372,7 @@ class Application(tk.Tk):
         # Create a new window
         window = tk.Toplevel(self)
         window_width = 380
-        window_height = 450
+        window_height = 520
 
         # Get screen width and height
         screen_width = window.winfo_screenwidth()
