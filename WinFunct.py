@@ -339,7 +339,8 @@ class Application(tk.Tk):
         print('Command copied to clipboard!')
 
     def arp(self):
-        command = 'cmd.exe /c arp -a'
+        command = ['powershell.exe', '-Command', 'arp -a']
+        # command = 'cmd.exe /c arp -a'
         subprocess.run(command, shell=True)
 
     def open_links_window(self):
