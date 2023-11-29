@@ -8,7 +8,6 @@ import tkinter as tk
 import webbrowser
 from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
-
 import requests
 import wmi
 
@@ -539,6 +538,23 @@ class Application(tk.Tk):
             # End the HTML file
             htmlfile.write('</table></body></html>')
 
+    def check_internet(self):
+        # Try to run the 'ping' command to check connectivity.
+        try:
+            # For Windows, use '-n' for count; for UNIX/Linux, use '-c'.
+            # The argument 'stdout=subprocess.PIPE' hides the command output.
+            output = subprocess.run(['ping', '-n', '1', '8.8.8.8'], stdout=subprocess.PIPE, text=True)
+
+            # If the ping command succeeds, the return code should be 0.
+            if output.returncode == 0:
+                messagebox.showinfo("Internet?", "You are: Online")
+            else:
+                messagebox.showinfo("Internet?", "You are: Offline")
+
+        except Exception as e:
+            # If an error occurs during the ping process, consider it as offline.
+            messagebox.showinfo("Internet?", f"An error occurred: {e}")
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -746,8 +762,8 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info",
-                                         command=self.compare_system_info)
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
+        internet_btn = ttk.Button(self.functions_frame, text="Internet?", command=self.check_internet)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -763,6 +779,7 @@ class Application(tk.Tk):
         open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
         save_info_btn.grid(row=1, column=4, padx=10, pady=10, sticky="we")
         compare_systems_btn.grid(row=2, column=4, padx=10, pady=10, sticky="we")
+        internet_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
