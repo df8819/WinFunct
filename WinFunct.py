@@ -143,7 +143,7 @@ class Application(tk.Tk):
 
     def show_wifi_networks(self):
         cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"]).decode("utf-8", "ignore")
-        networks = re.findall("All User Profile\s+:\s(.+)\r", cmd_output)
+        networks = re.findall(r"All User Profile\s+:\s(.+)\r", cmd_output)
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
@@ -193,7 +193,7 @@ class Application(tk.Tk):
     def show_wifi_password(self, network):
         cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"]).decode("utf-8",
                                                                                                                 "ignore")
-        password = re.search("Key Content\s+:\s(.+)\r", cmd_output)
+        password = re.search(r"Key Content\s+:\s(.+)\r", cmd_output)
         if password:
             # Create a new window to display the password
             password_window = tk.Toplevel(self)
@@ -453,13 +453,13 @@ class Application(tk.Tk):
     def gather_and_save_info(self):
         global info
         if tk.messagebox.askyesno("Extract", "This may take some time to extract data. Proceed?"):
-            info = self.get_system_info()
-        save_path = self.select_file()
-        if save_path:
-            self.save_to_file(info, save_path)
-            messagebox.showinfo("Success", f"System information saved to {save_path}")
-        else:
-            messagebox.showinfo("Cancelled", "Operation cancelled by user")
+            info = self.get_system_info()  # Gathers system info
+            save_path = self.select_file()  # Opens the file selection dialog
+            if save_path:
+                self.save_to_file(info, save_path)  # Saves the info to the selected file
+                messagebox.showinfo("Success", f"System information saved to {save_path}")
+            else:
+                messagebox.showinfo("Cancelled", "Operation cancelled by user")
 
     def compare_system_info(self):
         file_paths = filedialog.askopenfilenames(
