@@ -56,4 +56,5 @@ WinFunct is a Python application that provides various scripts and options to en
 - _The "Kill Bloatware" script still needs a little love as it tends to be a quite aggressive_ 👀
 
 ![Image](1701293876.png)
+
 ![Image](1701293895.png)
