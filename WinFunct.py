@@ -13,7 +13,7 @@ import requests
 import wmi
 
 # Version of the app
-VERSION = "v1.0.0.3"
+VERSION = "v1.1.0.0"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -111,15 +111,20 @@ class Application(tk.Tk):
         self.ip_text = None
         self.functions_frame = None
         self.bottom_frame = None
-        self.geometry("520x520")
+        self.geometry("650x520")
         self.center_window()
         self.title("Scripts & Options --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
 
-        self.main_frame = ttk.Frame(self)
+        # Setting the background color of the main frame to light blue
+        self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
+        #### Initial code for non-style: self.main_frame = ttk.Frame(self)
+
+        # Creating a style (Delete this to delete style)
+        style = ttk.Style()
+        style.configure('LightBlue.TFrame', background='dark grey')
+
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
-
         self.create_widgets()
-
         self.resizable(False, False)
 
     def center_window(self):
@@ -412,7 +417,8 @@ class Application(tk.Tk):
             system_info['Number of Processors'] = computer.NumberOfProcessors
 
         # Installed Software
-        installed_software = [software.Caption.strip() for software in c.Win32_Product() if software.Caption and software.Caption != 'HOTKEY']
+        installed_software = [software.Caption.strip() for software in c.Win32_Product() if
+                              software.Caption and software.Caption != 'HOTKEY']
 
         system_info['Installed Software'] = installed_software
 
@@ -627,63 +633,96 @@ class Application(tk.Tk):
         advanced_windows_settings_frame = ttk.Frame(options_notebook)
         system_tools_frame = ttk.Frame(options_notebook)
         utilities_frame = ttk.Frame(options_notebook)
+        tools_frame = ttk.Frame(options_notebook)
+        trouble_frame = ttk.Frame(options_notebook)
 
         # Adding new frames to the options notebook
-        options_notebook.add(advanced_windows_settings_frame, text='Windows Settings')
-        options_notebook.add(system_tools_frame, text='System Tools')
-        options_notebook.add(utilities_frame, text='Network')
+        options_notebook.add(advanced_windows_settings_frame, text='Windows Management')
+        options_notebook.add(system_tools_frame, text='Security & Network')
+        options_notebook.add(utilities_frame, text='Tools & Options')
+        options_notebook.add(tools_frame, text='Remote & Venv')
+        options_notebook.add(trouble_frame, text='Trouble & Optimize')
 
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
 
         # Categorized options lists
         # Note: You might need to adjust these lists based on your application's requirements
-        advanced_windows_settings_options = [
+        # Windows Management and Configuration Tools
+        windows_management_options = [
             ("Registry Editor", "regedit"),
-            ("Computer Management", "compmgmt.msc"),
+            ("Computer Manag.", "compmgmt.msc"),
             ("Event Viewer", "eventvwr.msc"),
             ("Services", "services.msc"),
-            ("Group Policy Editor", "gpedit.msc"),
-            ("Programs and Features", "appwiz.cpl"),
-            ("Windows Version", "winver"),
-            ("Windows Defender", "start ms-settings:windowsdefender"),
-            ("Advanced System Settings", "SystemPropertiesAdvanced"),
-            ("User Account Control", "useraccountcontrolsettings"),
+            ("Group Policy", "gpedit.msc"),
+            ("Programs", "appwiz.cpl"),
+            ("Windows Ver", "winver"),
+            ("Advanced Sys Set.", "SystemPropertiesAdvanced"),
+            ("User Acc Control", "useraccountcontrolsettings"),
             ("Windows Update", "start ms-settings:windowsupdate"),
-            ("Power Options", "powercfg.cpl"),
-            ("System Config (msc)", "msconfig"),
-            ("Disk Management", "diskmgmt.msc"),
+            ("Sys Config", "msconfig"),
+            ("Disk Manag.", "diskmgmt.msc"),
         ]
 
+        # Security and Networking Tools
+        security_and_networking_options = [
+            ("Defender", "start ms-settings:windowsdefender"),
+            ("Security Policy", "secpol.msc"),
+            ("Firewall", "wf.msc"),
+            ("Network/Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
+            ("Internet Options", "inetcpl.cpl"),
+            ("Cred. Manager", "control /name Microsoft.CredentialManager"),
+            ("Firewall", "firewall.cpl"),
+        ]
+
+        # System Tools and Utilities
         system_tools_options = [
-            ("GoTo hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Run PowerShell as admin", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
+            ("hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
+            ("Admin PS", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
             ("Task Manager", "taskmgr"),
-        ]
-
-        utilities_options = [
-            ("Browser", "start https://www.google.com"),
-            ("File Explorer", "explorer.exe"),
             ("Control Panel", "control"),
             ("Device Manager", "devmgmt.msc"),
-            ("Network Connections", "ncpa.cpl"),
-            ("Windows Firewall", "firewall.cpl"),
-            ("Performance Monitor", "perfmon"),
+            ("Network Conn.", "ncpa.cpl"),
+            ("Perform. Monitor", "perfmon"),
             ("Resource Monitor", "resmon"),
-            ("Device Installers", "hdwwiz"),
+            ("Device Install", "hdwwiz"),
             ("Windows Features", "optionalfeatures"),
+            ("DirectX Diag.", "dxdiag"),
+            ("Env. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+            ("Sys. Information", "msinfo32"),
+        ]
+
+        # Remote Management and Virtualization Tools
+        remote_and_virtualization_options = [
+            ("RDP", "mstsc"),
+            ("Hyper-V", "virtmgmt.msc"),
+            ("Windows Sandbox", "Sandbox"),
+        ]
+
+        # Troubleshooting and Optimization Tools
+        troubleshooting_and_optimization_options = [
+            ("Reliability", "perfmon /rel"),
+            ("Disk Cleanup", "cleanmgr"),
+            ("Sys Restore", "rstrui"),
+            ("Troubleshooting", "msdt"),
+            ("Optim. Drives", "dfrgui"),
+            ("Memory Diagnostic", "MdSched"),
+            ("Security Center", "wscui.cpl"),
+            ("Mobility Center", "mblctr"),
         ]
 
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
                 btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
-                btn.grid(row=i // 3, column=i % 3, padx=5, pady=5, sticky="we")
+                btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Create buttons in their respective new categories
-        create_option_buttons(advanced_windows_settings_frame, advanced_windows_settings_options)
-        create_option_buttons(system_tools_frame, system_tools_options)
-        create_option_buttons(utilities_frame, utilities_options)
+        create_option_buttons(advanced_windows_settings_frame, windows_management_options)
+        create_option_buttons(system_tools_frame, security_and_networking_options)
+        create_option_buttons(utilities_frame, system_tools_options)
+        create_option_buttons(tools_frame, remote_and_virtualization_options)
+        create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
 
         version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
@@ -707,8 +746,8 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
-
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info",
+                                         command=self.compare_system_info)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -722,9 +761,8 @@ class Application(tk.Tk):
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
         arp_btn.grid(row=2, column=3, padx=10, pady=10, sticky="we")
         open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
-        save_info_btn.grid(row=3, column=1, padx=10, pady=10, sticky="we")
-        compare_systems_btn.grid(row=3, column=2, padx=10, pady=10, sticky="we")
-
+        save_info_btn.grid(row=1, column=4, padx=10, pady=10, sticky="we")
+        compare_systems_btn.grid(row=2, column=4, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
@@ -744,7 +782,7 @@ class Application(tk.Tk):
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=3, padx=210, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=3, padx=335, pady=5, sticky="we")
 
 
 # Create and run the app
