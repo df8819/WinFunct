@@ -547,9 +547,9 @@ class Application(tk.Tk):
 
             # If the ping command succeeds, the return code should be 0.
             if output.returncode == 0:
-                messagebox.showinfo("Online?!", "Yes we're online 👍")
+                messagebox.showinfo("Online?!", "Yes, we're online 👍")
             else:
-                messagebox.showinfo("Online?!", "No we're offline 👎")
+                messagebox.showinfo("Online?!", "No, we're offline 👎")
 
         except Exception as e:
             # If an error occurs during the ping process, consider it as offline.
