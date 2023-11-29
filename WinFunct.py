@@ -456,6 +456,83 @@ class Application(tk.Tk):
         else:
             messagebox.showinfo("Cancelled", "Operation cancelled by user")
 
+    def compare_system_info(self):
+        file_paths = filedialog.askopenfilenames(
+            title="Select CSV files",
+            filetypes=[("CSV Files", "*.csv")])
+
+        if not file_paths:
+            messagebox.showinfo("Cancelled", "No files were selected.")
+            return
+
+        all_systems_info = [self.read_csv_file(path) for path in file_paths]
+
+        differences = self.find_differences(all_systems_info)
+
+        if differences:
+            save_path = filedialog.asksaveasfilename(
+                title="Save System Compare File",
+                defaultextension=".csv",
+                filetypes=[("CSV Files", "*.csv")],
+                initialfile="SystemCompare.html")
+
+            if save_path:
+                self.write_differences_to_file(differences, save_path)
+                messagebox.showinfo("Success", f"System comparison saved to {save_path}")
+            else:
+                messagebox.showinfo("Cancelled", "Save file operation was cancelled.")
+        else:
+            messagebox.showinfo("No Differences", "No differences found among the selected files.")
+
+    def read_csv_file(self, file_path):
+        with open(file_path, mode='r', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            return (file_path, {row['Field']: row['Value'] for row in reader})
+
+    def find_differences(self, systems_info):
+        # Get the union of keys from all systems
+        all_keys = set().union(*(info[1].keys() for info in systems_info))
+        differences = {field: {} for field in all_keys}
+
+        for file_path, system in systems_info:
+            for field in all_keys:
+                for other_file_path, other_system in systems_info:
+                    # If the field exists in both systems and they are not equal, record the difference
+                    if field in system and field in other_system and system[field] != other_system[field]:
+                        if system[field] not in differences[field]:
+                            differences[field][system[field]] = []
+                        if other_system[field] not in differences[field]:
+                            differences[field][other_system[field]] = []
+
+                        differences[field][system[field]].append(file_path)
+                        differences[field][other_system[field]].append(other_file_path)
+
+        # Remove fields where no differences were found
+        return {field: vals for field, vals in differences.items() if vals}
+
+    import os
+
+    def write_differences_to_file(self, differences, file_path):
+        with open(file_path, mode='w', encoding='utf-8') as htmlfile:
+            # Write the beginning of the HTML file
+            htmlfile.write('<html><head><style>')
+            htmlfile.write('table {border-collapse: collapse; width: 100%;}')
+            htmlfile.write('th, td {border: 1px solid #ddd; padding: 8px;}')
+            htmlfile.write('th {padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #f2f2f2;}')
+            htmlfile.write('</style></head><body>')
+            htmlfile.write('<table>')
+            htmlfile.write('<tr><th>Field</th><th>Value</th><th>Files</th></tr>')
+
+            for field, values in differences.items():
+                for value, files in values.items():
+                    # Extract just the file names from the paths
+                    file_names = set(os.path.basename(file) for file in files)  # Use a set to get unique filenames
+                    file_names_with_count = ', '.join(sorted(file_names))  # Sort the filenames
+                    htmlfile.write(f'<tr><td>{field}</td><td>{value}</td><td>{file_names_with_count}</td></tr>')
+
+            # End the HTML file
+            htmlfile.write('</table></body></html>')
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -629,8 +706,9 @@ class Application(tk.Tk):
         agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
-        save_info_button = ttk.Button(self.functions_frame, text="Extract System Info",
-                                      command=self.gather_and_save_info)
+        save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
+
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -644,7 +722,9 @@ class Application(tk.Tk):
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
         arp_btn.grid(row=2, column=3, padx=10, pady=10, sticky="we")
         open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
-        save_info_button.grid(row=3, column=1, padx=10, pady=10, sticky="we")
+        save_info_btn.grid(row=3, column=1, padx=10, pady=10, sticky="we")
+        compare_systems_btn.grid(row=3, column=2, padx=10, pady=10, sticky="we")
+
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
