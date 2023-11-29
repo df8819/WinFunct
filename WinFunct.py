@@ -547,13 +547,13 @@ class Application(tk.Tk):
 
             # If the ping command succeeds, the return code should be 0.
             if output.returncode == 0:
-                messagebox.showinfo("Internet?", "You are: Online")
+                messagebox.showinfo("Online?!", "Yes we're online 👍")
             else:
-                messagebox.showinfo("Internet?", "You are: Offline")
+                messagebox.showinfo("Online?!", "No we're offline 👎")
 
         except Exception as e:
             # If an error occurs during the ping process, consider it as offline.
-            messagebox.showinfo("Internet?", f"An error occurred: {e}")
+            messagebox.showinfo("Online?!", f"An error occurred: {e}")
 
     def open_links_window(self):
         # Define your links here
@@ -763,7 +763,7 @@ class Application(tk.Tk):
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
         compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
-        internet_btn = ttk.Button(self.functions_frame, text="Internet?", command=self.check_internet)
+        internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
