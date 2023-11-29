@@ -2,7 +2,7 @@
 
 Random utility app for Windows with functions, scripts and options that have pissed me off to search or execute every damn time I need them 🤭🙈
 
-***This is more of a "learning to code" repo that will change at will. It may provide useful features, but there will probably be bugs or some weird behaviours. Would be cool if a random chad would revamp the whole thing and add features I don't even know off. Cheers***
+***This is more of a "learning to code" repo that will change at will. It may provide useful features, but there will probably be bugs or some weird behaviours. Would be cool if a random chad would revamp the whole thing and add features I don't even know yet. Cheers***
 
 ## Description
 
