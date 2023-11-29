@@ -12,7 +12,7 @@ import requests
 import wmi
 
 # Version of the app
-VERSION = "v1.1.0.0"
+VERSION = "df8819 - v1.1.0.0"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -792,14 +792,20 @@ class Application(tk.Tk):
         reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot)
         reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
+        text1_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced command; No confirmation]")
+        text1_label.grid(row=0, column=2, padx=5, pady=5, sticky="we")
+
         uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi)
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
         sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep)
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
+        text2_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced command; No confirmation]")
+        text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
+
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=3, padx=335, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=3, padx=95, pady=5, sticky="we")
 
 
 # Create and run the app
