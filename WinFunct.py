@@ -350,28 +350,70 @@ class Application(tk.Tk):
         c = wmi.WMI()
         system_info = {}
 
-        # OS-Informationen
+        # Operating System Information
         for os in c.Win32_OperatingSystem():
             system_info['OS'] = os.Caption
             system_info['OS Version'] = os.Version
             system_info['OS Build'] = os.BuildNumber
+            system_info['OS Architecture'] = os.OSArchitecture
 
-        # Hardware
-        for computer in c.Win32_ComputerSystem():
-            system_info['Manufacturer'] = computer.Manufacturer
-            system_info['Model'] = computer.Model
-            system_info['Systemtype'] = computer.SystemType
-
-        # CPU
+        # CPU Details
         for processor in c.Win32_Processor():
-            system_info['CPU'] = processor.Name
+            system_info['CPU Model'] = processor.Name.strip()
+            system_info['CPU Cores'] = processor.NumberOfCores
+            system_info['CPU Threads'] = processor.ThreadCount
+            system_info['CPU Max Clock Speed'] = f"{processor.MaxClockSpeed} MHz"
+            system_info['CPU Serial Number'] = processor.ProcessorId.strip()
 
-        # RAM
-        for memory in c.Win32_PhysicalMemory():
-            system_info['RAM'] = f"{float(memory.Capacity) / (1024 ** 3):.2f} GB"
+        # RAM Details
+        total_memory = sum(float(memory.Capacity) for memory in c.Win32_PhysicalMemory())
+        memory_modules = [memory for memory in c.Win32_PhysicalMemory()]
+        memory_serial_numbers = [memory.SerialNumber.strip() for memory in memory_modules if
+                                 memory.SerialNumber.strip() not in ["", "00000000"]]
+        system_info['Total RAM'] = f"{total_memory / (1024 ** 3):.2f} GB"
+        system_info['RAM Modules'] = len(memory_modules)
+        system_info['RAM Serial Numbers'] = memory_serial_numbers if memory_serial_numbers else ["Not Available"]
+
+        # Storage Details
+        for disk in c.Win32_DiskDrive():
+            system_info['Hard Drive Model'] = disk.Model.strip()
+            system_info['Hard Drive Size'] = f"{float(disk.Size) / (1024 ** 3):.2f} GB"
+            system_info['Hard Drive Serial Number'] = disk.SerialNumber.strip()
+
+        # Motherboard Details
+        for board in c.Win32_BaseBoard():
+            system_info['Motherboard Manufacturer'] = board.Manufacturer.strip()
+            system_info['Motherboard Model'] = board.Product.strip()
+            system_info['Motherboard Serial Number'] = board.SerialNumber.strip()
+
+        # BIOS Details
+        for bios in c.Win32_BIOS():
+            system_info['BIOS Manufacturer'] = bios.Manufacturer.strip()
+            system_info['BIOS Version'] = bios.Version.strip()
+            system_info['BIOS Serial Number'] = bios.SerialNumber.strip()
+
+        # Graphics Card Details
+        for video_card in c.Win32_VideoController():
+            system_info['Graphics Card'] = video_card.Name.strip()
+
+        # Sound Controller Details
+        for sound in c.Win32_SoundDevice():
+            system_info['Sound Controller'] = sound.Name.strip()
+
+        # Network Adapters
+        adapters = [adapter.Name.strip() for adapter in c.Win32_NetworkAdapter() if adapter.NetEnabled]
+        system_info['Network Adapters'] = adapters
+
+        # Hardware General Details
+        for computer in c.Win32_ComputerSystem():
+            system_info['Computer Manufacturer'] = computer.Manufacturer.strip()
+            system_info['Computer Model'] = computer.Model.strip()
+            system_info['System Type'] = computer.SystemType.strip()
+            system_info['Number of Processors'] = computer.NumberOfProcessors
 
         # Installed Software
-        installed_software = [software.Caption for software in c.Win32_Product() if software.Caption != 'HOTKEY']
+        installed_software = [software.Caption.strip() for software in c.Win32_Product() if software.Caption and software.Caption != 'HOTKEY']
+
         system_info['Installed Software'] = installed_software
 
         return system_info
@@ -382,11 +424,15 @@ class Application(tk.Tk):
             # Write header
             writer.writerow(['Field', 'Value'])
             for key, value in info.items():
-                if key == 'Installed Software':
-                    # Write the software list with each entry on a new line
-                    writer.writerow([key, ''])  # Write the key with an empty value
-                    for software in value:
-                        writer.writerow(['', software])  # Write each software on a new line with an empty key
+                if isinstance(value, list):
+                    if key == 'Installed Software':
+                        # Write the software list with each entry on a new line
+                        writer.writerow([key, ''])  # Write the key with an empty value
+                        for software in value:
+                            writer.writerow(['', software])  # Write each software on a new line with an empty key
+                    else:
+                        # For other lists, join elements into a single string separated by commas
+                        writer.writerow([key, ', '.join(value)])
                 else:
                     writer.writerow([key, value])
 
