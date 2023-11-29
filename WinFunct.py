@@ -1,16 +1,19 @@
+import csv
 import ctypes
 import os
 import re
 import subprocess
 import sys
 import tkinter as tk
+import webbrowser
 from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
+
 import requests
-import webbrowser
+import wmi
 
 # Version of the app
-VERSION = "v1.0.0.2"
+VERSION = "v1.0.0.3"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -343,6 +346,70 @@ class Application(tk.Tk):
         command = 'powershell.exe arp -a'
         subprocess.run(command, shell=True)
 
+    def get_system_info(self):
+        c = wmi.WMI()
+        system_info = {}
+
+        # OS-Informationen
+        for os in c.Win32_OperatingSystem():
+            system_info['OS'] = os.Caption
+            system_info['OS Version'] = os.Version
+            system_info['OS Build'] = os.BuildNumber
+
+        # Hardware
+        for computer in c.Win32_ComputerSystem():
+            system_info['Manufacturer'] = computer.Manufacturer
+            system_info['Model'] = computer.Model
+            system_info['Systemtype'] = computer.SystemType
+
+        # CPU
+        for processor in c.Win32_Processor():
+            system_info['CPU'] = processor.Name
+
+        # RAM
+        for memory in c.Win32_PhysicalMemory():
+            system_info['RAM'] = f"{float(memory.Capacity) / (1024 ** 3):.2f} GB"
+
+        # Installed Software
+        installed_software = [software.Caption for software in c.Win32_Product() if software.Caption != 'HOTKEY']
+        system_info['Installed Software'] = installed_software
+
+        return system_info
+
+    def save_to_file(self, info, file_path):
+        with open(file_path, 'w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            # Write header
+            writer.writerow(['Field', 'Value'])
+            for key, value in info.items():
+                if key == 'Installed Software':
+                    # Write the software list with each entry on a new line
+                    writer.writerow([key, ''])  # Write the key with an empty value
+                    for software in value:
+                        writer.writerow(['', software])  # Write each software on a new line with an empty key
+                else:
+                    writer.writerow([key, value])
+
+    def select_file(self):
+        file_path = filedialog.asksaveasfilename(
+            parent=self,
+            defaultextension='.csv',
+            filetypes=[("CSV Files", "*.csv"), ("All Files", "*.*")],
+            title="Choose a location to save the file"
+        )
+        return file_path
+
+    def gather_and_save_info(self):
+        global info
+        if tk.messagebox.askyesno("Extract", "This may take some time to extract data. Proceed?"):
+            info = self.get_system_info()
+        save_path = self.select_file()
+        if save_path:
+            self.save_to_file(info, save_path)
+            messagebox.showinfo("Success", f"System information saved to {save_path}")
+        else:
+            messagebox.showinfo("Cancelled", "Operation cancelled by user")
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -516,6 +583,8 @@ class Application(tk.Tk):
         agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
+        save_info_button = ttk.Button(self.functions_frame, text="Extract System Info",
+                                      command=self.gather_and_save_info)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -529,6 +598,7 @@ class Application(tk.Tk):
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
         arp_btn.grid(row=2, column=3, padx=10, pady=10, sticky="we")
         open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
+        save_info_button.grid(row=3, column=1, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
