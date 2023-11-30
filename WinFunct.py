@@ -780,13 +780,13 @@ class Application(tk.Tk):
 
         # Security and Networking Tools
         security_and_networking_options = [
-            ("Defender", "start ms-settings:windowsdefender"),
+            ("Win Security", "start ms-settings:windowsdefender"),
             ("Security Policy", "secpol.msc"),
-            ("Firewall", "wf.msc"),
+            ("Firewall Rules", "wf.msc"),
             ("Network/Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
             ("Internet Options", "inetcpl.cpl"),
             ("Cred. Manager", "control /name Microsoft.CredentialManager"),
-            ("Firewall", "firewall.cpl"),
+            ("Firewall Defender", "firewall.cpl"),
         ]
 
         # System Tools and Utilities
