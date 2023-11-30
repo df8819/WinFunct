@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tkinter as tk
 import webbrowser
+import threading
 from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
 import requests
@@ -325,34 +326,110 @@ class Application(tk.Tk):
         # if tk.messagebox.askyesno("UEFI Boot", "Are you sure you want to reboot directly into BIOS/UEFI?"):
         os.system("shutdown /r /fw /t 1")
 
+    def run_powershell_command(self, command, return_output=False):
+        with open("powershell_log.txt", "a") as log_file:
+            log_file.write(f"Executing command: {command}\n")
+
+            process = subprocess.Popen(["powershell", "-Command", command], stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, text=True, shell=True)
+            stdout, stderr = process.communicate()
+
+            # Log the output and any errors
+            log_file.write("Standard Output:\n" + stdout)
+            log_file.write("Standard Error:\n" + stderr)
+
+            if return_output:
+                return stdout, stderr
+
+            return stderr == ""
+
+    def uninstall_package(self, package_name, results):
+        success = self.run_powershell_command(f"Get-AppxPackage {package_name} | Remove-AppxPackage")
+        results[f"Removing {package_name}"] = "Succeeded" if success else "Failed"
+
+    def uninstall_pwa(self, display_name, results):
+        # Use Get-AppxPackage to find the full package name
+        find_package_cmd = f"Get-AppxPackage -Name '*{display_name}*'"  # Added wildcard for better matching
+        stdout, stderr = self.run_powershell_command(find_package_cmd, return_output=True)
+
+        if stderr:
+            # Log the error if the package can't be found
+            results[f"Finding {display_name}"] = f"Failed: Package not found or other error. {stderr.strip()}"
+            return
+
+        # Parse the stdout to find the full package name (assuming the package is found)
+        package_full_name = None
+        for line in stdout.split('\n'):
+            if "PackageFullName" in line:
+                package_full_name = line.split(":")[-1].strip()
+                break
+
+        if package_full_name:
+            # Now that we have the full package name, attempt to remove it
+            remove_package_cmd = f"Remove-AppxPackage '{package_full_name}'"  # Removed '-Package' for correctness
+            stdout, stderr = self.run_powershell_command(remove_package_cmd, return_output=True)
+
+            # Log the results of the removal command
+            result_text = f"Removing PWA {package_full_name}"  # Added 'PWA' for clarity
+            results[result_text] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
+        else:
+            results[f"Finding {display_name}"] = "Failed: Full package name not found in the output."
+
+    def run_script_async(self, app_list, pwa_list):
+        thread = threading.Thread(target=self.handle_uninstall, args=(app_list, pwa_list), daemon=True)
+        thread.start()
+
+    def handle_uninstall(self, app_list, pwa_list):
+        uninstall_results = {}
+        for app in app_list:
+            stdout, stderr = self.run_powershell_command(f"Get-AppxPackage {app} | Remove-AppxPackage",
+                                                         return_output=True)
+            uninstall_results[f"Removing {app}"] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
+
+        for pwa_display_name in pwa_list:
+            # Search for the PWA by display name to get its details
+            find_package_cmd = f"Get-AppxPackage -Name '*{pwa_display_name}*'"
+            stdout, stderr = self.run_powershell_command(find_package_cmd, return_output=True)
+
+            if stderr:
+                # If there's an error, the package might not exist; log this case
+                uninstall_results[
+                    f"Finding {pwa_display_name}"] = f"Failed: Package not found or other error. {stderr.strip()}"
+                continue
+
+            # Parse stdout to find the full package name
+            package_full_name = None
+            for line in stdout.split('\n'):
+                if "PackageFullName" in line:
+                    package_full_name = line.split(":")[-1].strip()
+                    break
+
+            if package_full_name:
+                # Use the derived full package name to uninstall the PWA
+                remove_package_cmd = f"Remove-AppxPackage '{package_full_name}'"
+                stdout, stderr = self.run_powershell_command(remove_package_cmd, return_output=True)
+                result_text = f"Removing PWA {package_full_name}"
+                uninstall_results[result_text] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
+            else:
+                # This case may happen if the PWA was listed but not installed for the current user
+                uninstall_results[f"Finding {pwa_display_name}"] = "Failed: Full package name not found in the output."
+
+        self.on_script_complete(uninstall_results)
+
+    def on_script_complete(self, uninstall_results):
+        result_message = "The uninstallation process has completed. Here are the results:\n\n"
+        for app, result in uninstall_results.items():
+            result_message += f"{app}: {result}\n"
+
+        messagebox.showinfo("Uninstall Completed", result_message)
+
     def bloatware_killer(self):
-        if not tk.messagebox.askyesno("Bloatware Killer",
-                                      "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This will force-delete without any further conformation!"):
-            return  # User did not confirm, so we exit the function early.
+        if not messagebox.askyesno("Bloatware Killer",
+                                   "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This will force-delete without any further confirmation!"):
+            return
 
-        # Prepare the PowerShell script
-        powershell_script = "powershell -Command "
-
-        # Generate the script command for uninstalling apps
-        uninstall_commands = [
-            f"Get-AppxPackage {app} | Remove-AppxPackage" for app in apps_to_uninstall
-        ]
-        uninstall_script = "; ".join(uninstall_commands)
-
-        # Generate the script command for unregistering PWA shortcuts
-        unregister_commands = [
-            f"Get-AppxPackage {pwa} | Remove-AppxPackage; Remove-AppxProvisionedPackage -Online -PackageName {pwa}" for
-            pwa in pwas_to_unregister
-        ]
-        unregister_script = "; ".join(unregister_commands)
-
-        # Combine the uninstall and unregister scripts
-        full_script = f"{uninstall_script}; {unregister_script}"
-
-        # Run the combined script in a single PowerShell window
-        subprocess.run(["powershell", "-Command", full_script], shell=True)
-
-        messagebox.showinfo("Bloatware Killer", "Non-essential apps and PWA shortcuts have been uninstalled.")
+        messagebox.showinfo("Bloatware Killer", "The uninstallation process has started. This may take a while...")
+        self.run_script_async(apps_to_uninstall, pwas_to_unregister)
 
     def renew_ip_config(self):
         if messagebox.askyesno("Renew IP Configuration",
@@ -725,13 +802,13 @@ class Application(tk.Tk):
             ("Device Install", "hdwwiz"),
             ("Windows Features", "optionalfeatures"),
             ("DirectX Diag.", "dxdiag"),
-            ("Env. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+            ("Environm. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
             ("Sys. Information", "msinfo32"),
         ]
 
         # Remote Management and Virtualization Tools
         remote_and_virtualization_options = [
-            ("RDP", "mstsc"),
+            ("Remote Desktop", "mstsc"),
             ("Hyper-V", "virtmgmt.msc"),
             ("Windows Sandbox", "Sandbox"),
         ]
