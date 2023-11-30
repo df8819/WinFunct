@@ -24,19 +24,40 @@ command = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHo
 
 def is_admin():
     try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
+        return ctypes.windll.shell32.IsUserAnAdmin() != 0
+    except Exception as e:
+        print(f"Error checking admin status: {e}")
         return False
 
 
-if is_admin():
-    # The script is already running with admin rights.
-    # Replace the line below with your actual script
-    print("Running with admin rights. Nice.")
-else:
-    # Re-run the program with admin rights.
-    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-    sys.exit()
+def run_as_admin():
+    if sys.platform == "win32":
+        cmd = [sys.executable] + sys.argv
+        cmd_line = ' '.join('"' + item.replace('"', '\\"') + '"' for item in cmd)
+        try:
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
+            sys.exit()  # Exit after trying to elevate privileges
+        except Exception as e:
+            print(f"Error re-running the script with admin rights: {e}")
+    else:
+        print("Current platform is not Windows, skipping admin check.")
+
+
+def is_running_in_ide():
+    # This function checks for common IDE-specific variables
+    return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
+
+
+if __name__ == "__main__":
+    # Bypass admin check if running in an IDE
+    if not is_running_in_ide():
+        if not is_admin():
+            print("Script is not running with admin rights. Trying to obtain them...")
+            run_as_admin()
+            # The script will exit here if not running as admin
+
+    # Your normal script execution for both admin and non-admin mode continues here
+    print("Running with admin rights. Nice (⌐■_■)")
 
 
 # Command functions
@@ -492,7 +513,7 @@ class Application(tk.Tk):
     def read_csv_file(self, file_path):
         with open(file_path, mode='r', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-            return (file_path, {row['Field']: row['Value'] for row in reader})
+            return file_path, {row['Field']: row['Value'] for row in reader}
 
     def find_differences(self, systems_info):
         # Get the union of keys from all systems
@@ -762,7 +783,8 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info",
+                                         command=self.compare_system_info)
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")

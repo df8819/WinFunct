@@ -9,3 +9,6 @@ pip install -r requirements.txt
 
 echo Running the WinFunct Python script...
 python WinFunct.py
+
+echo -------INFO------- Please manually close this window after update. Update-Script will always pause -------INFO-------
+pause
