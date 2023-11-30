@@ -138,7 +138,7 @@ class Application(tk.Tk):
 
         # Setting the background color of the main frame to light blue
         self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
-        #### Initial code for non-style: self.main_frame = ttk.Frame(self)
+        # Initial code for non-style: self.main_frame = ttk.Frame(self)
 
         # Creating a style (Delete this to delete style)
         style = ttk.Style()
@@ -425,7 +425,7 @@ class Application(tk.Tk):
 
     def bloatware_killer(self):
         if not messagebox.askyesno("Bloatware Killer",
-                                   "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This will force-delete without any further confirmation!"):
+                                   "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This script will aggressively force-delete without any further confirmation!\n\nINFO: This script creates a .txt log file in the folder it was executed."):
             return
 
         messagebox.showinfo("Bloatware Killer", "The uninstallation process has started. This may take a while...")
@@ -613,8 +613,6 @@ class Application(tk.Tk):
         # Remove fields where no differences were found
         return {field: vals for field, vals in differences.items() if vals}
 
-    import os
-
     def write_differences_to_file(self, differences, file_path):
         with open(file_path, mode='w', encoding='utf-8') as htmlfile:
             # Write the beginning of the HTML file
@@ -792,7 +790,7 @@ class Application(tk.Tk):
         # System Tools and Utilities
         system_tools_options = [
             ("hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Admin PS", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
+            ("Admin PowerShell", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
             ("Task Manager", "taskmgr"),
             ("Control Panel", "control"),
             ("Device Manager", "devmgmt.msc"),
@@ -803,7 +801,7 @@ class Application(tk.Tk):
             ("Windows Features", "optionalfeatures"),
             ("DirectX Diag.", "dxdiag"),
             ("Environm. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
-            ("Sys. Information", "msinfo32"),
+            ("Sys Information", "msinfo32"),
         ]
 
         # Remote Management and Virtualization Tools
@@ -815,11 +813,11 @@ class Application(tk.Tk):
 
         # Troubleshooting and Optimization Tools
         troubleshooting_and_optimization_options = [
-            ("Reliability", "perfmon /rel"),
+            ("Reliability Monitor", "perfmon /rel"),
             ("Disk Cleanup", "cleanmgr"),
             ("Sys Restore", "rstrui"),
             ("Troubleshooting", "msdt"),
-            ("Optim. Drives", "dfrgui"),
+            ("Optimize Drives", "dfrgui"),
             ("Memory Diagnostic", "MdSched"),
             ("Security Center", "wscui.cpl"),
             ("Mobility Center", "mblctr"),
