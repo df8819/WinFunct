@@ -775,15 +775,15 @@ class Application(tk.Tk):
         # Note: You might need to adjust these lists based on your application's requirements
         # Windows Management and Configuration Tools
         windows_management_options = [
-            ("Registry Editor", "regedit"),
+            ("Registry Edit", "regedit"),
             ("Computer Manag.", "compmgmt.msc"),
             ("Event Viewer", "eventvwr.msc"),
             ("Services", "services.msc"),
             ("Group Policy", "gpedit.msc"),
             ("Programs", "appwiz.cpl"),
-            ("Windows Ver", "winver"),
+            ("Windows Ver.", "winver"),
             ("Advanced Sys Set.", "SystemPropertiesAdvanced"),
-            ("User Acc Control", "useraccountcontrolsettings"),
+            ("User Acc. Control", "useraccountcontrolsettings"),
             ("Windows Update", "start ms-settings:windowsupdate"),
             ("Sys Config", "msconfig"),
             ("Disk Manag.", "diskmgmt.msc"),
