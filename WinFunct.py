@@ -13,7 +13,7 @@ import requests
 import wmi
 
 # Version of the app
-VERSION = "df8819 - v1.1.0.0"
+VERSION = "df8819 - v1.1.0.1"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -156,6 +156,19 @@ class Application(tk.Tk):
         position_right = int(self.winfo_screenwidth() / 2 - window_width / 2)
 
         self.geometry(f"+{position_right}+{position_top}")
+
+    def open_ps_as_admin(self):
+        try:
+            subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
+
+    def open_cmd_as_admin(self):
+        try:
+            # Open a new Command Prompt window, navigate to C:\ and set the title
+            subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to open Command Prompt as admin: {e}")
 
     def show_ip_address(self):
         response = requests.get("https://ifconfig.me/ip")
@@ -790,7 +803,6 @@ class Application(tk.Tk):
         # System Tools and Utilities
         system_tools_options = [
             ("hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Admin PowerShell", "powershell.exe -Command Start-Process powershell -Verb RunAs"),
             ("Task Manager", "taskmgr"),
             ("Control Panel", "control"),
             ("Device Manager", "devmgmt.msc"),
@@ -800,7 +812,6 @@ class Application(tk.Tk):
             ("Device Install", "hdwwiz"),
             ("Windows Features", "optionalfeatures"),
             ("DirectX Diag.", "dxdiag"),
-            ("Environm. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
             ("Sys Information", "msinfo32"),
         ]
 
@@ -808,6 +819,7 @@ class Application(tk.Tk):
         remote_and_virtualization_options = [
             ("Remote Desktop", "mstsc"),
             ("Hyper-V", "virtmgmt.msc"),
+            ("Environm. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
             ("Windows Sandbox", "Sandbox"),
         ]
 
@@ -849,6 +861,8 @@ class Application(tk.Tk):
         # Functions tab ("create_user" is excluded due to a bug
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
+        cmd_btn = ttk.Button(self.functions_frame, text="cmd.exe", command=self.open_cmd_as_admin)
+        ps_btn = ttk.Button(self.functions_frame, text="PowerShell.exe", command=self.open_ps_as_admin)
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
@@ -858,13 +872,14 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info",
-                                         command=self.compare_system_info)
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
         self.ip_text.grid(row=0, column=1, padx=10, pady=10, sticky="we")
+        cmd_btn.grid(row=0, column=3, padx=10, pady=10, sticky="we")
+        ps_btn.grid(row=0, column=4, padx=10, pady=10, sticky="we")
         wifi_btn.grid(row=1, column=0, padx=10, pady=10, sticky="we")
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=10, sticky="we")
         kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=10, sticky="we")
