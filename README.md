@@ -24,14 +24,14 @@ WinFunct is a Python application that provides various scripts and options to en
 ## Requirements
 
 - [Python 3.x](https://www.python.org/downloads/)
-- [Git for Desktop](https://git-scm.com/downloads)
+- [Git for Desktop](https://git-scm.com/downloads/)
 
 ## Auto Installation
 
 1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
 2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **CMD** Window.
-3. Double click: **"Update.bat"**.
-4. For later instances, use: **"Run.bat"**
+3. Double click: **"Update.bat"**. This will install all dependencies and update the cloned repository. Use this occasionally.
+4. Double click: **"Run.bat"**. The typical ```py filename.py``` cmd command will not work, as the app demands elevated rights.
 
 ## Manual Installation
 
