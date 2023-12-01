@@ -904,7 +904,7 @@ class Application(tk.Tk):
         reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot)
         reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
-        text1_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced command; No confirmation]")
+        text1_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced commands; No confirmation]")
         text1_label.grid(row=0, column=2, padx=5, pady=5, sticky="we")
 
         uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi)
@@ -913,7 +913,7 @@ class Application(tk.Tk):
         sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep)
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
-        text2_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced command; No confirmation]")
+        text2_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced commands; No confirmation]")
         text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
