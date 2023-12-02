@@ -48,14 +48,12 @@ WinFunct is a Python application that provides various scripts and options to en
 3. Follow the on-screen instructions to perform the selected task.
 4. Enjoy the enhanced functionality and convenience provided by WinFunct!
 
-## Notes
+## Known Issues
 
-🌟 Star this repository if you find it helpful!
+- _Some features require administrative privileges to function properly. Make sure to run the app with administrator rights._ 🔺 (FIXED)
+- _The "Kill Bloatware" script still needs a little love as it tends to be a quite aggressive_ 👀 (FIXED)
+- _The "ARP scan" doesn't work when pyinstalled, as it will be shown in the py terminal_ 😐 (FIXED)
 
-- _Some features require administrative privileges to function properly. Make sure to run the app with administrator rights._
-- _The "Kill Bloatware" script still needs a little love as it tends to be a quite aggressive_ 👀
-- _The "ARP scan" doesn't work when pyinstalled, as it will be shown in the py terminal_ 😐
+![Image](1701505006.png)
 
-![Image](1701293876.png)
-
-![Image](1701293895.png)
+![Image](1701505092.png)
