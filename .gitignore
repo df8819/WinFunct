@@ -37,3 +37,6 @@ WinFunct_Corrected.py
 dist/WinFunct.zip
 .idea/codeStyles/codeStyleConfig.xml
 Run.lnk
+apikey.json
+__pycache__/JChatInt.cpython-312.pyc
+__pycache__/JChatInt.cpython-311.pyc

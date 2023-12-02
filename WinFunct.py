@@ -11,9 +11,10 @@ from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
 import requests
 import wmi
+from JChatInt import JChat
 
 # Version of the app
-VERSION = "df8819 - v1.1.0.1"
+VERSION = "df8819 - v1.1.1.0"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -135,6 +136,8 @@ class Application(tk.Tk):
         self.geometry("650x520")
         self.center_window()
         self.title("Scripts & Options --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.font_family = "Segoe UI Emoji"
+
 
         # Setting the background color of the main frame to light blue
         self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
@@ -156,6 +159,11 @@ class Application(tk.Tk):
         position_right = int(self.winfo_screenwidth() / 2 - window_width / 2)
 
         self.geometry(f"+{position_right}+{position_top}")
+
+    def open_chat(self):
+        chat_window = tk.Toplevel(self)
+        chat_window.title("JChat")
+        JChat(chat_window)  # Initialize JChat within the new window
 
     def open_ps_as_admin(self):
         try:
@@ -745,9 +753,11 @@ class Application(tk.Tk):
         # These are your original tabs
         self.functions_frame = ttk.Frame(self.tabs)  # Renamed from functions_frame for clarity
         self.options_frame = ttk.Frame(self.tabs)
+        self.fun_frame = ttk.Frame(self.tabs)
 
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
+        self.tabs.add(self.fun_frame, text="Apps")
 
         self.tabs.pack(fill="both", expand=True)
 
@@ -872,8 +882,10 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info",
+                                         command=self.compare_system_info)
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
+        chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -892,6 +904,7 @@ class Application(tk.Tk):
         save_info_btn.grid(row=1, column=4, padx=10, pady=10, sticky="we")
         compare_systems_btn.grid(row=2, column=4, padx=10, pady=10, sticky="we")
         internet_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
+        chat_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
