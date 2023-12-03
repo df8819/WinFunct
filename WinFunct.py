@@ -127,6 +127,7 @@ pwas_to_unregister = [
 
 
 # App Window
+# noinspection PyMethodMayBeStatic,PyShadowingNames
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -139,7 +140,6 @@ class Application(tk.Tk):
         self.title("Scripts & Options --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
-
         # Setting the background color of the main frame to light blue
         self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
         # Initial code for non-style: self.main_frame = ttk.Frame(self)
@@ -150,7 +150,7 @@ class Application(tk.Tk):
 
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
         self.create_widgets()
-        self.resizable(False, False)
+        self.resizable(True, True)
 
     def center_window(self):
         window_width = self.winfo_reqwidth()
@@ -160,6 +160,10 @@ class Application(tk.Tk):
         position_right = int(self.winfo_screenwidth() / 2 - window_width / 2)
 
         self.geometry(f"+{position_right}+{position_top}")
+
+    def reset_ui(self):
+        self.geometry("650x520")
+        self.center_window()
 
     def open_chat(self):
         chat_window = tk.Toplevel(self)
@@ -670,9 +674,9 @@ class Application(tk.Tk):
 
             # If the ping command succeeds, the return code should be 0.
             if output.returncode == 0:
-                messagebox.showinfo("Online?!", "Yes, we're online 👍")
+                messagebox.showinfo("Online?!", "Yes, we're online.")
             else:
-                messagebox.showinfo("Online?!", "No, we're offline 👎")
+                messagebox.showinfo("Online?!", "No, we're offline.")
 
         except Exception as e:
             # If an error occurs during the ping process, consider it as offline.
@@ -681,63 +685,76 @@ class Application(tk.Tk):
     def open_links_window(self):
         # Define your links here
         links = {
-            "Python - download": "https://www.python.org/downloads/",
-            "Git - download": "https://git-scm.com/downloads",
-            "GitHub Desktop - download": "https://desktop.github.com",
-            "Visual Studio - download": "https://code.visualstudio.com/download",
-            "MS/IDM Script - website": "https://massgrave.dev/index.html",
-            "TeamViewer - download": "https://www.teamviewer.com/de/download/windows/",
-            "RustDesk - download": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
-            "PyCharm - download": "https://www.jetbrains.com/pycharm/download/?section=windows",
-            "MS PowerToys - download": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
-            "PicPick - download": "https://picpick.app/en/download/",
-            "HWInfo64 - download": "https://www.hwinfo.com/download/",
-            "MSI Afterburner - download": "https://www.msi.com/Landing/afterburner/graphics-cards",
-            "SpaceSniffer - download": "http://www.uderzo.it/main_products/space_sniffer/download.html",
-            "Advanced IP Scanner - download": "https://www.advanced-ip-scanner.com/de/",
-            "Raspberry Pi Imager - download": "https://www.raspberrypi.com/software/",
-            "PuTTY (SSH) - download": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
-            "Notepad++ - download": "https://notepad-plus-plus.org/downloads/v8.5.8/",
-            "Partition Manager - download": "https://www.paragon-software.com/free/pm-express/#features",
-            "Win10 Creation Tool - download": "https://www.microsoft.com/de-de/software-download/windows10",
-            "AdGuard Home - YT Tutorial": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
-
-            # Add more items as needed
+            "Development Tools": {
+                "Python": "https://www.python.org/downloads/",
+                "Git": "https://git-scm.com/downloads",
+                "GitHub Desktop": "https://desktop.github.com",
+                "Visual Studio": "https://code.visualstudio.com/download",
+                "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
+            },
+            "Utilities": {
+                "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
+                "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
+                "MS PowerToys": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
+                "PicPick": "https://picpick.app/en/download/",
+                "HWInfo64": "https://www.hwinfo.com/download/",
+                "MSI Afterburner": "https://www.msi.com/Landing/afterburner/graphics-cards",
+                "SpaceSniffer": "http://www.uderzo.it/main_products/space_sniffer/download.html",
+                "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
+                "Raspberry Pi Imager": "https://www.raspberrypi.com/software/",
+                "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
+                "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
+                "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
+                "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
+            },
+            "Tutorials": {
+                "MAS/IDM Script": "https://massgrave.dev/index.html",
+                "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
+            },
+            # Add more categories and items as needed
         }
 
         # Create a new window
         window = tk.Toplevel(self)
-        window_width = 380
-        window_height = 520
+        window.title("Download Links")
+        window.resizable(True, True)  # Allow the window to be resizable
 
-        # Get screen width and height
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
+        # Create a scrollbar
+        scrollbar = tk.Scrollbar(window)
+        scrollbar.pack(side='right', fill='y')
 
-        # Calculate position x, y
-        x = (screen_width - window_width) // 2
-        y = (screen_height - window_height) // 2
+        # Create a canvas for scrolling
+        canvas = tk.Canvas(window, yscrollcommand=scrollbar.set)
+        canvas.pack(side='top', fill='both', expand=True)
+        scrollbar.config(command=canvas.yview)
 
-        window.geometry(f"{window_width}x{window_height}+{x}+{y}")
-        window.resizable(False, False)
-
-        # Create a frame for checkboxes
-        checkbox_frame = tk.Frame(window)
-        checkbox_frame.pack(padx=10, pady=10, expand=True)
+        # Create a frame for checkboxes within the canvas
+        checkbox_frame = tk.Frame(canvas)
+        canvas.create_window((0, 0), window=checkbox_frame, anchor='nw')
 
         # Dictionary to hold the IntVar linked to each checkbox
         self.checkbox_vars = {}
 
-        # Create checkboxes
-        for text, link in links.items():
-            var = tk.IntVar()
-            checkbox = ttk.Checkbutton(checkbox_frame, text=text, variable=var)
-            checkbox.pack(anchor='w')
-            self.checkbox_vars[link] = var
+        # Create checkboxes within each category
+        for category, links_dict in links.items():
+            # Create a label for the category
+            category_label = tk.Label(checkbox_frame, text=category, font="bold")
+            category_label.pack(anchor='w', pady=(10, 5))
+
+            # Create checkboxes for each link in the category
+            for text, link in links_dict.items():
+                var = tk.IntVar()
+                checkbox = ttk.Checkbutton(checkbox_frame, text=f"{text}", variable=var)
+                checkbox.pack(anchor='w', padx=10)
+                self.checkbox_vars[link] = var
+
+        # Update the canvas's scrollregion
+        checkbox_frame.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox("all"))
 
         # Create a frame for buttons
         button_frame = tk.Frame(window)
-        button_frame.pack(pady=10)
+        button_frame.pack(side='bottom', fill='x', pady=10)
 
         # OK button
         ok_button = ttk.Button(button_frame, text="OK", command=lambda: self.on_ok(window))
@@ -745,7 +762,22 @@ class Application(tk.Tk):
 
         # Cancel button
         cancel_button = ttk.Button(button_frame, text="Cancel", command=window.destroy)
-        cancel_button.pack(side='right')
+        cancel_button.pack(side='right', padx=5)
+
+        # Set the initial geometry of the window
+        initial_width = 380
+        initial_height = 620  # Adjust the height as needed
+        window.geometry(f"{initial_width}x{initial_height}")
+
+        # Center the window on the screen
+        window.update_idletasks()
+        window_width = window.winfo_width()
+        window_height = window.winfo_height()
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+        window.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
     def on_ok(self, window):
         for link, var in self.checkbox_vars.items():
@@ -836,7 +868,6 @@ class Application(tk.Tk):
             ("Remote Desktop", "mstsc"),
             ("Hyper-V", "virtmgmt.msc"),
             ("Environm. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
-            ("Windows Sandbox", "Sandbox"),
         ]
 
         # Troubleshooting and Optimization Tools
@@ -937,6 +968,9 @@ class Application(tk.Tk):
 
         text2_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced commands; No confirmation]")
         text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
+
+        reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
+        reset_ui_btn.grid(row=0, column=3, padx=95, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
         exit_btn.grid(row=1, column=3, padx=95, pady=5, sticky="we")
