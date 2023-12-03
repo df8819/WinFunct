@@ -12,6 +12,7 @@ from tkinter.simpledialog import askstring
 import requests
 import wmi
 from JChatInt import JChat
+from SimplePWGenInt import SimplePWGen
 
 # Version of the app
 VERSION = "df8819 - v1.1.1.0"
@@ -164,6 +165,11 @@ class Application(tk.Tk):
         chat_window = tk.Toplevel(self)
         chat_window.title("JChat")
         JChat(chat_window)  # Initialize JChat within the new window
+
+    def open_pw_gen(self):
+        pw_window = tk.Toplevel(self)
+        pw_window.title("Password Generator")
+        SimplePWGen(pw_window)
 
     def open_ps_as_admin(self):
         try:
@@ -882,10 +888,10 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info",
-                                         command=self.compare_system_info)
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
+        pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -905,6 +911,7 @@ class Application(tk.Tk):
         compare_systems_btn.grid(row=2, column=4, padx=10, pady=10, sticky="we")
         internet_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
         chat_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
+        pw_btn.grid(row=0, column=1, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
