@@ -670,7 +670,13 @@ class Application(tk.Tk):
         try:
             # For Windows, use '-n' for count; for UNIX/Linux, use '-c'.
             # The argument 'stdout=subprocess.PIPE' hides the command output.
-            output = subprocess.run(['ping', '-n', '1', '8.8.8.8'], stdout=subprocess.PIPE, text=True)
+            # 'shell=True' is used to execute the command through the shell (use with caution).
+            output = subprocess.run(['ping', '-n', '1', '8.8.8.8'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    shell=True)
+
+            # Decode the output using the correct encoding
+            output_decoded = output.stdout.decode(
+                'cp437')  # 'cp437' is a common code page for the Windows command prompt
 
             # If the ping command succeeds, the return code should be 0.
             if output.returncode == 0:
