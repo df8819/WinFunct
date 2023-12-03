@@ -13,7 +13,6 @@ import requests
 import wmi
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
-# from SimpleNNInt import SimpleNN
 
 # Version of the app
 VERSION = "df8819 - v1.1.1.0"
@@ -171,13 +170,6 @@ class Application(tk.Tk):
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
         SimplePWGen(pw_window)
-
-    """
-    def open_neural_network(self):
-        nn_window = tk.Toplevel(self)
-        nn_window.title("Simple Neural Network")
-        SimpleNN(nn_window)
-    """
 
     def open_ps_as_admin(self):
         try:
