@@ -13,6 +13,7 @@ import requests
 import wmi
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
+# from SimpleNNInt import SimpleNN
 
 # Version of the app
 VERSION = "df8819 - v1.1.1.0"
@@ -170,6 +171,13 @@ class Application(tk.Tk):
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
         SimplePWGen(pw_window)
+
+    """
+    def open_neural_network(self):
+        nn_window = tk.Toplevel(self)
+        nn_window.title("Simple Neural Network")
+        SimpleNN(nn_window)
+    """
 
     def open_ps_as_admin(self):
         try:
@@ -892,6 +900,7 @@ class Application(tk.Tk):
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
+        # nn_btn = ttk.Button(self.fun_frame, text="Simple Neural Network", command=self.open_neural_network)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -912,6 +921,7 @@ class Application(tk.Tk):
         internet_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
         chat_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         pw_btn.grid(row=0, column=1, padx=10, pady=10, sticky="we")
+        # nn_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
