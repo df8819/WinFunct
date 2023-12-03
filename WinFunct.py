@@ -15,7 +15,7 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 
 # Version of the app
-VERSION = "df8819 - v1.1.1.0"
+VERSION = "df8819 - v1.1.1.1"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
