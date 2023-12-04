@@ -697,6 +697,7 @@ class Application(tk.Tk):
                 "GitHub Desktop": "https://desktop.github.com",
                 "Visual Studio": "https://code.visualstudio.com/download",
                 "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
+                "UPX": "https://github.com/upx/upx/releases",
             },
             "Utilities": {
                 "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
@@ -772,7 +773,7 @@ class Application(tk.Tk):
 
         # Set the initial geometry of the window
         initial_width = 380
-        initial_height = 620  # Adjust the height as needed
+        initial_height = 640  # Adjust the height as needed
         window.geometry(f"{initial_width}x{initial_height}")
 
         # Center the window on the screen
@@ -814,13 +815,15 @@ class Application(tk.Tk):
         utilities_frame = ttk.Frame(options_notebook)
         tools_frame = ttk.Frame(options_notebook)
         trouble_frame = ttk.Frame(options_notebook)
+        netsh_frame = ttk.Frame(options_notebook)
 
         # Adding new frames to the options notebook
-        options_notebook.add(advanced_windows_settings_frame, text='Windows Management')
-        options_notebook.add(system_tools_frame, text='Security & Network')
+        options_notebook.add(advanced_windows_settings_frame, text='Win Manag.')
+        options_notebook.add(system_tools_frame, text='Sec. & Netw.')
         options_notebook.add(utilities_frame, text='Tools & Options')
         options_notebook.add(tools_frame, text='Remote & Venv')
-        options_notebook.add(trouble_frame, text='Trouble & Optimize')
+        options_notebook.add(trouble_frame, text='Trouble & Optim.')
+        options_notebook.add(netsh_frame, text='netsh')
 
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
@@ -908,6 +911,22 @@ class Application(tk.Tk):
             ("Insider Prog", "start ms-settings:windowsinsider"),
         ]
 
+        netsh_commands = [
+            ("IP Config", "netsh interface ip show config"),
+            ("Interf.", "netsh interface show interface"),
+            ("IPv4 Interf.", "netsh interface ipv4 show interface"),
+            ("IPv6 Interf.", "netsh interface ipv6 show interface"),
+            ("IP Addr.", "netsh interface ip show addresses"),
+            ("DNS Servers", "netsh interface ip show dns"),
+            ("FW State", "netsh advfirewall show currentprofile state"),
+            ("FW Config", "netsh advfirewall firewall show rule name=all"),
+            ("Rout. Table", "netsh interface ipv4 show route"),
+            ("Wirel. Prof.", "netsh wlan show profiles"),
+            ("Wirel. Set.", "netsh wlan show settings"),
+            ("Wirel. Netw.", "netsh wlan show networks"),
+            ("Netw. Stats", "netstat -s"),
+        ]
+
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
@@ -920,6 +939,7 @@ class Application(tk.Tk):
         create_option_buttons(utilities_frame, system_tools_options)
         create_option_buttons(tools_frame, remote_and_virtualization_options)
         create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
+        create_option_buttons(netsh_frame, netsh_commands)
 
         version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue", font="bold")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)

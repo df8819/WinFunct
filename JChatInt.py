@@ -3,7 +3,6 @@ import os
 import threading
 import tkinter as tk
 from tkinter import messagebox, scrolledtext, font
-
 import openai
 import requests
 
