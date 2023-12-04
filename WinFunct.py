@@ -838,7 +838,6 @@ class Application(tk.Tk):
             ("WinVer", "winver"),
             ("Adv. Sys Set.", "SystemPropertiesAdvanced"),
             ("User Acc Ctrl", "useraccountcontrolsettings"),
-            ("Sys Config", "msconfig"),
             ("DiskMgmt", "diskmgmt.msc"),
             ("Local Users", "lusrmgr.msc"),
             ("Sys Prop Name", "SystemPropertiesComputerName"),
@@ -880,9 +879,7 @@ class Application(tk.Tk):
             ("ResMon", "resmon"),
             ("Dev Pairing", "devicepairingwizard"),
             ("Win Features", "optionalfeatures"),
-            ("DirectX Diag", "dxdiag"),
             ("Sys Info", "msinfo32"),
-            ("Disk Defrag", "dfrgui"),
         ]
 
         # Remote Management and Virtualization Tools
