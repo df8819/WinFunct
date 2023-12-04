@@ -829,70 +829,93 @@ class Application(tk.Tk):
         # Note: You might need to adjust these lists based on your application's requirements
         # Windows Management and Configuration Tools
         windows_management_options = [
-            ("Registry Edit", "regedit"),
-            ("Computer Manag.", "compmgmt.msc"),
-            ("Event Viewer", "eventvwr.msc"),
+            ("RegEdit", "regedit"),
+            ("CompMgmt", "compmgmt.msc"),
+            ("EventVwr", "eventvwr.msc"),
             ("Services", "services.msc"),
-            ("Group Policy", "gpedit.msc"),
+            ("GP Editor", "gpedit.msc"),
             ("Programs", "appwiz.cpl"),
-            ("Windows Ver.", "winver"),
-            ("Advanced Sys Set.", "SystemPropertiesAdvanced"),
-            ("User Acc. Control", "useraccountcontrolsettings"),
-            ("Windows Update", "start ms-settings:windowsupdate"),
+            ("WinVer", "winver"),
+            ("Adv. Sys Set.", "SystemPropertiesAdvanced"),
+            ("User Acc Ctrl", "useraccountcontrolsettings"),
             ("Sys Config", "msconfig"),
-            ("Disk Manag.", "diskmgmt.msc"),
+            ("DiskMgmt", "diskmgmt.msc"),
+            ("Local Users", "lusrmgr.msc"),
+            ("Sys Prop Name", "SystemPropertiesComputerName"),
+            ("Sys Prop HW", "SystemPropertiesHardware"),
+            ("Sys Prop Prot.", "SystemPropertiesProtection"),
+            ("Sys Prop Remote", "SystemPropertiesRemote"),
+            ("ODBC Sources", "odbcad32"),
+            ("PrintMgmt", "printmanagement.msc"),
+            ("Shared Folders", "fsmgmt.msc"),
+            ("Mobility Ctr", "mblctr"),
         ]
 
         # Security and Networking Tools
         security_and_networking_options = [
-            ("Win Security", "start ms-settings:windowsdefender"),
-            ("Security Policy", "secpol.msc"),
-            ("Firewall Rules", "wf.msc"),
-            ("Network/Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
-            ("Internet Options", "inetcpl.cpl"),
-            ("Cred. Manager", "control /name Microsoft.CredentialManager"),
-            ("Firewall Defender", "firewall.cpl"),
+            ("Sec Center", "start ms-settings:windowsdefender"),
+            ("Sec Policy", "secpol.msc"),
+            ("FW Advanced", "wf.msc"),
+            ("Net Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
+            ("Internet Opt", "inetcpl.cpl"),
+            ("Cred Mgr", "control /name Microsoft.CredentialManager"),
+            ("Firewall", "firewall.cpl"),
+            ("Net Conn", "ncpa.cpl"),
+            ("DNS Cache", "ipconfig /displaydns"),
+            ("Remote Conn", "control /name Microsoft.RemoteAppAndDesktopConnections"),
+            ("VPN Set", "start ms-settings:network-vpn"),
+            ("Wi-Fi Set", "start ms-settings:network-wifi"),
+            ("Ethernet Set", "start ms-settings:network-ethernet"),
+            ("Dial-up Set", "start ms-settings:network-dialup"),
+            ("Proxy Set", "start ms-settings:network-proxy"),
         ]
 
         # System Tools and Utilities
         system_tools_options = [
-            ("hosts file location", "explorer.exe /select,C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Task Manager", "taskmgr"),
-            ("Control Panel", "control"),
-            ("Device Manager", "devmgmt.msc"),
-            ("Network Conn.", "ncpa.cpl"),
-            ("Perform. Monitor", "perfmon"),
-            ("Resource Monitor", "resmon"),
-            ("Device Install", "hdwwiz"),
-            ("Windows Features", "optionalfeatures"),
-            ("DirectX Diag.", "dxdiag"),
-            ("Sys Information", "msinfo32"),
+            ("Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
+            ("TaskMgr", "taskmgr"),
+            ("Ctrl Panel", "control"),
+            ("DevMgmt", "devmgmt.msc"),
+            ("PerfMon", "perfmon"),
+            ("ResMon", "resmon"),
+            ("Dev Pairing", "devicepairingwizard"),
+            ("Win Features", "optionalfeatures"),
+            ("DirectX Diag", "dxdiag"),
+            ("Sys Info", "msinfo32"),
+            ("Disk Defrag", "dfrgui"),
         ]
 
         # Remote Management and Virtualization Tools
         remote_and_virtualization_options = [
-            ("Remote Desktop", "mstsc"),
-            ("Hyper-V", "virtmgmt.msc"),
-            ("Environm. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+            ("RDP", "mstsc"),
+            ("Hyper-V Mgr", "virtmgmt.msc"),
+            ("Env Vars", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+            ("RDP Set", "start ms-settings:remotedesktop"),
+            ("Remote Assist", "msra"),
         ]
 
         # Troubleshooting and Optimization Tools
         troubleshooting_and_optimization_options = [
-            ("Reliability Monitor", "perfmon /rel"),
+            ("RelMon", "perfmon /rel"),
             ("Disk Cleanup", "cleanmgr"),
             ("Sys Restore", "rstrui"),
-            ("Troubleshooting", "msdt"),
-            ("Optimize Drives", "dfrgui"),
-            ("Memory Diagnostic", "MdSched"),
-            ("Security Center", "wscui.cpl"),
-            ("Mobility Center", "mblctr"),
+            ("Troubleshoot", "msdt"),
+            ("Opt Drives", "dfrgui"),
+            ("Mem Diag", "MdSched"),
+            ("DirectX Diag", "dxdiag"),
+            ("Sys Config", "msconfig"),
+            ("Win Update", "start ms-settings:windowsupdate"),
+            ("Update Hist", "start ms-settings:windowsupdate-history"),
+            ("Update Bus", "start ms-settings:windowsupdateforbusiness"),
+            ("Update Opt", "start ms-settings:windowsupdate-options"),
+            ("Insider Prog", "start ms-settings:windowsinsider"),
         ]
 
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
                 btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
-                btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
+                btn.grid(row=i // 6, column=i % 6, padx=5, pady=5, sticky="we")
 
         # Create buttons in their respective new categories
         create_option_buttons(advanced_windows_settings_frame, windows_management_options)
