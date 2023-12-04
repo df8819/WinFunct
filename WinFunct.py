@@ -15,7 +15,7 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 
 # Version of the app
-VERSION = "df8819 - v1.1.1.1"
+VERSION = "v1.1.1.1"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -921,7 +921,7 @@ class Application(tk.Tk):
         create_option_buttons(tools_frame, remote_and_virtualization_options)
         create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
 
-        version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue")
+        version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue", font="bold")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
 
         # Callback function for clicking the version label
