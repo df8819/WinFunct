@@ -188,6 +188,17 @@ class Application(tk.Tk):
         except Exception as e:
             messagebox.showerror("Error", f"Failed to open Command Prompt as admin: {e}")
 
+    def open_autostart_locations(self):
+        # Folder locations
+        user_startup_path = os.path.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
+        all_users_startup_path = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp'
+
+        # Open folder locations
+        if os.path.exists(user_startup_path):
+            os.startfile(user_startup_path)
+        if os.path.exists(all_users_startup_path):
+            os.startfile(all_users_startup_path)
+
     def show_ip_address(self):
         response = requests.get("https://ifconfig.me/ip")
         ip_address = response.text
@@ -969,7 +980,7 @@ class Application(tk.Tk):
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
-        # nn_btn = ttk.Button(self.fun_frame, text="Simple Neural Network", command=self.open_neural_network)
+        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -990,7 +1001,7 @@ class Application(tk.Tk):
         internet_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
         chat_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         pw_btn.grid(row=0, column=1, padx=10, pady=10, sticky="we")
-        # nn_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
+        autostart_btn.grid(row=3, column=1, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
