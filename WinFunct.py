@@ -724,6 +724,7 @@ class Application(tk.Tk):
                 "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
                 "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
                 "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
+                "WireShark": "https://www.wireshark.org/download.html",
             },
             "Tutorials": {
                 "MAS/IDM Script": "https://massgrave.dev/index.html",

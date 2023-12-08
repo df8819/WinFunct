@@ -47,3 +47,4 @@ Pyinstall_UPX.bat
 install-pyenv-win.ps1
 __pycache__/SimplePWGenInt.cpython-310.pyc
 __pycache__/JChatInt.cpython-310.pyc
+wifi_pw_error.txt
