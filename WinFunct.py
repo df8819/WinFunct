@@ -678,9 +678,10 @@ class Application(tk.Tk):
 
             for field, values in differences.items():
                 for value, files in values.items():
-                    # Extract just the file names from the paths
-                    file_names = set(os.path.basename(file) for file in files)  # Use a set to get unique filenames
+                    # Extract just the file names from the paths and remove the '.csv' extension
+                    file_names = set(os.path.splitext(os.path.basename(file))[0] for file in files)  # Use a set to get unique filenames
                     file_names_with_count = ', '.join(sorted(file_names))  # Sort the filenames
+                    # row_color = color_scheme.get(field, "#ffffff")
                     htmlfile.write(f'<tr><td>{field}</td><td>{value}</td><td>{file_names_with_count}</td></tr>')
 
             # End the HTML file
