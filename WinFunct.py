@@ -207,7 +207,7 @@ class Application(tk.Tk):
 
     def show_wifi_networks(self):
         cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"]).decode("utf-8", "ignore")
-        networks = re.findall(r"All User Profile\s+:\s(.+)\r", cmd_output)
+        networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
@@ -255,9 +255,17 @@ class Application(tk.Tk):
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
 
     def show_wifi_password(self, network):
-        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"]).decode("utf-8",
-                                                                                                                "ignore")
-        password = re.search(r"Key Content\s+:\s(.+)\r", cmd_output)
+        # Strip any trailing whitespace or control characters from the network name
+        network = network.strip()
+
+        try:
+            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"]).decode(
+                "utf-8", "ignore")
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"Failed to execute netsh command for network '{network}': {e}")
+            return
+
+        password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
         if password:
             # Create a new window to display the password
             password_window = tk.Toplevel(self)
@@ -657,11 +665,13 @@ class Application(tk.Tk):
 
     def write_differences_to_file(self, differences, file_path):
         with open(file_path, mode='w', encoding='utf-8') as htmlfile:
-            # Write the beginning of the HTML file
+            # Write the beginning of the HTML file with updated styles
             htmlfile.write('<html><head><style>')
-            htmlfile.write('table {border-collapse: collapse; width: 100%;}')
-            htmlfile.write('th, td {border: 1px solid #ddd; padding: 8px;}')
-            htmlfile.write('th {padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #f2f2f2;}')
+            htmlfile.write('body { background-color: #2b2b2b; color: #f0f0f0; font-family: Arial, sans-serif; }')
+            htmlfile.write('table {border-collapse: separate; border-spacing: 0 10px; width: 100%;}')
+            htmlfile.write('th, td {border: 1px solid #ddd; padding: 8px; background-color: #5b8ea6;}')
+            htmlfile.write('th {padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #3a7ca5;}')
+            htmlfile.write('tr:nth-child(even) {background-color: #f2f2f2; color: #333;}')
             htmlfile.write('</style></head><body>')
             htmlfile.write('<table>')
             htmlfile.write('<tr><th>Field</th><th>Value</th><th>Files</th></tr>')
@@ -717,7 +727,7 @@ class Application(tk.Tk):
                 "PicPick": "https://picpick.app/en/download/",
                 "HWInfo64": "https://www.hwinfo.com/download/",
                 "MSI Afterburner": "https://www.msi.com/Landing/afterburner/graphics-cards",
-                "SpaceSniffer": "http://www.uderzo.it/main_products/space_sniffer/download.html",
+                "WinDirStat": "https://sourceforge.net/projects/windirstat/",
                 "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
                 "Raspberry Pi Imager": "https://www.raspberrypi.com/software/",
                 "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
