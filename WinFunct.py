@@ -342,23 +342,29 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
-    def check_user_and_reset_password(self):  # For further customization
-        pass
-        username = "xxxx"
-        password = "xxxx"
+    def install_rust_transformers(self):
+        response = messagebox.askokcancel("Warning",
+                                          "This process will install Rust, transformers, and generate an SSH key. It may take some time. Do you want to continue?")
 
-        # Check if user exists
-        cmd = f"net user {username}"
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        output = result.stdout
+        if response:
+            # Prepare batch script content
+            batch_script = '''
+            @echo off
+            if not exist "%USERPROFILE%\\.cargo\\bin\\rustc.exe" (
+                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.exe
+                rustup-init.exe -y
+            )
+            pip install transformers
+            ssh-keygen
+            pause
+            '''
 
-        if username in output:
-            # Reset password if user exists
-            cmd = f"net user {username} {password}"
-            subprocess.call(cmd, shell=True)
-            messagebox.showinfo("Password Reset", f"Password for user '{username}' reset.")
-        else:
-            messagebox.showinfo("User Not Found", f"User '{username}' not found.")
+            # Create a temporary batch file
+            with open('temp_install_script.bat', 'w') as file:
+                file.write(batch_script)
+
+            # Execute the batch file in a new command prompt window
+            subprocess.run('start cmd.exe /k temp_install_script.bat', shell=True)
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
@@ -720,6 +726,8 @@ class Application(tk.Tk):
                 "Visual Studio": "https://code.visualstudio.com/download",
                 "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
                 "UPX": "https://github.com/upx/upx/releases",
+                "Rust/Cargo": "https://rustup.rs",
+
             },
             "Utilities": {
                 "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
@@ -796,7 +804,7 @@ class Application(tk.Tk):
 
         # Set the initial geometry of the window
         initial_width = 380
-        initial_height = 640  # Adjust the height as needed
+        initial_height = 680  # Adjust the height as needed
         window.geometry(f"{initial_width}x{initial_height}")
 
         # Center the window on the screen
@@ -993,6 +1001,7 @@ class Application(tk.Tk):
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
         autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
+        rust_btn = ttk.Button(self.functions_frame, text="Rust / Transformers", command=self.install_rust_transformers)
 
         my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
@@ -1014,6 +1023,7 @@ class Application(tk.Tk):
         chat_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
         pw_btn.grid(row=0, column=1, padx=10, pady=10, sticky="we")
         autostart_btn.grid(row=3, column=1, padx=10, pady=10, sticky="we")
+        rust_btn.grid(row=3, column=2, padx=10, pady=10, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
@@ -1026,7 +1036,7 @@ class Application(tk.Tk):
         reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot)
         reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
-        text1_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced commands; No confirmation]")
+        text1_label = ttk.Label(self.bottom_frame, text="⬅ /forced")
         text1_label.grid(row=0, column=2, padx=5, pady=5, sticky="we")
 
         uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi)
@@ -1035,14 +1045,14 @@ class Application(tk.Tk):
         sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep)
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
-        text2_label = ttk.Label(self.bottom_frame, text="⬅ [Foreced commands; No confirmation]")
+        text2_label = ttk.Label(self.bottom_frame, text="⬅ /forced")
         text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
 
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
-        reset_ui_btn.grid(row=0, column=3, padx=95, pady=5, sticky="we")
+        reset_ui_btn.grid(row=0, column=3, padx=255, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=3, padx=95, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=3, padx=255, pady=5, sticky="we")
 
 
 # Create and run the app
