@@ -755,6 +755,8 @@ class Application(tk.Tk):
             "Tutorials": {
                 "MAS/IDM Script": "https://massgrave.dev/index.html",
                 "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
+                "NSE Lab": "https://nse.digital",
+                "Wifi-Hack": "https://hackernoon.com/how-to-hack-wifi-like-a-pro-hacker",
             },
             # Add more categories and items as needed
         }
