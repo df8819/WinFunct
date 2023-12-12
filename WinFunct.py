@@ -15,7 +15,7 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 
 # Version of the app
-VERSION = "v1.2.0.1"
+VERSION = "v1.2.0.3"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -342,29 +342,35 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
+    import subprocess
+    import webbrowser
+    from tkinter import messagebox
+
     def install_rust_transformers(self):
         response = messagebox.askokcancel("Warning",
-                                          "This process will install Rust, transformers, and generate an SSH key. It may take some time. Do you want to continue?")
+                                          "This script will download 'rustup-init.sh', install transformers, and generate a SSH-Key. Continue?")
 
         if response:
-            # Prepare batch script content
-            batch_script = '''
-            @echo off
-            if not exist "%USERPROFILE%\\.cargo\\bin\\rustc.exe" (
-                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.exe
-                rustup-init.exe -y
-            )
-            pip install transformers
-            ssh-keygen
-            pause
-            '''
+            # Open the Rust installation script URL in the default browser
+            webbrowser.open('https://sh.rustup.rs')
 
-            # Create a temporary batch file
-            with open('temp_install_script.bat', 'w') as file:
-                file.write(batch_script)
+            # The user will manually download and execute the script in Git Bash or a similar shell
 
-            # Execute the batch file in a new command prompt window
-            subprocess.run('start cmd.exe /k temp_install_script.bat', shell=True)
+            # Continue with other installations
+            subprocess.run('pip install transformers', shell=True)
+            subprocess.run('ssh-keygen', shell=True)
+
+            messagebox.showinfo("Information", "Please follow the instructions in the opened Git Bash window to complete the Rust installation.")
+
+    def ssh_key(self):
+        response = messagebox.askokcancel("SSH-Key",
+                                          "Generating SSH-Key for this device. Continue?")
+        if response:
+            # Open a new Command Prompt window and run ssh-keygen
+            subprocess.Popen('start cmd.exe /k ssh-keygen', shell=True)
+
+    def shutdown_i(self):
+        subprocess.run("shutdown -i", shell=True)
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
@@ -982,7 +988,7 @@ class Application(tk.Tk):
         # Bind the callback function to the version label
         version_label.bind("<Button-1>", open_link)
 
-        # Functions tab ("create_user" is excluded due to a bug
+        # Functions tab
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
         cmd_btn = ttk.Button(self.functions_frame, text="cmd.exe", command=self.open_cmd_as_admin)
@@ -998,32 +1004,41 @@ class Application(tk.Tk):
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
         compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
         internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
+        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
+        rust_btn = ttk.Button(self.functions_frame, text="Rust/Transformers", command=self.install_rust_transformers)
+        ssh_key_btn = ttk.Button(self.functions_frame, text="New SSH Key", command=self.ssh_key)
+        shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
+
+        # Fun tab
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
-        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
-        rust_btn = ttk.Button(self.functions_frame, text="Rust / Transformers", command=self.install_rust_transformers)
 
-        my_ip_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
+        # Functions tab
+        my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
-        self.ip_text.grid(row=0, column=1, padx=10, pady=10, sticky="we")
-        cmd_btn.grid(row=0, column=3, padx=10, pady=10, sticky="we")
-        ps_btn.grid(row=0, column=4, padx=10, pady=10, sticky="we")
-        wifi_btn.grid(row=1, column=0, padx=10, pady=10, sticky="we")
-        winsat_disk_btn.grid(row=1, column=1, padx=10, pady=10, sticky="we")
-        kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=10, sticky="we")
-        renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=10, sticky="we")
-        activate_idm_btn.grid(row=2, column=0, padx=10, pady=10, sticky="we")
-        activate_win_btn.grid(row=2, column=1, padx=10, pady=10, sticky="we")
-        agh_curl_btn.grid(row=2, column=2, padx=10, pady=10, sticky="we")
-        arp_btn.grid(row=2, column=3, padx=10, pady=10, sticky="we")
-        open_links_btn.grid(row=3, column=0, padx=10, pady=10, sticky="we")
-        save_info_btn.grid(row=1, column=4, padx=10, pady=10, sticky="we")
-        compare_systems_btn.grid(row=2, column=4, padx=10, pady=10, sticky="we")
-        internet_btn.grid(row=0, column=2, padx=10, pady=10, sticky="we")
-        chat_btn.grid(row=0, column=0, padx=10, pady=10, sticky="we")
-        pw_btn.grid(row=0, column=1, padx=10, pady=10, sticky="we")
-        autostart_btn.grid(row=3, column=1, padx=10, pady=10, sticky="we")
-        rust_btn.grid(row=3, column=2, padx=10, pady=10, sticky="we")
+        self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+        cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
+        ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
+        winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
+        kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
+        renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
+        activate_idm_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
+        activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
+        agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
+        arp_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
+        open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+        save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+        compare_systems_btn.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+        internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+        autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
+        rust_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
+        ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
+        shutdown_i_btn.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+
+        # Fun tab
+        chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        pw_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
@@ -1055,6 +1070,5 @@ class Application(tk.Tk):
         exit_btn.grid(row=1, column=3, padx=255, pady=5, sticky="we")
 
 
-# Create and run the app
 app = Application()
 app.mainloop()
