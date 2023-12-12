@@ -1,0 +1,73 @@
+1. System File Checker (sfc)
+    The sfc /scannow command scans and repairs important Windows system files. It's a great tool for troubleshooting and fixing system issues.
+
+2. DiskPart
+    DiskPart is a text-mode command interpreter that enables you to manage objects (disks, partitions, or volumes) by using scripts or direct input at a command prompt. It's more advanced and flexible than the Disk Management tool in Windows.
+
+3. DriverQuery
+    The driverquery command displays a list of all installed device drivers and their properties. Useful for diagnostics and seeing what drivers are present on a system.
+
+4. Check Disk (chkdsk)
+    chkdsk checks the file system and file system metadata of a volume for logical and physical errors. It's a crucial tool for disk diagnostics and repairs.
+
+5. PathPing
+    pathping is a network utility that provides information about network latency and network loss at intermediate hops between a source and destination. It's a combination of ping and tracert.
+
+6. Cipher
+    cipher is used to encrypt or decrypt files and directories on NTFS volumes. It's also useful for wiping deleted data on a drive by overwriting it.
+
+7. Power Configuration (powercfg)
+    powercfg allows you to control power settings and configure power plans. It's particularly useful for laptops and optimizing battery usage. For example, powercfg /batteryreport generates a detailed battery usage report.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Battery Report (PowerCFG)
+powercfg /batteryreport /output "C:\path\to\battery_report.html"
+Generates a detailed battery usage report. You can specify the output path and file name.
+
+Energy Efficiency Diagnostics (PowerCFG)
+powercfg /energy /output "C:\path\to\energy_report.html"
+Analyzes the system's energy efficiency and reports issues that might reduce battery life.
+
+System Information (SystemInfo)
+systeminfo > "C:\path\to\systeminfo.txt"
+Provides detailed configuration information about a computer and its operating system, including software and hardware settings.
+
+Disk Usage (DiskUsage)
+du > "C:\path\to\diskusage.txt"
+The du (Disk Usage) tool, part of Sysinternals suite, reports the disk space usage for the directory you specify.
+
+Driver Query (DriverQuery)
+driverquery > "C:\path\to\drivers.txt"
+Lists all installed device drivers and their properties.
+
+Network Configuration (ipconfig)
+ipconfig /all > "C:\path\to\networkconfig.txt"
+Displays all current TCP/IP network configuration values and can be redirected to a file for analysis.
+
+Wireless Networks Report (netsh)
+netsh wlan show all > "C:\path\to\wlan_report.txt"
+Provides detailed information about wireless networks and interfaces.
+
+Windows Update History (PowerShell)
+Get-WindowsUpdateLog > "C:\path\to\windowsupdatelog.log"
+This PowerShell command creates a readable Windows Update log file.
+
+Event Logs (wevtutil or PowerShell)
+wevtutil qe System /f:text > "C:\path\to\system_event_log.txt"
+Exports Windows event logs. You can specify different log types (e.g., System, Application).
+
+List of Running Processes (TaskList)
+tasklist > "C:\path\to\processlist.txt"
+Generates a list of currently running processes on the system.
+
+Reliability Monitor Report (PowerShell)
+Get-WinEvent -LogName 'Microsoft-Windows-ReliabilityAnalysisComponent/Operational' | Out-File "C:\path\to\reliability_report.txt"
+Retrieves the reliability history of the Windows system.
+
+Performance Report (perfmon)
+perfmon /report
+Generates a System Diagnostics Report that collects information about the system and checks for problems.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
