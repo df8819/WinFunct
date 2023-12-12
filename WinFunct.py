@@ -166,9 +166,10 @@ class Application(tk.Tk):
         self.center_window()
 
     def open_chat(self):
-        chat_window = tk.Toplevel(self)
-        chat_window.title("JChat")
-        JChat(chat_window)  # Initialize JChat within the new window
+        if tk.messagebox.askyesno("Open JChat", "This will open a chat-app that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
+            chat_window = tk.Toplevel(self)
+            chat_window.title("JChat")
+            JChat(chat_window)  # Initialize JChat within the new window
 
     def open_pw_gen(self):
         pw_window = tk.Toplevel(self)
@@ -240,7 +241,7 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             # Create the "Ok" button
-            ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10)
+            ok_button = ttk.Button(network_window, text="Ok", command=ok_button_click, width=10)
             ok_button.pack(side="left", padx=(50, 5))  # Increase the padding on the left side
 
             # Function to handle the "Cancel" button click
@@ -248,7 +249,7 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             # Create the "Cancel" button
-            cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
+            cancel_button = ttk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
             cancel_button.pack(side="right", padx=(5, 50))  # Increase the padding on the right side
 
         else:
@@ -301,14 +302,14 @@ class Application(tk.Tk):
                 self.clipboard_append(password_text.get("1.0", "end-1c"))
                 self.update()
 
-            copy_button = tk.Button(password_frame, text="Copy Password", command=copy_password)
+            copy_button = ttk.Button(password_frame, text="Copy Password", command=copy_password)
             copy_button.grid(row=1, column=0, padx=(5, 5), pady=5, sticky="sw")
 
             # Add a "Cancel" button to close the window
             def cancel_button_click():
                 password_window.destroy()
 
-            cancel_button = tk.Button(password_frame, text="Cancel", command=cancel_button_click)
+            cancel_button = ttk.Button(password_frame, text="Cancel", command=cancel_button_click)
             cancel_button.grid(row=1, column=1, padx=(5, 50), pady=5, sticky="se")
 
         else:
