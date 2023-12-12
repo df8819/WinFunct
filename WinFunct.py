@@ -131,6 +131,8 @@ pwas_to_unregister = [
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.fun_frame = None
+        self.options_frame = None
         self.create_user = None
         self.ip_text = None
         self.functions_frame = None
@@ -507,6 +509,17 @@ class Application(tk.Tk):
         # Command to open a new PowerShell window and run 'arp -a'
         command = 'powershell.exe arp -a'
         subprocess.run(command, shell=True)
+
+    def get_file_checksum(self):
+        file_path = filedialog.askopenfilename()
+
+        if file_path:
+            # Open cmd with certutil to compute hash for the selected file
+            cmd = f'certutil -hashfile "{file_path}" SHA256'
+            # Run the command without waiting for it to complete
+            subprocess.Popen(cmd, shell=True)
+        else:
+            print("No file selected.")  # Replace with user notification as needed
 
     def get_system_info(self):
         c = wmi.WMI()
@@ -1009,6 +1022,7 @@ class Application(tk.Tk):
         rust_btn = ttk.Button(self.functions_frame, text="Rust/Transformers", command=self.install_rust_transformers)
         ssh_key_btn = ttk.Button(self.functions_frame, text="New SSH Key", command=self.ssh_key)
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
+        checksum_btn = ttk.Button(self.functions_frame, text="SHA256 file checksum", command=self.get_file_checksum)
 
         # Fun tab
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
@@ -1036,6 +1050,7 @@ class Application(tk.Tk):
         rust_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
         ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
         shutdown_i_btn.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+        checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         # Fun tab
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
