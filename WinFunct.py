@@ -15,7 +15,7 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 
 # Version of the app
-VERSION = "v1.2.0.3"
+VERSION = "Use at your own risk and responsibility - v1.2.1.0"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -137,7 +137,7 @@ class Application(tk.Tk):
         self.bottom_frame = None
         self.geometry("650x520")
         self.center_window()
-        self.title("Scripts & Options --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.title("Windows Functionalities --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
         # Setting the background color of the main frame to light blue
@@ -978,7 +978,7 @@ class Application(tk.Tk):
         create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
         create_option_buttons(netsh_frame, netsh_commands)
 
-        version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="blue", font="bold")
+        version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="#7a7a7a")
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
 
         # Callback function for clicking the version label
@@ -1064,10 +1064,10 @@ class Application(tk.Tk):
         text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
 
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
-        reset_ui_btn.grid(row=0, column=3, padx=255, pady=5, sticky="we")
+        reset_ui_btn.grid(row=0, column=3, padx=265, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=3, padx=255, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=3, padx=265, pady=5, sticky="we")
 
 
 app = Application()
