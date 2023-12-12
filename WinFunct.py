@@ -726,15 +726,16 @@ class Application(tk.Tk):
     def open_links_window(self):
         # Define your links here
         links = {
-            "Development Tools": {
+            "Dev Tools": {
                 "Python": "https://www.python.org/downloads/",
                 "Git": "https://git-scm.com/downloads",
                 "GitHub Desktop": "https://desktop.github.com",
                 "Visual Studio": "https://code.visualstudio.com/download",
                 "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
                 "UPX": "https://github.com/upx/upx/releases",
+                "AirCrack": "https://www.aircrack-ng.org",
+                "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
                 "Rust/Cargo": "https://rustup.rs",
-
             },
             "Utilities": {
                 "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
@@ -813,7 +814,7 @@ class Application(tk.Tk):
 
         # Set the initial geometry of the window
         initial_width = 380
-        initial_height = 680  # Adjust the height as needed
+        initial_height = 760  # Adjust the height as needed
         window.geometry(f"{initial_width}x{initial_height}")
 
         # Center the window on the screen
