@@ -343,9 +343,6 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
-    import subprocess
-    import webbrowser
-    from tkinter import messagebox
 
     def install_rust_transformers(self):
         response = messagebox.askokcancel("Warning",
