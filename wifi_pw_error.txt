@@ -1,0 +1,7 @@
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "tkinter\__init__.py", line 1921, in __call__
+  File "WinFunct.py", line 209, in show_wifi_networks
+  File "subprocess.py", line 420, in check_output
+  File "subprocess.py", line 524, in run
+subprocess.CalledProcessError: Command '['netsh', 'wlan', 'show', 'profiles']' returned non-zero exit status 1.
