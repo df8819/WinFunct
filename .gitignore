@@ -27,8 +27,6 @@ build/winfunct/winfunct.pkg
 build/winfunct/xref-winfunct.html
 dist/winfunct.exe
 winfunct.spec
-Run.bat
-Run.bat
 ideas.txt
 WinFunct.lnk
 WinFunct_Corrected.py
@@ -47,3 +45,4 @@ install-pyenv-win.ps1
 __pycache__/SimplePWGenInt.cpython-310.pyc
 __pycache__/JChatInt.cpython-310.pyc
 temp_install_script.bat
+.idea
