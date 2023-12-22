@@ -746,6 +746,8 @@ class Application(tk.Tk):
                 "AirCrack": "https://www.aircrack-ng.org",
                 "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
                 "Rust/Cargo": "https://rustup.rs",
+                "Rufus": "https://rufus.ie/en/",
+
             },
             "Utilities": {
                 "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
