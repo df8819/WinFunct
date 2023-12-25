@@ -747,6 +747,7 @@ class Application(tk.Tk):
                 "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
                 "Rust/Cargo": "https://rustup.rs",
                 "Rufus": "https://rufus.ie/en/",
+                "SoapUI": "https://www.soapui.org/downloads/soapui/"
 
             },
             "Utilities": {
@@ -826,7 +827,7 @@ class Application(tk.Tk):
 
         # Set the initial geometry of the window
         initial_width = 380
-        initial_height = 760  # Adjust the height as needed
+        initial_height = 780  # Adjust the height as needed
         window.geometry(f"{initial_width}x{initial_height}")
 
         # Center the window on the screen
