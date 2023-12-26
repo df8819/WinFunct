@@ -785,9 +785,15 @@ class Application(tk.Tk):
             webbrowser.open(search_base_url + query.replace(' ', '+'))
 
     def confirm_and_search(self):
-        response = messagebox.askyesno("Confirm Search", "Do you want to search application information online?")
+        file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
+
+        # Check if the file exists
+        if not os.path.exists(file_path):
+            messagebox.showinfo("File Not Found", f"netstat_exe_output.txt not found\n\nPlease click 'App Connections' first and try again.")
+            return
+
+        response = messagebox.askyesno("Confirm Search", "Do you want to check scanned App information online?\n\nWARNING: This will open a new google search tab for every entry in netstat_exe_output.txt")
         if response:
-            file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
             self.search_app_info(file_path)
 
     def open_links_window(self):
