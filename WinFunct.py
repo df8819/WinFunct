@@ -2,6 +2,7 @@ import csv
 import ctypes
 import os
 import re
+import pyperclip
 import subprocess
 import sys
 import tkinter as tk
@@ -733,6 +734,62 @@ class Application(tk.Tk):
             # If an error occurs during the ping process, consider it as offline.
             messagebox.showinfo("Online?!", f"An error occurred: {e}")
 
+    def netstat_output(self):
+        try:
+            # Execute the netstat command and send the output to the clipboard
+            subprocess.run('netstat -b -n | clip', shell=True, check=True)
+
+            # Retrieve the content from the clipboard
+            clipboard_content = pyperclip.paste()
+
+            # Define the file path
+            file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
+
+            # Write the clipboard content to a file
+            with open(file_path, 'w') as file:
+                file.write(clipboard_content)
+
+            # Read and process the file
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+
+            # Filter and format the content
+            processed_lines = [re.findall(r'\[(.*?)]', line) for line in lines]
+            processed_lines = [item for sublist in processed_lines for item in sublist]
+
+            # Remove duplicates by converting the list to a set and back to a list
+            unique_lines = list(set(processed_lines))
+
+            # Save the processed content, now without duplicates
+            with open(file_path, 'w') as file:
+                for line in unique_lines:
+                    file.write(line + '\n')
+
+            messagebox.showinfo("Success", "Netstat command executed successfully.")
+
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+
+    def search_app_info(self, file_path):
+        search_base_url = "https://www.google.com/search?q="
+
+        # Read the application names from the file
+        with open(file_path, 'r') as file:
+            app_list = [line.strip() for line in file if line.strip()]
+
+        # Perform a search for each application
+        for app in app_list:
+            query = f"Is {app} dangerous?"
+            webbrowser.open(search_base_url + query.replace(' ', '+'))
+
+    def confirm_and_search(self):
+        response = messagebox.askyesno("Confirm Search", "Do you want to search application information online?")
+        if response:
+            file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
+            self.search_app_info(file_path)
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -1026,6 +1083,8 @@ class Application(tk.Tk):
         ssh_key_btn = ttk.Button(self.functions_frame, text="New SSH Key", command=self.ssh_key)
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
         checksum_btn = ttk.Button(self.functions_frame, text="SHA256 file checksum", command=self.get_file_checksum)
+        netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
+        search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
 
         # Fun tab
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
@@ -1054,6 +1113,8 @@ class Application(tk.Tk):
         ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
         shutdown_i_btn.grid(row=3, column=4, padx=10, pady=5, sticky="we")
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
+        netstat_output_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
+        search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
 
         # Fun tab
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
