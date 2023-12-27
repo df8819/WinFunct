@@ -132,6 +132,8 @@ pwas_to_unregister = [
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.tabs = None
+        self.checkbox_vars = None
         self.fun_frame = None
         self.options_frame = None
         self.create_user = None
@@ -346,7 +348,6 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
-
     def install_rust_transformers(self):
         response = messagebox.askokcancel("Warning",
                                           "This script will download 'rustup-init.sh', install transformers, and generate a SSH-Key. Continue?")
@@ -374,7 +375,7 @@ class Application(tk.Tk):
         subprocess.run("shutdown -i", shell=True)
 
     def confirm_shutdown(self):
-        # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shutdown your PC?"):
+        # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shut down your PC?"):
         os.system("shutdown /s /t 1")
 
     def confirm_reboot(self):
@@ -674,7 +675,7 @@ class Application(tk.Tk):
         for file_path, system in systems_info:
             for field in all_keys:
                 for other_file_path, other_system in systems_info:
-                    # If the field exists in both systems and they are not equal, record the difference
+                    # If the field exists in both systems, and they are not equal, record the difference
                     if field in system and field in other_system and system[field] != other_system[field]:
                         if system[field] not in differences[field]:
                             differences[field][system[field]] = []
@@ -721,8 +722,7 @@ class Application(tk.Tk):
                                     shell=True)
 
             # Decode the output using the correct encoding
-            output_decoded = output.stdout.decode(
-                'cp437')  # 'cp437' is a common code page for the Windows command prompt
+            output_decoded = output.stdout.decode('cp437')  # 'cp437' is a common code page for the Windows command prompt
 
             # If the ping command succeeds, the return code should be 0.
             if output.returncode == 0:
@@ -765,7 +765,7 @@ class Application(tk.Tk):
                 for line in unique_lines:
                     file.write(line + '\n')
 
-            messagebox.showinfo("Success", "Netstat command executed successfully.")
+            messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the Apps root folder.\n\n'netstat_exe_output.txt' lists all Apps that have established an internet connection. 'Scan Apps' will lookup each one in a separate google search tab.")
 
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
@@ -810,7 +810,8 @@ class Application(tk.Tk):
                 "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
                 "Rust/Cargo": "https://rustup.rs",
                 "Rufus": "https://rufus.ie/en/",
-                "SoapUI": "https://www.soapui.org/downloads/soapui/"
+                "SoapUI": "https://www.soapui.org/downloads/soapui/",
+                "Win X Server": "https://sourceforge.net/projects/vcxsrv/",
 
             },
             "Utilities": {
@@ -860,17 +861,28 @@ class Application(tk.Tk):
         self.checkbox_vars = {}
 
         # Create checkboxes within each category
+        row = 0
+        col = 0
         for category, links_dict in links.items():
             # Create a label for the category
             category_label = tk.Label(checkbox_frame, text=category, font="bold")
-            category_label.pack(anchor='w', pady=(10, 5))
+            category_label.grid(row=row, column=col, columnspan=2, sticky='w', pady=(10, 5))
+            row += 1
 
             # Create checkboxes for each link in the category
             for text, link in links_dict.items():
                 var = tk.IntVar()
                 checkbox = ttk.Checkbutton(checkbox_frame, text=f"{text}", variable=var)
-                checkbox.pack(anchor='w', padx=10)
+                checkbox.grid(row=row, column=col, sticky='w', padx=10)
+
                 self.checkbox_vars[link] = var
+
+                # Update row and column positions
+                if col == 0:
+                    col = 1
+                else:
+                    col = 0
+                    row += 1
 
         # Update the canvas's scrollregion
         checkbox_frame.update_idletasks()
@@ -889,8 +901,8 @@ class Application(tk.Tk):
         cancel_button.pack(side='right', padx=5)
 
         # Set the initial geometry of the window
-        initial_width = 380
-        initial_height = 780  # Adjust the height as needed
+        initial_width = 400
+        initial_height = 550  # Adjust the height as needed
         window.geometry(f"{initial_width}x{initial_height}")
 
         # Center the window on the screen
