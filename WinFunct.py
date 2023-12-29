@@ -812,8 +812,9 @@ class Application(tk.Tk):
                 "Rufus": "https://rufus.ie/en/",
                 "SoapUI": "https://www.soapui.org/downloads/soapui/",
                 "Win X Server": "https://sourceforge.net/projects/vcxsrv/",
-
+                "HxD": "https://mh-nexus.de/de/downloads.php?product=HxD20",
             },
+
             "Utilities": {
                 "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
                 "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
@@ -830,6 +831,7 @@ class Application(tk.Tk):
                 "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
                 "WireShark": "https://www.wireshark.org/download.html",
             },
+
             "Tutorials": {
                 "MAS/IDM Script": "https://massgrave.dev/index.html",
                 "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
@@ -862,12 +864,12 @@ class Application(tk.Tk):
 
         # Create checkboxes within each category
         row = 0
-        col = 0
         for category, links_dict in links.items():
+            col = 0  # Ensure a category label starts in the first column
             # Create a label for the category
             category_label = tk.Label(checkbox_frame, text=category, font="bold")
             category_label.grid(row=row, column=col, columnspan=2, sticky='w', pady=(10, 5))
-            row += 1
+            row += 1  # Increment the row for the first item in the category
 
             # Create checkboxes for each link in the category
             for text, link in links_dict.items():
@@ -883,6 +885,10 @@ class Application(tk.Tk):
                 else:
                     col = 0
                     row += 1
+
+            # If the number of items in the category is odd, increment the row to start a new line
+            if col != 0:
+                row += 1
 
         # Update the canvas's scrollregion
         checkbox_frame.update_idletasks()
