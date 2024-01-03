@@ -722,7 +722,7 @@ class Application(tk.Tk):
                                     shell=True)
 
             # Decode the output using the correct encoding
-            output_decoded = output.stdout.decode('cp437')  # 'cp437' is a common code page for the Windows command prompt
+            # output_decoded = output.stdout.decode('cp437')  # 'cp437' is a common code page for the Windows command prompt
 
             # If the ping command succeeds, the return code should be 0.
             if output.returncode == 0:
