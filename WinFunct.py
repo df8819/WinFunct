@@ -796,6 +796,45 @@ class Application(tk.Tk):
         if response:
             self.search_app_info(file_path)
 
+    def git_pull(self):
+        """
+        Executes 'git pull' command in the current directory, which is assumed to be a git repository.
+        """
+        # Save the current working directory
+        repo_path = os.getcwd()
+
+        try:
+            # Execute 'git pull'
+            result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                    text=True)
+
+            # Optionally, you can log or return the result
+            print(result.stdout)
+
+            # If the result indicates that updates were applied, notify the user
+            if "Already up to date." not in result.stdout:
+                print("Update detected. Notifying user...")
+                self.notify_user_of_restart()
+
+            return True, result.stdout
+        except subprocess.CalledProcessError as e:
+            print(f"Error during git pull: {e.stderr}")
+            return False, e.stderr
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            return False, str(e)
+
+    def notify_user_of_restart(self):
+        """
+        Notifies the user to manually restart the application after an update has been applied.
+        """
+        # Initialize Tkinter root window
+        root = tk.Tk()
+        root.withdraw()  # Hide the root window
+        messagebox.showinfo("Update Applied",
+                            "Updates have been applied. Please restart the application to use the latest version.")
+        root.destroy()
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -1155,7 +1194,7 @@ class Application(tk.Tk):
         reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot)
         reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
-        text1_label = ttk.Label(self.bottom_frame, text="⬅ /forced")
+        text1_label = ttk.Label(self.bottom_frame, text="----------------------------------------------")
         text1_label.grid(row=0, column=2, padx=5, pady=5, sticky="we")
 
         uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi)
@@ -1164,14 +1203,17 @@ class Application(tk.Tk):
         sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep)
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
-        text2_label = ttk.Label(self.bottom_frame, text="⬅ /forced")
+        text2_label = ttk.Label(self.bottom_frame, text="----------------------------------------------")
         text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
 
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
-        reset_ui_btn.grid(row=0, column=3, padx=265, pady=5, sticky="we")
+        reset_ui_btn.grid(row=0, column=3, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=3, padx=265, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
+
+        update_btn = ttk.Button(self.bottom_frame, text="Update", command=self.git_pull)
+        update_btn.grid(row=1, column=3, padx=5, pady=5, sticky="we")
 
 
 app = Application()
