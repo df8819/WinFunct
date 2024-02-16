@@ -16,7 +16,6 @@ import wmi
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 
-# Comment to check if the new git pull function works
 
 # Version of the app
 VERSION = "Use at your own risk and responsibility - v1.2.2.0"
