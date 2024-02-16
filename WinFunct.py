@@ -8,6 +8,7 @@ import sys
 import tkinter as tk
 import webbrowser
 import threading
+import hashlib
 from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
 import requests
@@ -801,22 +802,30 @@ class Application(tk.Tk):
     def git_pull(self):
         """
         Executes 'git pull' command in the current directory, which is assumed to be a git repository.
+        Additionally, checks if requirements.txt has changed and installs new requirements if necessary.
         """
         # Save the current working directory
         repo_path = os.getcwd()
+        requirements_path = os.path.join(repo_path, 'requirements.txt')
+
+        # Get the hash of requirements.txt before the pull
+        before_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
 
         try:
             # Execute 'git pull'
-            result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                    text=True)
-
-            # Optionally, you can log or return the result
+            result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             print(result.stdout)
 
             # If the result indicates that updates were applied, notify the user
             if "Already up to date." not in result.stdout:
                 print("Update detected. Notifying user...")
                 self.notify_user_of_restart()
+
+                # Check if requirements.txt has changed by comparing hashes
+                after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
+                if before_pull_hash != after_pull_hash:
+                    print("requirements.txt has changed. Installing new requirements...")
+                    self.install_requirements(requirements_path)
 
             return True, result.stdout
         except subprocess.CalledProcessError as e:
@@ -825,6 +834,26 @@ class Application(tk.Tk):
         except Exception as e:
             print(f"Unexpected error: {e}")
             return False, str(e)
+
+    def file_hash(self, filepath):
+        """
+        Calculates the MD5 hash of a file.
+        """
+        hash_md5 = hashlib.md5()
+        with open(filepath, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
+    def install_requirements(self, requirements_path):
+        """
+        Installs the packages from requirements.txt using pip.
+        """
+        try:
+            subprocess.run(["pip", "install", "-r", requirements_path], check=True)
+            print("Requirements installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error installing requirements: {e.stderr}")
 
     def notify_user_of_restart(self):
         """
