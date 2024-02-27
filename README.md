@@ -31,28 +31,17 @@ WinFunct is a Python application that provides various scripts and options to en
 1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
 2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **CMD** Window.
 3. Double click: **"Update.bat"**. This will install all dependencies and update the cloned repository. Use this occasionally.
-4. Double click: **"Run.bat"**. The typical ```py filename.py``` cmd command will not work, as the app demands elevated rights.
-
-## Manual Installation
-
-1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
-2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **CMD** Window.
-3. Navigate to the project directory: `cd WinFunct`
-4. Install the required libraries: `pip install -r requirements.txt`
-5. Run the app: `python winfunct.py`
+4. Double click: **"Run.bat"**. The typical ```py filename.py``` cmd command will not work, as the app demands elevated rights via script.
 
 ## Usage
 
-1. Launch the app by executing `winfunct.py`.
-2. Select the desired function or option from the available tabs.
-3. Follow the on-screen instructions to perform the selected task.
-4. Enjoy the enhanced functionality and convenience provided by WinFunct!
+1. Launch/Update the app by double-clicking `Run.bat/Update.bat`.
+2. ...
+3. Profit
 
 ## Known Issues
 
-- _Some features require administrative privileges to function properly. Make sure to run the app with administrator rights._ 🔺 (FIXED)
-- _The "Kill Bloatware" script still needs a little love as it tends to be a quite aggressive_ 👀 (FIXED)
-- _The "ARP scan" doesn't work when pyinstalled, as it will be shown in the py terminal_ 😐 (FIXED)
+- _The "Update" button tends to behave weird if clicked from a pyinstalled release .exe_ 😐
 
 ![Image](1701505006.png)
 
