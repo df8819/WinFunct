@@ -48,3 +48,4 @@ temp_install_script.bat
 .idea
 Run-PAUSE.bat
 netstat_exe_output.txt
+dist/WinFunct-1.2.2.0.exe
