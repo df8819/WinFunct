@@ -17,7 +17,7 @@ from SimplePWGenInt import SimplePWGen
 
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.2.2.0"
+VERSION = "Use at your own risk and responsibility - v1.3.0.0"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -861,6 +861,47 @@ class Application(tk.Tk):
                             "Updates have been applied. Please restart the application to use the latest version.")
         root.destroy()
 
+    def check_dependencies(self):
+        """Check if Git and Python are installed."""
+        try:
+            subprocess.run(["git", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(["python", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return True
+        except subprocess.CalledProcessError:
+            messagebox.showerror("Dependency Error", "Please ensure Git and Python are installed on your system.")
+            return False
+
+    def select_clone_directory(self):
+        """Prompt user to select directory where the repo should be cloned."""
+        root = tk.Tk()
+        root.withdraw()  # we don't want a full GUI, so keep the root window from appearing
+        messagebox.showinfo("Select Directory", "Please select a directory where the repository will be cloned.")
+        directory = filedialog.askdirectory()  # show an "Open" dialog box and return the path to the selected directory
+        root.destroy()
+        return directory
+
+    def clone_repository(self, repo_url, clone_path):
+        """
+        Clone the repository directly into a subdirectory within the selected path,
+        named after the repository itself.
+        """
+        # Extract the repo name from the URL (assuming the URL ends with '.git')
+        repo_name = repo_url.split('/')[-1][:-4]  # Removes '.git' from the end of the URL to get the repo name
+        final_clone_path = os.path.join(clone_path, repo_name)
+
+        try:
+            subprocess.run(["git", "clone", repo_url, final_clone_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            messagebox.showinfo("Repository Cloned", f"Repository cloned successfully into {final_clone_path}")
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"Failed to clone repository: {e.stderr}")
+
+    def clone_repo_with_prompt(self):
+        """Function to run the whole process."""
+        if self.check_dependencies():
+            clone_path = self.select_clone_directory()
+            repo_url = "https://github.com/df8819/WinFunct.git"
+            self.clone_repository(repo_url, clone_path)
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -1232,13 +1273,16 @@ class Application(tk.Tk):
         text2_label = ttk.Label(self.bottom_frame, text="----------------------------------------------")
         text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
 
+        clone_btn = ttk.Button(self.bottom_frame, text="Clone Repo", command=self.clone_repo_with_prompt)
+        clone_btn.grid(row=0, column=3, padx=5, pady=5, sticky="we")
+
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
-        reset_ui_btn.grid(row=0, column=3, padx=5, pady=5, sticky="we")
+        reset_ui_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
         exit_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
-        update_btn = ttk.Button(self.bottom_frame, text="Update", command=self.git_pull)
+        update_btn = ttk.Button(self.bottom_frame, text="Update Repo", command=self.git_pull)
         update_btn.grid(row=1, column=3, padx=5, pady=5, sticky="we")
 
 
