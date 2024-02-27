@@ -875,10 +875,13 @@ class Application(tk.Tk):
         """Prompt user to select directory where the repo should be cloned."""
         root = tk.Tk()
         root.withdraw()  # we don't want a full GUI, so keep the root window from appearing
-        messagebox.showinfo("Select Directory", "Please select a directory where the repository will be cloned.")
         directory = filedialog.askdirectory()  # show an "Open" dialog box and return the path to the selected directory
         root.destroy()
-        return directory
+        # Check if the user selected a directory or cancelled the dialog
+        if directory:  # This will be False if the user clicked "Cancel" or closed the dialog
+            return directory
+        else:
+            return None  # Indicate no selection was made
 
     def clone_repository(self, repo_url, clone_path):
         """
@@ -896,11 +899,19 @@ class Application(tk.Tk):
             messagebox.showerror("Error", f"Failed to clone repository: {e.stderr}")
 
     def clone_repo_with_prompt(self):
-        """Function to run the whole process."""
-        if self.check_dependencies():
-            clone_path = self.select_clone_directory()
-            repo_url = "https://github.com/df8819/WinFunct.git"
-            self.clone_repository(repo_url, clone_path)
+        # Check for Git and Python
+        if not self.check_dependencies():
+            messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
+            return
+
+        # Prompt the user to select a directory
+        clone_path = self.select_clone_directory()
+        if clone_path is None:
+            messagebox.showwarning("Clone Cancelled", "Repository clone cancelled. No directory selected.")
+            return  # Exit the function as the user cancelled the directory selection
+
+        # Clone the repository directly into the selected path without appending the repo name
+        self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
     def open_links_window(self):
         # Define your links here
