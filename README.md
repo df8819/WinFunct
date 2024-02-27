@@ -43,6 +43,8 @@ WinFunct is a Python application that provides various scripts and options to en
 
 - _The "Update" button tends to behave weird if clicked from a pyinstalled release .exe_ 😐
 
-![Image](1701505006.png)
+![Image](1701505001.png)
 
-![Image](1701505092.png)
+![Image](1701505091.png)
+
+![Image](1709048179.png)
