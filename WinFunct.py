@@ -2,7 +2,6 @@ import csv
 import ctypes
 import os
 import re
-import pyperclip
 import subprocess
 import sys
 import tkinter as tk
@@ -738,18 +737,15 @@ class Application(tk.Tk):
 
     def netstat_output(self):
         try:
-            # Execute the netstat command and send the output to the clipboard
-            subprocess.run('netstat -b -n | clip', shell=True, check=True)
-
-            # Retrieve the content from the clipboard
-            clipboard_content = pyperclip.paste()
+            # Execute the netstat command and capture the output
+            result = subprocess.check_output('netstat -b -n', shell=True).decode()
 
             # Define the file path
             file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
 
-            # Write the clipboard content to a file
+            # Write the command output to a file
             with open(file_path, 'w') as file:
-                file.write(clipboard_content)
+                file.write(result)
 
             # Read and process the file
             with open(file_path, 'r') as file:
@@ -767,7 +763,7 @@ class Application(tk.Tk):
                 for line in unique_lines:
                     file.write(line + '\n')
 
-            messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the Apps root folder.\n\n'netstat_exe_output.txt' lists all Apps that have established an internet connection. 'Scan Apps' will lookup each one in a separate google search tab.")
+            messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the app's root folder.\n\n'netstat_exe_output.txt' lists all apps that have established an internet connection. 'Scan Apps' will lookup each one in a separate Google search tab.")
 
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
