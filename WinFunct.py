@@ -14,6 +14,7 @@ import requests
 import wmi
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
+from HashStuffInt import HashStuff
 
 
 # Version of the app
@@ -181,6 +182,11 @@ class Application(tk.Tk):
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
         SimplePWGen(pw_window)
+
+    def open_hash_stuff(self):
+        hash_window = tk.Toplevel(self)
+        hash_window.title("Hash Demo")
+        HashStuff(hash_window)
 
     def open_ps_as_admin(self):
         try:
@@ -1230,6 +1236,8 @@ class Application(tk.Tk):
         # Fun tab
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
+        hash_btn = ttk.Button(self.fun_frame, text="Hash Demo", command=self.open_hash_stuff)
+
 
         # Functions tab
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
@@ -1260,6 +1268,8 @@ class Application(tk.Tk):
         # Fun tab
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
         pw_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+        hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
