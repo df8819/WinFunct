@@ -35,12 +35,12 @@ class HashStuff:
         self.hash_output = tk.StringVar()
         self.hash_algo = tk.StringVar(value='sha512')
 
-        ttk.Label(self.root, text="Select Hash Algorithm:").grid(row=0, column=0, padx=10, pady=(10, 0), sticky="w")
+        ttk.Label(self.root, text="Hash Algorithm:").grid(row=0, column=0, padx=10, pady=(10, 0), sticky="w")
         hash_options = ['md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512']
         dropdown = ttk.Combobox(self.root, textvariable=self.hash_algo, values=hash_options, state="readonly", width=60)
         dropdown.grid(row=0, column=1, padx=10, pady=(10, 0), sticky="ew")
 
-        ttk.Label(self.root, text="Enter Text to Hash:").grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        ttk.Label(self.root, text="Enter Password to Hash:").grid(row=1, column=0, padx=10, pady=10, sticky="w")
         self.entry = ttk.Entry(self.root, textvariable=self.entry_text, width=60)
         self.entry.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
 

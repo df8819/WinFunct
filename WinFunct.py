@@ -185,7 +185,7 @@ class Application(tk.Tk):
 
     def open_hash_stuff(self):
         hash_window = tk.Toplevel(self)
-        hash_window.title("Hash Demo")
+        hash_window.title("Hash Generator")
         HashStuff(hash_window)
 
     def open_ps_as_admin(self):
@@ -1236,7 +1236,7 @@ class Application(tk.Tk):
         # Fun tab
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
-        hash_btn = ttk.Button(self.fun_frame, text="Hash Demo", command=self.open_hash_stuff)
+        hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
 
 
         # Functions tab
