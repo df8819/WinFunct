@@ -12,9 +12,15 @@ class HashStuff:
     def hash_text(self):
         input_string = self.entry_text.get()
         selected_algo = self.hash_algo.get()
-        hasher = getattr(hashlib, selected_algo)()  # Dynamically get the hashing function
+        hasher = getattr(hashlib, selected_algo)()
         hasher.update(input_string.encode('utf-8'))
         self.hash_output.set(hasher.hexdigest())
+
+    def transfer_hash(self):
+        # Transfer the hash from the "Hashed Output" to the "Enter Hash for Password"
+        self.password_hash.set(self.hash_output.get())
+        # Clear the "Hashed Output" field
+        self.hash_output.set('')
 
     def calculate_password(self):
         self.calculation_thread = threading.Thread(target=self.brute_force_search, daemon=True)
@@ -25,7 +31,6 @@ class HashStuff:
         selected_algo = self.hash_algo.get()
         found = False
 
-        # Adjusting the range to include numbers from 0 to 99
         for number in range(0, 99999999):
             test_string = str(number)
             hasher = getattr(hashlib, selected_algo)()
@@ -40,8 +45,6 @@ class HashStuff:
 
     def stop_calculation(self):
         if self.calculation_thread is not None:
-            # Not directly stoppable, so we'll use this method to demonstrate functionality
-            # You would need a more complex setup to safely interrupt and manage thread state
             self.calculation_thread = None
 
     def exit_app(self):
@@ -88,11 +91,13 @@ class HashStuff:
         button_frame.grid(row=5, column=0, columnspan=2, **layout_options)
 
         ttk.Button(button_frame, text="Hash", command=self.hash_text).pack(side=tk.LEFT, padx=5)
+        ttk.Button(button_frame, text="Transfer Hash", command=self.transfer_hash).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="Calculate Password", command=self.calculate_password).pack(side=tk.LEFT, padx=5)
         ttk.Button(button_frame, text="Exit", command=self.exit_app).pack(side=tk.RIGHT, padx=5)
         ttk.Button(button_frame, text="Stop Calculation", command=self.stop_calculation).pack(side=tk.RIGHT, padx=5)
 
         self.root.grid_columnconfigure(1, weight=1)
+
 
 def main():
     root = tk.Tk()
