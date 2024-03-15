@@ -233,36 +233,42 @@ class Application(tk.Tk):
             x = (screen_width - window_width) // 2
             y = (screen_height - window_height) // 2
 
-            network_window.geometry(f"{window_width}x{window_height}+{x}+{y}")  # Set window size and position
-            network_window.resizable(False, False)  # Lock the window size
+            network_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+            network_window.resizable(False, False)
 
-            label_text = "Select a Wi-Fi Network in the\ndrop-down menu to copy its password:"  # Text for the label
+            label_text = "Select a Wi-Fi Network from the list below to copy its password:"
             label = tk.Label(network_window, text=label_text)
             label.pack(pady=10)
 
-            selected_network = tk.StringVar()  # Variable to store the selected network
+            # Creating a frame to hold the listbox and scrollbar
+            list_frame = tk.Frame(network_window)
+            list_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-            # Create the network dropdown menu
-            network_menu = tk.OptionMenu(network_window, selected_network, *networks)
-            network_menu.pack(padx=10, pady=10)
+            scrollbar = tk.Scrollbar(list_frame, orient="vertical")
+            network_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set, exportselection=False)
 
-            # Function to handle the "Ok" button click
+            scrollbar.config(command=network_listbox.yview)
+            scrollbar.pack(side="right", fill="y")
+            network_listbox.pack(side="left", fill="both", expand=True)
+
+            for network in networks:
+                network_listbox.insert(tk.END, network)
+
             def ok_button_click():
-                if selected_network.get():
-                    self.show_wifi_password(selected_network.get())
+                selected_index = network_listbox.curselection()
+                if selected_index:
+                    selected_network = network_listbox.get(selected_index[0])
+                    self.show_wifi_password(selected_network)
                 network_window.destroy()
 
-            # Create the "Ok" button
             ok_button = ttk.Button(network_window, text="Ok", command=ok_button_click, width=10)
-            ok_button.pack(side="left", padx=(50, 5))  # Increase the padding on the left side
+            ok_button.pack(side="left", padx=(50, 5))
 
-            # Function to handle the "Cancel" button click
             def cancel_button_click():
                 network_window.destroy()
 
-            # Create the "Cancel" button
             cancel_button = ttk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
-            cancel_button.pack(side="right", padx=(5, 50))  # Increase the padding on the right side
+            cancel_button.pack(side="right", padx=(5, 50))
 
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
