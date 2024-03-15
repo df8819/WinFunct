@@ -262,13 +262,13 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             ok_button = ttk.Button(network_window, text="Ok", command=ok_button_click, width=10)
-            ok_button.pack(side="left", padx=(50, 5))
+            ok_button.pack(side="left", padx=(50, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
 
             cancel_button = ttk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
-            cancel_button.pack(side="right", padx=(5, 50))
+            cancel_button.pack(side="right", padx=(5, 50), pady=10)
 
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
