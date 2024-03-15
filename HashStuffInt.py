@@ -2,12 +2,16 @@ import tkinter as tk
 from tkinter import ttk
 import hashlib
 import threading
+import itertools
+import string
+from tkinter import messagebox
+from tkinter import simpledialog
 
 class HashStuff:
     def __init__(self, parent):
         self.root = parent
         self.setup_ui()
-        self.calculation_thread = None
+        self.stop_event = threading.Event()  # Event to signal the thread to stop
 
     def hash_text(self):
         input_string = self.entry_text.get()
@@ -23,29 +27,81 @@ class HashStuff:
         self.hash_output.set('')
 
     def calculate_password(self):
-        self.calculation_thread = threading.Thread(target=self.brute_force_search, daemon=True)
-        self.calculation_thread.start()
+        self.character_options()
 
-    def brute_force_search(self):
+    def character_options(self):
+        # Dialog to select character types
+        self.chars_to_use = {'Letters': False, 'Digits': False, 'Special': False}
+
+        options_window = tk.Toplevel(self.root)
+        options_window.title("Character Types in Password?")
+
+        # Use the options_window's screen dimensions to center it
+        screen_width = options_window.winfo_screenwidth()
+        screen_height = options_window.winfo_screenheight()
+        window_width = 360
+        window_height = 120
+        center_x = int((screen_width - window_width) / 2)
+        center_y = int((screen_height - window_height) / 2)
+
+        # Adjust options_window size and position, not self.root
+        options_window.resizable(width=False, height=False)
+        options_window.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+
+        tk.Checkbutton(options_window, text="Letters (A/a)", variable=tk.BooleanVar(value=False),
+                       command=lambda: self.toggle_chars('Letters')).grid(row=0, column=0, sticky="w")
+        tk.Checkbutton(options_window, text="Digits (0-9)", variable=tk.BooleanVar(value=False),
+                       command=lambda: self.toggle_chars('Digits')).grid(row=1, column=0, sticky="w")
+        tk.Checkbutton(options_window, text="Special (#*!..)", variable=tk.BooleanVar(value=False),
+                       command=lambda: self.toggle_chars('Special')).grid(row=2, column=0, sticky="w")
+
+        ttk.Button(options_window, text="OK", command=lambda: [options_window.destroy(), self.start_brute_force_search()]).grid(row=3, column=0, sticky="ew")
+
+    def toggle_chars(self, char_type):
+        self.chars_to_use[char_type] = not self.chars_to_use[char_type]
+
+    def start_brute_force_search(self):
+        chars = ""
+        if self.chars_to_use['Letters']:
+            chars += string.ascii_letters
+        if self.chars_to_use['Digits']:
+            chars += string.digits
+        if self.chars_to_use['Special']:
+            chars += string.punctuation
+
+        # Proceed with the calculation if at least one character type is selected
+        if chars:
+            self.stop_event.clear()  # Reset the stop event for a new calculation
+            self.calculation_thread = threading.Thread(target=lambda: self.brute_force_search(chars), daemon=True)
+            self.calculation_thread.start()
+        else:
+            messagebox.showwarning("Warning", "Please select at least one character type for the password.")
+
+    def brute_force_search(self, chars):
         target_hash = self.password_hash.get()
         selected_algo = self.hash_algo.get()
         found = False
+        max_length = 8
 
-        for number in range(0, 99999999):
-            test_string = str(number)
-            hasher = getattr(hashlib, selected_algo)()
-            hasher.update(test_string.encode())
-            if hasher.hexdigest() == target_hash:
-                self.possible_password.set(test_string)
-                found = True
-                break
-
+        for length in range(1, max_length + 1):
+            for test_string in itertools.product(chars, repeat=length):
+                test_string = ''.join(test_string)
+                hasher = getattr(hashlib, selected_algo)()
+                hasher.update(test_string.encode())
+                if self.stop_event.is_set():
+                    self.possible_password.set("Calculation stopped by user.")
+                    return
+                if hasher.hexdigest() == target_hash:
+                    self.possible_password.set(test_string)
+                    return
         if not found:
-            self.possible_password.set("Not found")
+            if self.stop_event.is_set():
+                self.possible_password.set("Calculation stopped by user.")
+            else:
+                self.possible_password.set("Not found")
 
     def stop_calculation(self):
-        if self.calculation_thread is not None:
-            self.calculation_thread = None
+        self.stop_event.set()  # Signal the thread to stop
 
     def exit_app(self):
         self.root.destroy()
@@ -66,7 +122,7 @@ class HashStuff:
         self.entry_text = tk.StringVar()
         self.hash_output = tk.StringVar()
         self.possible_password = tk.StringVar()
-        self.hash_algo = tk.StringVar(value='sha512')
+        self.hash_algo = tk.StringVar(value='sha256')
         self.password_hash = tk.StringVar()
 
         hash_options = ['md5', 'sha1', 'sha224', 'sha256', 'sha384', 'sha512']
