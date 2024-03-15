@@ -226,7 +226,7 @@ class Application(tk.Tk):
             network_window.title("Wi-Fi Networks")
 
             window_width = 420
-            window_height = 360
+            window_height = 380
             screen_width = network_window.winfo_screenwidth()
             screen_height = network_window.winfo_screenheight()
 
