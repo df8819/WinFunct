@@ -1102,9 +1102,6 @@ class Application(tk.Tk):
             ("DiskMgmt", "diskmgmt.msc"),
             ("Local Users", "lusrmgr.msc"),
             ("Sys Prop Name", "SystemPropertiesComputerName"),
-            ("Sys Prop HW", "SystemPropertiesHardware"),
-            ("Sys Prop Prot.", "SystemPropertiesProtection"),
-            ("Sys Prop Remote", "SystemPropertiesRemote"),
             ("ODBC Sources", "odbcad32"),
             ("PrintMgmt", "printmanagement.msc"),
             ("Shared Folders", "fsmgmt.msc"),
@@ -1164,9 +1161,7 @@ class Application(tk.Tk):
             ("Sys Config", "msconfig"),
             ("Win Update", "start ms-settings:windowsupdate"),
             ("Update Hist", "start ms-settings:windowsupdate-history"),
-            ("Update Bus", "start ms-settings:windowsupdateforbusiness"),
             ("Update Opt", "start ms-settings:windowsupdate-options"),
-            ("Insider Prog", "start ms-settings:windowsinsider"),
         ]
 
         netsh_commands = [
