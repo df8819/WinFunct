@@ -153,7 +153,7 @@ class Application(tk.Tk):
 
         # Creating a style (Delete this to delete style)
         style = ttk.Style()
-        style.configure('LightBlue.TFrame', background='dark grey')
+        style.configure('LightBlue.TFrame', background='#4791cc')
 
         self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
         self.create_widgets()
@@ -959,6 +959,7 @@ class Application(tk.Tk):
                 "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
                 "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
                 "WireShark": "https://www.wireshark.org/download.html",
+                "Total Commander": "https://www.ghisler.com/liste.htm",
             },
 
             "Tutorials": {
