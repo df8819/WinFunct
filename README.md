@@ -31,7 +31,7 @@ WinFunct is a Python application that provides various scripts and options to en
 1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
 2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **CMD** Window.
 3. Double click: **"Update.bat"**. This will install all dependencies and update the cloned repository. Use this occasionally.
-4. Double click: **"Run.bat"**. The typical ```py filename.py``` cmd command will not work, as the app demands elevated rights via script.
+4. Double click: **"Run.bat"**. _(The typical ```py filename.py``` cmd command will not work, as the app demands elevated rights via temp script.)_
 
 ## Usage
 
@@ -41,7 +41,7 @@ WinFunct is a Python application that provides various scripts and options to en
 
 ## Known Issues
 
-- _The "Update" button tends to behave weird if clicked from a pyinstalled release .exe_ 😐
+- _The "Update & Clone Repo" buttons are in an experimental state and need further testing_ 😐
 
 ![Image](1701505001.png)
 

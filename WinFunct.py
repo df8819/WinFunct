@@ -874,14 +874,39 @@ class Application(tk.Tk):
         root.destroy()
 
     def check_dependencies(self):
-        """Check if Git and Python are installed."""
-        try:
-            subprocess.run(["git", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            subprocess.run(["python", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            return True
-        except subprocess.CalledProcessError:
-            messagebox.showerror("Dependency Error", "Please ensure Git and Python are installed on your system.")
-            return False
+        """Check if Git and Python are installed and show a message box if not."""
+        dependencies = {
+            "Git": ["git", "--version", "https://git-scm.com/downloads"],
+            "Python": [sys.executable, "--version", "https://www.python.org/downloads/"]
+        }
+        missing_deps = []
+
+        for dep, commands in dependencies.items():
+            try:
+                result = subprocess.run(commands[:2], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                print(f"{dep} version: {result.stdout}")  # Debug print to check successful output
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to run {commands[0]}: {e.stderr}")  # Debug print to check error output
+                missing_deps.append((dep, commands[2]))
+
+        if missing_deps:
+            self.notify_missing_dependencies(missing_deps)
+        else:
+            return True  # Indicate that all dependencies are present
+
+    def notify_missing_dependencies(self, missing_deps):
+        """Show a message box with options to download missing dependencies."""
+        message = "The following dependencies are missing:\n"
+        for dep, _ in missing_deps:
+            message += f"- {dep}\n"
+        message += "Would you like to download them now?"
+
+        if messagebox.askyesno("Missing Dependencies", message):
+            for _, url in missing_deps:
+                webbrowser.open(url)
+
+    def run(self):
+        self.check_dependencies()
 
     def select_clone_directory(self):
         """Prompt user to select directory where the repo should be cloned."""
