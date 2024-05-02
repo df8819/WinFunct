@@ -29,7 +29,7 @@ class SimplePWGen:
         self.password_entry.pack(fill='x', padx=10, pady=10)
 
         self.length_scale = tk.Scale(self.password_tab, from_=6, to_=128, orient='horizontal', label='Password length')
-        self.length_scale.set(16)
+        self.length_scale.set(20)
         self.length_scale.pack(fill='x', padx=10)
 
         self.var_upper = tk.BooleanVar(value=True)
@@ -44,7 +44,7 @@ class SimplePWGen:
         self.check_digit = tk.Checkbutton(self.password_tab, text="Digits", variable=self.var_digit, anchor='w')
         self.check_digit.pack(fill='x', padx=10)
 
-        self.var_special = tk.BooleanVar(value=True)
+        self.var_special = tk.BooleanVar(value=False)
         self.check_special = tk.Checkbutton(self.password_tab, text="Special Characters", variable=self.var_special, anchor='w')
         self.check_special.pack(fill='x', padx=10)
         self.button_frame_password = tk.Frame(self.password_tab)
