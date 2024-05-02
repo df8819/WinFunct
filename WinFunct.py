@@ -925,6 +925,12 @@ class Application(tk.Tk):
         # Clone the repository directly into the selected path without appending the repo name
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
+    def open_godmode(self):
+        try:
+            subprocess.run("explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}", shell=True)
+        except Exception as e:
+            print(f"Error: {e}")
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -1234,12 +1240,12 @@ class Application(tk.Tk):
         checksum_btn = ttk.Button(self.functions_frame, text="SHA256 file checksum", command=self.get_file_checksum)
         netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
         search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
+        godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
 
         # Fun tab
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
-
 
         # Functions tab
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
@@ -1266,12 +1272,12 @@ class Application(tk.Tk):
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
         netstat_output_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
         search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
+        godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
         # Fun tab
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
         pw_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
-
 
         # New frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
