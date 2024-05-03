@@ -973,6 +973,8 @@ class Application(tk.Tk):
                 "SoapUI": "https://www.soapui.org/downloads/soapui/",
                 "Win X Server": "https://sourceforge.net/projects/vcxsrv/",
                 "HxD": "https://mh-nexus.de/de/downloads.php?product=HxD20",
+                "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
+                "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
             },
 
             "Utilities": {
