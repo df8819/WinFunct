@@ -992,7 +992,7 @@ class Application(tk.Tk):
                 "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
                 "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
                 "WireShark": "https://www.wireshark.org/download.html",
-                "Total Commander": "https://www.ghisler.com/liste.htm",
+                "Total Commander": "https://www.ghisler.com/ddownload.htm",
             },
 
             "Tutorials": {
