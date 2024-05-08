@@ -87,7 +87,7 @@ class SimplePWGen:
         self.check_lower.pack(fill='x', padx=10)
 
         self.var_digit = tk.BooleanVar(value=True)
-        self.check_digit = tk.Checkbutton(self.password_tab, text="Digits", variable=self.var_digit, anchor='w')
+        self.check_digit = tk.Checkbutton(self.password_tab, text="Numbers", variable=self.var_digit, anchor='w')
         self.check_digit.pack(fill='x', padx=10)
 
         self.var_special = tk.BooleanVar(value=False)
@@ -112,7 +112,7 @@ class SimplePWGen:
         self.passphrase_entry.pack(fill='x', padx=10, pady=10)
 
         self.word_count_scale = tk.Scale(self.passphrase_tab, from_=3, to_=20, orient='horizontal', label='Number of Words')
-        self.word_count_scale.set(6)
+        self.word_count_scale.set(4)
         self.word_count_scale.pack(fill='x', padx=10)
 
         self.var_include_number = tk.BooleanVar(value=True)
