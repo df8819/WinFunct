@@ -1131,15 +1131,15 @@ class Application(tk.Tk):
         # Windows Management and Configuration Tools
         windows_management_options = [
             ("RegEdit", "regedit"),
-            ("CompMgmt", "compmgmt.msc"),
-            ("EventVwr", "eventvwr.msc"),
+            ("PC Mgr", "compmgmt.msc"),
+            ("Event Vwr", "eventvwr.msc"),
             ("Services", "services.msc"),
-            ("GP Editor", "gpedit.msc"),
+            ("Group Policy", "gpedit.msc"),
             ("Programs", "appwiz.cpl"),
-            ("WinVer", "winver"),
+            ("Win Ver.", "winver"),
             ("Adv. Sys Set.", "SystemPropertiesAdvanced"),
             ("User Acc Ctrl", "useraccountcontrolsettings"),
-            ("DiskMgmt", "diskmgmt.msc"),
+            ("Disk Mgr", "diskmgmt.msc"),
             ("Local Users", "lusrmgr.msc"),
             ("Sys Prop Name", "SystemPropertiesComputerName"),
             ("ODBC Sources", "odbcad32"),
@@ -1150,32 +1150,32 @@ class Application(tk.Tk):
 
         # Security and Networking Tools
         security_and_networking_options = [
-            ("Sec Center", "start ms-settings:windowsdefender"),
-            ("Sec Policy", "secpol.msc"),
+            ("Sec. Center", "start ms-settings:windowsdefender"),
+            ("Sec. Policy", "secpol.msc"),
             ("FW Advanced", "wf.msc"),
-            ("Net Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
-            ("Internet Opt", "inetcpl.cpl"),
-            ("Cred Mgr", "control /name Microsoft.CredentialManager"),
+            ("Net. Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
+            ("Internet Opt.", "inetcpl.cpl"),
+            ("Cred. Mgr", "control /name Microsoft.CredentialManager"),
             ("Firewall", "firewall.cpl"),
-            ("Net Conn", "ncpa.cpl"),
+            ("Net. Adapt.", "ncpa.cpl"),
             ("DNS Cache", "ipconfig /displaydns"),
             ("Remote Conn", "control /name Microsoft.RemoteAppAndDesktopConnections"),
-            ("VPN Set", "start ms-settings:network-vpn"),
-            ("Wi-Fi Set", "start ms-settings:network-wifi"),
-            ("Ethernet Set", "start ms-settings:network-ethernet"),
-            ("Dial-up Set", "start ms-settings:network-dialup"),
-            ("Proxy Set", "start ms-settings:network-proxy"),
+            ("VPN Set.", "start ms-settings:network-vpn"),
+            ("Wi-Fi Set.", "start ms-settings:network-wifi"),
+            ("Ethernet Set.", "start ms-settings:network-ethernet"),
+            ("Dial-up Set.", "start ms-settings:network-dialup"),
+            ("Proxy Set.", "start ms-settings:network-proxy"),
         ]
 
         # System Tools and Utilities
         system_tools_options = [
             ("Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("TaskMgr", "taskmgr"),
+            ("Task Mgr", "taskmgr"),
             ("Ctrl Panel", "control"),
-            ("DevMgmt", "devmgmt.msc"),
-            ("PerfMon", "perfmon"),
-            ("ResMon", "resmon"),
-            ("Dev Pairing", "devicepairingwizard"),
+            ("Device Mgr", "devmgmt.msc"),
+            ("Perf Mon.", "perfmon"),
+            ("Res. Mon.", "resmon"),
+            ("Dev. Pairing", "devicepairingwizard"),
             ("Win Features", "optionalfeatures"),
             ("Sys Info", "msinfo32"),
         ]
@@ -1184,7 +1184,7 @@ class Application(tk.Tk):
         remote_and_virtualization_options = [
             ("RDP", "mstsc"),
             ("Hyper-V Mgr", "virtmgmt.msc"),
-            ("Env Vars", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+            ("Env. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
             ("RDP Set", "start ms-settings:remotedesktop"),
             ("Remote Assist", "msra"),
         ]
