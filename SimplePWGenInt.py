@@ -3,6 +3,45 @@ from tkinter import messagebox, ttk
 import secrets
 import string
 import random
+import requests
+import os
+import sys
+
+
+def check_and_download_wordlist():
+    """Check if the eff_wordlist.txt file exists, prompt to download if not."""
+    if getattr(sys, 'frozen', False):
+        app_dir = os.path.dirname(sys.executable)
+    else:
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+
+    wordlist_filename = 'eff_wordlist.txt'
+    wordlist_filepath = os.path.join(app_dir, wordlist_filename)
+    download_url = 'https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt'
+
+    # Check if the wordlist file already exists
+    if not os.path.isfile(wordlist_filepath):
+        # Prompt user to download the wordlist
+        root = tk.Tk()
+        root.withdraw()  # Hide the root window
+        response = messagebox.askyesno("Download Needed", "Passphrase list not found. Download it?")
+
+        if response:  # User clicked 'Yes'
+            try:
+                # Download the wordlist from the provided URL
+                response = requests.get(download_url)
+                response.raise_for_status()  # Raise error for unsuccessful downloads
+
+                # Write the downloaded content to the specified local file
+                with open(wordlist_filepath, 'wb') as wordlist_file:
+                    wordlist_file.write(response.content)
+
+                messagebox.showinfo("Download Complete", "The passphrase list was successfully downloaded.")
+            except Exception as e:
+                # Log any errors that occur during download
+                messagebox.showerror("Error", f"An error occurred while downloading the file: {str(e)}")
+                return None
+    return wordlist_filepath
 
 class SimplePWGen:
     def __init__(self, parent):
@@ -101,24 +140,33 @@ class SimplePWGen:
         self.copy_passphrase_button.pack(side='right', pady=5)
 
     def update_passphrase(self):
+        # Call the check and download function to ensure the wordlist is available
+        wordlist_filepath = check_and_download_wordlist()
+
+        if wordlist_filepath is None:
+            return  # Exit if the wordlist couldn't be downloaded or found
+
+        # Load the wordlist using the correct path
+        eff_wordlist = self.load_eff_wordlist(wordlist_filepath)
+
         word_count = int(self.word_count_scale.get())
         include_number = self.var_include_number.get()
         include_special = self.var_include_special.get()
         include_upper = self.var_include_upper.get()
 
-        new_passphrase = self.generate_passphrase(word_count, include_number, include_special, include_upper)
+        # Ensure only five arguments are used here: self + other parameters
+        new_passphrase = self.generate_passphrase(word_count, include_number, include_special, include_upper, eff_wordlist)
         self.passphrase_entry.delete(0, tk.END)
         self.passphrase_entry.insert(0, new_passphrase)
 
-    def generate_passphrase(self, word_count, include_number, include_special, include_upper):
+    def generate_passphrase(self, word_count, include_number, include_special, include_upper, eff_wordlist):
         """Generate a passphrase using the EFF wordlist format."""
-        eff_wordlist = self.load_eff_wordlist('eff_wordlist.txt')  # Path to the EFF wordlist
         words = []
 
-        # Generate random five-digit numbers and map to words
+        # Generate random five-digit numbers and map them to words
         for _ in range(word_count):
-            roll = ''.join([str(random.randint(1, 6)) for _ in range(5)])
-            word = eff_wordlist.get(roll)
+            roll = ''.join([str(random.randint(1, 6)) for _ in range(5)])  # Corrected parentheses
+            word = eff_wordlist.get(roll)  # Ensure `eff_wordlist` is passed in and contains valid mappings
             if word:
                 words.append(word)
 
@@ -128,14 +176,15 @@ class SimplePWGen:
             words[index] = words[index].capitalize()
 
         # Add number and/or special character at the end of a random word if required
-        if include_number:
+        if include_number and words:
             index = random.randint(0, len(words) - 1)
             words[index] += str(random.randint(0, 9))
 
-        if include_special:
+        if include_special and words:
             index = random.randint(0, len(words) - 1)
             words[index] += secrets.choice(string.punctuation)
 
+        # Concatenate all words into a passphrase
         passphrase = '-'.join(words)
         return passphrase
 
