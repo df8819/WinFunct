@@ -1262,7 +1262,7 @@ class Application(tk.Tk):
                 btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd))
                 btn.grid(row=i // 6, column=i % 6, padx=5, pady=5, sticky="we")
 
-        # Create buttons in their respective new categories
+        # Create buttons in their distinct categories
         create_option_buttons(advanced_windows_settings_frame, windows_management_options)
         create_option_buttons(system_tools_frame, security_and_networking_options)
         create_option_buttons(utilities_frame, system_tools_options)
@@ -1280,7 +1280,7 @@ class Application(tk.Tk):
         # Bind the callback function to the version label
         version_label.bind("<Button-1>", open_link)
 
-        # Functions tab
+        # Functions tab Buttons
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
         cmd_btn = ttk.Button(self.functions_frame, text="cmd", command=self.open_cmd_as_admin)
@@ -1305,12 +1305,7 @@ class Application(tk.Tk):
         search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
 
-        # Fun tab
-        chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
-        pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
-        hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
-
-        # Functions tab
+        # Functions tab Positions
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
         self.ip_text = tk.Entry(self.functions_frame)
         self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
@@ -1337,12 +1332,17 @@ class Application(tk.Tk):
         search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
-        # Fun tab
+        # Fun tab Buttons
+        chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
+        pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
+        hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
+
+        # Fun tab Positions
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
         pw_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        # New frame for bottom buttons
+        # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
         self.bottom_frame.pack(fill="x", padx=10, pady=5)
 
