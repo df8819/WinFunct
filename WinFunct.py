@@ -188,6 +188,22 @@ class Application(tk.Tk):
         hash_window.title("Hash Generator")
         HashStuff(hash_window)
 
+    def open_app_root_folder(self):
+        """Open the root folder of the Python app."""
+        # Determine the directory of the executable or the script itself
+        if getattr(sys, 'frozen', False):
+            app_root = os.path.dirname(sys.executable)
+        else:
+            app_root = os.path.dirname(os.path.abspath(__file__))
+
+        # Open the directory using the platform-specific command
+        if sys.platform == 'win32':
+            subprocess.Popen(f'explorer "{app_root}"')
+        elif sys.platform == 'darwin':
+            subprocess.Popen(['open', app_root])
+        else:  # Linux and other Unix-like systems
+            subprocess.Popen(['xdg-open', app_root])
+
     def open_ps_as_admin(self):
         try:
             subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
@@ -1310,15 +1326,12 @@ class Application(tk.Tk):
         self.bottom_frame = ttk.Frame(self.main_frame)
         self.bottom_frame.pack(fill="x", padx=10, pady=5)
 
-        # Adjusting the button parent frame to bottom_frame and using grid
+        # Left-aligned buttons
         shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown)
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
         reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot)
         reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
-
-        text1_label = ttk.Label(self.bottom_frame, text="----------------------------------------------")
-        text1_label.grid(row=0, column=2, padx=5, pady=5, sticky="we")
 
         uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi)
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
@@ -1326,20 +1339,26 @@ class Application(tk.Tk):
         sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep)
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
-        text2_label = ttk.Label(self.bottom_frame, text="----------------------------------------------")
-        text2_label.grid(row=1, column=2, padx=5, pady=5, sticky="we")
+        # Spacer label to fill the space between left and right groups
+        spacer = ttk.Label(self.bottom_frame)
+        spacer.grid(row=0, column=2, rowspan=2, sticky="we")
+        self.bottom_frame.columnconfigure(2, weight=1)
 
+        # Right-aligned buttons (including "Root Folder")
         clone_btn = ttk.Button(self.bottom_frame, text="Clone Repo", command=self.clone_repo_with_prompt)
-        clone_btn.grid(row=0, column=3, padx=5, pady=5, sticky="we")
+        clone_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
-        reset_ui_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
+        reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
+
+        root_btn = ttk.Button(self.bottom_frame, text="Root Folder", command=self.open_app_root_folder)
+        root_btn.grid(row=0, column=3, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
-        exit_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
+        exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
         update_btn = ttk.Button(self.bottom_frame, text="Update Repo", command=self.git_pull)
-        update_btn.grid(row=1, column=3, padx=5, pady=5, sticky="we")
+        update_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
 
 app = Application()
