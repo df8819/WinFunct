@@ -1247,8 +1247,8 @@ class Application(tk.Tk):
         # Functions tab
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
-        cmd_btn = ttk.Button(self.functions_frame, text="cmd.exe", command=self.open_cmd_as_admin)
-        ps_btn = ttk.Button(self.functions_frame, text="PowerShell.exe", command=self.open_ps_as_admin)
+        cmd_btn = ttk.Button(self.functions_frame, text="cmd", command=self.open_cmd_as_admin)
+        ps_btn = ttk.Button(self.functions_frame, text="PowerShell", command=self.open_ps_as_admin)
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
         kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
