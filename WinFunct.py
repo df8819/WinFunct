@@ -8,6 +8,7 @@ import tkinter as tk
 import webbrowser
 import threading
 import hashlib
+import urllib.request
 from tkinter import ttk, messagebox, filedialog
 from tkinter.simpledialog import askstring
 import requests
@@ -379,20 +380,39 @@ class Application(tk.Tk):
 
     def install_rust_transformers(self):
         response = messagebox.askokcancel("Warning",
-                                          "This script will download 'rustup-init.sh', install transformers, and generate a SSH-Key. Continue?")
+                                          "This script will install Rust, the transformers library, and generate an SSH key. Continue?")
 
         if response:
-            # Open the Rust installation script URL in the default browser
-            webbrowser.open('https://sh.rustup.rs')
+            try:
+                # Download the Rust installer for Windows
+                rust_installer_url = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
+                rust_installer_path = os.path.expanduser("~/rustup-init.exe")
+                self.download_file(rust_installer_url, rust_installer_path)
 
-            # The user will manually download and execute the script in Git Bash or a similar shell
+                # Run the Rust installer silently with the '-y' flag (yes to all)
+                subprocess.run([rust_installer_path, '-y'], check=True)
 
-            # Continue with other installations
-            subprocess.run('pip install transformers', shell=True)
-            subprocess.run('ssh-keygen', shell=True)
+                # Install the transformers library via pip
+                subprocess.run(['pip', 'install', 'transformers'], check=True)
 
-            messagebox.showinfo("Information", "Please follow the instructions in the opened Git Bash window to complete the Rust installation.")
+                # Check if an SSH key already exists, otherwise generate one
+                ssh_key_path = os.path.expanduser('~/.ssh/id_rsa')
+                if not os.path.exists(ssh_key_path):
+                    subprocess.run(['ssh-keygen', '-t', 'rsa', '-b', '4096', '-C', 'user@example.com', '-N', '', '-f', ssh_key_path], check=True)
 
+                messagebox.showinfo("Success", "Installation completed successfully.")
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Error", f"An error occurred during the installation process: {e}")
+            except Exception as e:
+                messagebox.showerror("Error", f"Unexpected error: {e}")
+
+    def download_file(self, url, dest):
+        """Download a file from a given URL to the destination path."""
+        try:
+            urllib.request.urlretrieve(url, dest)
+        except Exception as e:
+            messagebox.showerror("Download Error", f"Could not download the file: {e}")
+            raise
     def ssh_key(self):
         response = messagebox.askokcancel("SSH-Key",
                                           "Generating SSH-Key for this device. Continue?")
