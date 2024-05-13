@@ -785,6 +785,10 @@ class Application(tk.Tk):
 
     def netstat_output(self):
         try:
+            # Ask user if they want to create the file
+            if not messagebox.askyesno("Create File", "This will create the file 'netstat_exe_output.txt', which contains a list with all apps that have an active internet connection?"):
+                return
+
             # Execute the netstat command and capture the output
             result = subprocess.check_output('netstat -b -n', shell=True).decode()
 

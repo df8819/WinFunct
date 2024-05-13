@@ -254,7 +254,7 @@ class JChat:
         self.conversation_history.append({'role': 'user', 'content': user_prompt})
 
         data = {
-            'model': 'gpt-4-turbo-2024-04-09',
+            'model': 'gpt-3.5-turbo-0125',
             # 'model': 'gpt-3.5-turbo-16k',
             'messages': self.conversation_history,
             'temperature': 0.7,
