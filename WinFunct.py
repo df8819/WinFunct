@@ -363,7 +363,7 @@ class Application(tk.Tk):
                                             "This will open a PowerShell instance and guide the user with "
                                             "instructions. Proceed?")
         if user_response:
-            command = ['powershell.exe', '-Command', 'irm https://massgrave.dev/get | iex']
+            command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
             subprocess.run(command, shell=True)
         else:
             print("Command was cancelled.")
