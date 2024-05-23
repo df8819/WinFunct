@@ -19,7 +19,7 @@ from HashStuffInt import HashStuff
 
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.357"
+VERSION = "Use at your own risk and responsibility - v1.364"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -143,7 +143,7 @@ class Application(tk.Tk):
         self.ip_text = None
         self.functions_frame = None
         self.bottom_frame = None
-        self.geometry("650x520")
+        self.geometry("630x520")
         self.center_window()
         self.title("Windows Functionalities --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
@@ -156,7 +156,7 @@ class Application(tk.Tk):
         style = ttk.Style()
         style.configure('LightBlue.TFrame', background='#4791cc')
 
-        self.main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+        self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.create_widgets()
         self.resizable(True, True)
 
