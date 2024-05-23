@@ -1285,68 +1285,90 @@ class Application(tk.Tk):
         # Bind the callback function to the version label
         version_label.bind("<Button-1>", open_link)
 
-        # Functions tab Buttons
-        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
+        # Script tab Buttons and Positions
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
-        cmd_btn = ttk.Button(self.functions_frame, text="cmd", command=self.open_cmd_as_admin)
-        ps_btn = ttk.Button(self.functions_frame, text="PowerShell", command=self.open_ps_as_admin)
-        winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
-        kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
-        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
-        activate_idm_btn = ttk.Button(self.functions_frame, text="Activate IDM", command=self.activate_idm)
-        activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
-        agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
-        arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
-        open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
-        save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
-        internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
-        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
-        rust_btn = ttk.Button(self.functions_frame, text="Rust/Transformers", command=self.install_rust_transformers)
-        ssh_key_btn = ttk.Button(self.functions_frame, text="New SSH Key", command=self.ssh_key)
-        shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
-        checksum_btn = ttk.Button(self.functions_frame, text="SHA256 file checksum", command=self.get_file_checksum)
-        netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
-        search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
-        godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
-        clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
-
-        # Functions tab Positions
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+
         self.ip_text = tk.Entry(self.functions_frame)
         self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
-        cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
-        ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
-        wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
-        winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
-        kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
-        renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
-        activate_idm_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
-        activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
-        agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
-        arp_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
-        open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
-        save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
-        compare_systems_btn.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+
+        internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
         internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+
+        cmd_btn = ttk.Button(self.functions_frame, text="cmd", command=self.open_cmd_as_admin)
+        cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
+
+        ps_btn = ttk.Button(self.functions_frame, text="PowerShell", command=self.open_ps_as_admin)
+        ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+
+        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
+        wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
+
+        winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
+        winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
+
+        kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
+        kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
+
+        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
+        renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
+
+        save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
+        save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+
+        activate_idm_btn = ttk.Button(self.functions_frame, text="Activate IDM", command=self.activate_idm)
+        activate_idm_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
+
+        activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
+        activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
+
+        agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
+        agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
+
+        arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
+        arp_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
+
+        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
+        compare_systems_btn.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+
+        open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
+        open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+
+        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
+
+        rust_btn = ttk.Button(self.functions_frame, text="Rust/Transformers", command=self.install_rust_transformers)
         rust_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
+
+        ssh_key_btn = ttk.Button(self.functions_frame, text="New SSH Key", command=self.ssh_key)
         ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
+
+        shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
         shutdown_i_btn.grid(row=3, column=4, padx=10, pady=5, sticky="we")
-        checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
-        netstat_output_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
-        search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
+
+        godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
+
+        checksum_btn = ttk.Button(self.functions_frame, text="SHA256 file checksum", command=self.get_file_checksum)
+        checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
+
+        netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
+        netstat_output_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
+
+        search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
+        search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
+
+        clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
-        # Fun tab Buttons
+        # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
-        pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
-        hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
-
-        # Fun tab Positions
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+
+        pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen)
         pw_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+
+        hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
         # Frame for bottom buttons
