@@ -235,6 +235,12 @@ class Application(tk.Tk):
         self.ip_text.delete(0, tk.END)
         self.ip_text.insert(tk.END, ip_address)
 
+        # Schedule the removal of the IP address
+        self.ip_text.after(3000, self.clear_ip_text)
+
+    def clear_ip_text(self):
+        self.ip_text.delete(0, tk.END)
+
     def show_wifi_networks(self):
         cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"]).decode("utf-8", "ignore")
         networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
