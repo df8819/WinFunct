@@ -9,7 +9,7 @@ import webbrowser
 import threading
 import hashlib
 import urllib.request
-from tkinter import ttk, messagebox, filedialog
+from tkinter import ttk, messagebox, filedialog, simpledialog
 from tkinter.simpledialog import askstring
 import requests
 import wmi
@@ -19,7 +19,7 @@ from HashStuffInt import HashStuff
 
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.353"
+VERSION = "Use at your own risk and responsibility - v1.357"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -352,16 +352,25 @@ class Application(tk.Tk):
             tk.messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     def run_winsat_disk(self):
+        def is_valid_drive_letter(letter):
+            return len(letter) == 1 and letter.isalpha()
+
         # Ask user to input the drive letter
-        drive_letter = askstring("Drive selection", "Enter the drive letter (without colon) to test:")
-        if drive_letter is not None:
+        drive_letter = simpledialog.askstring("Drive selection", "Enter the drive letter (without colon) to test:")
+
+        if drive_letter is None:  # User cancelled the input
+            messagebox.showinfo("Operation Cancelled", "Drive selection was cancelled.")
+            return
+
+        if is_valid_drive_letter(drive_letter):
+            drive_letter = drive_letter.upper()
             powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/k winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
             subprocess.Popen(powershell_command, shell=True)
+        else:
+            messagebox.showerror("Invalid Input", "Please enter a valid drive letter (A-Z).")
 
     def activate_win(self):
-        user_response = messagebox.askyesno("Activate Microsoft Products",
-                                            "This will open a PowerShell instance and guide the user with "
-                                            "instructions. Proceed?")
+        user_response = messagebox.askyesno("Activate Microsoft Products", "This will open a PowerShell instance and guide the user with instructions. Proceed?")
         if user_response:
             command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
             subprocess.run(command, shell=True)
@@ -369,9 +378,7 @@ class Application(tk.Tk):
             print("Command was cancelled.")
 
     def activate_idm(self):
-        user_response = messagebox.askyesno("Activate Internet Download Manager",
-                                            "This will open a PowerShell instance and guide the user with "
-                                            "instructions. Proceed?")
+        user_response = messagebox.askyesno("Activate Internet Download Manager", "This will open a PowerShell instance and guide the user with instructions. Proceed?")
         if user_response:
             command = ['powershell.exe', '-Command', 'irm https://massgrave.dev/ias | iex']
             subprocess.run(command, shell=True)
@@ -379,9 +386,7 @@ class Application(tk.Tk):
             print("Command was cancelled.")
 
     def install_rust_transformers(self):
-        response = messagebox.askokcancel("Warning",
-                                          "This script will install Rust, the transformers library, and generate an SSH key. Continue?")
-
+        response = messagebox.askokcancel("Warning", "This script will install Rust, the transformers library, and generate an SSH key. Continue?")
         if response:
             try:
                 # Download the Rust installer for Windows
@@ -413,9 +418,9 @@ class Application(tk.Tk):
         except Exception as e:
             messagebox.showerror("Download Error", f"Could not download the file: {e}")
             raise
+
     def ssh_key(self):
-        response = messagebox.askokcancel("SSH-Key",
-                                          "Generating SSH-Key for this device. Continue?")
+        response = messagebox.askokcancel("SSH-Key", "Generating SSH-Key for this device. Continue?")
         if response:
             # Open a new Command Prompt window and run ssh-keygen
             subprocess.Popen('start cmd.exe /k ssh-keygen', shell=True)
@@ -443,8 +448,7 @@ class Application(tk.Tk):
         with open("powershell_log.txt", "a") as log_file:
             log_file.write(f"Executing command: {command}\n")
 
-            process = subprocess.Popen(["powershell", "-Command", command], stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE, text=True, shell=True)
+            process = subprocess.Popen(["powershell", "-Command", command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
             stdout, stderr = process.communicate()
 
             # Log the output and any errors
@@ -495,8 +499,7 @@ class Application(tk.Tk):
     def handle_uninstall(self, app_list, pwa_list):
         uninstall_results = {}
         for app in app_list:
-            stdout, stderr = self.run_powershell_command(f"Get-AppxPackage {app} | Remove-AppxPackage",
-                                                         return_output=True)
+            stdout, stderr = self.run_powershell_command(f"Get-AppxPackage {app} | Remove-AppxPackage", return_output=True)
             uninstall_results[f"Removing {app}"] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
 
         for pwa_display_name in pwa_list:
@@ -537,16 +540,14 @@ class Application(tk.Tk):
         messagebox.showinfo("Uninstall Completed", result_message)
 
     def bloatware_killer(self):
-        if not messagebox.askyesno("Bloatware Killer",
-                                   "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This script will aggressively force-delete without any further confirmation!\n\nINFO: This script creates a .txt log file in the folder it was executed."):
+        if not messagebox.askyesno("Bloatware Killer", "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This script will aggressively force-delete without any further confirmation!\n\nINFO: This script creates a .txt log file in the folder it was executed."):
             return
 
         messagebox.showinfo("Bloatware Killer", "The uninstallation process has started. This may take a while...")
         self.run_script_async(apps_to_uninstall, pwas_to_unregister)
 
     def renew_ip_config(self):
-        if messagebox.askyesno("Renew IP Configuration",
-                               "Are you sure you want to release/renew the IP config and flush DNS?"):
+        if messagebox.askyesno("Renew IP Configuration", "Are you sure you want to release/renew the IP config and flush DNS?"):
             cmd = "cmd.exe /c ipconfig /release && ipconfig /flushdns && ipconfig /renew"
             print(f"Executing command: {cmd}")
             subprocess.run(cmd, shell=True)
@@ -816,7 +817,6 @@ class Application(tk.Tk):
                     file.write(line + '\n')
 
             messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the app's root folder.\n\n'netstat_exe_output.txt' lists all apps that have established an internet connection. 'Scan Apps' will lookup each one in a separate Google search tab.")
-
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
         except Exception as e:
@@ -909,8 +909,7 @@ class Application(tk.Tk):
         # Initialize Tkinter root window
         root = tk.Tk()
         root.withdraw()  # Hide the root window
-        messagebox.showinfo("Update Applied",
-                            "Updates have been applied. Please restart the application to use the latest version.")
+        messagebox.showinfo("Update Applied", "Updates have been applied. Please restart the application to use the latest version.")
         root.destroy()
 
     def check_dependencies(self):
@@ -1015,6 +1014,8 @@ class Application(tk.Tk):
                 "HxD": "https://mh-nexus.de/de/downloads.php?product=HxD20",
                 "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
                 "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
+                "Qt Designer": "https://build-system.fman.io/qt-designer-download",
+                "fbs Installer": "https://github.com/mherrmann/fbs-tutorial",
             },
 
             "Utilities": {
@@ -1110,8 +1111,8 @@ class Application(tk.Tk):
         cancel_button.pack(side='right', padx=5)
 
         # Set the initial geometry of the window
-        initial_width = 400
-        initial_height = 550  # Adjust the height as needed
+        initial_width = 360
+        initial_height = 640  # Adjust the height as needed
         window.geometry(f"{initial_width}x{initial_height}")
 
         # Center the window on the screen
@@ -1308,6 +1309,7 @@ class Application(tk.Tk):
         netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
         search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
+        clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
 
         # Functions tab Positions
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
@@ -1335,6 +1337,7 @@ class Application(tk.Tk):
         netstat_output_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
         search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
+        clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
@@ -1369,14 +1372,11 @@ class Application(tk.Tk):
         self.bottom_frame.columnconfigure(2, weight=1)
 
         # Right-aligned buttons (including "Root Folder")
-        clone_btn = ttk.Button(self.bottom_frame, text="Clone Repo", command=self.clone_repo_with_prompt)
-        clone_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
-
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
         root_btn = ttk.Button(self.bottom_frame, text="Root Folder", command=self.open_app_root_folder)
-        root_btn.grid(row=0, column=3, padx=5, pady=5, sticky="we")
+        root_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
