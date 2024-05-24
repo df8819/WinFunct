@@ -242,8 +242,13 @@ class Application(tk.Tk):
         self.ip_text.delete(0, tk.END)
 
     def show_wifi_networks(self):
-        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"]).decode("utf-8", "ignore")
-        networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
+        try:
+            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"], stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+            networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"Failed to execute netsh command: {e.output.decode('utf-8', 'ignore')}")
+            return
+
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
@@ -263,7 +268,6 @@ class Application(tk.Tk):
             label = tk.Label(network_window, text=label_text)
             label.pack(pady=10)
 
-            # Creating a frame to hold the listbox and scrollbar
             list_frame = tk.Frame(network_window)
             list_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
@@ -275,7 +279,7 @@ class Application(tk.Tk):
             network_listbox.pack(side="left", fill="both", expand=True)
 
             for network in networks:
-                network_listbox.insert(tk.END, network)
+                network_listbox.insert(tk.END, network.strip())
 
             def ok_button_click():
                 selected_index = network_listbox.curselection()
@@ -292,24 +296,19 @@ class Application(tk.Tk):
 
             cancel_button = ttk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
             cancel_button.pack(side="right", padx=(5, 50), pady=10)
-
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
 
     def show_wifi_password(self, network):
-        # Strip any trailing whitespace or control characters from the network name
         network = network.strip()
-
         try:
-            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"]).decode(
-                "utf-8", "ignore")
+            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"], stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+            password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to execute netsh command for network '{network}': {e}")
+            messagebox.showerror("Error", f"Failed to execute netsh command for network '{network}': {e.output.decode('utf-8', 'ignore')}")
             return
 
-        password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
         if password:
-            # Create a new window to display the password
             password_window = tk.Toplevel(self)
             password_window.title(f"Password for {network}")
 
@@ -321,23 +320,20 @@ class Application(tk.Tk):
             x = (screen_width - window_width) // 2
             y = (screen_height - window_height) // 2
 
-            password_window.geometry(f"{window_width}x{window_height}+{x}+{y}")  # Set window size and position
+            password_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
             password_window.resizable(False, False)
 
             password_frame = tk.Frame(password_window)
             password_frame.pack(padx=10, pady=10)
 
-            # Add a label for the password
             password_label = tk.Label(password_frame, text="Password:")
             password_label.grid(row=0, column=0, padx=5, pady=5)
 
-            # Add a text field to display the password
             password_text = tk.Text(password_frame, height=1, width=20)
             password_text.insert(tk.END, password.group(1))
             password_text.grid(row=0, column=1, padx=5, pady=5)
             password_text.config(state="disabled")
 
-            # Add a button to copy the password to the clipboard
             def copy_password():
                 self.clipboard_clear()
                 self.clipboard_append(password_text.get("1.0", "end-1c"))
@@ -346,15 +342,12 @@ class Application(tk.Tk):
             copy_button = ttk.Button(password_frame, text="Copy Password", command=copy_password)
             copy_button.grid(row=1, column=0, padx=(5, 5), pady=5, sticky="sw")
 
-            # Add a "Cancel" button to close the window
             def cancel_button_click():
                 password_window.destroy()
 
             cancel_button = ttk.Button(password_frame, text="Cancel", command=cancel_button_click)
             cancel_button.grid(row=1, column=1, padx=(5, 50), pady=5, sticky="se")
-
         else:
-            # No password found
             tk.messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     def run_winsat_disk(self):
