@@ -135,6 +135,7 @@ pwas_to_unregister = [
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.resolution_main = "630x520"
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -143,7 +144,7 @@ class Application(tk.Tk):
         self.ip_text = None
         self.functions_frame = None
         self.bottom_frame = None
-        self.geometry("630x520")
+        self.geometry(self.resolution_main)
         self.center_window()
         self.title("Windows Functionalities --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
@@ -161,16 +162,17 @@ class Application(tk.Tk):
         self.resizable(True, True)
 
     def center_window(self):
-        window_width = self.winfo_reqwidth()
-        window_height = self.winfo_reqheight()
+        self.update_idletasks()  # Ensures the geometry is calculated
+        window_width = self.winfo_width()
+        window_height = self.winfo_height()
 
-        position_top = int(self.winfo_screenheight() / 3 - window_height / 2)
         position_right = int(self.winfo_screenwidth() / 2 - window_width / 2)
+        position_top = int(self.winfo_screenheight() / 2 - window_height / 2)
 
         self.geometry(f"+{position_right}+{position_top}")
 
     def reset_ui(self):
-        self.geometry("650x520")
+        self.geometry(self.resolution_main)
         self.center_window()
 
     def open_chat(self):
