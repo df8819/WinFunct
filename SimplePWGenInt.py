@@ -96,7 +96,7 @@ class SimplePWGen:
         self.passphrase_entry = tk.Entry(self.passphrase_tab, width=24)
         self.passphrase_entry.pack(fill='x', padx=10, pady=10)
 
-        self.word_count_scale = tk.Scale(self.passphrase_tab, from_=3, to_=20, orient='horizontal', label='Number of Words')
+        self.word_count_scale = tk.Scale(self.passphrase_tab, from_=2, to_=20, orient='horizontal', label='Number of Words')
         self.word_count_scale.set(4)
         self.word_count_scale.pack(fill='x', padx=10)
 
