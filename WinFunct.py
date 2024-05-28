@@ -18,7 +18,7 @@ from HashStuffInt import HashStuff
 
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.366"
+VERSION = "Use at your own risk and responsibility - v1.372"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
