@@ -10,7 +10,6 @@ import threading
 import hashlib
 import urllib.request
 from tkinter import ttk, messagebox, filedialog, simpledialog
-from tkinter.simpledialog import askstring
 import requests
 import wmi
 from JChatInt import JChat
