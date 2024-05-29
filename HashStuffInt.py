@@ -7,6 +7,7 @@ import string
 from tkinter import messagebox
 from tkinter import simpledialog
 
+
 class HashStuff:
     def __init__(self, parent):
         self.root = parent
@@ -159,6 +160,7 @@ def main():
     root = tk.Tk()
     app = HashStuff(root)
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()

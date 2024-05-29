@@ -17,6 +17,8 @@ import platform
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
+from SimpleNNInt import run_simple_nn
+
 
 # Version of the app
 VERSION = "Use at your own risk and responsibility - v1.402"
@@ -206,6 +208,9 @@ class Application(tk.Tk):
         hash_window = tk.Toplevel(self)
         hash_window.title("Hash Generator")
         HashStuff(hash_window)
+
+    def open_simplenn(self):
+        run_simple_nn()
 
     def open_app_root_folder(self):
         """Open the root folder of the Python app."""
@@ -1464,6 +1469,9 @@ class Application(tk.Tk):
 
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+
+        neural_btn = ttk.Button(self.fun_frame, text="Neural Network", command=self.open_simplenn)
+        neural_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)

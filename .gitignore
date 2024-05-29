@@ -43,6 +43,7 @@ __pycache__/JChatInt.cpython-310.pyc
 __pycache__/JChatInt.cpython-311.pyc
 __pycache__/JChatInt.cpython-312.pyc
 __pycache__/SimpleNNInt.cpython-311.pyc
+__pycache__/SimpleNNInt.cpython-312.pyc
 __pycache__/SimplePWGenInt.cpython-310.pyc
 __pycache__/SimplePWGenInt.cpython-311.pyc
 __pycache__/SimplePWGenInt.cpython-312.pyc
@@ -60,6 +61,7 @@ winfunct.spec
 
 # Log files
 jchat.log
+admin_log.txt
 netstat_exe_output.txt
 
 # Miscellaneous
