@@ -19,7 +19,7 @@ from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.401"
+VERSION = "Use at your own risk and responsibility - v1.402"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -33,38 +33,49 @@ def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
     except Exception as e:
-        print(f"Error checking admin status: {e}")
+        log_message(f"Error checking admin status: {e}")
         return False
 
+def log_message(message):
+    with open("admin_log.txt", "a") as log_file:
+        log_file.write(message + "\n")
 
 def run_as_admin():
     if sys.platform == "win32":
         cmd = [sys.executable] + sys.argv
         cmd_line = ' '.join('"' + item.replace('"', '\\"') + '"' for item in cmd)
         try:
+            log_message("Script is not running with admin rights. Trying to obtain them...")
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
             sys.exit()  # Exit after trying to elevate privileges
         except Exception as e:
-            print(f"Error re-running the script with admin rights: {e}")
+            log_message(f"Error re-running the script with admin rights: {e}")
     else:
-        print("Current platform is not Windows, skipping admin check.")
-
+        log_message("Current platform is not Windows, skipping admin check.")
 
 def is_running_in_ide():
     # This function checks for common IDE-specific variables
     return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
 
+def print_log():
+    log_path = "admin_log.txt"
+    if os.path.exists(log_path):
+        with open(log_path, "r") as log_file:
+            print(log_file.read())
+        os.remove(log_path)
 
 if __name__ == "__main__":
     # Bypass admin check if running in an IDE
     if not is_running_in_ide():
         if not is_admin():
-            print("Script is not running with admin rights. Trying to obtain them...")
             run_as_admin()
             # The script will exit here if not running as admin
 
+    # Print log messages in the elevated terminal
+    print_log()
+
     # Your normal script execution for both admin and non-admin mode continues here
-    print("Running with admin rights. Nice (⌐■_■)")
+    print("Now running with admin rights. Nice (⌐■_■)")
 
 
 # Command functions
