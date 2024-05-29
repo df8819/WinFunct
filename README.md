@@ -41,7 +41,9 @@ WinFunct is a Python application that provides various scripts and options to en
 
 ## Known Issues
 
-- _The "Update & Clone Repo" buttons are in an experimental state and need further testing_ 😐
+- _The "Update & Clone Repo" buttons are in an experimental state and need further testing._ 😐
+
+- _Screenshots may not show the latest version of the app._
 
 ![Image](1701505001.png)
 
