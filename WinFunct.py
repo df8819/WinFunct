@@ -995,6 +995,48 @@ class Application(tk.Tk):
         except Exception as e:
             print(f"Error: {e}")
 
+    def check_wsl(self):
+        try:
+            result = subprocess.run(['wsl', '--list', '--verbose'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if result.returncode == 0 and result.stdout:
+                return True, result.stdout
+            return False, None
+        except Exception as e:
+            return False, str(e)
+
+    def enable_wsl(self):
+        try:
+            result1 = subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:Microsoft-Windows-Subsystem-Linux', '/all', '/norestart'], check=False)
+            result2 = subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:VirtualMachinePlatform', '/all', '/norestart'], check=False)
+
+            if result1.returncode == 3010 or result2.returncode == 3010:
+                messagebox.showinfo("Restart Required", "The operation completed successfully but requires a restart to take effect.")
+                return
+
+            subprocess.run(['wsl', '--set-default-version', '2'], check=True)
+            subprocess.run(['wsl', '--install', '-d', 'Ubuntu'], check=True)
+            messagebox.showinfo("Success", "WSL and Ubuntu installation is complete or was already installed. You can close this window.")
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"An error occurred while enabling WSL: {e}")
+
+    def manage_wsl(self):
+        wsl_installed, wsl_output = self.check_wsl()
+
+        if wsl_installed:
+            messagebox.showinfo("WSL Status", f"WSL is already installed with the following distributions:\n{wsl_output}")
+            choice = simpledialog.askstring("Choice", "Do you want to abort the installation and open the installed instance? (Y/N): ")
+            if choice and choice.strip().upper() == 'Y':
+                distro = simpledialog.askstring("Distro", "Enter the name of the distribution to open (default is Ubuntu): ", initialvalue="Ubuntu")
+                if not distro:
+                    distro = "Ubuntu"
+                messagebox.showinfo("Opening", f"Opening {distro}...")
+                subprocess.run(['wsl', '-d', distro])
+            else:
+                messagebox.showinfo("Continuing", "Continuing with the installation...")
+                self.enable_wsl()
+        else:
+            self.enable_wsl()
+
     def open_links_window(self):
         # Define your links here
         links = {
@@ -1361,6 +1403,9 @@ class Application(tk.Tk):
         clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
+        wsl_btn = ttk.Button(self.functions_frame, text="Install WSL", command=self.manage_wsl)
+        wsl_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
+
         # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
@@ -1403,7 +1448,7 @@ class Application(tk.Tk):
         exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
-        update_btn = ttk.Button(self.bottom_frame, text="Update Repo", command=self.git_pull)
+        update_btn = ttk.Button(self.bottom_frame, text="Update", command=self.git_pull)
         update_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
 
