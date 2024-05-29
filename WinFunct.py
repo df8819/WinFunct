@@ -18,7 +18,6 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
 
-
 # Version of the app
 VERSION = "Use at your own risk and responsibility - v1.372"
 
@@ -997,6 +996,18 @@ class Application(tk.Tk):
         except Exception as e:
             print(f"Error: {e}")
 
+    def is_feature_enabled(self, feature_name):
+        result = subprocess.run(['dism.exe', '/online', '/get-features', '/format:table'], stdout=subprocess.PIPE, text=True)
+        return feature_name in result.stdout and 'Enabled' in result.stdout.split(feature_name)[1].split()[0]
+
+    def is_wsl_kernel_installed(self):
+        kernel_path = r"C:\Windows\System32\lxss\tools\kernel"
+        return os.path.exists(kernel_path)
+
+    def is_ubuntu_installed(self):
+        result = subprocess.run(['wsl', '--list', '--verbose'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        return 'Ubuntu' in result.stdout
+
     def download_wsl2_kernel(self):
         if platform.system() == "Windows":
             print("Downloading WSL 2 kernel update...")
@@ -1030,22 +1041,34 @@ class Application(tk.Tk):
         self.enable_wsl()
 
     def enable_wsl(self):
-        print("Enabling WSL feature...")
-        subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:Microsoft-Windows-Subsystem-Linux', '/all', '/norestart'])
+        if not self.is_feature_enabled('Microsoft-Windows-Subsystem-Linux'):
+            print("Enabling WSL feature...")
+            subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:Microsoft-Windows-Subsystem-Linux', '/all', '/norestart'])
+        else:
+            print("WSL feature is already enabled.")
 
-        print("Enabling Virtual Machine Platform feature...")
-        subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:VirtualMachinePlatform', '/all', '/norestart'])
+        if not self.is_feature_enabled('VirtualMachinePlatform'):
+            print("Enabling Virtual Machine Platform feature...")
+            subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:VirtualMachinePlatform', '/all', '/norestart'])
+        else:
+            print("Virtual Machine Platform feature is already enabled.")
 
         print("Setting WSL 2 as the default version...")
         subprocess.run(['wsl', '--set-default-version', '2'])
 
-        # Download and install the WSL 2 kernel update
-        self.download_wsl2_kernel()
+        if not self.is_wsl_kernel_installed():
+            self.download_wsl2_kernel()
+        else:
+            print("WSL 2 kernel is already installed.")
 
-        print("Installing Ubuntu distribution...")
-        subprocess.run(['wsl', '--install', '-d', 'Ubuntu'])
+        if not self.is_ubuntu_installed():
+            print("Installing Ubuntu distribution...")
+            subprocess.run(['wsl', '--install', '-d', 'Ubuntu'])
+        else:
+            print("Ubuntu is already installed. Launching Ubuntu...")
+            subprocess.run(['wsl', '-d', 'Ubuntu'])
 
-        print("WSL and Ubuntu installation is complete or was already installed. You can close this window.")
+        print("WSL and Ubuntu installation is complete or was already installed.")
 
 
     def open_links_window(self):
