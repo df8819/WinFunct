@@ -19,7 +19,7 @@ from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.372"
+VERSION = "Use at your own risk and responsibility - v1.401"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -1069,7 +1069,6 @@ class Application(tk.Tk):
             subprocess.run(['wsl', '-d', 'Ubuntu'])
 
         print("WSL and Ubuntu installation is complete or was already installed.")
-
 
     def open_links_window(self):
         # Define your links here
