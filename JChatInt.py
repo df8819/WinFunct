@@ -5,7 +5,6 @@ import tkinter as tk
 from tkinter import messagebox, scrolledtext, font
 import openai
 import requests
-
 import logging
 from datetime import datetime
 

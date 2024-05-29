@@ -17,7 +17,7 @@ import platform
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
-from SimpleNNInt import run_simple_nn
+# from SimpleNNInt import run_simple_nn
 
 
 # Version of the app
@@ -209,8 +209,13 @@ class Application(tk.Tk):
         hash_window.title("Hash Generator")
         HashStuff(hash_window)
 
-    def open_simplenn(self):
-        run_simple_nn()
+    # This function replaces the "open_simplenn" function to exclude the Neural Network app to be started regularly.
+    def show_message(self):
+        messagebox.showinfo("Information",
+                            "This application will only be enabled for presentations as it requires too much space to include with PyInstaller or to boot the main app regularly.")
+
+    # def open_simplenn(self):
+        # run_simple_nn()
 
     def open_app_root_folder(self):
         """Open the root folder of the Python app."""
@@ -1470,7 +1475,7 @@ class Application(tk.Tk):
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        neural_btn = ttk.Button(self.fun_frame, text="Neural Network", command=self.open_simplenn)
+        neural_btn = ttk.Button(self.fun_frame, text="Neural Network", command=self.show_message)
         neural_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         # Frame for bottom buttons
