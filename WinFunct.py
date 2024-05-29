@@ -12,6 +12,8 @@ import urllib.request
 from tkinter import ttk, messagebox, filedialog, simpledialog
 import requests
 import wmi
+import urllib.request
+import platform
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
@@ -995,47 +997,56 @@ class Application(tk.Tk):
         except Exception as e:
             print(f"Error: {e}")
 
+    def download_wsl2_kernel(self):
+        if platform.system() == "Windows":
+            print("Downloading WSL 2 kernel update...")
+            url = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
+            file_path = os.path.join(os.getenv("TEMP"), "wsl_update_x64.msi")
+            urllib.request.urlretrieve(url, file_path)
+            print("Installing WSL 2 kernel update...")
+            subprocess.run(['msiexec', '/i', file_path, '/quiet', '/norestart'])
+
     def check_wsl(self):
         try:
             result = subprocess.run(['wsl', '--list', '--verbose'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             if result.returncode == 0 and result.stdout:
-                return True, result.stdout
-            return False, None
-        except Exception as e:
-            return False, str(e)
+                print("WSL is already installed with the following distributions:")
+                print(result.stdout)
+                choice = input("Do you want to abort the installation and open the installed instance? (Y/N): ").strip().upper()
+                if choice == "Y":
+                    distro = input("Enter the name of the distribution to open (default is Ubuntu): ").strip()
+                    if not distro:
+                        distro = "Ubuntu"
+                    print(f"Opening {distro}...")
+                    subprocess.run(['wsl', '-d', distro])
+                    return
+                else:
+                    print("Continuing with the installation...")
+            else:
+                print("WSL is not installed. Proceeding with installation...")
+        except FileNotFoundError:
+            print("WSL is not installed. Proceeding with installation...")
+
+        self.enable_wsl()
 
     def enable_wsl(self):
-        try:
-            result1 = subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:Microsoft-Windows-Subsystem-Linux', '/all', '/norestart'], check=False)
-            result2 = subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:VirtualMachinePlatform', '/all', '/norestart'], check=False)
+        print("Enabling WSL feature...")
+        subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:Microsoft-Windows-Subsystem-Linux', '/all', '/norestart'])
 
-            if result1.returncode == 3010 or result2.returncode == 3010:
-                messagebox.showinfo("Restart Required", "The operation completed successfully but requires a restart to take effect.")
-                return
+        print("Enabling Virtual Machine Platform feature...")
+        subprocess.run(['dism.exe', '/online', '/enable-feature', '/featurename:VirtualMachinePlatform', '/all', '/norestart'])
 
-            subprocess.run(['wsl', '--set-default-version', '2'], check=True)
-            subprocess.run(['wsl', '--install', '-d', 'Ubuntu'], check=True)
-            messagebox.showinfo("Success", "WSL and Ubuntu installation is complete or was already installed. You can close this window.")
-        except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"An error occurred while enabling WSL: {e}")
+        print("Setting WSL 2 as the default version...")
+        subprocess.run(['wsl', '--set-default-version', '2'])
 
-    def manage_wsl(self):
-        wsl_installed, wsl_output = self.check_wsl()
+        # Download and install the WSL 2 kernel update
+        self.download_wsl2_kernel()
 
-        if wsl_installed:
-            messagebox.showinfo("WSL Status", f"WSL is already installed with the following distributions:\n{wsl_output}")
-            choice = simpledialog.askstring("Choice", "Do you want to abort the installation and open the installed instance? (Y/N): ")
-            if choice and choice.strip().upper() == 'Y':
-                distro = simpledialog.askstring("Distro", "Enter the name of the distribution to open (default is Ubuntu): ", initialvalue="Ubuntu")
-                if not distro:
-                    distro = "Ubuntu"
-                messagebox.showinfo("Opening", f"Opening {distro}...")
-                subprocess.run(['wsl', '-d', distro])
-            else:
-                messagebox.showinfo("Continuing", "Continuing with the installation...")
-                self.enable_wsl()
-        else:
-            self.enable_wsl()
+        print("Installing Ubuntu distribution...")
+        subprocess.run(['wsl', '--install', '-d', 'Ubuntu'])
+
+        print("WSL and Ubuntu installation is complete or was already installed. You can close this window.")
+
 
     def open_links_window(self):
         # Define your links here
@@ -1403,7 +1414,7 @@ class Application(tk.Tk):
         clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
-        wsl_btn = ttk.Button(self.functions_frame, text="Install WSL", command=self.manage_wsl)
+        wsl_btn = ttk.Button(self.functions_frame, text="Install WSL", command=self.enable_wsl)
         wsl_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons and Positions
