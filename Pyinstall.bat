@@ -17,7 +17,20 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
-REM Optionally clean up the build and dist directories created by PyInstaller
+REM Move the generated executable to the root folder
+echo Moving the generated executable to the root folder...
+move /Y dist\WinFunct.exe .
+if %errorlevel% NEQ 0 (
+    echo Error: Failed to move the executable to the root folder.
+    pause
+    exit /B 1
+)
+
+REM Delete the dist folder
+echo Deleting the dist folder...
+rmdir /S /Q dist
+
+REM Clean up temporary files
 echo Cleaning up temporary files...
 rmdir /S /Q build
 rmdir /S /Q __pycache__
