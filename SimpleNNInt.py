@@ -1,15 +1,15 @@
 import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TensorFlow logs
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Turn off oneDNN custom operations
+
+import tensorflow.keras as keras
 import numpy as np
 import tkinter as tk
 from tkinter import ttk, messagebox, font
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import networkx as nx
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-import tensorflow.keras as keras
-
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 class GUI:
@@ -169,6 +169,9 @@ class GUI:
         self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
     def predict(self):
+        from tensorflow.keras.models import Sequential
+        from tensorflow.keras.layers import Dense
+
         threshold = float(self.threshold_entry.get())
         number = float(self.number_entry.get())
         layers_input = int(self.layers_entry.get())
