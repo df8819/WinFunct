@@ -17,7 +17,7 @@ if '%errorlevel%' NEQ '0' (
     "%temp%\getadmin.vbs"
     echo Deleting VBS script... >> admin_log.txt
     del "%temp%\getadmin.vbs"
-    echo VBS script deleted. Exiting batch file. >> admin_log.txt
+    echo VBS script deleted. Exiting batch (run.bat) file. >> admin_log.txt
     exit /B
 
 :gotAdmin
