@@ -36,9 +36,11 @@ def is_admin():
         log_message(f"Error checking admin status: {e}")
         return False
 
+
 def log_message(message):
     with open("admin_log.txt", "a") as log_file:
         log_file.write(message + "\n")
+
 
 def run_as_admin():
     if sys.platform == "win32":
@@ -53,9 +55,11 @@ def run_as_admin():
     else:
         log_message("Current platform is not Windows, skipping admin check.")
 
+
 def is_running_in_ide():
     # This function checks for common IDE-specific variables
     return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
+
 
 def print_log():
     log_path = "admin_log.txt"
@@ -63,6 +67,7 @@ def print_log():
         with open(log_path, "r") as log_file:
             print(log_file.read())
         os.remove(log_path)
+
 
 if __name__ == "__main__":
     # Bypass admin check if running in an IDE
