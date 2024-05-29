@@ -21,7 +21,7 @@ from SimpleNNInt import run_simple_nn
 
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.402"
+VERSION = "Use at your own risk and responsibility - v1.411"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
