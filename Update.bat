@@ -17,5 +17,7 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
-echo -------INFO------- UPDATE COMPLETE. Please manually close this window after update. -------INFO-------
+echo --------------------------------------INFO--------------------------------------
+echo ---------------Update complete. Please manually close this window.--------------
+echo --------------------------------------INFO--------------------------------------
 pause
