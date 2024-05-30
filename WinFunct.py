@@ -2,6 +2,7 @@ import csv
 import ctypes
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tkinter as tk
@@ -1056,15 +1057,58 @@ class Application(tk.Tk):
                         distro = "Ubuntu"
                     print(f"Opening {distro}...")
                     subprocess.run(['wsl', '-d', distro])
-                    return
+                    return True
                 else:
                     print("Continuing with the installation...")
+                    return False
             else:
                 print("WSL is not installed. Proceeding with installation...")
+                return False
         except FileNotFoundError:
             print("WSL is not installed. Proceeding with installation...")
+            return False
 
-        self.enable_wsl()
+    def configure_wsl(self):
+        # Create or edit the .wslconfig file to disable auto-generation of resolv.conf
+        wsl_config_path = os.path.expanduser("~/.wslconfig")
+        with open(wsl_config_path, 'w') as file:
+            file.write("[network]\ngenerateResolvConf = false\n")
+
+    def preserve_resolv_conf(self):
+        resolv_conf_path = "/etc/resolv.conf"
+        backup_path = "/etc/resolv.conf.bak"
+
+        # Check if /etc directory exists, create if not
+        if not os.path.exists("/etc"):
+            os.makedirs("/etc")
+
+        # If resolv.conf does not exist, create it
+        if not os.path.exists(resolv_conf_path):
+            print("resolv.conf does not exist. Creating the file...")
+            with open(resolv_conf_path, 'w') as file:
+                file.write("nameserver 1.1.1.1\n")  # Add your desired nameserver here
+
+        if os.path.islink(resolv_conf_path):
+            print("Resolving symbolic link of resolv.conf...")
+            actual_path = os.readlink(resolv_conf_path)
+            print(f"Backing up existing resolv.conf from {actual_path} to {backup_path}...")
+            shutil.copy(actual_path, backup_path)
+        elif os.path.exists(resolv_conf_path):
+            print("Backing up existing resolv.conf...")
+            shutil.copy(resolv_conf_path, backup_path)
+
+        # Lock the resolv.conf file to prevent overwrites
+        subprocess.run(['chattr', '+i', resolv_conf_path], shell=True)
+
+    def restore_resolv_conf(self):
+        resolv_conf_path = "/etc/resolv.conf"
+        backup_path = "/etc/resolv.conf.bak"
+        # Unlock the resolv.conf file to allow modifications
+        subprocess.run(['chattr', '-i', resolv_conf_path], shell=True)
+
+        if os.path.exists(backup_path):
+            print("Restoring original resolv.conf...")
+            shutil.copy(backup_path, resolv_conf_path)
 
     def enable_wsl(self):
         if not self.is_feature_enabled('Microsoft-Windows-Subsystem-Linux'):
@@ -1087,6 +1131,9 @@ class Application(tk.Tk):
         else:
             print("WSL 2 kernel is already installed.")
 
+        self.configure_wsl()
+        self.preserve_resolv_conf()
+
         if not self.is_ubuntu_installed():
             print("Installing Ubuntu distribution...")
             subprocess.run(['wsl', '--install', '-d', 'Ubuntu'])
@@ -1094,6 +1141,7 @@ class Application(tk.Tk):
             print("Ubuntu is already installed. Launching Ubuntu...")
             subprocess.run(['wsl', '-d', 'Ubuntu'])
 
+        self.restore_resolv_conf()
         print("WSL and Ubuntu installation is complete or was already installed.")
 
     def open_links_window(self):
