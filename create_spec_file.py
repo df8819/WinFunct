@@ -17,19 +17,19 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
           [],
-          exclude_binaries=True,
+          exclude_binaries=False,  # Include binaries to ensure functionality
           name='WinFunct',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
-          upx=True,
+          upx=False,  # Disable UPX for consistency with defaults
           console=True)
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
                strip=False,
-               upx=True,
+               upx=False,  # Disable UPX for consistency with defaults
                upx_exclude=[],
                name='WinFunct')
 """
