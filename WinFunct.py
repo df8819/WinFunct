@@ -1025,10 +1025,14 @@ class Application(tk.Tk):
 
     def is_feature_enabled(self, feature_name):
         result = subprocess.run(['dism.exe', '/online', '/get-features', '/format:table'], stdout=subprocess.PIPE, text=True)
-        return feature_name in result.stdout and 'Enabled' in result.stdout.split(feature_name)[1].split()[0]
+        feature_lines = result.stdout.splitlines()
+        for line in feature_lines:
+            if feature_name in line and 'Enabled' in line:
+                return True
+        return False
 
     def is_wsl_kernel_installed(self):
-        kernel_path = r"C:\Windows\System32\lxss\tools\kernel"
+        kernel_path = r"C:\Windows\System32\lxss\tools\kernel"  # Verify this path is correct for WSL 2
         return os.path.exists(kernel_path)
 
     def is_ubuntu_installed(self):
@@ -1040,75 +1044,17 @@ class Application(tk.Tk):
             print("Downloading WSL 2 kernel update...")
             url = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
             file_path = os.path.join(os.getenv("TEMP"), "wsl_update_x64.msi")
-            urllib.request.urlretrieve(url, file_path)
-            print("Installing WSL 2 kernel update...")
-            subprocess.run(['msiexec', '/i', file_path, '/quiet', '/norestart'])
-
-    def check_wsl(self):
-        try:
-            result = subprocess.run(['wsl', '--list', '--verbose'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            if result.returncode == 0 and result.stdout:
-                print("WSL is already installed with the following distributions:")
-                print(result.stdout)
-                choice = input("Do you want to abort the installation and open the installed instance? (Y/N): ").strip().upper()
-                if choice == "Y":
-                    distro = input("Enter the name of the distribution to open (default is Ubuntu): ").strip()
-                    if not distro:
-                        distro = "Ubuntu"
-                    print(f"Opening {distro}...")
-                    subprocess.run(['wsl', '-d', distro])
-                    return True
-                else:
-                    print("Continuing with the installation...")
-                    return False
-            else:
-                print("WSL is not installed. Proceeding with installation...")
-                return False
-        except FileNotFoundError:
-            print("WSL is not installed. Proceeding with installation...")
-            return False
+            try:
+                urllib.request.urlretrieve(url, file_path)
+                print("Installing WSL 2 kernel update...")
+                subprocess.run(['msiexec', '/i', file_path, '/quiet', '/norestart'])
+            except Exception as e:
+                print(f"Failed to download or install WSL 2 kernel: {e}")
 
     def configure_wsl(self):
-        # Create or edit the .wslconfig file to disable auto-generation of resolv.conf
         wsl_config_path = os.path.expanduser("~/.wslconfig")
         with open(wsl_config_path, 'w') as file:
             file.write("[network]\ngenerateResolvConf = false\n")
-
-    def preserve_resolv_conf(self):
-        resolv_conf_path = "/etc/resolv.conf"
-        backup_path = "/etc/resolv.conf.bak"
-
-        # Check if /etc directory exists, create if not
-        if not os.path.exists("/etc"):
-            os.makedirs("/etc")
-
-        # If resolv.conf does not exist, create it
-        if not os.path.exists(resolv_conf_path):
-            print("resolv.conf does not exist. Creating the file...")
-            with open(resolv_conf_path, 'w') as file:
-                file.write("nameserver 1.1.1.1\n")  # Add your desired nameserver here
-
-        if os.path.islink(resolv_conf_path):
-            print("Resolving symbolic link of resolv.conf...")
-            actual_path = os.readlink(resolv_conf_path)
-            print(f"Backing up existing resolv.conf from {actual_path} to {backup_path}...")
-            shutil.copy(actual_path, backup_path)
-        elif os.path.exists(resolv_conf_path):
-            print("Backing up existing resolv.conf...")
-            shutil.copy(resolv_conf_path, backup_path)
-
-        # Lock the resolv.conf file to prevent overwrites
-        subprocess.run(['chattr', '+i', resolv_conf_path], shell=True)
-
-    def restore_resolv_conf(self):
-        resolv_conf_path = "/etc/resolv.conf"
-        backup_path = "/etc/resolv.conf.bak"
-        # Unlock the resolv.conf file to allow modifications
-        subprocess.run(['chattr', '-i', resolv_conf_path], shell=True)
-
-        if os.path.exists(backup_path):
-            print("Restoring original resolv.conf...")
-            shutil.copy(backup_path, resolv_conf_path)
 
     def enable_wsl(self):
         if not self.is_feature_enabled('Microsoft-Windows-Subsystem-Linux'):
@@ -1132,16 +1078,14 @@ class Application(tk.Tk):
             print("WSL 2 kernel is already installed.")
 
         self.configure_wsl()
-        self.preserve_resolv_conf()
 
         if not self.is_ubuntu_installed():
             print("Installing Ubuntu distribution...")
             subprocess.run(['wsl', '--install', '-d', 'Ubuntu'])
         else:
-            print("Ubuntu is already installed. Launching Ubuntu...")
-            subprocess.run(['wsl', '-d', 'Ubuntu'])
+            print("Ubuntu is already installed. Launching Ubuntu in a new terminal...")
+            subprocess.run(['start', 'cmd', '/c', 'wsl', '-d', 'Ubuntu'], shell=True)
 
-        self.restore_resolv_conf()
         print("WSL and Ubuntu installation is complete or was already installed.")
 
     def open_links_window(self):
@@ -1510,8 +1454,8 @@ class Application(tk.Tk):
         clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
-        wsl_btn = ttk.Button(self.functions_frame, text="Install WSL", command=self.enable_wsl)
-        wsl_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
+        # wsl_btn = ttk.Button(self.functions_frame, text="Install WSL", command=self.enable_wsl)
+        # wsl_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
