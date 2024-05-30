@@ -36,7 +36,7 @@ class JChat:
 
     def initialize_behaviors(self):
         return {
-            "Default": "---Act as normal GPT-4 instance--- ",
+            "Default": "---Act as normal GPT instance--- ",
             "(＾• ω •＾)": "---Act as cute eGirl and ALWAYS/ONLY use UwU-speech and lots of kaomojies/emojies: --- ",
             "Mad Scientist": "---Act as mean sarcastic Einstein and answer ALWAYS/ONLY with intrinsic lyrically spoken formulas: --- ",
             "SciFi Commander": "---Act as advanced AGI-Commander onboard of a space frigate and ALWAY/ONLY answer in short, brief and precise answers: --- ",
@@ -45,36 +45,41 @@ class JChat:
             "Grow-Master": "---Act as professional gardener and assist the user in growing CBD-(legal!)-weed: --- ",
             "Alien": "---Act as confused Alien from G581c that wants to stay unnoticed and ALWAYS/ONLY answer with text in altered format: --- ",
             "Code-Guru": "---Act as senior Software engineer from a world leading dev-team who will assist the user in all coding related questions: --- ",
-            "Medical Assistant": "---Act as calming and professional medical doctor with PhD who will assist the user with precise, detailed and brief answers to medical conditions--- ",
+            "Medical Assistant": "---Act as calming and professional medical doctor with PhD who will assist the user with precise, detailed and brief answers to medical conditions: --- ",
         }
 
     def setup_gui(self):
         self.root.title("JChat")
         self.center_window(self.root)
-        self.root.resizable(height=False, width=False)
+        self.root.resizable(height=True, width=True)
 
         frame = tk.Frame(self.root)
-        frame.grid(sticky="nsew", padx=10, pady=10)
+        frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         self.conversation = scrolledtext.ScrolledText(frame, wrap='word', state='disabled')
         self.conversation.configure(font=(self.font_family, self.font_size), bg='#edfcf0')
-        self.conversation.grid(sticky="nsew")
+        self.conversation.grid(row=0, column=0, sticky="nsew")
 
         self.text_input = tk.StringVar()
         entry_field = tk.Entry(self.root, textvariable=self.text_input, font=(self.font_family, self.font_size))
         entry_field.bind('<Return>', self.send_message)
-        entry_field.grid(sticky="we", padx=10)
+        entry_field.grid(row=1, column=0, sticky="we", padx=10)
         entry_field.focus_set()
 
         btn_frame = tk.Frame(self.root)
-        btn_frame.grid(sticky="we", padx=10, pady=5)
+        btn_frame.grid(row=2, column=0, sticky="we", padx=10, pady=5)
 
         self.add_buttons(btn_frame)
 
+        # Adding the new label
+        model_label = tk.Label(self.root, text='Type "what model???" to verify model selection.', font=(self.font_family, self.font_size))
+        model_label.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+
+        # Configure grid weights to allow scaling
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
-        self.root.grid_rowconfigure(1, weight=0)
-        self.root.grid_columnconfigure(1, weight=1)
+        frame.grid_rowconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
 
     def add_buttons(self, btn_frame):
         buttons = [
