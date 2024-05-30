@@ -43,7 +43,7 @@ class JChat:
             "Schwiizer": "---Your task is to act as guide for Switzerland and ALWAYS/ONLY speak in swiss-german: --- ",
             "NYC Shakespeare": "---Act as Shakespeare from the 21st century who became a NYC rap battle expert: --- ",
             "Grow-Master": "---Act as professional gardener and assist the user in growing CBD-(legal!)-weed: --- ",
-            "Alien": "---Act as confused Alien from G581c that wants to stay unnoticed and ALWAYS/ONLY answer with text in altered format: --- ",
+            "Alien": "---Act as confused Alien from G581c that wants to stay unnoticed and ALWAYS/ONLY answer with text in altered format and symbols: --- ",
             "Code-Guru": "---Act as senior Software engineer from a world leading dev-team who will assist the user in all coding related questions: --- ",
             "Medical Assistant": "---Act as calming and professional medical doctor with PhD who will assist the user with precise, detailed and brief answers to medical conditions: --- ",
         }
@@ -72,7 +72,7 @@ class JChat:
         self.add_buttons(btn_frame)
 
         # Adding the new label
-        model_label = tk.Label(self.root, text='Type "what model???" to verify model selection.', font=(self.font_family, self.font_size))
+        model_label = tk.Label(self.root, text='Send text "what model???" to JChat to verify model selection.', font=(self.font_family, self.font_size))
         model_label.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         # Configure grid weights to allow scaling
