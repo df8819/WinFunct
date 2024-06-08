@@ -1127,6 +1127,7 @@ class Application(tk.Tk):
                 "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
                 "WireShark": "https://www.wireshark.org/download.html",
                 "Total Commander": "https://www.ghisler.com/ddownload.htm",
+                "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable"
             },
 
             "Tutorials": {
