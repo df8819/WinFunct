@@ -136,6 +136,7 @@ class SimplePWGen:
 
         self.digits_entry = tk.Entry(self.number_tab, width=12)
         self.digits_entry.pack(padx=10, pady=5)
+        self.digits_entry.insert(0, "5")
 
         self.button_frame_number = tk.Frame(self.number_tab)
         self.button_frame_number.pack(pady=20)

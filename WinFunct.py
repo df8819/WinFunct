@@ -1,28 +1,30 @@
-import csv
-import ctypes
+# Standard Library Imports
 import os
-import re
-import shutil
-import subprocess
 import sys
-import tkinter as tk
-import webbrowser
-import threading
+import re
+import csv
+import subprocess
 import hashlib
+import threading
 import urllib.request
-from tkinter import ttk, messagebox, filedialog, simpledialog
+import ctypes
+import webbrowser
+
+# Third-Party Imports
 import requests
 import wmi
-import urllib.request
-import platform
+
+# Tkinter Imports
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog, simpledialog
+
+# Local Imports
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
-# from SimpleNNInt import run_simple_nn
-
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.411"
+VERSION = "Use at your own risk and responsibility - v1.423"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
