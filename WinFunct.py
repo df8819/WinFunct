@@ -407,6 +407,14 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
+    def activate_wui(self):
+        user_response = messagebox.askyesno("Open Windows Utility Improved", "This will open a PowerShell instance and GUI for Windows Utility Improved. Proceed?")
+        if user_response:
+            command = ['powershell.exe', '-Command', 'irm christitus.com/win | iex']
+            subprocess.run(command, shell=True)
+        else:
+            print("Command was cancelled.")
+
     def install_rust_transformers(self):
         response = messagebox.askokcancel("Warning", "This script will install Rust, the transformers library, and generate an SSH key. Continue?")
         if response:
@@ -1386,8 +1394,8 @@ class Application(tk.Tk):
         clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
-        # wsl_btn = ttk.Button(self.functions_frame, text="Install WSL", command=self.enable_wsl)
-        # wsl_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
+        wui_btn = ttk.Button(self.functions_frame, text="Win Util Impr", command=self.activate_wui)
+        wui_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
