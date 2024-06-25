@@ -399,14 +399,6 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
-    def activate_idm(self):
-        user_response = messagebox.askyesno("Activate Internet Download Manager", "This will open a PowerShell instance and guide the user with instructions. Proceed?")
-        if user_response:
-            command = ['powershell.exe', '-Command', 'irm https://massgrave.dev/ias | iex']
-            subprocess.run(command, shell=True)
-        else:
-            print("Command was cancelled.")
-
     def activate_wui(self):
         user_response = messagebox.askyesno("Open Windows Utility Improved", "This will open a PowerShell instance and GUI for Windows Utility Improved. Proceed?")
         if user_response:
@@ -1070,7 +1062,7 @@ class Application(tk.Tk):
             },
 
             "Tutorials": {
-                "MAS/IDM Script": "https://massgrave.dev/index.html",
+                "MAS Script": "https://massgrave.dev/index.html",
                 "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
                 "NSE Lab": "https://nse.digital",
                 "Wifi-Hack": "https://hackernoon.com/how-to-hack-wifi-like-a-pro-hacker",
@@ -1349,8 +1341,8 @@ class Application(tk.Tk):
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
         save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
 
-        activate_idm_btn = ttk.Button(self.functions_frame, text="Activate IDM", command=self.activate_idm)
-        activate_idm_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
+        activate_wui_btn = ttk.Button(self.functions_frame, text="Windows Utility", command=self.activate_wui)
+        activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
         activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
@@ -1394,9 +1386,6 @@ class Application(tk.Tk):
         clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
 
-        wui_btn = ttk.Button(self.functions_frame, text="Win Util Impr", command=self.activate_wui)
-        wui_btn.grid(row=5, column=0, padx=10, pady=5, sticky="we")
-
         # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
@@ -1406,7 +1395,6 @@ class Application(tk.Tk):
 
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
-
 
         # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
@@ -1430,7 +1418,7 @@ class Application(tk.Tk):
         spacer.grid(row=0, column=2, rowspan=2, sticky="we")
         self.bottom_frame.columnconfigure(2, weight=1)
 
-        # Right-aligned buttons (including "Root Folder")
+        # Right-aligned buttons
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui)
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
