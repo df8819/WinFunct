@@ -1341,7 +1341,7 @@ class Application(tk.Tk):
         save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
         save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
 
-        activate_wui_btn = ttk.Button(self.functions_frame, text="Windows Utility", command=self.activate_wui)
+        activate_wui_btn = ttk.Button(self.functions_frame, text="CTT Winutil", command=self.activate_wui)
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
