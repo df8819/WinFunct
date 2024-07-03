@@ -1026,19 +1026,16 @@ class Application(tk.Tk):
                 "GitHub Desktop": "https://desktop.github.com",
                 "Visual Studio": "https://code.visualstudio.com/download",
                 "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
-                "UPX": "https://github.com/upx/upx/releases",
+                "UPX Packer": "https://github.com/upx/upx/releases",
                 "AirCrack": "https://www.aircrack-ng.org",
                 "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
                 "Rust/Cargo": "https://rustup.rs",
-                "Rufus USB Creator": "https://rufus.ie/en/",
                 "Etcher USB Creator": "https://etcher.balena.io",
-                "SoapUI": "https://www.soapui.org/downloads/soapui/",
                 "Win X Server": "https://sourceforge.net/projects/vcxsrv/",
-                "HxD": "https://mh-nexus.de/de/downloads.php?product=HxD20",
+                "HxD Hex Editor": "https://mh-nexus.de/en/programs.php",
                 "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
                 "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
                 "Qt Designer": "https://build-system.fman.io/qt-designer-download",
-                "fbs Installer": "https://github.com/mherrmann/fbs-tutorial",
             },
 
             "Utilities": {
@@ -1058,7 +1055,9 @@ class Application(tk.Tk):
                 "WireShark": "https://www.wireshark.org/download.html",
                 "Total Commander": "https://www.ghisler.com/ddownload.htm",
                 "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
+                "Rufus USB Creator": "https://rufus.ie/en/",
                 "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
+                "NetManSet": "https://www.netsetman.com/en/freeware",
             },
 
             "Tutorials": {
