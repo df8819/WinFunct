@@ -24,7 +24,7 @@ from SimplePWGenInt import SimplePWGen
 from HashStuffInt import HashStuff
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.423"
+VERSION = "Use at your own risk and responsibility - v1.435"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
