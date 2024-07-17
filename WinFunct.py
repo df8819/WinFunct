@@ -1082,6 +1082,14 @@ class Application(tk.Tk):
     def run(self):
         self.check_dependencies()
 
+    def check_dependencies(self):
+        try:
+            subprocess.run(["git", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(["python", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return True
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            return False
+
     def select_clone_directory(self):
         """Prompt user to select directory where the repo should be cloned."""
         root = tk.Tk()
