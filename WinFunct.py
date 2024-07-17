@@ -417,21 +417,28 @@ class Application(tk.Tk):
                 self.download_file(rust_installer_url, rust_installer_path)
 
                 # Run the Rust installer silently with the '-y' flag (yes to all)
-                subprocess.run([rust_installer_path, '-y'], check=True)
+                subprocess.run([rust_installer_path, '-y'], check=True, capture_output=True, text=True)
 
                 # Install the transformers library via pip
-                subprocess.run(['pip', 'install', 'transformers'], check=True)
+                subprocess.run(['pip', 'install', 'transformers'], check=True, capture_output=True, text=True)
 
                 # Check if an SSH key already exists, otherwise generate one
                 ssh_key_path = os.path.expanduser('~/.ssh/id_rsa')
                 if not os.path.exists(ssh_key_path):
-                    subprocess.run(['ssh-keygen', '-t', 'rsa', '-b', '4096', '-C', 'user@example.com', '-N', '', '-f', ssh_key_path], check=True)
+                    subprocess.run(['ssh-keygen', '-t', 'rsa', '-b', '4096', '-C', 'user@example.com', '-N', '', '-f', ssh_key_path], check=True, capture_output=True, text=True)
 
                 messagebox.showinfo("Success", "Installation completed successfully.")
             except subprocess.CalledProcessError as e:
-                messagebox.showerror("Error", f"An error occurred during the installation process: {e}")
+                messagebox.showerror("Error", f"An error occurred during the installation process:\n{e.stderr}")
             except Exception as e:
-                messagebox.showerror("Error", f"Unexpected error: {e}")
+                messagebox.showerror("Error", f"Unexpected error:\n{str(e)}")
+            finally:
+                # Clean up the downloaded Rust installer
+                if os.path.exists(rust_installer_path):
+                    try:
+                        os.remove(rust_installer_path)
+                    except Exception:
+                        pass
 
     def download_file(self, url, dest):
         """Download a file from a given URL to the destination path."""
