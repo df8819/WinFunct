@@ -1,6 +1,5 @@
 @echo off
 cd %~dp0
-
 REM Prompt for version number
 set /p version=Enter the version number (e.g., v1.234): 
 
@@ -31,7 +30,7 @@ if %errorlevel% NEQ 0 (
 
 REM Move the generated executable to the root folder and rename it with the version number
 echo Moving the generated executable to the root folder...
-move /Y dist\WinFunct\WinFunct.exe WinFunct_%version%.exe
+move /Y dist\WinFunct.exe WinFunct_%version%.exe
 if %errorlevel% NEQ 0 (
     echo Error: Failed to move and rename the executable to the root folder.
     pause

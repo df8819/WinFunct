@@ -1,5 +1,6 @@
 spec_content = """
 # -*- mode: python ; coding: utf-8 -*-
+import sys ; sys.setrecursionlimit(sys.getrecursionlimit() * 5)
 block_cipher = None
 
 a = Analysis(['WinFunct.py'],
@@ -9,29 +10,33 @@ a = Analysis(['WinFunct.py'],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
-             excludes=['matplotlib', 'networkx', 'tensorflow'],
+             excludes=['matplotlib', 'tensorflow', 'PIL', 'numpy', 'pandas', 'scipy', 'PyQt5', 'PyQt6', 'PySide2', 'PySide6'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
+             cipher=block_cipher,
+             noarchive=False)
+
+pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+
 exe = EXE(pyz,
           a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           [],
-          exclude_binaries=False,  # Include binaries to ensure functionality
           name='WinFunct',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
-          upx=False,  # Disable UPX for consistency with defaults
-          console=True)
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=False,  # Disable UPX for consistency with defaults
-               upx_exclude=[],
-               name='WinFunct')
+          upx=True,
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=True,
+          disable_windowed_traceback=False,
+          target_arch=None,
+          codesign_identity=None,
+          entitlements_file=None )
 """
 
 with open("WinFunct.spec", "w") as spec_file:
