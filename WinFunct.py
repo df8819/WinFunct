@@ -969,17 +969,28 @@ class Application(tk.Tk):
 
     def git_pull(self):
         """
-        Executes 'git pull' command in the current directory, which is assumed to be a git repository.
+        Executes 'git pull' command in the appropriate directory, which is assumed to be a git repository.
         Additionally, checks if requirements.txt has changed and installs new requirements if necessary.
         """
-        # Save the current working directory
-        repo_path = os.getcwd()
+        # Determine if we're running as a script or frozen executable
+        if getattr(sys, 'frozen', False):
+            # We're running in a PyInstaller bundle
+            base_path = sys._MEIPASS
+            repo_path = os.path.dirname(sys.executable)
+        else:
+            # We're running in a normal Python environment
+            base_path = os.path.dirname(os.path.abspath(__file__))
+            repo_path = os.getcwd()
+
         requirements_path = os.path.join(repo_path, 'requirements.txt')
 
         # Get the hash of requirements.txt before the pull
         before_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
 
         try:
+            # Change to the repo directory before git operations
+            os.chdir(repo_path)
+
             # Execute 'git pull'
             result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             print(result.stdout)
@@ -1002,6 +1013,9 @@ class Application(tk.Tk):
         except Exception as e:
             print(f"Unexpected error: {e}")
             return False, str(e)
+        finally:
+            # Change back to the original directory
+            os.chdir(base_path)
 
     def file_hash(self, filepath):
         """
