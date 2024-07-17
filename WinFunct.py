@@ -16,7 +16,7 @@ import wmi
 
 # Tkinter Imports
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog, simpledialog
+from tkinter import ttk, messagebox, filedialog, simpledialog, scrolledtext
 
 # Local Imports
 from JChatInt import JChat
@@ -593,14 +593,106 @@ class Application(tk.Tk):
 
     def get_file_checksum(self):
         file_path = filedialog.askopenfilename()
+        if not file_path:
+            messagebox.showinfo("Info", "No file selected.")
+            return
 
-        if file_path:
-            # Open cmd with certutil to compute hash for the selected file
-            cmd = f'certutil -hashfile "{file_path}" SHA256'
-            # Run the command without waiting for it to complete
-            subprocess.Popen(cmd, shell=True)
-        else:
-            print("No file selected.")  # Replace with user notification as needed
+        # Create a new window for algorithm selection
+        algo_window = tk.Toplevel(self)
+        algo_window.title("Compute File Checksum")
+        algo_window.geometry("400x250")
+
+        # Center the window
+        algo_window.update_idletasks()
+        width = algo_window.winfo_width()
+        height = algo_window.winfo_height()
+        x = (algo_window.winfo_screenwidth() // 2) - (width // 2)
+        y = (algo_window.winfo_screenheight() // 2) - (height // 2)
+        algo_window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+
+        # Create and pack a label
+        label = ttk.Label(algo_window, text="Choose a checksum algorithm:")
+        label.pack(pady=10)
+
+        # Create a variable to hold the selected algorithm
+        selected_algo = tk.StringVar()
+
+        # Create a combobox for algorithm selection
+        algorithms = ["MD5", "SHA1", "SHA256", "SHA384", "SHA512"]
+        algo_combo = ttk.Combobox(algo_window, textvariable=selected_algo, values=algorithms, state="readonly")
+        algo_combo.set("SHA256")  # Default value
+        algo_combo.pack(pady=10)
+
+        # Create a label to display the selected algorithm
+        algo_label = ttk.Label(algo_window, text="")
+        algo_label.pack(pady=5)
+
+        # Create a ScrolledText widget to display the result
+        result_text = scrolledtext.ScrolledText(algo_window, height=3, width=50, wrap=tk.WORD)
+        result_text.pack(pady=10, padx=10, expand=True, fill=tk.BOTH)
+        result_text.config(state=tk.DISABLED)  # Make it read-only initially
+
+        def run_checksum():
+            algo = selected_algo.get()
+            cmd = f'certutil -hashfile "{file_path}" {algo}'
+
+            try:
+                # Run the command and capture the output
+                result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+
+                # Extract the checksum from the output
+                checksum = result.stdout.split('\n')[1].strip()
+
+                # Update the algorithm label
+                algo_label.config(text=f"Algorithm: {algo}")
+
+                # Display only the checksum in the text widget
+                result_text.config(state=tk.NORMAL)
+                result_text.delete('1.0', tk.END)
+                result_text.insert(tk.END, checksum)
+                result_text.config(state=tk.DISABLED)
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Error", f"An error occurred while computing the checksum:\n{e.stderr}")
+            except Exception as e:
+                messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}")
+
+        # Create and pack a button
+        button = ttk.Button(algo_window, text="Compute Checksum", command=run_checksum)
+        button.pack(pady=10)
+
+        # Make the window modal
+        algo_window.transient(self)
+        algo_window.grab_set()
+        self.wait_window(algo_window)
+
+        def run_checksum():
+            algo = selected_algo.get()
+            cmd = f'certutil -hashfile "{file_path}" {algo}'
+
+            try:
+                # Run the command and capture the output
+                result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+
+                # Extract the checksum from the output
+                checksum = result.stdout.split('\n')[1].strip()
+
+                # Show the result in a message box
+                messagebox.showinfo("Checksum Result", f"Algorithm: {algo}\nChecksum: {checksum}")
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Error", f"An error occurred while computing the checksum:\n{e.stderr}")
+            except Exception as e:
+                messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}")
+
+            algo_window.destroy()
+
+        # Create and pack a button
+        button = ttk.Button(algo_window, text="Compute Checksum", command=run_checksum)
+        button.pack(pady=10)
+
+        # Make the window modal
+        algo_window.transient(self)
+        algo_window.grab_set()
+        self.wait_window(algo_window)
 
     def get_system_info(self):
         c = wmi.WMI()
@@ -1380,7 +1472,7 @@ class Application(tk.Tk):
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
-        checksum_btn = ttk.Button(self.functions_frame, text="SHA256 file checksum", command=self.get_file_checksum)
+        checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum)
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
