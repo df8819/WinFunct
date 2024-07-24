@@ -1179,6 +1179,7 @@ class Application(tk.Tk):
                 "Rufus USB Creator": "https://rufus.ie/en/",
                 "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
                 "NetManSet": "https://www.netsetman.com/en/freeware",
+                "Posy Cursors": "http://www.michieldb.nl/other/cursors",
             },
 
             "Tutorials": {
