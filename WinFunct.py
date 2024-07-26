@@ -755,6 +755,8 @@ class Application(tk.Tk):
             self.gather_and_save_info()
         elif selected1 == "Compare Sys Info":
             self.compare_system_info()
+        elif selected1 == "Show single Sys":
+            self.show_system_info()
 
     def on_function_select2(self, event):
         selected2 = self.selected_function2.get()
@@ -850,6 +852,51 @@ class Application(tk.Tk):
                     htmlfile.write(f'<tr><td>{field}</td><td>{value}</td><td>{file_names_with_count}</td></tr>')
 
             # End the HTML file
+            htmlfile.write('</table></body></html>')
+
+    def show_system_info(self):
+        file_path = filedialog.askopenfilename(
+            title="Select a CSV file",
+            filetypes=[("CSV Files", "*.csv")])
+
+        if not file_path:
+            messagebox.showinfo("Cancelled", "No file was selected.")
+            return
+
+        system_info = self.read_single_csv(file_path)
+
+        save_path = filedialog.asksaveasfilename(
+            title="Save System Info File",
+            defaultextension=".html",
+            filetypes=[("HTML Files", "*.html")],
+            initialfile="SystemInfo.html")
+
+        if save_path:
+            self.write_system_info_to_file(system_info, save_path)
+            messagebox.showinfo("Success", f"System info saved to {save_path}")
+        else:
+            messagebox.showinfo("Cancelled", "Save file operation was cancelled.")
+
+    def read_single_csv(self, file_path):
+        with open(file_path, mode='r', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            return {row['Field']: row['Value'] for row in reader}
+
+    def write_system_info_to_file(self, system_info, file_path):
+        with open(file_path, mode='w', encoding='utf-8') as htmlfile:
+            htmlfile.write('<html><head><style>')
+            htmlfile.write('body { background-color: #2b2b2b; color: #f0f0f0; font-family: Arial, sans-serif; }')
+            htmlfile.write('table {border-collapse: separate; border-spacing: 0 10px; width: 100%;}')
+            htmlfile.write('th, td {border: 1px solid #ddd; padding: 8px; background-color: #5b8ea6;}')
+            htmlfile.write('th {padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #3a7ca5;}')
+            htmlfile.write('tr:nth-child(even) {background-color: #f2f2f2; color: #333;}')
+            htmlfile.write('</style></head><body>')
+            htmlfile.write('<table>')
+            htmlfile.write('<tr><th>Field</th><th>Value</th></tr>')
+
+            for field, value in system_info.items():
+                htmlfile.write(f'<tr><td>{field}</td><td>{value}</td></tr>')
+
             htmlfile.write('</table></body></html>')
 
     def check_internet(self):
@@ -1424,7 +1471,7 @@ class Application(tk.Tk):
         self.function_dropdown1 = ttk.Combobox(
             self.functions_frame,
             textvariable=self.selected_function1,
-            values=["Extract Sys Info", "Compare Sys Info"],
+            values=["Extract Sys Info", "Compare Sys Info", "Show single Sys"],
             state="readonly"
         )
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
