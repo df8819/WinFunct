@@ -156,7 +156,7 @@ pwas_to_unregister = [
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.resolution_main = "630x520"
+        self.resolution_main = "660x520"
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -747,6 +747,13 @@ class Application(tk.Tk):
             title="Choose a location to save the file"
         )
         return file_path
+
+    def on_function_select(self, event):
+        selected = self.selected_function.get()
+        if selected == "Extract Sys Info":
+            self.gather_and_save_info()
+        elif selected == "Compare Sys Info":
+            self.compare_system_info()
 
     def gather_and_save_info(self):
         global info
@@ -1408,8 +1415,19 @@ class Application(tk.Tk):
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
 
-        save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function = tk.StringVar()
+        self.function_dropdown = ttk.Combobox(
+            self.functions_frame,
+            textvariable=self.selected_function,
+            values=["Extract Sys Info", "Compare Sys Info"],
+            state="readonly"
+        )
+        self.function_dropdown.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown.set("System Info")  # Set default text
+        self.function_dropdown.bind("<<ComboboxSelected>>", self.on_function_select)
+
+        # save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
+        # save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
 
         activate_wui_btn = ttk.Button(self.functions_frame, text="CTT Winutil", command=self.activate_wui)
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
@@ -1423,8 +1441,8 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         arp_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
-        compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
-        compare_systems_btn.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+        # compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
+        # compare_systems_btn.grid(row=2, column=4, padx=10, pady=5, sticky="we")
 
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
