@@ -407,52 +407,6 @@ class Application(tk.Tk):
         else:
             print("Command was cancelled.")
 
-    def install_rust_transformers(self):
-        response = messagebox.askokcancel("Warning", "This script will install Rust, the transformers library, and generate an SSH key. Continue?")
-        if response:
-            try:
-                # Download the Rust installer for Windows
-                rust_installer_url = "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe"
-                rust_installer_path = os.path.expanduser("~/rustup-init.exe")
-                self.download_file(rust_installer_url, rust_installer_path)
-
-                # Run the Rust installer silently with the '-y' flag (yes to all)
-                subprocess.run([rust_installer_path, '-y'], check=True, capture_output=True, text=True)
-
-                # Install the transformers library via pip
-                subprocess.run(['pip', 'install', 'transformers'], check=True, capture_output=True, text=True)
-
-                # Check if an SSH key already exists, otherwise generate one
-                ssh_key_path = os.path.expanduser('~/.ssh/id_rsa')
-                if not os.path.exists(ssh_key_path):
-                    subprocess.run(['ssh-keygen', '-t', 'rsa', '-b', '4096', '-C', 'user@example.com', '-N', '', '-f', ssh_key_path], check=True, capture_output=True, text=True)
-
-                messagebox.showinfo("Success", "Installation completed successfully.")
-            except subprocess.CalledProcessError as e:
-                messagebox.showerror("Error", f"An error occurred during the installation process:\n{e.stderr}")
-            except Exception as e:
-                messagebox.showerror("Error", f"Unexpected error:\n{str(e)}")
-            finally:
-                # Clean up the downloaded Rust installer
-                if os.path.exists(rust_installer_path):
-                    try:
-                        os.remove(rust_installer_path)
-                    except Exception:
-                        pass
-
-    def download_file(self, url, dest):
-        """Download a file from a given URL to the destination path."""
-        try:
-            urllib.request.urlretrieve(url, dest)
-        except Exception as e:
-            messagebox.showerror("Download Error", f"Could not download the file: {e}")
-            raise
-
-    def ssh_key(self):
-        response = messagebox.askokcancel("SSH-Key", "Generating SSH-Key for this device. Continue?")
-        if response:
-            # Open a new Command Prompt window and run ssh-keygen
-            subprocess.Popen('start cmd.exe /k ssh-keygen', shell=True)
 
     def shutdown_i(self):
         subprocess.run("shutdown -i", shell=True)
@@ -1330,7 +1284,6 @@ class Application(tk.Tk):
             ("Local Users", "lusrmgr.msc"),
             ("Sys Prop Name", "SystemPropertiesComputerName"),
             ("ODBC Sources", "odbcad32"),
-            ("PrintMgmt", "printmanagement.msc"),
             ("Shared Folders", "fsmgmt.msc"),
             ("Mobility Ctr", "mblctr"),
         ]
@@ -1350,7 +1303,6 @@ class Application(tk.Tk):
             ("VPN Set.", "start ms-settings:network-vpn"),
             ("Wi-Fi Set.", "start ms-settings:network-wifi"),
             ("Ethernet Set.", "start ms-settings:network-ethernet"),
-            ("Dial-up Set.", "start ms-settings:network-dialup"),
             ("Proxy Set.", "start ms-settings:network-proxy"),
         ]
 
@@ -1373,7 +1325,6 @@ class Application(tk.Tk):
             ("Hyper-V Mgr", "virtmgmt.msc"),
             ("Env. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
             ("RDP Set", "start ms-settings:remotedesktop"),
-            ("Remote Assist", "msra"),
         ]
 
         # Troubleshooting and Optimization Tools
@@ -1381,7 +1332,6 @@ class Application(tk.Tk):
             ("RelMon", "perfmon /rel"),
             ("Disk Cleanup", "cleanmgr"),
             ("Sys Restore", "rstrui"),
-            ("Troubleshoot", "msdt"),
             ("Opt Drives", "dfrgui"),
             ("Mem Diag", "MdSched"),
             ("DirectX Diag", "dxdiag"),
@@ -1399,7 +1349,6 @@ class Application(tk.Tk):
             ("IP Addr.", "netsh interface ip show addresses"),
             ("DNS Servers", "netsh interface ip show dns"),
             ("FW State", "netsh advfirewall show currentprofile state"),
-            ("FW Config", "netsh advfirewall firewall show rule name=all"),
             ("Rout. Table", "netsh interface ipv4 show route"),
             ("Wirel. Prof.", "netsh wlan show profiles"),
             ("Wirel. Set.", "netsh wlan show settings"),
@@ -1483,11 +1432,11 @@ class Application(tk.Tk):
         autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
-        rust_btn = ttk.Button(self.functions_frame, text="Rust/Transformers", command=self.install_rust_transformers)
-        rust_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
+        # rust_btn = ttk.Button(self.functions_frame, text="XXXXXXXXX", command=self.XXXXXXXXX)
+        # rust_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
-        ssh_key_btn = ttk.Button(self.functions_frame, text="New SSH Key", command=self.ssh_key)
-        ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
+        # ssh_key_btn = ttk.Button(self.functions_frame, text="XXXXXXXXX", command=self.XXXXXXXXX)
+        # ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
         shutdown_i_btn.grid(row=3, column=4, padx=10, pady=5, sticky="we")
