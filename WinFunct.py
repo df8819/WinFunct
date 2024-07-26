@@ -1136,137 +1136,107 @@ class Application(tk.Tk):
             print(f"Error: {e}")
 
     def open_links_window(self):
-        # Define your links here
         links = {
             "Dev Tools": {
                 "Python": "https://www.python.org/downloads/",
                 "Git": "https://git-scm.com/downloads",
                 "GitHub Desktop": "https://desktop.github.com",
-                "Visual Studio": "https://code.visualstudio.com/download",
+                "Visual Studio Code": "https://code.visualstudio.com/download",
                 "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
                 "UPX Packer": "https://github.com/upx/upx/releases",
-                "AirCrack": "https://www.aircrack-ng.org",
-                "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
                 "Rust/Cargo": "https://rustup.rs",
-                "Etcher USB Creator": "https://etcher.balena.io",
-                "Win X Server": "https://sourceforge.net/projects/vcxsrv/",
-                "HxD Hex Editor": "https://mh-nexus.de/en/programs.php",
-                "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
-                "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
                 "Qt Designer": "https://build-system.fman.io/qt-designer-download",
             },
-
-            "Utilities": {
-                "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
-                "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
-                "MS PowerToys": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
-                "PicPick": "https://picpick.app/en/download/",
+            "Network Tools": {
+                "AirCrack": "https://www.aircrack-ng.org",
+                "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
+                "WireShark": "https://www.wireshark.org/download.html",
+                "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
+                "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
+                "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
+            },
+            "System Utilities": {
+                "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
+                "HxD Hex Editor": "https://mh-nexus.de/en/programs.php",
                 "HWInfo64": "https://www.hwinfo.com/download/",
                 "MSI Afterburner": "https://www.msi.com/Landing/afterburner/graphics-cards",
                 "WinDirStat": "https://sourceforge.net/projects/windirstat/",
-                "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
+                "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
+            },
+            "Remote & Collaboration": {
+                "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
+                "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
+                "MS PowerToys": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
+            },
+            "Disk & Partition Tools": {
+                "Etcher USB Creator": "https://etcher.balena.io",
                 "Raspberry Pi Imager": "https://www.raspberrypi.com/software/",
-                "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
-                "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
                 "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
-                "Win10 Creation Tool": "https://www.microsoft.com/de-de/software-download/windows10",
-                "WireShark": "https://www.wireshark.org/download.html",
-                "Total Commander": "https://www.ghisler.com/ddownload.htm",
                 "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
                 "Rufus USB Creator": "https://rufus.ie/en/",
-                "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
+            },
+            "Productivity": {
+                "PicPick": "https://picpick.app/en/download/",
+                "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
+                "Total Commander": "https://www.ghisler.com/ddownload.htm",
                 "NetManSet": "https://www.netsetman.com/en/freeware",
                 "Posy Cursors": "http://www.michieldb.nl/other/cursors",
+                "Bitwarden": "https://bitwarden.com/download/",
             },
-
-            "Tutorials": {
+            "Tutorials & Resources": {
                 "MAS Script": "https://massgrave.dev/index.html",
                 "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
                 "NSE Lab": "https://nse.digital",
                 "Wifi-Hack": "https://hackernoon.com/how-to-hack-wifi-like-a-pro-hacker",
             },
-            # Add more categories and items as needed
         }
 
-        # Create a new window
         window = tk.Toplevel(self)
         window.title("Download Links")
-        window.resizable(True, True)  # Allow the window to be resizable
+        window.resizable(True, True)
 
-        # Create a scrollbar
-        scrollbar = tk.Scrollbar(window)
-        scrollbar.pack(side='right', fill='y')
+        main_frame = ttk.Frame(window)
+        main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Create a canvas for scrolling
-        canvas = tk.Canvas(window, yscrollcommand=scrollbar.set)
-        canvas.pack(side='top', fill='both', expand=True)
-        scrollbar.config(command=canvas.yview)
+        canvas = tk.Canvas(main_frame)
+        scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
+        scrollable_frame = ttk.Frame(canvas)
 
-        # Create a frame for checkboxes within the canvas
-        checkbox_frame = tk.Frame(canvas)
-        canvas.create_window((0, 0), window=checkbox_frame, anchor='nw')
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
 
-        # Dictionary to hold the IntVar linked to each checkbox
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
         self.checkbox_vars = {}
 
-        # Create checkboxes within each category
-        row = 0
-        for category, links_dict in links.items():
-            col = 0  # Ensure a category label starts in the first column
-            # Create a label for the category
-            category_label = tk.Label(checkbox_frame, text=category, font="bold")
-            category_label.grid(row=row, column=col, columnspan=2, sticky='w', pady=(10, 5))
-            row += 1  # Increment the row for the first item in the category
+        for category, items in links.items():
+            category_frame = ttk.LabelFrame(scrollable_frame, text=category)
+            category_frame.pack(fill="x", expand=True, padx=10, pady=5)
 
-            # Create checkboxes for each link in the category
-            for text, link in links_dict.items():
+            for i, (text, link) in enumerate(items.items()):
                 var = tk.IntVar()
-                checkbox = ttk.Checkbutton(checkbox_frame, text=f"{text}", variable=var)
-                checkbox.grid(row=row, column=col, sticky='w', padx=10)
-
+                checkbox = ttk.Checkbutton(category_frame, text=text, variable=var)
+                checkbox.grid(row=i // 2, column=i % 2, sticky="w", padx=5, pady=2)
                 self.checkbox_vars[link] = var
 
-                # Update row and column positions
-                if col == 0:
-                    col = 1
-                else:
-                    col = 0
-                    row += 1
+        button_frame = ttk.Frame(window)
+        button_frame.pack(fill="x", padx=10, pady=10)
 
-            # If the number of items in the category is odd, increment the row to start a new line
-            if col != 0:
-                row += 1
+        ttk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window)).pack(side="right", padx=5)
+        ttk.Button(button_frame, text="Cancel", command=window.destroy).pack(side="right", padx=5)
 
-        # Update the canvas's scrollregion
-        checkbox_frame.update_idletasks()
-        canvas.config(scrollregion=canvas.bbox("all"))
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
 
-        # Create a frame for buttons
-        button_frame = tk.Frame(window)
-        button_frame.pack(side='bottom', fill='x', pady=10)
-
-        # OK button
-        ok_button = ttk.Button(button_frame, text="OK", command=lambda: self.on_ok(window))
-        ok_button.pack(side='right', padx=5)
-
-        # Cancel button
-        cancel_button = ttk.Button(button_frame, text="Cancel", command=window.destroy)
-        cancel_button.pack(side='right', padx=5)
-
-        # Set the initial geometry of the window
-        initial_width = 360
-        initial_height = 640  # Adjust the height as needed
-        window.geometry(f"{initial_width}x{initial_height}")
-
-        # Center the window on the screen
         window.update_idletasks()
-        window_width = window.winfo_width()
-        window_height = window.winfo_height()
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
-        x = (screen_width - window_width) // 2
-        y = (screen_height - window_height) // 2
-        window.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        width = min(340, window.winfo_screenwidth() - 100)
+        height = min(750, window.winfo_screenheight() - 100)
+        x = (window.winfo_screenwidth() - width) // 2
+        y = (window.winfo_screenheight() - height) // 2
+        window.geometry(f"{width}x{height}+{x}+{y}")
 
     def on_ok(self, window):
         for link, var in self.checkbox_vars.items():
