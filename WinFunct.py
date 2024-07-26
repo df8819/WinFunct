@@ -2,6 +2,7 @@
 import csv
 import ctypes
 import hashlib
+import logging
 import os
 import re
 import socket
@@ -10,6 +11,7 @@ import sys
 import threading
 import time
 import webbrowser
+import winreg
 
 # Third-Party Imports
 import requests
@@ -649,6 +651,74 @@ class Application(tk.Tk):
         algo_window.grab_set()
         self.wait_window(algo_window)
 
+    def get_installed_software(self):
+        software_list = []
+        logging.basicConfig(level=logging.INFO)
+
+        def get_software_from_key(key, flag):
+            try:
+                access_flag = winreg.KEY_READ | flag
+                with winreg.OpenKey(key, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", 0, access_flag) as reg_key:
+                    for i in range(winreg.QueryInfoKey(reg_key)[0]):
+                        try:
+                            subkey_name = winreg.EnumKey(reg_key, i)
+                            with winreg.OpenKey(reg_key, subkey_name) as subkey:
+                                try:
+                                    software_name = winreg.QueryValueEx(subkey, "DisplayName")[0]
+                                    if software_name and software_name.strip():
+                                        software_list.append(software_name.strip())
+                                except FileNotFoundError:
+                                    pass
+                                except WindowsError as e:
+                                    logging.warning(f"Error reading subkey {subkey_name}: {str(e)}")
+                        except WindowsError:
+                            pass
+            except WindowsError as e:
+                logging.error(f"Error opening key {key}: {str(e)}")
+
+        # Check both 32-bit and 64-bit registry keys
+        get_software_from_key(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_32KEY)
+        get_software_from_key(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_64KEY)
+        get_software_from_key(winreg.HKEY_CURRENT_USER, 0)
+
+        # Additional registry keys to check
+        additional_keys = [
+            r"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+            r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+        ]
+
+        for add_key in additional_keys:
+            try:
+                with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, add_key, 0, winreg.KEY_READ | winreg.KEY_WOW64_64KEY) as reg_key:
+                    for i in range(winreg.QueryInfoKey(reg_key)[0]):
+                        try:
+                            subkey_name = winreg.EnumKey(reg_key, i)
+                            with winreg.OpenKey(reg_key, subkey_name) as subkey:
+                                try:
+                                    software_name = winreg.QueryValueEx(subkey, "DisplayName")[0]
+                                    if software_name and software_name.strip():
+                                        software_list.append(software_name.strip())
+                                except FileNotFoundError:
+                                    pass
+                        except WindowsError:
+                            pass
+            except WindowsError:
+                pass
+
+        # Add Microsoft Store apps
+        try:
+            apps_path = os.path.join(os.environ["ProgramFiles"], "WindowsApps")
+            for item in os.listdir(apps_path):
+                if os.path.isdir(os.path.join(apps_path, item)):
+                    parts = item.split("_")
+                    if len(parts) > 1:
+                        software_list.append(parts[0])
+        except Exception as e:
+            logging.error(f"Error reading Microsoft Store apps: {str(e)}")
+
+        # Remove duplicates and sort
+        return sorted(set(software_list))
+
     def get_system_info(self):
         c = wmi.WMI()
         system_info = {}
@@ -715,10 +785,7 @@ class Application(tk.Tk):
             system_info['Number of Processors'] = computer.NumberOfProcessors
 
         # Installed Software
-        installed_software = [software.Caption.strip() for software in c.Win32_Product() if
-                              software.Caption and software.Caption != 'HOTKEY']
-
-        system_info['Installed Software'] = installed_software
+        system_info['Installed Software'] = self.get_installed_software()
 
         return system_info
 
@@ -865,6 +932,10 @@ class Application(tk.Tk):
 
         system_info = self.read_single_csv(file_path)
 
+        print("\nSystem Info before writing to HTML:")
+        for key, value in system_info.items():
+            print(f"{key}: {value}")
+
         save_path = filedialog.asksaveasfilename(
             title="Save System Info File",
             defaultextension=".html",
@@ -872,15 +943,40 @@ class Application(tk.Tk):
             initialfile="SystemInfo.html")
 
         if save_path:
-            self.write_system_info_to_file(system_info, save_path)
-            messagebox.showinfo("Success", f"System info saved to {save_path}")
+            try:
+                self.write_system_info_to_file(system_info, save_path)
+                messagebox.showinfo("Success", f"System info saved to {save_path}")
+            except PermissionError as e:
+                messagebox.showerror("Permission Error", f"Permission denied: {str(e)}")
         else:
             messagebox.showinfo("Cancelled", "Save file operation was cancelled.")
 
     def read_single_csv(self, file_path):
+        system_info = {}
+        current_field = None
+
         with open(file_path, mode='r', encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile)
-            return {row['Field']: row['Value'] for row in reader}
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if row and row[0]:  # Non-empty row with content in the first column
+                    current_field = row[0]
+                    if current_field == 'Installed Software':
+                        system_info[current_field] = []
+                    elif len(row) > 1:
+                        system_info[current_field] = row[1]
+                    else:
+                        system_info[current_field] = ''
+                elif current_field == 'Installed Software' and len(row) > 1:
+                    system_info[current_field].append(row[1])
+                elif current_field and len(row) > 1:
+                    # Append to existing value if it's a continuation
+                    system_info[current_field] += f", {row[1]}"
+
+        print("Processed system_info:")
+        for key, value in system_info.items():
+            print(f"{key}: {value}")
+
+        return system_info
 
     def write_system_info_to_file(self, system_info, file_path):
         with open(file_path, mode='w', encoding='utf-8') as htmlfile:
@@ -895,7 +991,15 @@ class Application(tk.Tk):
             htmlfile.write('<tr><th>Field</th><th>Value</th></tr>')
 
             for field, value in system_info.items():
-                htmlfile.write(f'<tr><td>{field}</td><td>{value}</td></tr>')
+                htmlfile.write(f'<tr><td>{field}</td><td>')
+                if field == 'Installed Software' and isinstance(value, list):
+                    htmlfile.write('<ul>')
+                    for software in value:
+                        htmlfile.write(f'<li>{software}</li>')
+                    htmlfile.write('</ul>')
+                else:
+                    htmlfile.write(f'{value}')
+                htmlfile.write('</td></tr>')
 
             htmlfile.write('</table></body></html>')
 
