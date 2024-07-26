@@ -871,20 +871,20 @@ class Application(tk.Tk):
                                    stdout=subprocess.DEVNULL,
                                    stderr=subprocess.DEVNULL,
                                    check=True)
-                    success, message = True, f"{method_name} successful"
+                    success, message = True, f"{method_name} (8.8.8.8) successful"
                 except subprocess.CalledProcessError:
                     pass
             elif method_name == "Socket":
                 try:
                     socket.create_connection(target, timeout=3)
-                    success, message = True, f"{method_name} connection successful"
+                    success, message = True, f"{method_name} (8.8.8.8 -Port 53) connection successful"
                 except socket.error:
                     pass
             elif method_name == "HTTP":
                 try:
                     response = requests.get(target, timeout=5)
                     if response.status_code == 200:
-                        success, message = True, f"{method_name} request successful"
+                        success, message = True, f"{method_name} (http://www.google.com) request successful"
                 except requests.RequestException:
                     pass
 
@@ -893,12 +893,12 @@ class Application(tk.Tk):
             results.append((success, message, latency))
 
         online = any(result[0] for result in results)
-        status_message = "\n".join(f"{msg} (Latency: {lat} ms)" for _, msg, lat in results)
+        status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
 
         if online:
-            messagebox.showinfo("Internet Status", f"We're online!\n\n{status_message}")
+            messagebox.showinfo("Internet Status", f"We're online :)\n\n{status_message}")
         else:
-            messagebox.showwarning("Internet Status", f"We're offline.\n\n{status_message}")
+            messagebox.showwarning("Internet Status", f"We're offline :(\n\n{status_message}")
 
     def netstat_output(self):
         try:
