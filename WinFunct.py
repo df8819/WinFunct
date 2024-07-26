@@ -748,12 +748,19 @@ class Application(tk.Tk):
         )
         return file_path
 
-    def on_function_select(self, event):
-        selected = self.selected_function.get()
-        if selected == "Extract Sys Info":
+    def on_function_select1(self, event):
+        selected1 = self.selected_function1.get()
+        if selected1 == "Extract Sys Info":
             self.gather_and_save_info()
-        elif selected == "Compare Sys Info":
+        elif selected1 == "Compare Sys Info":
             self.compare_system_info()
+
+    def on_function_select2(self, event):
+        selected2 = self.selected_function2.get()
+        if selected2 == "Active Connections":
+            self.netstat_output()
+        elif selected2 == "Threat Search":
+            self.confirm_and_search()
 
     def gather_and_save_info(self):
         global info
@@ -898,13 +905,15 @@ class Application(tk.Tk):
                 for line in unique_lines:
                     file.write(line + '\n')
 
-            messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the app's root folder.\n\n'netstat_exe_output.txt' lists all apps that have established an internet connection. 'Scan Apps' will lookup each one in a separate Google search tab.")
+            messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the app's root folder.\n\n'Threat Search' will lookup each one in a separate Google search tab.")
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred: {e}")
 
-    def search_app_info(self, file_path):
+    def search_app_info(self, file_path=None):
+        if file_path is None:
+            file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
         search_base_url = "https://www.google.com/search?q="
 
         # Read the application names from the file
@@ -921,7 +930,7 @@ class Application(tk.Tk):
 
         # Check if the file exists
         if not os.path.exists(file_path):
-            messagebox.showinfo("File Not Found", f"netstat_exe_output.txt not found\n\nPlease click 'App Connections' first and try again.")
+            messagebox.showinfo("File Not Found", f"netstat_exe_output.txt not found\n\nPlease click 'Active Connections' first and try again.")
             return
 
         response = messagebox.askyesno("Confirm Search", "Do you want to check scanned App information online?\n\nWARNING: This will open a new google search tab for every entry in netstat_exe_output.txt")
@@ -1415,19 +1424,28 @@ class Application(tk.Tk):
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
 
-        self.selected_function = tk.StringVar()
-        self.function_dropdown = ttk.Combobox(
+        # Dropdown menu for similar functions - System Info Compare
+        self.selected_function1 = tk.StringVar()
+        self.function_dropdown1 = ttk.Combobox(
             self.functions_frame,
-            textvariable=self.selected_function,
+            textvariable=self.selected_function1,
             values=["Extract Sys Info", "Compare Sys Info"],
             state="readonly"
         )
-        self.function_dropdown.grid(row=1, column=4, padx=10, pady=5, sticky="we")
-        self.function_dropdown.set("System Info")  # Set default text
-        self.function_dropdown.bind("<<ComboboxSelected>>", self.on_function_select)
+        self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown1.set("System Info")  # Set default text
+        self.function_dropdown1.bind("<<ComboboxSelected>>", self.on_function_select1)
 
-        # save_info_btn = ttk.Button(self.functions_frame, text="Extract Sys Info", command=self.gather_and_save_info)
-        # save_info_btn.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function2 = tk.StringVar()
+        self.function_dropdown2 = ttk.Combobox(
+            self.functions_frame,
+            textvariable=self.selected_function2,
+            values=["Active Connections", "Threat Search"],
+            state="readonly"
+        )
+        self.function_dropdown2.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown2.set("App Connections")  # Set default text
+        self.function_dropdown2.bind("<<ComboboxSelected>>", self.on_function_select2)
 
         activate_wui_btn = ttk.Button(self.functions_frame, text="CTT Winutil", command=self.activate_wui)
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
@@ -1441,23 +1459,14 @@ class Application(tk.Tk):
         arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
         arp_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
-        # compare_systems_btn = ttk.Button(self.functions_frame, text="Compare Sys Info", command=self.compare_system_info)
-        # compare_systems_btn.grid(row=2, column=4, padx=10, pady=5, sticky="we")
-
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations)
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
-        # rust_btn = ttk.Button(self.functions_frame, text="XXXXXXXXX", command=self.XXXXXXXXX)
-        # rust_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
-
-        # ssh_key_btn = ttk.Button(self.functions_frame, text="XXXXXXXXX", command=self.XXXXXXXXX)
-        # ssh_key_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
-
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
-        shutdown_i_btn.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+        shutdown_i_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
@@ -1465,14 +1474,8 @@ class Application(tk.Tk):
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum)
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
-        netstat_output_btn = ttk.Button(self.functions_frame, text="App Connections", command=self.netstat_output)
-        netstat_output_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
-
-        search_app_btn = ttk.Button(self.functions_frame, text="Scan Apps", command=self.confirm_and_search)
-        search_app_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
-
         clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
-        clone_btn.grid(row=4, column=4, padx=10, pady=5, sticky="we")
+        clone_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat)
