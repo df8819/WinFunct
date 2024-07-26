@@ -1,13 +1,14 @@
 # Standard Library Imports
-import os
-import sys
-import re
 import csv
-import subprocess
-import hashlib
-import threading
-import urllib.request
 import ctypes
+import hashlib
+import os
+import re
+import socket
+import subprocess
+import sys
+import threading
+import time
 import webbrowser
 
 # Third-Party Imports
@@ -16,15 +17,15 @@ import wmi
 
 # Tkinter Imports
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog, simpledialog, scrolledtext
+from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
 
 # Local Imports
+from HashStuffInt import HashStuff
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
-from HashStuffInt import HashStuff
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.511"
+VERSION = "Use at your own risk and responsibility - v1.607"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -852,26 +853,52 @@ class Application(tk.Tk):
             htmlfile.write('</table></body></html>')
 
     def check_internet(self):
-        # Try to run the 'ping' command to check connectivity.
-        try:
-            # For Windows, use '-n' for count; for UNIX/Linux, use '-c'.
-            # The argument 'stdout=subprocess.PIPE' hides the command output.
-            # 'shell=True' is used to execute the command through the shell (use with caution).
-            output = subprocess.run(['ping', '-n', '1', '8.8.8.8'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                    shell=True)
+        results = []
+        methods = [
+            ("Ping", '8.8.8.8'),
+            ("Socket", ('8.8.8.8', 53)),
+            ("HTTP", 'http://www.google.com')
+        ]
 
-            # Decode the output using the correct encoding
-            # output_decoded = output.stdout.decode('cp437')  # 'cp437' is a common code page for the Windows command prompt
+        for method_name, target in methods:
+            start_time = time.time()
+            success, message = False, f"{method_name} failed"
 
-            # If the ping command succeeds, the return code should be 0.
-            if output.returncode == 0:
-                messagebox.showinfo("Online?!", "Yes, we're online.")
-            else:
-                messagebox.showinfo("Online?!", "No, we're offline.")
+            if method_name == "Ping":
+                try:
+                    param = '-n' if subprocess.sys.platform.lower() == 'win32' else '-c'
+                    subprocess.run(['ping', param, '1', target],
+                                   stdout=subprocess.DEVNULL,
+                                   stderr=subprocess.DEVNULL,
+                                   check=True)
+                    success, message = True, f"{method_name} successful"
+                except subprocess.CalledProcessError:
+                    pass
+            elif method_name == "Socket":
+                try:
+                    socket.create_connection(target, timeout=3)
+                    success, message = True, f"{method_name} connection successful"
+                except socket.error:
+                    pass
+            elif method_name == "HTTP":
+                try:
+                    response = requests.get(target, timeout=5)
+                    if response.status_code == 200:
+                        success, message = True, f"{method_name} request successful"
+                except requests.RequestException:
+                    pass
 
-        except Exception as e:
-            # If an error occurs during the ping process, consider it as offline.
-            messagebox.showinfo("Online?!", f"An error occurred: {e}")
+            end_time = time.time()
+            latency = round((end_time - start_time) * 1000, 2)  # Convert to ms
+            results.append((success, message, latency))
+
+        online = any(result[0] for result in results)
+        status_message = "\n".join(f"{msg} (Latency: {lat} ms)" for _, msg, lat in results)
+
+        if online:
+            messagebox.showinfo("Internet Status", f"We're online!\n\n{status_message}")
+        else:
+            messagebox.showwarning("Internet Status", f"We're offline.\n\n{status_message}")
 
     def netstat_output(self):
         try:
