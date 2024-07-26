@@ -1270,12 +1270,12 @@ class Application(tk.Tk):
         netsh_frame = ttk.Frame(options_notebook)
 
         # Adding new frames to the options notebook
-        options_notebook.add(advanced_windows_settings_frame, text='Win Manag.')
-        options_notebook.add(system_tools_frame, text='Sec. & Netw.')
-        options_notebook.add(utilities_frame, text='Tools & Options')
-        options_notebook.add(tools_frame, text='Remote & Venv')
-        options_notebook.add(trouble_frame, text='Trouble & Optim.')
-        options_notebook.add(netsh_frame, text='netsh')
+        options_notebook.add(advanced_windows_settings_frame, text='Management')
+        options_notebook.add(system_tools_frame, text='Security & Network')
+        options_notebook.add(utilities_frame, text='System Tools')
+        options_notebook.add(tools_frame, text='RDP & Environment')
+        options_notebook.add(trouble_frame, text='Trouble & Optimize')
+        options_notebook.add(netsh_frame, text='Network Shell')
 
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
@@ -1286,87 +1286,85 @@ class Application(tk.Tk):
         windows_management_options = [
             ("RegEdit", "regedit"),
             ("PC Mgr", "compmgmt.msc"),
-            ("Event Vwr", "eventvwr.msc"),
+            ("Event Viewer", "eventvwr.msc"),
             ("Services", "services.msc"),
-            ("Group Policy", "gpedit.msc"),
+            ("GPO", "gpedit.msc"),
             ("Programs", "appwiz.cpl"),
-            ("Win Ver.", "winver"),
-            ("Adv. Sys Set.", "SystemPropertiesAdvanced"),
-            ("User Acc Ctrl", "useraccountcontrolsettings"),
+            ("Win Version", "winver"),
+            ("Adv Sys Set", "SystemPropertiesAdvanced"),
+            ("UAC", "useraccountcontrolsettings"),
             ("Disk Mgr", "diskmgmt.msc"),
             ("Local Users", "lusrmgr.msc"),
-            ("Sys Prop Name", "SystemPropertiesComputerName"),
-            ("ODBC Sources", "odbcad32"),
+            ("Sys Name", "SystemPropertiesComputerName"),
+            ("ODBC", "odbcad32"),
             ("Shared Folders", "fsmgmt.msc"),
-            ("Mobility Ctr", "mblctr"),
+            ("Mobility", "mblctr"),
         ]
 
         # Security and Networking Tools
         security_and_networking_options = [
-            ("Sec. Center", "start ms-settings:windowsdefender"),
-            ("Sec. Policy", "secpol.msc"),
-            ("FW Advanced", "wf.msc"),
-            ("Net. Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
-            ("Internet Opt.", "inetcpl.cpl"),
-            ("Cred. Mgr", "control /name Microsoft.CredentialManager"),
+            ("Sec Center", "start ms-settings:windowsdefender"),
+            ("Sec Policy", "secpol.msc"),
+            ("FW Adv", "wf.msc"),
+            ("Net Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
+            ("Internet Opt", "inetcpl.cpl"),
+            ("Cred Mgr", "control /name Microsoft.CredentialManager"),
             ("Firewall", "firewall.cpl"),
-            ("Net. Adapt.", "ncpa.cpl"),
+            ("Net Adapts", "ncpa.cpl"),
             ("DNS Cache", "ipconfig /displaydns"),
             ("Remote Conn", "control /name Microsoft.RemoteAppAndDesktopConnections"),
-            ("VPN Set.", "start ms-settings:network-vpn"),
-            ("Wi-Fi Set.", "start ms-settings:network-wifi"),
-            ("Ethernet Set.", "start ms-settings:network-ethernet"),
-            ("Proxy Set.", "start ms-settings:network-proxy"),
+            ("VPN", "start ms-settings:network-vpn"),
+            ("Wi-Fi", "start ms-settings:network-wifi"),
+            ("Ethernet", "start ms-settings:network-ethernet"),
+            ("Proxy", "start ms-settings:network-proxy"),
         ]
 
         # System Tools and Utilities
         system_tools_options = [
             ("Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Task Mgr", "taskmgr"),
-            ("Ctrl Panel", "control"),
-            ("Device Mgr", "devmgmt.msc"),
-            ("Perf Mon.", "perfmon"),
-            ("Res. Mon.", "resmon"),
-            ("Dev. Pairing", "devicepairingwizard"),
+            ("Task Manager", "taskmgr"),
+            ("Control Panel", "control"),
+            ("Device Manager", "devmgmt.msc"),
+            ("Performance Mon", "perfmon"),
+            ("Resource Mon", "resmon"),
+            ("Device Pair", "devicepairingwizard"),
             ("Win Features", "optionalfeatures"),
-            ("Sys Info", "msinfo32"),
+            ("System Info", "msinfo32"),
         ]
 
         # Remote Management and Virtualization Tools
         remote_and_virtualization_options = [
             ("RDP", "mstsc"),
-            ("Hyper-V Mgr", "virtmgmt.msc"),
-            ("Env. Var.", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
-            ("RDP Set", "start ms-settings:remotedesktop"),
+            ("RDP Settings", "start ms-settings:remotedesktop"),
+            ("Hyper-V", "C:\\Windows\\System32\\virtmgmt.msc"),
+            ("Environ Vari", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
         ]
 
         # Troubleshooting and Optimization Tools
         troubleshooting_and_optimization_options = [
-            ("RelMon", "perfmon /rel"),
-            ("Disk Cleanup", "cleanmgr"),
+            ("Rel Mon", "perfmon /rel"),
+            ("Disk Clean", "cleanmgr"),
             ("Sys Restore", "rstrui"),
             ("Opt Drives", "dfrgui"),
-            ("Mem Diag", "MdSched"),
+            ("Memory Diag", "MdSched"),
             ("DirectX Diag", "dxdiag"),
             ("Sys Config", "msconfig"),
             ("Win Update", "start ms-settings:windowsupdate"),
-            ("Update Hist", "start ms-settings:windowsupdate-history"),
-            ("Update Opt", "start ms-settings:windowsupdate-options"),
         ]
 
         netsh_commands = [
             ("IP Config", "netsh interface ip show config"),
-            ("Interf.", "netsh interface show interface"),
-            ("IPv4 Interf.", "netsh interface ipv4 show interface"),
-            ("IPv6 Interf.", "netsh interface ipv6 show interface"),
-            ("IP Addr.", "netsh interface ip show addresses"),
-            ("DNS Servers", "netsh interface ip show dns"),
+            ("Interface", "netsh interface show interface"),
+            ("IPv4 Interface", "netsh interface ipv4 show interface"),
+            ("IPv6 Interface", "netsh interface ipv6 show interface"),
+            ("IP Address", "netsh interface ip show addresses"),
+            ("DNS Configs", "netsh interface ip show dns"),
             ("FW State", "netsh advfirewall show currentprofile state"),
-            ("Rout. Table", "netsh interface ipv4 show route"),
-            ("Wirel. Prof.", "netsh wlan show profiles"),
-            ("Wirel. Set.", "netsh wlan show settings"),
-            ("Wirel. Netw.", "netsh wlan show networks"),
-            ("Netw. Stats", "netstat -s"),
+            ("Routing Table", "netsh interface ipv4 show route"),
+            ("WiFi Profiles", "netsh wlan show profiles"),
+            ("WiFi Settings", "netsh wlan show settings"),
+            ("WiFi Netwroks", "netsh wlan show networks"),
+            ("Net Stats", "netstat -s"),
         ]
 
         # Function to create buttons within a frame from a list of option tuples
@@ -1400,13 +1398,13 @@ class Application(tk.Tk):
         self.ip_text = tk.Entry(self.functions_frame)
         self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
-        internet_btn = ttk.Button(self.functions_frame, text="Online?", command=self.check_internet)
+        internet_btn = ttk.Button(self.functions_frame, text="Are we online?", command=self.check_internet)
         internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        cmd_btn = ttk.Button(self.functions_frame, text="cmd", command=self.open_cmd_as_admin)
+        cmd_btn = ttk.Button(self.functions_frame, text="admin cmd", command=self.open_cmd_as_admin)
         cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
-        ps_btn = ttk.Button(self.functions_frame, text="PowerShell", command=self.open_ps_as_admin)
+        ps_btn = ttk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin)
         ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
         wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks)
