@@ -4,23 +4,23 @@ import ctypes
 import hashlib
 import logging
 import os
-import psutil
 import re
 import socket
 import subprocess
 import sys
 import threading
 import time
-import webbrowser
-import winreg
-
-# Third-Party Imports
-import requests
-import wmi
 
 # Tkinter Imports
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, simpledialog, ttk
+import webbrowser
+import winreg
+from tkinter import filedialog, messagebox, scrolledtext, ttk
+
+import psutil
+# Third-Party Imports
+import requests
+import wmi
 
 # Local Imports
 from HashStuffInt import HashStuff
