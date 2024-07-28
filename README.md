@@ -36,7 +36,7 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 - _The "Kill Bloatware" function needs some love and may don't work as intended_ 🤷‍♂️
 
-- _Screenshots may not show the latest version of the app. (Theme-Selector with ttkbootstrap in the making)_ 👀
+- _Screenshots may not show the latest version of the app. (Theme-Selector with ttkbootstrap is planned for the future)_ 👀
 
 ![Image](1701505001.png)
 
