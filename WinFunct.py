@@ -4,8 +4,10 @@ import ctypes
 import hashlib
 import logging
 import os
+import psutil
 import re
 import socket
+import string
 import subprocess
 import sys
 import threading
@@ -377,22 +379,62 @@ class Application(tk.Tk):
             tk.messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     def run_winsat_disk(self):
-        def is_valid_drive_letter(letter):
-            return len(letter) == 1 and letter.isalpha()
+        def get_available_drives():
+            drives = []
+            for partition in psutil.disk_partitions(all=False):
+                if partition.device and partition.device[0].isalpha():
+                    try:
+                        usage = psutil.disk_usage(partition.mountpoint)
+                        drives.append(f"{partition.device[0]}: ({usage.total / (1024 ** 3):.2f} GB)")
+                    except Exception:
+                        # Skip drives that can't be accessed
+                        pass
+            return drives
 
-        # Ask user to input the drive letter
-        drive_letter = simpledialog.askstring("Drive selection", "Enter the drive letter (without colon) to test:")
+        def on_run():
+            selected_drive = drive_combobox.get()
 
-        if drive_letter is None:  # User cancelled the input
-            messagebox.showinfo("Operation Cancelled", "Drive selection was cancelled.")
-            return
+            if selected_drive == "Select a drive":
+                messagebox.showwarning("No Drive Selected", "Please select a drive from the dropdown menu.")
+                return
 
-        if is_valid_drive_letter(drive_letter):
-            drive_letter = drive_letter.upper()
-            powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/k winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
-            subprocess.Popen(powershell_command, shell=True)
-        else:
-            messagebox.showerror("Invalid Input", "Please enter a valid drive letter (A-Z).")
+            drive_letter = selected_drive[0]  # Extract the drive letter from the selected option
+
+            try:
+                powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/k winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
+                subprocess.Popen(powershell_command, shell=True)
+                top.destroy()  # Close the drive selection window
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred while trying to run the WinSAT disk test: {str(e)}")
+
+        # Create a top-level window for drive selection
+        top = tk.Tk()
+        top.title("WinSAT Disk Performance Test")
+        top.geometry("380x130")
+
+        # Center the window on the screen
+        top.update_idletasks()  # Update "requested size" from geometry manager
+        width = top.winfo_width()
+        height = top.winfo_height()
+        x = (top.winfo_screenwidth() // 2) - (width // 2)
+        y = (top.winfo_screenheight() // 2) - (height // 2)
+        top.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+
+        # Create and pack a label
+        label = ttk.Label(top, text="Select a drive to test:", padding=(10, 10))
+        label.pack()
+
+        # Create and pack the combobox for drive selection
+        drive_combobox = ttk.Combobox(top, values=get_available_drives(), state="readonly", width=50)
+        drive_combobox.pack(pady=10)
+        drive_combobox.set("Select a drive")
+
+        # Create and pack the run button
+        run_button = ttk.Button(top, text="Run WinSAT Disk Test", command=on_run)
+        run_button.pack(pady=10)
+
+        # Start the Tkinter event loop
+        top.mainloop()
 
     def activate_win(self):
         user_response = messagebox.askyesno("Activate Microsoft Products", "This will open a PowerShell instance and guide the user with instructions. Proceed?")
@@ -1116,10 +1158,6 @@ class Application(tk.Tk):
             self.search_app_info(file_path)
 
     def git_pull(self):
-        """
-        Executes 'git pull' command in the appropriate directory, which is assumed to be a git repository.
-        Additionally, checks if requirements.txt has changed and installs new requirements if necessary.
-        """
         # Determine if we're running as a script or frozen executable
         if getattr(sys, 'frozen', False):
             # We're running in a PyInstaller bundle
