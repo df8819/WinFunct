@@ -7,7 +7,6 @@ import os
 import psutil
 import re
 import socket
-import string
 import subprocess
 import sys
 import threading
@@ -567,12 +566,95 @@ class Application(tk.Tk):
 
         messagebox.showinfo("Uninstall Completed", result_message)
 
-    def bloatware_killer(self):
-        if not messagebox.askyesno("Bloatware Killer", "Are you sure you want to uninstall non-essential apps and PWA shortcuts?\n\nWARNING: This script will aggressively force-delete without any further confirmation!\n\nINFO: This script creates a .txt log file in the folder it was executed."):
-            return
+    def enhanced_bloatware_killer(self):
+        def run_uninstall(items, is_app):
+            for item in items:
+                if is_app:
+                    command = f'powershell.exe Get-AppxPackage *{item}* | Remove-AppxPackage'
+                else:
+                    command = f'powershell.exe Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like *{item}* | Remove-AppxProvisionedPackage -Online'
 
-        messagebox.showinfo("Bloatware Killer", "The uninstallation process has started. This may take a while...")
-        self.run_script_async(apps_to_uninstall, pwas_to_unregister)
+                process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout, stderr = process.communicate()
+
+                result = "Success" if process.returncode == 0 else "Failed"
+                log_text.insert(tk.END, f"{'App' if is_app else 'PWA'}: {item} - {result}\n")
+                log_text.see(tk.END)
+                progress['value'] += 1
+
+            if is_app:
+                run_uninstall([pwa for pwa in pwas_to_unregister if pwa_vars[pwa].get()], False)
+            else:
+                messagebox.showinfo("Bloatware Killer", "Uninstallation process completed.")
+                start_button['state'] = 'normal'
+
+        def start_uninstall():
+            if not any(app_vars[app].get() for app in apps_to_uninstall) and not any(
+                    pwa_vars[pwa].get() for pwa in pwas_to_unregister):
+                messagebox.showwarning("No Selection", "Please select at least one item to uninstall.")
+                return
+
+            if not messagebox.askyesno("Confirm Uninstallation",
+                                       "Are you sure you want to uninstall the selected items?\n\nWARNING: This process cannot be undone!"):
+                return
+
+            start_button['state'] = 'disabled'
+            log_text.delete(1.0, tk.END)
+            progress['maximum'] = sum(app_vars[app].get() for app in apps_to_uninstall) + sum(
+                pwa_vars[pwa].get() for pwa in pwas_to_unregister)
+            progress['value'] = 0
+
+            selected_apps = [app for app in apps_to_uninstall if app_vars[app].get()]
+            threading.Thread(target=run_uninstall, args=(selected_apps, True), daemon=True).start()
+
+        # Create main window
+        top = tk.Toplevel(self.master)
+        top.title("Enhanced Bloatware Killer")
+        top.geometry("560x780")
+
+        # Create notebook for tabs
+        notebook = ttk.Notebook(top)
+        notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Create frames for each tab
+        apps_frame = ttk.Frame(notebook)
+        pwas_frame = ttk.Frame(notebook)
+        notebook.add(apps_frame, text="Apps")
+        notebook.add(pwas_frame, text="PWAs")
+
+        # Create checkbuttons for apps and PWAs
+        app_vars = {app: tk.BooleanVar(value=True) for app in apps_to_uninstall}
+        pwa_vars = {pwa: tk.BooleanVar(value=True) for pwa in pwas_to_unregister}
+
+        for i, app in enumerate(apps_to_uninstall):
+            ttk.Checkbutton(apps_frame, text=app, variable=app_vars[app]).grid(row=i // 2, column=i % 2, sticky="w",
+                                                                               padx=5, pady=2)
+
+        for i, pwa in enumerate(pwas_to_unregister):
+            ttk.Checkbutton(pwas_frame, text=pwa, variable=pwa_vars[pwa]).grid(row=i // 2, column=i % 2, sticky="w",
+                                                                               padx=5, pady=2)
+
+        # Create log text area
+        log_frame = ttk.Frame(top)
+        log_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        log_text = tk.Text(log_frame, height=10)
+        log_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        scrollbar = ttk.Scrollbar(log_frame, orient="vertical", command=log_text.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        log_text.configure(yscrollcommand=scrollbar.set)
+
+        # Create progress bar
+        progress = ttk.Progressbar(top, orient="horizontal", length=300, mode="determinate")
+        progress.pack(pady=10)
+
+        # Create start button
+        start_button = ttk.Button(top, text="Start Uninstallation", command=start_uninstall)
+        start_button.pack(pady=10)
+
+        top.mainloop()
 
     def renew_ip_config(self):
         if messagebox.askyesno("Renew IP Configuration", "Are you sure you want to release/renew the IP config and flush DNS?"):
@@ -1602,7 +1684,7 @@ class Application(tk.Tk):
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk)
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
-        kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.bloatware_killer)
+        kill_bloatware_btn = ttk.Button(self.functions_frame, text="Kill Bloatware", command=self.enhanced_bloatware_killer)
         kill_bloatware_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
         renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config)
