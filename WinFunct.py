@@ -138,7 +138,6 @@ pwas_to_unregister = [
     "Microsoft.TikTok",
     "Microsoft.CandyCrushSaga",
     "Microsoft.Office.Online",
-    "Microsoft.StorePurchaseApp",
     "Microsoft.XboxConsoleCompanion",
     "Microsoft.WindowsMaps",
     "Microsoft.WindowsFeedbackHub",
@@ -583,7 +582,8 @@ class Application(tk.Tk):
                 progress['value'] += 1
 
             if is_app:
-                run_uninstall([pwa for pwa in pwas_to_unregister if pwa_vars[pwa].get()], False)
+                selected_pwas = [pwa for pwa in pwas_to_unregister if pwa_vars[pwa].get()]
+                run_uninstall(selected_pwas, False)
             else:
                 messagebox.showinfo("Bloatware Killer", "Uninstallation process completed.")
                 start_button['state'] = 'normal'
@@ -606,6 +606,14 @@ class Application(tk.Tk):
 
             selected_apps = [app for app in apps_to_uninstall if app_vars[app].get()]
             threading.Thread(target=run_uninstall, args=(selected_apps, True), daemon=True).start()
+
+        def select_all():
+            for var in list(app_vars.values()) + list(pwa_vars.values()):
+                var.set(True)
+
+        def unselect_all():
+            for var in list(app_vars.values()) + list(pwa_vars.values()):
+                var.set(False)
 
         # Create main window
         top = tk.Toplevel(self.master)
@@ -650,9 +658,21 @@ class Application(tk.Tk):
         progress = ttk.Progressbar(top, orient="horizontal", length=300, mode="determinate")
         progress.pack(pady=10)
 
+        # Create a frame for buttons
+        button_frame = ttk.Frame(top)
+        button_frame.pack(pady=10)
+
+        # Create Select All button
+        select_all_button = ttk.Button(button_frame, text="Select All", command=select_all)
+        select_all_button.pack(side=tk.LEFT, padx=5)
+
+        # Create Unselect All button
+        unselect_all_button = ttk.Button(button_frame, text="Unselect All", command=unselect_all)
+        unselect_all_button.pack(side=tk.LEFT, padx=5)
+
         # Create start button
-        start_button = ttk.Button(top, text="Start Uninstallation", command=start_uninstall)
-        start_button.pack(pady=10)
+        start_button = ttk.Button(button_frame, text="Start Uninstallation", command=start_uninstall)
+        start_button.pack(side=tk.LEFT, padx=5)
 
         top.mainloop()
 
