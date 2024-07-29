@@ -22,8 +22,6 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 - Either download the latest [Release](https://github.com/df8819/WinFunct/releases), unpack the .zip file, right-click and select **Run as administrator** or:
 
-<hr style="border: none; border-top: 2px dashed #333;" />
-
 1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
 
 2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **cmd** Window.
@@ -41,8 +39,6 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 - _The "Kill Bloatware" function needs some love and may don't work as intended_ 🤷‍♂️
 
 - _Screenshots may not show the latest version of the app. (Theme-Selector with ttkbootstrap is planned for the future)_ 👀
-
-<hr style="border: none; border-top: 2px dashed #333;" />
 
 ![Image](1701505001.png)
 
