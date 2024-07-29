@@ -200,7 +200,7 @@ class Application(tk.Tk):
         self.center_window()
 
     def open_chat(self):
-        if tk.messagebox.askyesno("Open JChat", "This will open a chat-app that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
+        if tk.messagebox.askyesno("Open JChat", "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
             chat_window = tk.Toplevel(self)
             chat_window.title("JChat")
             JChat(chat_window)  # Initialize JChat within the new window
