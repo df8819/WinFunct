@@ -22,15 +22,15 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 - Either download the latest [Release](https://github.com/df8819/WinFunct/releases), unpack the .zip file, right-click and select **Run as administrator** or:
 
-1. Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
+**1.** Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
 
-2. Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **cmd** Window.
+**2.** Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **cmd** Window.
 
-3. Double click **"Install.bat"**. This will install all dependencies and update the cloned repository. Use the **"Update"** button in the app itself to pull the latest version _(no fumbling around in cmd)_.
+**3.** Double click **"Install.bat"**. This will install all dependencies and update the cloned repository. Use the **"Update"** button in the app itself to pull the latest version _(no fumbling around in cmd)_.
 
-4. Double click **"Run.bat"**. _(The typical ```python *.py``` cmd command will not work, as the app demands elevated rights via temporary VBS script.)_
+**4.** Double click **"Run.bat"**. _(The typical ```python *.py``` cmd command will not work, as the app demands elevated rights via temporary VBS script.)_
 
-5. It may requires you to add an exclusion for the folder you have cloned this repo in Windows **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**, as many scripts in this app will auto-flag it as malicious🤐
+**5.** It may requires you to add an exclusion for the folder you have cloned this repo in Windows **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**, as many scripts in this app will auto-flag it as malicious🤐
 
 ## Known Issues
 
