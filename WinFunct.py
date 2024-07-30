@@ -620,7 +620,6 @@ class Application(tk.Tk):
         top.title("Enhanced Bloatware Killer")
         top.geometry("560x780")
 
-        # Force update of the window to ensure correct dimensions
         top.update_idletasks()
 
         width = top.winfo_width()
