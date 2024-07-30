@@ -594,8 +594,8 @@ class Application(tk.Tk):
                 messagebox.showwarning("No Selection", "Please select at least one item to uninstall.")
                 return
 
-            if not messagebox.askyesno("Confirm Uninstallation",
-                                       "Are you sure you want to uninstall the selected items?\n\nWARNING: This process cannot be undone!"):
+            if not messagebox.askokcancel("Confirm Uninstallation",
+                                       "Are you sure you want to uninstall the selected items?\n\nWARNING: This process cannot be undone!\n\nThis is still a bit messed up. I recommend using the \n>>>CTT Winutil<<< \nbutton/function in this app for de-bloat your system."):
                 return
 
             start_button['state'] = 'disabled'
@@ -619,6 +619,15 @@ class Application(tk.Tk):
         top = tk.Toplevel(self.master)
         top.title("Enhanced Bloatware Killer")
         top.geometry("560x780")
+
+        # Force update of the window to ensure correct dimensions
+        top.update_idletasks()
+
+        width = top.winfo_width()
+        height = top.winfo_height()
+        x = (top.winfo_screenwidth() // 2) - (width // 2)
+        y = (top.winfo_screenheight() // 2) - (height // 2)
+        top.geometry(f'{width}x{height}+{x}+{y}')
 
         # Create notebook for tabs
         notebook = ttk.Notebook(top)
