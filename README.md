@@ -36,8 +36,6 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 - _Several files like `ui.py` or `functions.py` are part of an unfinished refractor process that will happen. Somewhen.._ 😶
 
-- _The "Update" function is a little weird when executed from the downloaded .exe and needs further tweaking. I implemented a logic that should recognize if the app runs from an .exe or venv, but it still needs some love_ 😐
-
 - _**"Kill Bloatware"** needs an overhaul and may don't work as intended. Please use **"CCT Winutil"** and its GUI to de-bloat Windows, that works like a charm_ 🤷‍♂️
 
 - _Screenshots may not show the latest version of the app. (Theme-Selector with ttkbootstrap is planned for the future)_ 👀
