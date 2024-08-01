@@ -753,7 +753,7 @@ class Application(tk.Tk):
                 checksum = result.stdout.split('\n')[1].strip()
 
                 # Update the algorithm label
-                algo_label.config(text=f"Algorithm: {algo}")
+                algo_label.config(text=f"Selected algorithm: {algo}")
 
                 # Display only the checksum in the text widget
                 result_text.config(state=tk.NORMAL)
@@ -764,35 +764,6 @@ class Application(tk.Tk):
                 messagebox.showerror("Error", f"An error occurred while computing the checksum:\n{e.stderr}")
             except Exception as e:
                 messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}")
-
-        # Create and pack a button
-        button = ttk.Button(algo_window, text="Compute Checksum", command=run_checksum)
-        button.pack(pady=10)
-
-        # Make the window modal
-        algo_window.transient(self)
-        algo_window.grab_set()
-        self.wait_window(algo_window)
-
-        def run_checksum():
-            algo = selected_algo.get()
-            cmd = f'certutil -hashfile "{file_path}" {algo}'
-
-            try:
-                # Run the command and capture the output
-                result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
-
-                # Extract the checksum from the output
-                checksum = result.stdout.split('\n')[1].strip()
-
-                # Show the result in a message box
-                messagebox.showinfo("Checksum Result", f"Algorithm: {algo}\nChecksum: {checksum}")
-            except subprocess.CalledProcessError as e:
-                messagebox.showerror("Error", f"An error occurred while computing the checksum:\n{e.stderr}")
-            except Exception as e:
-                messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}")
-
-            algo_window.destroy()
 
         # Create and pack a button
         button = ttk.Button(algo_window, text="Compute Checksum", command=run_checksum)
@@ -1314,9 +1285,7 @@ class Application(tk.Tk):
             os.chdir(base_path)
 
     def file_hash(self, filepath):
-        """
-        Calculates the MD5 hash of a file.
-        """
+        """Calculates the MD5 hash of a file."""
         hash_md5 = hashlib.md5()
         with open(filepath, "rb") as f:
             for chunk in iter(lambda: f.read(4096), b""):
@@ -1324,9 +1293,7 @@ class Application(tk.Tk):
         return hash_md5.hexdigest()
 
     def install_requirements(self, requirements_path):
-        """
-        Installs the packages from requirements.txt using pip.
-        """
+        """Installs the packages from requirements.txt using pip."""
         try:
             subprocess.run(["pip", "install", "-r", requirements_path], check=True)
             print("Requirements installed successfully.")
@@ -1334,9 +1301,7 @@ class Application(tk.Tk):
             print(f"Error installing requirements: {e.stderr}")
 
     def notify_user_of_restart(self):
-        """
-        Notifies the user to manually restart the application after an update has been applied.
-        """
+        """Notifies the user to manually restart the application after an update has been applied."""
         # Initialize Tkinter root window
         root = tk.Tk()
         root.withdraw()  # Hide the root window
