@@ -1258,22 +1258,44 @@ class Application(tk.Tk):
             # Change to the repo directory before git operations
             os.chdir(repo_path)
 
-            # Execute 'git pull'
-            result = subprocess.run(["git", "pull"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            print(result.stdout)
+            # Create and show progress window
+            progress_window = self.create_progress_window("Updating...")
 
-            # If the result indicates that updates were applied, notify the user
-            if "Already up to date." not in result.stdout:
+            # Execute 'git pull' with progress updates
+            process = subprocess.Popen(["git", "pull"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+            output = []
+            while True:
+                line = process.stdout.readline()
+                if not line and process.poll() is not None:
+                    break
+                if line:
+                    output.append(line.strip())
+                    self.update_progress(progress_window, f"Pulling updates: {line.strip()}")
+
+            progress_window.destroy()
+
+            result = process.communicate()
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode, "git pull", result[1])
+
+            full_output = "\n".join(output)
+            print(full_output)
+
+            # Check if updates were actually applied
+            if "Already up to date." not in full_output:
                 print("Update detected. Notifying user...")
-                self.notify_user_of_restart()
+                self.notify_user_of_update(full_output)
 
                 # Check if requirements.txt has changed by comparing hashes
                 after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
                 if before_pull_hash != after_pull_hash:
                     print("requirements.txt has changed. Installing new requirements...")
                     self.install_requirements(requirements_path)
+            else:
+                print("No updates available.")
 
-            return True, result.stdout
+            return True, full_output
         except subprocess.CalledProcessError as e:
             print(f"Error during git pull: {e.stderr}")
             return False, e.stderr
@@ -1295,18 +1317,76 @@ class Application(tk.Tk):
     def install_requirements(self, requirements_path):
         """Installs the packages from requirements.txt using pip."""
         try:
-            subprocess.run(["pip", "install", "-r", requirements_path], check=True)
+            progress_window = self.create_progress_window("Installing Requirements")
+
+            process = subprocess.Popen(["pip", "install", "-r", requirements_path], stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, text=True)
+
+            while True:
+                line = process.stdout.readline()
+                if not line and process.poll() is not None:
+                    break
+                if line:
+                    self.update_progress(progress_window, f"Installing: {line.strip()}")
+
+            progress_window.destroy()
+
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode, "pip install", process.stderr.read())
+
             print("Requirements installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"Error installing requirements: {e.stderr}")
 
-    def notify_user_of_restart(self):
-        """Notifies the user to manually restart the application after an update has been applied."""
-        # Initialize Tkinter root window
+    def notify_user_of_update(self, update_info):
+        """Notifies the user of the update with detailed information."""
         root = tk.Tk()
         root.withdraw()  # Hide the root window
-        messagebox.showinfo("Update Applied", "Updates have been applied. Please restart the application to use the latest version.")
+        messagebox.showinfo("Update Applied",
+                            f"Updates have been applied. Please restart the application to use the latest version.\n\nUpdate details:\n{update_info}")
         root.destroy()
+
+    def create_progress_window(self, title):
+        """Creates a progress window with a label and indeterminate progress bar."""
+        window = tk.Toplevel()
+        window.title(title)
+        window.geometry("300x100")
+
+        # Make the window appear on top of other windows
+        window.attributes('-topmost', True)
+
+        # Withdraw the window to hide it before setting its position
+        window.withdraw()
+
+        # Calculate the center position
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        window_width = 300
+        window_height = 100
+        x_coordinate = int((screen_width / 2) - (window_width / 2))
+        y_coordinate = int((screen_height / 2) - (window_height / 2))
+
+        # Set the position of the window
+        window.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
+
+        progress_label = tk.Label(window, text="Starting...")
+        progress_label.pack(pady=10)
+
+        progress_bar = ttk.Progressbar(window, mode="indeterminate", length=200)
+        progress_bar.pack(pady=10)
+        progress_bar.start()
+
+        # Make the window visible again
+        window.deiconify()
+
+        window.update()
+        return window
+
+    def update_progress(self, window, message):
+        """Updates the progress window with a new message."""
+        if window.winfo_exists():
+            window.children['!label'].config(text=message)
+            window.update()
 
     def check_dependencies(self):
         """Check if Git and Python are installed and show a message box if not."""
