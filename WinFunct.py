@@ -16,8 +16,8 @@ import tkinter as tk
 import webbrowser
 import winreg
 from tkinter import filedialog, messagebox, scrolledtext, ttk
-
 import psutil
+
 # Third-Party Imports
 import requests
 import wmi
@@ -1244,6 +1244,8 @@ class Application(tk.Tk):
             # We're running in a PyInstaller bundle
             base_path = sys._MEIPASS
             repo_path = os.path.dirname(sys.executable)
+            print(">>>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Clone this Repo' button to make use of the 'Update' function. <<<<<")
+            return False, "Cannot update when running from .exe"
         else:
             # We're running in a normal Python environment
             base_path = os.path.dirname(os.path.abspath(__file__))
