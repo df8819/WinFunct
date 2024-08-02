@@ -180,11 +180,13 @@ class Application(tk.Tk):
 
         # Creating a style (Delete this to delete style)
         style = ttk.Style()
-        style.configure('LightBlue.TFrame', background='#4791cc')
+        style.configure('LightBlue.TFrame', background='#4791CC')
 
-        # Initial code for non-style:
+        # Background color
+        # style.configure('TFrame', background='#000000')
+
+        # Initial code for non-style
         # self.main_frame = ttk.Frame(self)
-
 
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.create_widgets()
