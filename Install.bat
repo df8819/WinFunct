@@ -1,6 +1,18 @@
 @echo off
-cd %~dp0
+setlocal enabledelayedexpansion
 
+:: Change to the script's directory
+cd /d "%~dp0"
+
+:: Check if Git is installed
+git --version >nul 2>&1
+if %errorlevel% NEQ 0 (
+    echo Error: Git is not installed or not in the system PATH.
+    pause
+    exit /B 2
+)
+
+:: Pull the latest updates from Git
 echo Pulling latest updates from Git...
 git pull
 if %errorlevel% NEQ 0 (
@@ -9,6 +21,15 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
+:: Check if Python is installed
+python --version >nul 2>&1
+if %errorlevel% NEQ 0 (
+    echo Error: Python is not installed or not in the system PATH.
+    pause
+    exit /B 3
+)
+
+:: Install required Python packages
 echo Installing required Python packages...
 pip install -r requirements.txt
 if %errorlevel% NEQ 0 (
@@ -17,7 +38,11 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
-echo --------------------------------------INFO--------------------------------------
-echo ---------------Update complete. Please manually close this window.--------------
-echo --------------------------------------INFO--------------------------------------
+:: Success message
+echo.
+echo ------------------------------------- INFO -------------------------------------
+echo -------------- Update complete. Please manually close this window. -------------
+echo --------------------------------------------------------------------------------
+echo.
 pause
+exit /B 0
