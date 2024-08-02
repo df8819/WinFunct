@@ -232,17 +232,26 @@ class Application(tk.Tk):
             subprocess.Popen(['xdg-open', app_root])
 
     def open_ps_as_admin(self):
-        try:
-            subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
+        def run_command():
+            try:
+                subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
 
     def open_cmd_as_admin(self):
-        try:
-            # Open a new Command Prompt window, navigate to C:\ and set the title
-            subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to open Command Prompt as admin: {e}")
+        def run_command():
+            try:
+                subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to open Command Prompt as admin: {e}")
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
 
     def open_autostart_locations(self):
         # Folder locations
@@ -435,18 +444,30 @@ class Application(tk.Tk):
         top.mainloop()
 
     def activate_win(self):
-        user_response = messagebox.askyesno("Activate Microsoft Products", "This will open a PowerShell instance and guide the user with instructions. Proceed?")
+        user_response = messagebox.askyesno("Activate Microsoft Products",
+                                            "This will open a PowerShell instance and run the MAS User Interface. Proceed?")
         if user_response:
-            command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
-            subprocess.run(command, shell=True)
+            def run_command():
+                command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
+                subprocess.run(command, shell=True)
+
+            # Run the command in a separate thread to avoid freezing the UI
+            thread = threading.Thread(target=run_command)
+            thread.start()
         else:
             print("Command was cancelled.")
 
     def activate_wui(self):
-        user_response = messagebox.askyesno("Open Windows Utility Improved", "This will open a PowerShell instance and GUI for Windows Utility Improved. Proceed?")
+        user_response = messagebox.askyesno("Open Windows Utility Improved",
+                                            "This will open a PowerShell instance run Chris Titus Tech Windows Utility. Proceed?")
         if user_response:
-            command = ['powershell.exe', '-Command', 'irm christitus.com/win | iex']
-            subprocess.run(command, shell=True)
+            def run_command():
+                command = ['powershell.exe', '-Command', 'irm christitus.com/win | iex']
+                subprocess.run(command, shell=True)
+
+            # Run the command in a separate thread to avoid freezing the UI
+            thread = threading.Thread(target=run_command)
+            thread.start()
         else:
             print("Command was cancelled.")
 
@@ -685,10 +706,29 @@ class Application(tk.Tk):
         top.mainloop()
 
     def renew_ip_config(self):
-        if messagebox.askyesno("Renew IP Configuration", "Are you sure you want to release/renew the IP config and flush DNS?"):
-            cmd = "cmd.exe /c ipconfig /release && ipconfig /flushdns && ipconfig /renew"
-            print(f"Executing command: {cmd}")
-            subprocess.run(cmd, shell=True)
+        if messagebox.askyesno("Renew IP Configuration",
+                               "Are you sure you want to release/renew the IP config and flush DNS?"):
+            def run_command():
+                commands = [
+                    ("ipconfig /release", "Releasing IP configuration..."),
+                    ("ipconfig /flushdns", "Flushing DNS..."),
+                    ("ipconfig /renew", "Renewing IP configuration...")
+                ]
+
+                for cmd, description in commands:
+                    print(f"\n{'-' * 10} {description} {'-' * 10}")
+                    full_cmd = f"cmd.exe /c {cmd}"
+                    print(f"Executing command: {full_cmd}")
+                    subprocess.run(full_cmd, shell=True)
+                    print(f"Finished command: {cmd}")
+
+                print(f"\n{'-' * 10} All commands completed {'-' * 10}")
+
+            # Run the command in a separate thread to avoid freezing the UI
+            thread = threading.Thread(target=run_command)
+            thread.start()
+        else:
+            print("Command was cancelled.")
 
     def agh_curl(self):
         # Copy the command to the clipboard using the 'clip' command on Windows
@@ -696,9 +736,14 @@ class Application(tk.Tk):
         print('Command copied to clipboard!')
 
     def arp(self):
-        # Command to open a new PowerShell window and run 'arp -a'
-        command = 'powershell.exe arp -a'
-        subprocess.run(command, shell=True)
+        def run_command():
+            # Command to open a new PowerShell window and run 'arp -a'
+            command = 'powershell.exe arp -a'
+            subprocess.run(command, shell=True)
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
 
     def get_file_checksum(self):
         file_path = filedialog.askopenfilename()
@@ -1127,52 +1172,57 @@ class Application(tk.Tk):
             htmlfile.write('</table></body></html>')
 
     def check_internet(self):
-        results = []
-        methods = [
-            ("Ping", '8.8.8.8'),
-            ("Socket", ('8.8.8.8', 53)),
-            ("HTTP", 'http://www.google.com')
-        ]
+        def run_checks():
+            results = []
+            methods = [
+                ("Ping", '8.8.8.8'),
+                ("Socket", ('8.8.8.8', 53)),
+                ("HTTP", 'http://www.google.com')
+            ]
 
-        for method_name, target in methods:
-            start_time = time.time()
-            success, message = False, f"{method_name} failed"
+            for method_name, target in methods:
+                start_time = time.time()
+                success, message = False, f"{method_name} failed"
 
-            if method_name == "Ping":
-                try:
-                    param = '-n' if subprocess.sys.platform.lower() == 'win32' else '-c'
-                    subprocess.run(['ping', param, '1', target],
-                                   stdout=subprocess.DEVNULL,
-                                   stderr=subprocess.DEVNULL,
-                                   check=True)
-                    success, message = True, f"{method_name} (8.8.8.8) successful"
-                except subprocess.CalledProcessError:
-                    pass
-            elif method_name == "Socket":
-                try:
-                    socket.create_connection(target, timeout=3)
-                    success, message = True, f"{method_name} (8.8.8.8 -Port 53) connection successful"
-                except socket.error:
-                    pass
-            elif method_name == "HTTP":
-                try:
-                    response = requests.get(target, timeout=5)
-                    if response.status_code == 200:
-                        success, message = True, f"{method_name} (http://www.google.com) request successful"
-                except requests.RequestException:
-                    pass
+                if method_name == "Ping":
+                    try:
+                        param = '-n' if subprocess.sys.platform.lower() == 'win32' else '-c'
+                        subprocess.run(['ping', param, '1', target],
+                                       stdout=subprocess.DEVNULL,
+                                       stderr=subprocess.DEVNULL,
+                                       check=True)
+                        success, message = True, f"{method_name} (8.8.8.8) successful"
+                    except subprocess.CalledProcessError:
+                        pass
+                elif method_name == "Socket":
+                    try:
+                        socket.create_connection(target, timeout=3)
+                        success, message = True, f"{method_name} (8.8.8.8 -Port 53) connection successful"
+                    except socket.error:
+                        pass
+                elif method_name == "HTTP":
+                    try:
+                        response = requests.get(target, timeout=5)
+                        if response.status_code == 200:
+                            success, message = True, f"{method_name} (http://www.google.com) request successful"
+                    except requests.RequestException:
+                        pass
 
-            end_time = time.time()
-            latency = round((end_time - start_time) * 1000, 2)  # Convert to ms
-            results.append((success, message, latency))
+                end_time = time.time()
+                latency = round((end_time - start_time) * 1000, 2)  # Convert to ms
+                results.append((success, message, latency))
 
-        online = any(result[0] for result in results)
-        status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
+            online = any(result[0] for result in results)
+            status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
 
-        if online:
-            messagebox.showinfo("Internet Status", f"We're online :)\n\n{status_message}")
-        else:
-            messagebox.showwarning("Internet Status", f"We're offline :(\n\n{status_message}")
+            if online:
+                messagebox.showinfo("Internet Status", f"We're online :)\n\n{status_message}")
+            else:
+                messagebox.showwarning("Internet Status", f"We're offline :(\n\n{status_message}")
+
+        # Run the internet checks in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_checks)
+        thread.start()
 
     def netstat_output(self):
         try:
@@ -1476,10 +1526,15 @@ class Application(tk.Tk):
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
     def open_godmode(self):
-        try:
-            subprocess.run("explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}", shell=True)
-        except Exception as e:
-            print(f"Error: {e}")
+        def run_command():
+            try:
+                subprocess.run("explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}", shell=True)
+            except Exception as e:
+                print(f"Error: {e}")
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
 
     def open_links_window(self):
         links = {
