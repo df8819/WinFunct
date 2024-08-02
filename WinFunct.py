@@ -89,7 +89,7 @@ if __name__ == "__main__":
     print_log()
 
     # Your normal script execution for both admin and non-admin mode continues here
-    print("\n...Now running with admin rights. Nice (⌐■_■)")
+    print(f"\n...Now running with admin rights. Nice (⌐■_■)\n")
 
 
 # Command functions
