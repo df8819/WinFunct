@@ -172,16 +172,19 @@ class Application(tk.Tk):
         self.bottom_frame = None
         self.geometry(self.resolution_main)
         self.center_window()
-        self.title("Windows Functionalities ----- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.title("Windows Functionalities --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
         # Setting the background color of the main frame to light blue
         self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
-        # Initial code for non-style: self.main_frame = ttk.Frame(self)
 
         # Creating a style (Delete this to delete style)
         style = ttk.Style()
         style.configure('LightBlue.TFrame', background='#4791cc')
+
+        # Initial code for non-style:
+        # self.main_frame = ttk.Frame(self)
+
 
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.create_widgets()
