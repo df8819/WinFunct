@@ -337,18 +337,20 @@ class Application(tk.Tk):
     def show_wifi_password(self, network):
         network = network.strip()
         try:
-            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"], stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"],
+                                                 stderr=subprocess.STDOUT).decode("utf-8", "ignore")
             password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to execute netsh command for network '{network}': {e.output.decode('utf-8', 'ignore')}")
+            messagebox.showerror("Error",
+                                 f"Failed to execute netsh command for network '{network}': {e.output.decode('utf-8', 'ignore')}")
             return
 
         if password:
             password_window = tk.Toplevel(self)
             password_window.title(f"Password for {network}")
 
-            window_width = 350
-            window_height = 100
+            window_width = 320
+            window_height = 120
             screen_width = password_window.winfo_screenwidth()
             screen_height = password_window.winfo_screenheight()
 
@@ -359,31 +361,34 @@ class Application(tk.Tk):
             password_window.resizable(False, False)
 
             password_frame = tk.Frame(password_window)
-            password_frame.pack(padx=10, pady=10)
+            password_frame.pack(padx=20, pady=20)
 
             password_label = tk.Label(password_frame, text="Password:")
-            password_label.grid(row=0, column=0, padx=5, pady=5)
+            password_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
 
-            password_text = tk.Text(password_frame, height=1, width=20)
-            password_text.insert(tk.END, password.group(1))
+            password_text = tk.Entry(password_frame, width=30)
+            password_text.insert(0, password.group(1))
             password_text.grid(row=0, column=1, padx=5, pady=5)
-            password_text.config(state="disabled")
+            password_text.config(state="readonly")
 
             def copy_password():
                 self.clipboard_clear()
-                self.clipboard_append(password_text.get("1.0", "end-1c"))
+                self.clipboard_append(password_text.get())
                 self.update()
 
-            copy_button = ttk.Button(password_frame, text="Copy Password", command=copy_password)
-            copy_button.grid(row=1, column=0, padx=(5, 5), pady=5, sticky="sw")
+            button_frame = tk.Frame(password_frame)
+            button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
+
+            copy_button = ttk.Button(button_frame, text="Copy Password", command=copy_password)
+            copy_button.pack(side="left", padx=10)
 
             def cancel_button_click():
                 password_window.destroy()
 
-            cancel_button = ttk.Button(password_frame, text="Cancel", command=cancel_button_click)
-            cancel_button.grid(row=1, column=1, padx=(5, 50), pady=5, sticky="se")
+            cancel_button = ttk.Button(button_frame, text="Cancel", command=cancel_button_click)
+            cancel_button.pack(side="left", padx=10)
         else:
-            tk.messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
+            messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     def run_winsat_disk(self):
         def get_available_drives():
