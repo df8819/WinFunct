@@ -1299,7 +1299,7 @@ class Application(tk.Tk):
             # We're running in a PyInstaller bundle
             base_path = sys._MEIPASS
             repo_path = os.path.dirname(sys.executable)
-            print(">>>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Clone this Repo' button to make use of the 'Update' function. <<<<<")
+            print(">>>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Get from GitHub' button to make use of the 'Update' function. <<<<<")
             return False, "Cannot update when running from .exe"
         else:
             # We're running in a normal Python environment
@@ -1860,7 +1860,7 @@ class Application(tk.Tk):
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum)
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
-        clone_btn = ttk.Button(self.functions_frame, text="Clone this Repo", command=self.clone_repo_with_prompt)
+        clone_btn = ttk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt)
         clone_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons and Positions
