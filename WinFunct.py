@@ -1449,22 +1449,23 @@ class Application(tk.Tk):
         """Check if Git and Python are installed and show a message box if not."""
         dependencies = {
             "Git": ["git", "--version", "https://git-scm.com/downloads"],
-            "Python": [sys.executable, "--version", "https://www.python.org/downloads/"]
+            "Python": ["python", "--version", "https://www.python.org/downloads/"]
         }
         missing_deps = []
 
         for dep, commands in dependencies.items():
             try:
-                result = subprocess.run(commands[:2], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                print(f"{dep} version: {result.stdout}")  # Debug print to check successful output
+                result = subprocess.run(commands[:2], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                        text=True)
+                print(f">>>>> {dep} version: {result.stdout}")  # Debug print to check successful output
             except subprocess.CalledProcessError as e:
-                print(f"Failed to run {commands[0]}: {e.stderr}")  # Debug print to check error output
+                print(f">>>>> Failed to run {commands[0]}: {e.stderr}")  # Debug print to check error output
                 missing_deps.append((dep, commands[2]))
 
         if missing_deps:
             self.notify_missing_dependencies(missing_deps)
-        else:
-            return True  # Indicate that all dependencies are present
+            return False
+        return True
 
     def notify_missing_dependencies(self, missing_deps):
         """Show a message box with options to download missing dependencies."""
@@ -1480,14 +1481,6 @@ class Application(tk.Tk):
     def run(self):
         self.check_dependencies()
 
-    def check_dependencies(self):
-        try:
-            subprocess.run(["git", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            subprocess.run(["python", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            return True
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            return False
-
     def select_clone_directory(self):
         """Prompt user to select directory where the repo should be cloned."""
         root = tk.Tk()
@@ -1501,10 +1494,8 @@ class Application(tk.Tk):
             return None  # Indicate no selection was made
 
     def clone_repository(self, repo_url, clone_path):
-        """
-        Clone the repository directly into a subdirectory within the selected path,
-        named after the repository itself.
-        """
+        """Clone the repository directly into a subdirectory within the selected path,
+        named after the repository itself."""
         # Extract the repo name from the URL (assuming the URL ends with '.git')
         repo_name = repo_url.split('/')[-1][:-4]  # Removes '.git' from the end of the URL to get the repo name
         final_clone_path = os.path.join(clone_path, repo_name)
