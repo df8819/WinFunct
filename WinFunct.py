@@ -1455,11 +1455,10 @@ class Application(tk.Tk):
 
         for dep, commands in dependencies.items():
             try:
-                result = subprocess.run(commands[:2], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                        text=True)
-                print(f">>>>> {dep} version: {result.stdout}")  # Debug print to check successful output
+                result = subprocess.run(commands[:2], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                print(f"{dep} version: {result.stdout.strip()}")  # Improved: Strip extra whitespace
             except subprocess.CalledProcessError as e:
-                print(f">>>>> Failed to run {commands[0]}: {e.stderr}")  # Debug print to check error output
+                print(f"Failed to run {commands[0]}: {e.stderr.strip()}")  # Improved: Strip extra whitespace
                 missing_deps.append((dep, commands[2]))
 
         if missing_deps:
@@ -1479,46 +1478,41 @@ class Application(tk.Tk):
                 webbrowser.open(url)
 
     def run(self):
-        self.check_dependencies()
+        """Check dependencies before proceeding."""
+        if not self.check_dependencies():
+            messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
+            return
 
     def select_clone_directory(self):
         """Prompt user to select directory where the repo should be cloned."""
         root = tk.Tk()
-        root.withdraw()  # we don't want a full GUI, so keep the root window from appearing
-        directory = filedialog.askdirectory()  # show an "Open" dialog box and return the path to the selected directory
+        root.withdraw()  # Keep the root window from appearing
+        directory = filedialog.askdirectory()  # Show dialog and return the path
         root.destroy()
-        # Check if the user selected a directory or cancelled the dialog
-        if directory:  # This will be False if the user clicked "Cancel" or closed the dialog
-            return directory
-        else:
-            return None  # Indicate no selection was made
+        return directory if directory else None  # Return None if no directory selected
 
     def clone_repository(self, repo_url, clone_path):
-        """Clone the repository directly into a subdirectory within the selected path,
-        named after the repository itself."""
-        # Extract the repo name from the URL (assuming the URL ends with '.git')
-        repo_name = repo_url.split('/')[-1][:-4]  # Removes '.git' from the end of the URL to get the repo name
+        """Clone the repository into the selected path."""
+        repo_name = repo_url.split('/')[-1][:-4]  # Extract repo name
         final_clone_path = os.path.join(clone_path, repo_name)
 
         try:
             subprocess.run(["git", "clone", repo_url, final_clone_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             messagebox.showinfo("Repository Cloned", f"Repository cloned successfully into {final_clone_path}")
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to clone repository: {e.stderr}")
+            messagebox.showerror("Error", f"Failed to clone repository: {e.stderr.strip()}")  # Improved: Strip extra whitespace
 
     def clone_repo_with_prompt(self):
-        # Check for Git and Python
+        """Check dependencies, prompt user for directory, and clone the repository."""
         if not self.check_dependencies():
             messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
             return
 
-        # Prompt the user to select a directory
         clone_path = self.select_clone_directory()
         if clone_path is None:
             messagebox.showwarning("Clone Cancelled", "Repository clone cancelled. No directory selected.")
-            return  # Exit the function as the user cancelled the directory selection
+            return
 
-        # Clone the repository directly into the selected path without appending the repo name
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
     def open_godmode(self):
