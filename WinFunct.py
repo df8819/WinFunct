@@ -12,11 +12,12 @@ import threading
 import time
 
 # Tkinter Imports
+import psutil
 import tkinter as tk
+from tkinter import filedialog, messagebox, scrolledtext, ttk
+# import ttkbootstrap as ttk
 import webbrowser
 import winreg
-from tkinter import filedialog, messagebox, scrolledtext, ttk
-import psutil
 
 # Third-Party Imports
 import requests
@@ -170,7 +171,7 @@ class Application(tk.Tk):
         self.bottom_frame = None
         self.geometry(self.resolution_main)
         self.center_window()
-        self.title("Windows Functionalities --- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.title("Windows Functionalities ----- (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
         # Setting the background color of the main frame to light blue
@@ -216,7 +217,6 @@ class Application(tk.Tk):
         HashStuff(hash_window)
 
     def open_app_root_folder(self):
-        """Open the root folder of the Python app."""
         # Determine the directory of the executable or the script itself
         if getattr(sys, 'frozen', False):
             app_root = os.path.dirname(sys.executable)
