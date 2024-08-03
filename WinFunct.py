@@ -172,7 +172,7 @@ class Application(tk.Tk):
         self.bottom_frame = None
         self.geometry(self.resolution_main)
         self.center_window()
-        self.title("Windows Functionalities (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧")
+        self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
         # Setting the background color of the main frame to light blue
