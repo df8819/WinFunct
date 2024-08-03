@@ -7,7 +7,7 @@ Custom utility app for Windows to speed up functions, scripts and options which 
 This app combines a lot of useful functions or scripts for managing Windows. I consider it kinda useful after v1.6xx:
 
 - Extract Wifi passwords, do disk speedtest or release/renew DNS.
-- Execute ChrisTitusTech beloved WinUtils, the MAS activation or run a checksum verifier with all encryption algos selectable.
+- Execute ChrisTitusTech beloved WinUtils, the MAS activation or run a checksum verifier with all encryption algorithms selectable.
 - Link opener for a bunch of useful stuff, Win "Godmode" settings, system info extraction/comparison or checking what apps have an active internet connection.
 - **Options Tab** is a settings dump for stuff that's usually annoying to find or sort of hidden in Windows.
 - **Apps Tab** has some fun stuff like my old python ChatGPT GUI, a hash cracker or a password/passphrase generator 👍
