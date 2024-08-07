@@ -1527,6 +1527,8 @@ class Application(tk.Tk):
 
     def check_dependencies(self):
         """Check if Git and Python are installed and show a message box if not."""
+        print(f"\n>>> Please select location. 'WinFunct' Folder will be created & cloned at this location.")
+        print(f">>> Checking dependencies:\n")
         dependencies = {
             "Git": ["git", "--version", "https://git-scm.com/downloads"],
             "Python": ["python", "--version", "https://www.python.org/downloads/"]
