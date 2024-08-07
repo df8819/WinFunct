@@ -39,6 +39,62 @@ LINK = "https://github.com/df8819/WinFunct"
 AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s ' \
           '-- -v'
 
+# List of non-essential apps to uninstall
+apps_to_uninstall = [
+    "Microsoft.SkypeApp",
+    "Microsoft.Todos",
+    "Microsoft.Microsoft3DViewer",
+    "Microsoft.Messaging",
+    "Microsoft.Office.Sway",
+    "Microsoft.OneConnect",
+    "Microsoft.People",
+    "Microsoft.Print3D",
+    "Microsoft.GetHelp",
+    "Microsoft.Getstarted",
+    "Microsoft.BingWeather",
+    "Microsoft.WindowsFeedbackHub",
+    "Microsoft.XboxApp",
+    "Microsoft.XboxGameOverlay",
+    "Microsoft.XboxIdentityProvider",
+    "Microsoft.XboxSpeechToTextOverlay",
+    "Microsoft.YourPhone",
+    "Microsoft.ZuneMusic",
+    "Microsoft.ZuneVideo",
+    "Microsoft.MinecraftUWP",
+    "Microsoft.BingNews",
+    "Microsoft.BingFinance",
+    "Microsoft.BingSports",
+    "Microsoft.BingTravel",
+    "Microsoft.BingHealthAndFitness",
+    "Microsoft.BingFoodAndDrink",
+    "Microsoft.BingDictionary",
+    "Microsoft.MicrosoftSolitaireCollection",
+    "Microsoft.Office.SkypeforBusiness",
+    "Microsoft.Windows.CommunicationApps",
+    "Microsoft.Windows.MixedReality",
+    "Microsoft.Xbox.TCUI"
+]
+
+# List of unnecessary PWA shortcuts to unregister
+pwas_to_unregister = [
+    "Microsoft.TikTok",
+    "Microsoft.CandyCrushSaga",
+    "Microsoft.Office.Online",
+    "Microsoft.XboxConsoleCompanion",
+    "Microsoft.WindowsMaps",
+    "Microsoft.WindowsFeedbackHub",
+    "Microsoft.SkypeApp",
+    "Microsoft.OneNote",
+    "Microsoft.XboxIdentityProvider",
+    "Microsoft.3DViewer",
+    "Microsoft.Office.Sway",
+    "Microsoft.MicrosoftSolitaireCollection",
+    "Microsoft.GetHelp",
+    "Microsoft.GrooveMusic",
+    "Microsoft.MinecraftEducationEdition",
+    # Add other unnecessary PWA shortcuts here
+]
+
 
 def is_admin():
     try:
@@ -116,63 +172,6 @@ if __name__ == "__main__":
 # Command functions
 def execute_command(cmd):
     subprocess.Popen(cmd, shell=True)
-
-
-# List of non-essential apps to uninstall
-apps_to_uninstall = [
-    "Microsoft.SkypeApp",
-    "Microsoft.Todos",
-    "Microsoft.Microsoft3DViewer",
-    "Microsoft.Messaging",
-    "Microsoft.Office.Sway",
-    "Microsoft.OneConnect",
-    "Microsoft.People",
-    "Microsoft.Print3D",
-    "Microsoft.GetHelp",
-    "Microsoft.Getstarted",
-    "Microsoft.BingWeather",
-    "Microsoft.WindowsFeedbackHub",
-    "Microsoft.XboxApp",
-    "Microsoft.XboxGameOverlay",
-    "Microsoft.XboxIdentityProvider",
-    "Microsoft.XboxSpeechToTextOverlay",
-    "Microsoft.YourPhone",
-    "Microsoft.ZuneMusic",
-    "Microsoft.ZuneVideo",
-    "Microsoft.MinecraftUWP",
-    "Microsoft.BingNews",
-    "Microsoft.BingFinance",
-    "Microsoft.BingSports",
-    "Microsoft.BingTravel",
-    "Microsoft.BingHealthAndFitness",
-    "Microsoft.BingFoodAndDrink",
-    "Microsoft.BingDictionary",
-    "Microsoft.MicrosoftSolitaireCollection",
-    "Microsoft.Office.SkypeforBusiness",
-    "Microsoft.Windows.CommunicationApps",
-    "Microsoft.Windows.MixedReality",
-    "Microsoft.Xbox.TCUI"
-]
-
-# List of unnecessary PWA shortcuts to unregister
-pwas_to_unregister = [
-    "Microsoft.TikTok",
-    "Microsoft.CandyCrushSaga",
-    "Microsoft.Office.Online",
-    "Microsoft.XboxConsoleCompanion",
-    "Microsoft.WindowsMaps",
-    "Microsoft.WindowsFeedbackHub",
-    "Microsoft.SkypeApp",
-    "Microsoft.OneNote",
-    "Microsoft.XboxIdentityProvider",
-    "Microsoft.3DViewer",
-    "Microsoft.Office.Sway",
-    "Microsoft.MicrosoftSolitaireCollection",
-    "Microsoft.GetHelp",
-    "Microsoft.GrooveMusic",
-    "Microsoft.MinecraftEducationEdition",
-    # Add other unnecessary PWA shortcuts here
-]
 
 
 # App Window
