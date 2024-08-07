@@ -34,6 +34,7 @@ admin_log.txt
 netstat_exe_output.txt
 
 # Miscellaneous
+*.zip
 SystemCompare.html
 functionverify.py
 SimpleNNInt.py
