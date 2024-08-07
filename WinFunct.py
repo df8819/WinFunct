@@ -36,7 +36,7 @@ VERSION = "Use at your own risk and responsibility - v1.624"
 LINK = "https://github.com/df8819/WinFunct"
 
 # The curl-command to copy to the clipboard
-command = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s ' \
+AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s ' \
           '-- -v'
 
 
@@ -762,7 +762,7 @@ class Application(tk.Tk):
 
     def agh_curl(self):
         # Copy the command to the clipboard using the 'clip' command on Windows
-        subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=command.encode())
+        subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
         print('Command copied to clipboard!')
 
     def arp(self):
