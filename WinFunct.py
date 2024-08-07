@@ -30,7 +30,7 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.624"
+VERSION = "Use at your own risk and responsibility - v1.626"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
