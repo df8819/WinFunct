@@ -28,9 +28,10 @@ import wmi
 from HashStuffInt import HashStuff
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
+from DonutInt import Donut
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.628"
+VERSION = "Use at your own risk and responsibility - v1.630"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -231,7 +232,6 @@ def execute_command(cmd):
 
 
 # App Window
-# noinspection PyMethodMayBeStatic,PyShadowingNames
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -295,6 +295,13 @@ class Application(tk.Tk):
         hash_window = tk.Toplevel(self)
         hash_window.title("Hash Generator")
         HashStuff(hash_window)
+
+    def open_donut(self):
+        donut = Donut()
+        if sys.platform == 'win32':
+            subprocess.Popen(['start', 'python', '-c', 'from DonutInt import Donut; Donut().run()'], shell=True)
+        else:
+            subprocess.Popen(['python', '-c', 'from DonutInt import Donut; Donut().run()'])
 
     def open_app_root_folder(self):
         # Determine the directory of the executable or the script itself
@@ -1898,6 +1905,9 @@ class Application(tk.Tk):
 
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff)
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+
+        donut_btn = ttk.Button(self.fun_frame, text="ASCII Donut", command=self.open_donut)
+        donut_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
