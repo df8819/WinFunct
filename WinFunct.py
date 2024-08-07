@@ -1421,16 +1421,16 @@ class Application(tk.Tk):
 
             # Check if updates were actually applied
             if "Already up to date." not in full_output:
-                print("Update detected. Notifying user...")
+                print(f"\n>>> Update detected. Notifying user...")
                 self.notify_user_of_update(full_output)
 
                 # Check if requirements.txt has changed by comparing hashes
                 after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
                 if before_pull_hash != after_pull_hash:
-                    print("requirements.txt has changed. Installing new requirements...")
+                    print(f"\n>>> requirements.txt has changed. Installing new requirements...")
                     self.install_requirements(requirements_path)
             else:
-                print("No updates available.")
+                print(f"\n>>> No updates available.")
 
             return True, full_output
         except subprocess.CalledProcessError as e:
@@ -1471,7 +1471,7 @@ class Application(tk.Tk):
             if process.returncode != 0:
                 raise subprocess.CalledProcessError(process.returncode, "pip install", process.stderr.read())
 
-            print("Requirements installed successfully.")
+            print(f"\n>>> Requirements installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"Error installing requirements: {e.stderr}")
 
