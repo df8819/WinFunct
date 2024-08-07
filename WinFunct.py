@@ -540,7 +540,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print("Command was cancelled.")
+            print(f"\n>>> Command was cancelled.")
 
     def activate_wui(self):
         user_response = messagebox.askyesno("Open Windows Utility Improved",
@@ -554,7 +554,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print("Command was cancelled.")
+            print(f"\n>>> Command was cancelled.")
 
 
     def shutdown_i(self):
@@ -813,12 +813,12 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print("Command was cancelled.")
+            print(f"\n>>> Command was cancelled.")
 
     def agh_curl(self):
         # Copy the command to the clipboard using the 'clip' command on Windows
         subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
-        print('Command copied to clipboard!')
+        print(f"\n>>> Command copied to clipboard!")
 
     def arp(self):
         def run_command():
@@ -1379,7 +1379,7 @@ class Application(tk.Tk):
             # We're running in a PyInstaller bundle
             base_path = sys._MEIPASS
             repo_path = os.path.dirname(sys.executable)
-            print(">>>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Get from GitHub' button to make use of the 'Update' function. <<<<<")
+            print("\n>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Get from GitHub' button to make use of the 'Update' function.")
             return False, "Cannot update when running from .exe"
         else:
             # We're running in a normal Python environment
