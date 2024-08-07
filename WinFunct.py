@@ -90,8 +90,27 @@ if __name__ == "__main__":
     # Print log messages in the elevated terminal
     print_log()
 
-    # Your normal script execution for both admin and non-admin mode continues here
-    print(f"\n...Now running with admin rights. Nice (⌐■_■)\n")
+    # Welcome text :)
+    print("""
+    
+  ╔════════════════════════════════════════════════════════════════════════╗  
+  ║  Thank you for using                                                   ║
+  ║                                                                        ║
+  ║                                                                        ║
+  ║  888       888 d8b          8888888888                         888     ║
+  ║  888   o   888 Y8P          888                                888     ║
+  ║  888  d8b  888              888                                888     ║
+  ║  888 d888b 888 888 88888b.  8888888 888  888 88888b.   .d8888b 888888  ║
+  ║  888d88888b888 888 888 "88b 888     888  888 888 "88b d88P"    888     ║
+  ║  88888P Y88888 888 888  888 888     888  888 888  888 888      888     ║
+  ║  8888P   Y8888 888 888  888 888     Y88b 888 888  888 Y88b.    Y88b.   ║
+  ║  888P     Y888 888 888  888 888      "Y88888 888  888  "Y8888P  "Y888  ║
+  ║                                                                        ║
+  ║                                                                        ║
+  ║  ...Now running with admin rights. Nice (⌐■_■)                         ║
+  ╚════════════════════════════════════════════════════════════════════════╝  
+    
+    """)
 
 
 # Command functions
