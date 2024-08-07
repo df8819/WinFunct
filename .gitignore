@@ -32,7 +32,6 @@ temp_install_script.bat
 *.log
 admin_log.txt
 netstat_exe_output.txt
-ASCII.txt
 
 # Miscellaneous
 SystemCompare.html
