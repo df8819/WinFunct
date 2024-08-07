@@ -95,60 +95,61 @@ pwas_to_unregister = [
     # Add other unnecessary PWA shortcuts here
 ]
 
+# Links for the "Link Opener" window
 links = {
-            "Dev Tools": {
-                "Python": "https://www.python.org/downloads/",
-                "Git": "https://git-scm.com/downloads",
-                "GitHub Desktop": "https://desktop.github.com",
-                "Visual Studio Code": "https://code.visualstudio.com/download",
-                "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
-                "UPX Packer": "https://github.com/upx/upx/releases",
-                "Rust/Cargo": "https://rustup.rs",
-                "Qt Designer": "https://build-system.fman.io/qt-designer-download",
-            },
-            "Network Tools": {
-                "AirCrack": "https://www.aircrack-ng.org",
-                "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
-                "WireShark": "https://www.wireshark.org/download.html",
-                "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
-                "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
-                "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
-            },
-            "System Utilities": {
-                "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
-                "HxD Hex Editor": "https://mh-nexus.de/en/programs.php",
-                "HWInfo64": "https://www.hwinfo.com/download/",
-                "MSI Afterburner": "https://www.msi.com/Landing/afterburner/graphics-cards",
-                "WinDirStat": "https://sourceforge.net/projects/windirstat/",
-                "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
-            },
-            "Remote & Collaboration": {
-                "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
-                "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
-                "MS PowerToys": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
-            },
-            "Disk & Partition Tools": {
-                "Etcher USB Creator": "https://etcher.balena.io",
-                "Raspberry Pi Imager": "https://www.raspberrypi.com/software/",
-                "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
-                "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
-                "Rufus USB Creator": "https://rufus.ie/en/",
-            },
-            "Productivity": {
-                "PicPick": "https://picpick.app/en/download/",
-                "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
-                "Total Commander": "https://www.ghisler.com/ddownload.htm",
-                "NetManSet": "https://www.netsetman.com/en/freeware",
-                "Posy Cursors": "http://www.michieldb.nl/other/cursors",
-                "Bitwarden": "https://bitwarden.com/download/",
-            },
-            "Tutorials & Resources": {
-                "MAS Script": "https://massgrave.dev/index.html",
-                "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
-                "NSE Lab": "https://nse.digital",
-                "Wifi-Hack": "https://hackernoon.com/how-to-hack-wifi-like-a-pro-hacker",
-            },
-        }
+    "Dev Tools": {
+        "Python": "https://www.python.org/downloads/",
+        "Git": "https://git-scm.com/downloads",
+        "GitHub Desktop": "https://desktop.github.com",
+        "Visual Studio Code": "https://code.visualstudio.com/download",
+        "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
+        "UPX Packer": "https://github.com/upx/upx/releases",
+        "Rust/Cargo": "https://rustup.rs",
+        "Qt Designer": "https://build-system.fman.io/qt-designer-download",
+    },
+    "Network Tools": {
+        "AirCrack": "https://www.aircrack-ng.org",
+        "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
+        "WireShark": "https://www.wireshark.org/download.html",
+        "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
+        "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
+        "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
+    },
+    "System Utilities": {
+        "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
+        "HxD Hex Editor": "https://mh-nexus.de/en/programs.php",
+        "HWInfo64": "https://www.hwinfo.com/download/",
+        "MSI Afterburner": "https://www.msi.com/Landing/afterburner/graphics-cards",
+        "WinDirStat": "https://sourceforge.net/projects/windirstat/",
+        "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
+    },
+    "Remote & Collaboration": {
+        "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
+        "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
+        "MS PowerToys": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
+    },
+    "Disk & Partition Tools": {
+        "Etcher USB Creator": "https://etcher.balena.io",
+        "Raspberry Pi Imager": "https://www.raspberrypi.com/software/",
+        "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
+        "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
+        "Rufus USB Creator": "https://rufus.ie/en/",
+    },
+    "Productivity": {
+        "PicPick": "https://picpick.app/en/download/",
+        "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
+        "Total Commander": "https://www.ghisler.com/ddownload.htm",
+        "NetManSet": "https://www.netsetman.com/en/freeware",
+        "Posy Cursors": "http://www.michieldb.nl/other/cursors",
+        "Bitwarden": "https://bitwarden.com/download/",
+    },
+    "Tutorials & Resources": {
+        "MAS Script": "https://massgrave.dev/index.html",
+        "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
+        "NSE Lab": "https://nse.digital",
+        "Wifi-Hack": "https://hackernoon.com/how-to-hack-wifi-like-a-pro-hacker",
+    },
+}
 
 
 def is_admin():
@@ -1695,8 +1696,7 @@ class Application(tk.Tk):
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
 
-        # Categorized options lists
-        # Note: You might need to adjust these lists based on your application's requirements
+        # Option Buttons for Option Tab (UI element)
         # Windows Management and Configuration Tools
         windows_management_options = [
             ("RegEdit", "regedit"),
