@@ -218,12 +218,12 @@ def show_logo():
     █░       █▓▓█       ▓█    ██     ██   ╔════════╗    █░     █▓          
     ██████████ ▓█▓███████▓    ██▓▓█▓▓█▓   ║WinFunct║   ▓█▓▓▓█▓██           
      ▓▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓▓░     ▒▓▓▓▓▓▓▓    ╚════════╝    ▓▓▓▓▓▓▓            
-
-...Now running with admin rights. Nice (⌐■_■)  
-    """)
+""")
 
 
 show_logo()
+
+print("""...Now running with admin rights. Nice (⌐■_■)""")
 
 
 # Command functions
@@ -1748,6 +1748,9 @@ class Application(tk.Tk):
 
         window.mainloop()
 
+    def show_logo(self):
+        show_logo()
+
     def open_links_window(self):
         print("""Open Link summary.""")
         window = tk.Toplevel(self)
@@ -1813,7 +1816,7 @@ class Application(tk.Tk):
 
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
-        self.tabs.add(self.fun_frame, text="Apps")
+        self.tabs.add(self.fun_frame, text="Misc")
 
         self.tabs.pack(fill="both", expand=True)
 
@@ -2045,6 +2048,9 @@ class Application(tk.Tk):
 
         donut_btn = ttk.Button(self.fun_frame, text="ASCII Donut", command=self.open_donut)
         donut_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
+
+        show_logo_btn = ttk.Button(self.fun_frame, text="WinFunct Logo", command=self.show_logo)
+        show_logo_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
         # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
