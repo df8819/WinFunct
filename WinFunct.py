@@ -1422,7 +1422,13 @@ class Application(tk.Tk):
             # We're running in a PyInstaller bundle
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))  # Use default if _MEIPASS not present
             repo_path = os.path.dirname(sys.executable)
-            print("\n>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Get from GitHub' button to make use of the 'Update' function.")
+            print(f"""
+            ╔═════════════════════════════════ERROR═════════════════════════════════════╗
+            ║ You are running WinFunct from an .exe file.                               ║
+            ║ Please clone the repository from GitHub via 'Get from GitHub' button      ║
+            ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
+            ╚═══════════════════════════════════════════════════════════════════════════╝
+            """)
             return False, "Cannot update when running from .exe"
         else:
             # We're running in a normal Python environment
