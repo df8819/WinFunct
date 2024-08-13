@@ -31,7 +31,7 @@ from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.633"
+VERSION = "Use at your own risk and responsibility - v1.634"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -563,7 +563,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print(f"\nCommand was cancelled.")
+            print(f"Command was cancelled.")
 
 
     def shutdown_i(self):
@@ -824,7 +824,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print(f"\nCommand was cancelled.")
+            print(f"Command was cancelled.")
 
     def agh_curl(self):
         print("""Executing AdGuard Home install helper.""")
@@ -834,11 +834,11 @@ class Application(tk.Tk):
         def on_yes():
             AdGuardClipBoard = "curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v"
             subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
-            print("\nCommand copied to clipboard")
+            print("Command copied to clipboard")
             root.destroy()
 
         def on_no():
-            print("\nCommand execution canceled.")
+            print("Command execution canceled.")
             root.destroy()
 
         root = tk.Tk()
@@ -1463,13 +1463,13 @@ class Application(tk.Tk):
 
             # Check if updates were actually applied
             if "Already up to date." not in full_output:
-                print(f"\nUpdate detected. Notifying user...")
+                print(f"Update detected. Notifying user...")
                 self.notify_user_of_update(full_output)
 
                 # Check if requirements.txt has changed by comparing hashes
                 after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
                 if before_pull_hash != after_pull_hash:
-                    print(f"\nrequirements.txt has changed. Installing new requirements...")
+                    print(f"requirements.txt has changed. Installing new requirements...")
                     self.install_requirements(requirements_path)
             else:
                 print(f"No updates available.")
@@ -1513,7 +1513,7 @@ class Application(tk.Tk):
             if process.returncode != 0:
                 raise subprocess.CalledProcessError(process.returncode, "pip install", process.stderr.read())
 
-            print(f"\nRequirements installed successfully.")
+            print(f"Requirements installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"Error installing requirements: {e.stderr}")
 
@@ -1641,7 +1641,7 @@ class Application(tk.Tk):
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
     def open_godmode(self):
-        print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.\n""")
+        print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.""")
         def run_command():
             try:
                 subprocess.run("explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}", shell=True)
