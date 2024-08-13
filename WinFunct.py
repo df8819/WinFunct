@@ -316,7 +316,7 @@ class Application(tk.Tk):
             subprocess.Popen(['xdg-open', app_root])
 
     def open_ps_as_admin(self):
-        print("""Open PowerShell window as admin""")
+        print("""Open PowerShell window as admin.""")
         def run_command():
             try:
                 subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
@@ -328,7 +328,7 @@ class Application(tk.Tk):
         thread.start()
 
     def open_cmd_as_admin(self):
-        print("""Open cmd window as admin""")
+        print("""Open cmd window as admin.""")
         def run_command():
             try:
                 subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
@@ -340,7 +340,7 @@ class Application(tk.Tk):
         thread.start()
 
     def open_autostart_locations(self):
-        print("""Open Windows Auto-Start folders""")
+        print("""Open Windows Auto-Start folders.""")
         # Folder locations
         user_startup_path = os.path.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
         all_users_startup_path = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp'
@@ -479,6 +479,7 @@ class Application(tk.Tk):
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     def run_winsat_disk(self):
+        print("""Running Disk speed test.""")
         def get_available_drives():
             drives = []
             for partition in psutil.disk_partitions(all=False):
@@ -566,6 +567,7 @@ class Application(tk.Tk):
 
 
     def shutdown_i(self):
+        print("""Opening Remote Shutdown Dialog.""")
         subprocess.run("shutdown -i", shell=True)
 
     def confirm_shutdown(self):
@@ -680,6 +682,7 @@ class Application(tk.Tk):
         messagebox.showinfo("Uninstall Completed", result_message)
 
     def enhanced_bloatware_killer(self):
+        print("""Running De-bloat function. Please read the message before executing!""")
         def run_uninstall(items, is_app):
             for item in items:
                 if is_app:
@@ -824,6 +827,7 @@ class Application(tk.Tk):
             print(f"\nCommand was cancelled.")
 
     def agh_curl(self):
+        print("""Executing AdGuard Home install helper.""")
         def on_link_click(event):
             webbrowser.open("https://github.com/AdguardTeam/AdGuardHome")
 
@@ -861,6 +865,7 @@ class Application(tk.Tk):
         root.mainloop()
 
     def get_file_checksum(self):
+        print("""Running file checksum helper.""")
         file_path = filedialog.askopenfilename()
         if not file_path:
             messagebox.showinfo("Info", "No file selected.")
@@ -1073,6 +1078,7 @@ class Application(tk.Tk):
         return system_info
 
     def save_to_file(self, info, file_path):
+        print("""Saving system info to .csv file.""")
         with open(file_path, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             # Write header
@@ -1116,6 +1122,7 @@ class Application(tk.Tk):
             self.confirm_and_search()
 
     def gather_and_save_info(self):
+        print("""Extracting system info.""")
         global info
         if tk.messagebox.askyesno("Extract", "This may take some time to extract data. Proceed?"):
             info = self.get_system_info()  # Gathers system info
@@ -1181,6 +1188,7 @@ class Application(tk.Tk):
         return {field: vals for field, vals in differences.items() if vals}
 
     def write_differences_to_file(self, differences, file_path):
+        print("""Merging system info for comparison.""")
         with open(file_path, mode='w', encoding='utf-8') as htmlfile:
             # Write the beginning of the HTML file with updated styles
             htmlfile.write('<html><head><style>')
@@ -1262,6 +1270,7 @@ class Application(tk.Tk):
         return system_info
 
     def write_system_info_to_file(self, system_info, file_path):
+        print("""Creating system info file.""")
         with open(file_path, mode='w', encoding='utf-8') as htmlfile:
             htmlfile.write('<html><head><style>')
             htmlfile.write('body { background-color: #2b2b2b; color: #f0f0f0; font-family: Arial, sans-serif; }')
@@ -1287,6 +1296,7 @@ class Application(tk.Tk):
             htmlfile.write('</table></body></html>')
 
     def check_internet(self):
+        print("""Running various 'is online?' checks.""")
         def run_checks():
             results = []
             methods = [
@@ -1340,6 +1350,7 @@ class Application(tk.Tk):
         thread.start()
 
     def netstat_output(self):
+        print("""Executing Network Shell command to extract apps with active internet connection.""")
         try:
             # Ask user if they want to create the file
             if not messagebox.askyesno("Create File", "This will create the file 'netstat_exe_output.txt', which contains a list with all apps that have an active internet connection?"):
@@ -1402,6 +1413,7 @@ class Application(tk.Tk):
         response = messagebox.askyesno("Confirm Search", "Do you want to check scanned App information online?\n\nWARNING: This will open a new google search tab for every entry in netstat_exe_output.txt")
         if response:
             self.search_app_info(file_path)
+        print("""Searching scanned apps online to check their trustworthiness.""")
 
     def git_pull(self):
         # Determine if we're running as a script or frozen executable
@@ -1579,7 +1591,7 @@ class Application(tk.Tk):
         return True
 
     def notify_missing_dependencies(self, missing_deps):
-        """Show a message box with options to download missing dependencies."""
+        """Showing a message box with options to download missing dependencies."""
         message = "The following dependencies are missing:\n"
         for dep, _ in missing_deps:
             message += f"- {dep}\n"
@@ -1604,6 +1616,7 @@ class Application(tk.Tk):
         return directory if directory else None  # Return None if no directory selected
 
     def clone_repository(self, repo_url, clone_path):
+        print("""Cloning repository.""")
         """Clone the repository into the selected path."""
         repo_name = repo_url.split('/')[-1][:-4]  # Extract repo name
         final_clone_path = os.path.join(clone_path, repo_name)
@@ -1615,7 +1628,7 @@ class Application(tk.Tk):
             messagebox.showerror("Error", f"Failed to clone repository: {e.stderr.strip()}")  # Improved: Strip extra whitespace
 
     def clone_repo_with_prompt(self):
-        print("""\nCheck dependencies, prompt user for directory, and clone the repository:""")
+        print("""\nChecking dependencies, prompt user for directory, and clone the repository:""")
         if not self.check_dependencies():
             messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
             return
@@ -1640,7 +1653,7 @@ class Application(tk.Tk):
         thread.start()
 
     def logoff_users(self):
-        print("""\nRunning 'quser' command to get list of logged-in users""")
+        print("""Running 'quser' command to get list of logged-in users.""")
         try:
             result = subprocess.run(['quser'], capture_output=True, text=True, shell=True)
             output = result.stdout
@@ -1730,7 +1743,7 @@ class Application(tk.Tk):
         window.mainloop()
 
     def open_links_window(self):
-        print("""\nOpen Link summary\n""")
+        print("""Open Link summary.""")
         window = tk.Toplevel(self)
         window.title("Download Links")
         window.resizable(True, True)
