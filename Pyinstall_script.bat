@@ -81,7 +81,12 @@ if exist WinFunct.spec del /F WinFunct.spec
 echo.
 echo ----------------------------------------------------
 echo Compilation complete.
-echo The file has been renamed to WinFunct_%version%.exe.
+echo WinFunct_%version%.exe created and moved to root directory.
+echo The following have been cleaned up:
+echo - dist/
+echo - build/
+echo - __pycache__
+echo - WinFunct.spec
 echo ----------------------------------------------------
 echo.
 timeout /t 30
