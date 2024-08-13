@@ -50,5 +50,5 @@ echo.
 echo Thank you for using WinFunct :)
 echo -------------------------------------------
 echo.
-timeout /t 30
+timeout /t 60
 exit /B 0
