@@ -1950,7 +1950,7 @@ class Application(tk.Tk):
         # Bind the callback function to the version label
         version_label.bind("<Button-1>", open_link)
 
-        # Script tab Buttons and Positions
+        # Script tab Buttons and Positions 1/2
         my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address)
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
@@ -2002,6 +2002,7 @@ class Application(tk.Tk):
         self.function_dropdown2.set("App Connections")  # Set default text
         self.function_dropdown2.bind("<<ComboboxSelected>>", self.on_function_select2)
 
+        # Script tab Buttons and Positions 1/2
         activate_wui_btn = ttk.Button(self.functions_frame, text="CTT Winutil", command=self.activate_wui)
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
