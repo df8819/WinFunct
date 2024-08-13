@@ -40,10 +40,15 @@ if %errorlevel% NEQ 0 (
 
 :: Success message
 echo.
-echo ------------------------------------- INFO -------------------------------------
-echo -------------- Update complete. Please manually close this window. -------------
-echo --------------------------------------------------------------------------------
 echo.
-color 0A
-pause
+echo -------------------------------------------
+echo Installation/Update complete.
+echo.
+echo You can use the "Update" button in the App 
+echo for future updates.
+echo.
+echo Thank you for using WinFunct :)
+echo -------------------------------------------
+echo.
+timeout /t 30
 exit /B 0

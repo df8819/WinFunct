@@ -19,14 +19,12 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
-REM Prompt to decide whether to run create_spec_file.py
-set "use_spec_file="
-set /p "use_spec_file=Do you want to run create_spec_file.py to generate the spec file? [Y/n]: "
-if /i "%use_spec_file%"=="n" (
-    set "use_spec_file=NO"
-) else (
-    set "use_spec_file=YES"
-)
+REM Prompt for pyinstaller process option with default [1]
+set "option=1"
+set /p "option=Choose pyinstaller process: [1] With spec file (default) or [2] Without spec file: "
+
+REM Default to 1 if the input is empty
+if "%option%"=="" set "option=1"
 
 REM Prompt for version number with validation
 :version_prompt
@@ -37,36 +35,23 @@ if "!version!"=="" (
     goto version_prompt
 )
 
-REM Run create_spec_file.py if the user selected YES
-if "%use_spec_file%"=="YES" (
+REM Branch based on user option
+if "%option%"=="1" (
+    REM Create the spec file with the necessary exclusions using a Python script
     echo Creating the spec file with exclusions...
     python create_spec_file.py
-    set errorlevel_after_python=%errorlevel%
-    echo Error level after Python script: !errorlevel_after_python!
     
-    REM Ensure error level is rechecked properly
-    if !errorlevel_after_python! NEQ 0 (
-        echo Error: Failed to create the spec file.
-        pause
-        exit /B 1
-    )
-
-    REM Check if the spec file exists
-    if not exist "WinFunct.spec" (
-        echo Error: Spec file not found after creation.
-        pause
-        exit /B 1
-    )
-)
-
-REM Compile using PyInstaller with or without the spec file
-if "%use_spec_file%"=="YES" (
     echo Compiling WinFunct.py into a single executable using PyInstaller with the spec file...
     pyinstaller WinFunct.spec
+) else if "%option%"=="2" (
+    echo Compiling WinFunct.py into a single executable using PyInstaller without spec file...
+    pyinstaller --onefile WinFunct.py
 ) else (
-    echo Compiling WinFunct.py into a single executable using PyInstaller without a spec file...
-    pyinstaller WinFunct.py
+    echo Invalid option. Please select [1] or [2].
+    pause
+    exit /B 1
 )
+
 if %errorlevel% NEQ 0 (
     echo Error: PyInstaller failed to compile the script. Please check the output for details.
     pause
@@ -91,7 +76,11 @@ echo Cleaning up temporary files and folders...
 if exist dist rmdir /S /Q dist
 if exist build rmdir /S /Q build
 if exist __pycache__ rmdir /S /Q __pycache__
-if exist WinFunct.spec del /F WinFunct.spec
+
+REM Only delete WinFunct.spec if option 1 was selected
+if "%option%"=="1" (
+    if exist WinFunct.spec del /F WinFunct.spec
+)
 
 echo.
 echo --------------------------------------------------------------------------
