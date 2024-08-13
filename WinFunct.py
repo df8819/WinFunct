@@ -246,40 +246,30 @@ class Application(tk.Tk):
         self.functions_frame = None
         self.bottom_frame = None
         self.geometry(self.resolution_main)
-        self.center_window()
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
         # Setting the background color of the main frame to light blue
         self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
 
-        # Creating a style (Delete this to delete style)
+        # Creating a style
         style = ttk.Style()
         style.configure('LightBlue.TFrame', background='#4791CC')
-
-        # Background color
-        # style.configure('TFrame', background='#000000')
-
-        # Initial code for non-style
-        # self.main_frame = ttk.Frame(self)
 
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.create_widgets()
         self.resizable(True, True)
 
+        # Center the window after all widgets have been packed
+        self.after(100, self.center_window)
+
     def center_window(self):
-        self.update_idletasks()  # Ensures the geometry is calculated
-        window_width = self.winfo_width()
-        window_height = self.winfo_height()
-
-        position_right = int(self.winfo_screenwidth() / 2 - window_width / 2)
-        position_top = int(self.winfo_screenheight() / 2 - window_height / 2)
-
-        self.geometry(f"+{position_right}+{position_top}")
+        # Center the window using Tcl method
+        self.eval('tk::PlaceWindow . center')
 
     def reset_ui(self):
         self.geometry(self.resolution_main)
-        self.center_window()
+        self.after(100, self.center_window)
 
     def open_chat(self):
         if tk.messagebox.askyesno("Open JChat", "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
