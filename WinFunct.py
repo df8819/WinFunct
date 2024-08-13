@@ -1616,6 +1616,78 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_command)
         thread.start()
 
+    def logoff_users(self):
+        # Run the 'quser' command to get the list of logged-in users
+        try:
+            result = subprocess.run(['quser'], capture_output=True, text=True, shell=True)
+            output = result.stdout
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to run 'quser': {e}")
+            return
+
+        # Parse the output to extract user information using regex for better accuracy
+        lines = output.strip().split('\n')
+        users = []
+
+        for line in lines[1:]:  # Skip the header line
+            # Use regex to handle varying spaces and capture username and session ID
+            match = re.match(r'^\s*(\S+)\s+(\S+)\s+(\d+)\s+', line)
+            if match:
+                username = match.group(1)
+                session_id = match.group(3)
+                users.append((username, session_id))
+
+        if not users:
+            messagebox.showinfo("Info", "No users found.")
+            return
+
+        # Create a Tkinter window to display a listbox for user selection
+        window = tk.Tk()
+        window.title("Select Users to Log Off")
+
+        # Set the initial window size
+        window_width = 400
+        window_height = 300
+        window.geometry(f"{window_width}x{window_height}")
+
+        # Center the window on the screen
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        x_cordinate = int((screen_width / 2) - (window_width / 2))
+        y_cordinate = int((screen_height / 2) - (window_height / 2))
+        window.geometry(f"+{x_cordinate}+{y_cordinate}")
+
+        # Create a Listbox for multiple selection
+        listbox = tk.Listbox(window, selectmode=tk.MULTIPLE)
+        for i, (username, session_id) in enumerate(users):
+            listbox.insert(tk.END, f"{username} (Session ID: {session_id})")
+        listbox.pack(fill=tk.BOTH, expand=True)
+
+        def on_submit():
+            selected_indices = listbox.curselection()
+            selected_users = [users[i] for i in selected_indices]
+
+            print(f"Debug: Selected users: {selected_users}")
+
+            if not selected_users:
+                messagebox.showinfo("Info", "No users selected.")
+            else:
+                for username, session_id in selected_users:
+                    try:
+                        # Run the logoff command for the selected users
+                        print(f"Would log off: {username} (Session ID: {session_id})")
+                        subprocess.run(['logoff', session_id], shell=True)
+                        messagebox.showinfo("Success", f"Logged off: {username}")
+                    except Exception as e:
+                        messagebox.showerror("Error", f"Failed to log off {username}: {e}")
+            window.destroy()
+
+        # Add a submit button
+        submit_button = tk.Button(window, text="Log Off Selected Users", command=on_submit)
+        submit_button.pack()
+
+        window.mainloop()
+
     def open_links_window(self):
         window = tk.Toplevel(self)
         window.title("Download Links")
@@ -1887,6 +1959,9 @@ class Application(tk.Tk):
 
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
         shutdown_i_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
+
+        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff usr", command=self.logoff_users)
+        logoff_usr_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
