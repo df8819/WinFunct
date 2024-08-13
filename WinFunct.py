@@ -39,7 +39,6 @@ LINK = "https://github.com/df8819/WinFunct"
 # The curl-command to copy to the clipboard
 AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v'
 
-
 # List of non-essential apps to uninstall
 apps_to_uninstall = [
     "Microsoft.SkypeApp",
