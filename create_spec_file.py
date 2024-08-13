@@ -38,11 +38,6 @@ exe = EXE(pyz,
           entitlements_file=None )
 """
 
-try:
-    with open("WinFunct.spec", "w") as spec_file:
-        spec_file.write(spec_content)
-    print("Spec file created successfully.")
-    exit(0)  # Explicitly exit with code 0
-except IOError as e:
-    print(f"Error creating spec file: {e}")
-    exit(1)  # Exit with code 1 in case of failure
+with open("WinFunct.spec", "w") as spec_file:
+    spec_file.write(spec_content)
+print("Spec file created successfully.")
