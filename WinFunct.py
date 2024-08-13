@@ -31,7 +31,7 @@ from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
 
 # Version of the app
-VERSION = "Use at your own risk and responsibility - v1.630"
+VERSION = "Use at your own risk and responsibility - v1.633"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
