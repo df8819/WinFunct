@@ -39,7 +39,7 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 - _**"Kill Bloatware"** needs an overhaul and may not work as intended. Please use **"CCT Winutil"** and its GUI to de-bloat Windows, that works like a charm_ 👌
 
 ## Screenshots
-Screenshots may not show the latest version of the app. _(Theme-Selector with ttkbootstrap is planned for the future)_ 👀
+**Screenshots may not show the latest version of the app!** 👀
 
 ![Image](1701505001.png)
 
