@@ -48,8 +48,9 @@ rmdir /S /Q __pycache__
 
 echo.
 echo.
-echo -----------------------------------------------------INFO----------------------------------------------------
-echo Compilation complete. The file has been renamed to WinFunct_%version%.exe. Please manually close this window.
-echo -------------------------------------------------------------------------------------------------------------
+echo --------------------------------------------------------------------------
+echo Compilation complete. The file has been renamed to WinFunct_%version%.exe.
+echo Please manually close this window.
+echo --------------------------------------------------------------------------
 echo.
 pause
