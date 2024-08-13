@@ -1297,6 +1297,7 @@ class Application(tk.Tk):
 
     def check_internet(self):
         print("""Running various 'is online?' checks.""")
+
         def run_checks():
             results = []
             methods = [
@@ -1311,7 +1312,7 @@ class Application(tk.Tk):
 
                 if method_name == "Ping":
                     try:
-                        param = '-n' if subprocess.sys.platform.lower() == 'win32' else '-c'
+                        param = '-n' if sys.platform.lower() == 'win32' else '-c'
                         subprocess.run(['ping', param, '1', target],
                                        stdout=subprocess.DEVNULL,
                                        stderr=subprocess.DEVNULL,
@@ -1322,7 +1323,7 @@ class Application(tk.Tk):
                 elif method_name == "Socket":
                     try:
                         socket.create_connection(target, timeout=3)
-                        success, message = True, f"{method_name} (8.8.8.8 -Port 53) connection successful"
+                        success, message = True, f"{method_name} (8.8.8.8 - Port 53) connection successful"
                     except socket.error:
                         pass
                 elif method_name == "HTTP":
