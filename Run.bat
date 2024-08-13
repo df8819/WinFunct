@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: BatchGotAdmin
-title --- WinFunct Terminal ---
+title WinFunct Terminal
 color 0A
 
 :-------------------------------------

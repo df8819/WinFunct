@@ -206,19 +206,19 @@ if __name__ == "__main__":
 
 def show_logo():
     print("""
-  ╔════════════════════════════════════════════════════════════════════════╗
-  ║  Welcome to and thanks for using:                                      ║
-  ║  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                                      ║
-  ║                                                                        ║
-  ║  888       888 d8b          8888888888                         888     ║
-  ║  888   o   888 Y8P          888                                888     ║
-  ║  888  d8b  888              888                                888     ║
-  ║  888 d888b 888 888 88888b.  8888888 888  888 88888b.   .d8888b 888888  ║
-  ║  888d88888b888 888 888 "88b 888     888  888 888 "88b d88P"    888     ║
-  ║  88888P Y88888 888 888  888 888     888  888 888  888 888      888     ║
-  ║  8888P   Y8888 888 888  888 888     Y88b 888 888  888 Y88b.    Y88b.   ║
-  ║  888P     Y888 888 888  888 888      "Y88888 888  888  "Y8888P  "Y888  ║
-  ╚════════════════════════════════════════════════════════════════════════╝
+   ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒  
+  █████████ ░█████████▓ ██████████████████████████████████████████████████ 
+  ▓█      █▒██       █▓▓█      █ █                  █                   █▓ 
+   █░     ███        ▓██▓     █▓▓█             ░▒▒▒▓█░▒▒▒░        ▒▒▒▒▒▓█  
+   █▓     ██         ▓█▓     ██ ██     ████████████████████     ░████████  
+   ██     █▓         ▒█     ██  █▓     ██▓▓▓▓▓█▓         ▓█     ██         
+   ██                      ▓█░ ▓█             █          ██     ██         
+   ██          █▓          █▓  ██     █████████          █▒     █░         
+   ▓█         ▓█▓         ██   █▓     █▓▓▓▓▓▓▓          ▓█     ▓█          
+   ▓█        ▒██▓        ██   ▒█     ▓█                 ██     ██          
+    █░       █▓▓█       ▓█    ██     ██   ╔════════╗    █░     █▓          
+    ██████████ ▓█▓███████▓    ██▓▓█▓▓█▓   ║WinFunct║   ▓█▓▓▓█▓██           
+     ▓▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓▓░     ▒▓▓▓▓▓▓▓    ╚════════╝    ▓▓▓▓▓▓▓            
 
 >>> Now running with admin rights. Nice (⌐■_■)  
     """)
@@ -352,6 +352,7 @@ class Application(tk.Tk):
             os.startfile(all_users_startup_path)
 
     def show_ip_address(self):
+        print("""Temporary showing IP address""")
         response = requests.get("https://ifconfig.me/ip")
         ip_address = response.text
         self.ip_text.delete(0, tk.END)
@@ -827,7 +828,7 @@ class Application(tk.Tk):
             print(f"Command was cancelled.")
 
     def agh_curl(self):
-        print("""Executing AdGuard Home install helper.""")
+        print("""Executing 'AdGuard Home' install helper.""")
         def on_link_click(event):
             webbrowser.open("https://github.com/AdguardTeam/AdGuardHome")
 
@@ -1569,7 +1570,7 @@ class Application(tk.Tk):
 
     def check_dependencies(self):
         """Check if Git and Python are installed and show a message box if not."""
-        print(f"\nPlease select location. 'WinFunct' Folder will be created & cloned at this location.")
+        print(f"\nPlease select location.\n'WinFunct' Folder will be created & cloned at this location.")
         print(f"Checking dependencies:\n")
         dependencies = {
             "Git": ["git", "--version", "https://git-scm.com/downloads"],
@@ -1628,7 +1629,6 @@ class Application(tk.Tk):
             messagebox.showerror("Error", f"Failed to clone repository: {e.stderr.strip()}")  # Improved: Strip extra whitespace
 
     def clone_repo_with_prompt(self):
-        print("""\nChecking dependencies, prompt user for directory, and clone the repository:""")
         if not self.check_dependencies():
             messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
             return
