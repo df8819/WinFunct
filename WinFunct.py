@@ -37,8 +37,8 @@ VERSION = "Use at your own risk and responsibility - v1.630"
 LINK = "https://github.com/df8819/WinFunct"
 
 # The curl-command to copy to the clipboard
-AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s ' \
-          '-- -v'
+AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v'
+
 
 # List of non-essential apps to uninstall
 apps_to_uninstall = [
@@ -824,19 +824,15 @@ class Application(tk.Tk):
             print(f"\n>>> Command was cancelled.")
 
     def agh_curl(self):
-        # Copy the command to the clipboard using the 'clip' command on Windows
-        subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
-        print(f"\n>>> Command copied to clipboard!")
+        message = f"This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\nto your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?"
+        response = messagebox.askyesno("Execute Command", message)
 
-    def arp(self):
-        def run_command():
-            # Command to open a new PowerShell window and run 'arp -a'
-            command = 'powershell.exe arp -a'
-            subprocess.run(command, shell=True)
-
-        # Run the command in a separate thread to avoid freezing the UI
-        thread = threading.Thread(target=run_command)
-        thread.start()
+        if response:
+            # Copy the command to the clipboard using the 'clip' command on Windows
+            subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
+            print(f"\n>>> Command copied to clipboard!")
+        else:
+            print("\n>>> Command execution canceled.")
 
     def get_file_checksum(self):
         file_path = filedialog.askopenfilename()
@@ -1625,16 +1621,16 @@ class Application(tk.Tk):
             messagebox.showerror("Error", f"Failed to run 'quser': {e}")
             return
 
-        # Parse the output to extract user information using regex for better accuracy
+        # Parse the output to extract user information
         lines = output.strip().split('\n')
         users = []
 
         for line in lines[1:]:  # Skip the header line
-            # Use regex to handle varying spaces and capture username and session ID
-            match = re.match(r'^\s*(\S+)\s+(\S+)\s+(\d+)\s+', line)
+            # Adjusted regex to capture usernames and session IDs
+            match = re.match(r'^\s*(\S+)\s+\S+\s+(\d+)\s+', line)
             if match:
                 username = match.group(1)
-                session_id = match.group(3)
+                session_id = match.group(2)
                 users.append((username, session_id))
 
         if not users:
@@ -1878,8 +1874,9 @@ class Application(tk.Tk):
             ("Routing Table", "netsh interface ipv4 show route"),
             ("WiFi Profiles", "netsh wlan show profiles"),
             ("WiFi Settings", "netsh wlan show settings"),
-            ("WiFi Netwroks", "netsh wlan show networks"),
+            ("WiFi Networks", "netsh wlan show networks"),
             ("Net Stats", "netstat -s"),
+            ("ARP Scan", "powershell.exe arp -a")  # Added ARP Scan command
         ]
 
         # Function to create buttons within a frame from a list of option tuples
@@ -1966,8 +1963,8 @@ class Application(tk.Tk):
         agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
-        arp_btn = ttk.Button(self.functions_frame, text="ARP scan", command=self.arp)
-        arp_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
+        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users)
+        logoff_usr_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
         open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window)
         open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
@@ -1977,9 +1974,6 @@ class Application(tk.Tk):
 
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
         shutdown_i_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
-
-        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users)
-        logoff_usr_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
