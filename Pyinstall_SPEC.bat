@@ -1,14 +1,23 @@
 @echo off
-cd %~dp0
-REM Prompt for version number
-set /p version=Enter the version number (e.g., v1.234): 
+setlocal enabledelayedexpansion
 
-REM Check if pyinstaller is installed
-pyinstaller --version >nul 2>&1
+cd /d "%~dp0"
+
+REM Check if Python is installed
+python --version >nul 2>&1
 if %errorlevel% NEQ 0 (
-    echo Error: PyInstaller is not installed. Please install it using 'pip install pyinstaller'.
+    echo Error: Python is not installed or not in the system PATH.
     pause
     exit /B 1
+)
+
+REM Prompt for version number with validation
+:version_prompt
+set "version="
+set /p "version=Enter the version number (e.g., v1.234): "
+if "!version!"=="" (
+    echo Version number cannot be empty.
+    goto version_prompt
 )
 
 REM Create the spec file with the necessary exclusions using a Python script
@@ -30,23 +39,24 @@ if %errorlevel% NEQ 0 (
 
 REM Move the generated executable to the root folder and rename it with the version number
 echo Moving the generated executable to the root folder...
-move /Y dist\WinFunct.exe WinFunct_%version%.exe
+if exist "WinFunct_%version%.exe" (
+    echo Warning: WinFunct_%version%.exe already exists. Overwriting...
+    del /F "WinFunct_%version%.exe"
+)
+move /Y "dist\WinFunct.exe" "WinFunct_%version%.exe"
 if %errorlevel% NEQ 0 (
     echo Error: Failed to move and rename the executable to the root folder.
     pause
     exit /B 1
 )
 
-REM Delete the dist folder
-echo Deleting the dist folder...
-rmdir /S /Q dist
+REM Clean up
+echo Cleaning up temporary files and folders...
+if exist dist rmdir /S /Q dist
+if exist build rmdir /S /Q build
+if exist __pycache__ rmdir /S /Q __pycache__
+if exist WinFunct.spec del /F WinFunct.spec
 
-REM Clean up temporary files
-echo Cleaning up temporary files...
-rmdir /S /Q build
-rmdir /S /Q __pycache__
-
-echo.
 echo.
 echo --------------------------------------------------------------------------
 echo Compilation complete. The file has been renamed to WinFunct_%version%.exe.
@@ -54,3 +64,5 @@ echo Please manually close this window.
 echo --------------------------------------------------------------------------
 echo.
 pause
+
+endlocal

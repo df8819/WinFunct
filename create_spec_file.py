@@ -1,8 +1,9 @@
+import os
+
 spec_content = """
 # -*- mode: python ; coding: utf-8 -*-
 import sys ; sys.setrecursionlimit(sys.getrecursionlimit() * 5)
 block_cipher = None
-
 a = Analysis(['WinFunct.py'],
              pathex=[],
              binaries=[],
@@ -15,10 +16,8 @@ a = Analysis(['WinFunct.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
@@ -39,5 +38,10 @@ exe = EXE(pyz,
           entitlements_file=None )
 """
 
-with open("WinFunct.spec", "w") as spec_file:
-    spec_file.write(spec_content)
+try:
+    with open("WinFunct.spec", "w") as spec_file:
+        spec_file.write(spec_content)
+    print("Spec file created successfully.")
+except IOError as e:
+    print(f"Error creating spec file: {e}")
+    exit(1)
