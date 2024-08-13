@@ -79,16 +79,18 @@ if exist __pycache__ rmdir /S /Q __pycache__
 if exist WinFunct.spec del /F WinFunct.spec
 
 echo.
-echo ----------------------------------------------------
+echo.
+echo -----------------------------------------------------------
 echo Compilation complete.
 echo WinFunct_%version%.exe created and moved to root directory.
-echo The following have been cleaned up:
-echo - dist/
-echo - build/
-echo - __pycache__
-echo - WinFunct.spec
-echo ----------------------------------------------------
+echo The following has been cleaned up:
 echo.
-timeout /t 30
+echo 	dist/
+echo 	build/
+echo 	__pycache__/
+echo 	WinFunct.spec
+echo -----------------------------------------------------------
+echo.
+timeout /t 60
 
 endlocal
