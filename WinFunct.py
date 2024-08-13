@@ -824,15 +824,41 @@ class Application(tk.Tk):
             print(f"\n>>> Command was cancelled.")
 
     def agh_curl(self):
-        message = f"This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\nto your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?"
-        response = messagebox.askyesno("Execute Command", message)
+        def on_link_click(event):
+            webbrowser.open("https://github.com/AdguardTeam/AdGuardHome")
 
-        if response:
-            # Copy the command to the clipboard using the 'clip' command on Windows
+        def on_yes():
+            AdGuardClipBoard = "curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v"
             subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
-            print(f"\n>>> Command copied to clipboard!")
-        else:
+            print("\n>>> Command copied to clipboard!")
+            root.destroy()
+
+        def on_no():
             print("\n>>> Command execution canceled.")
+            root.destroy()
+
+        root = tk.Tk()
+        root.title("Copy to Clipboard?")
+        root.geometry("380x230")
+        root.eval('tk::PlaceWindow . center')  # Center the window on the screen
+
+        message = tk.Label(root, text=f"This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\n to your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?", wraplength=280)
+        message.pack(pady=10)
+
+        link = tk.Label(root, text="AdGuard Home GitHub Repository", fg="blue", cursor="hand2")
+        link.pack()
+        link.bind("<Button-1>", on_link_click)
+
+        button_frame = tk.Frame(root)
+        button_frame.pack(pady=10)
+
+        yes_button = tk.Button(button_frame, text="Yes", command=on_yes)
+        yes_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        no_button = tk.Button(button_frame, text="No", command=on_no)
+        no_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+        root.mainloop()
 
     def get_file_checksum(self):
         file_path = filedialog.askopenfilename()
