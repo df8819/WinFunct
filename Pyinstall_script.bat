@@ -36,6 +36,11 @@ set /p "option=Choose pyinstaller process: [1] With WinFunct.spec file (default)
 REM Default to 1 if the input is empty
 if "%option%"=="" set "option=1"
 
+REM Get start time
+for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
+    set /a start_time=%%a*3600 + %%b*60 + %%c
+)
+
 REM Validate the input and execute the appropriate PyInstaller command
 if "%option%"=="1" (
     REM Create the spec file with the necessary exclusions using a Python script
@@ -57,6 +62,14 @@ if %errorlevel% NEQ 0 (
     pause
     exit /B 1
 )
+
+REM Get end time
+for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
+    set /a end_time=%%a*3600 + %%b*60 + %%c
+)
+
+REM Calculate elapsed time
+set /a elapsed_time=end_time-start_time
 
 REM Move the generated executable to the root folder and rename it with the version number
 echo Moving the generated executable to the root folder...
@@ -81,7 +94,8 @@ if exist WinFunct.spec del /F WinFunct.spec
 echo.
 echo.
 echo -----------------------------------------------------------
-echo Compilation complete.
+echo Compilation complete. Process took %elapsed_time% seconds.
+echo.
 echo WinFunct_%version%.exe created and moved to root directory.
 echo The following has been cleaned up:
 echo.
