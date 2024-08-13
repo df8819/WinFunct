@@ -1419,7 +1419,7 @@ class Application(tk.Tk):
         # Determine if we're running as a script or frozen executable
         if getattr(sys, 'frozen', False):
             # We're running in a PyInstaller bundle
-            base_path = sys._MEIPASS
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))  # Use default if _MEIPASS not present
             repo_path = os.path.dirname(sys.executable)
             print("\n>>> You are running WinFunct from an .exe. Please clone the repository from github via 'Get from GitHub' button to make use of the 'Update' function.")
             return False, "Cannot update when running from .exe"
