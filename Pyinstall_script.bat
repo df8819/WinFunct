@@ -19,13 +19,6 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
-REM Prompt for pyinstaller process option with default [1]
-set "option=1"
-set /p "option=Choose pyinstaller process: [1] With spec file (default) or [2] Without spec file: "
-
-REM Default to 1 if the input is empty
-if "%option%"=="" set "option=1"
-
 REM Prompt for version number with validation
 :version_prompt
 set "version="
@@ -35,7 +28,15 @@ if "!version!"=="" (
     goto version_prompt
 )
 
-REM Branch based on user option
+:option_prompt
+REM Prompt for pyinstaller process option with default [1]
+set "option=1"
+set /p "option=Choose pyinstaller process: [1] With WinFunct.spec file (default) or [2] Without .spec file: "
+
+REM Default to 1 if the input is empty
+if "%option%"=="" set "option=1"
+
+REM Validate the input and execute the appropriate PyInstaller command
 if "%option%"=="1" (
     REM Create the spec file with the necessary exclusions using a Python script
     echo Creating the spec file with exclusions...
@@ -47,9 +48,8 @@ if "%option%"=="1" (
     echo Compiling WinFunct.py into a single executable using PyInstaller without spec file...
     pyinstaller --onefile WinFunct.py
 ) else (
-    echo Invalid option. Please select [1] or [2].
-    pause
-    exit /B 1
+    echo Invalid entry! Please select [1] or [2].
+    goto option_prompt
 )
 
 if %errorlevel% NEQ 0 (
@@ -76,18 +76,14 @@ echo Cleaning up temporary files and folders...
 if exist dist rmdir /S /Q dist
 if exist build rmdir /S /Q build
 if exist __pycache__ rmdir /S /Q __pycache__
-
-REM Only delete WinFunct.spec if option 1 was selected
-if "%option%"=="1" (
-    if exist WinFunct.spec del /F WinFunct.spec
-)
+if exist WinFunct.spec del /F WinFunct.spec
 
 echo.
-echo --------------------------------------------------------------------------
-echo Compilation complete. The file has been renamed to WinFunct_%version%.exe.
-echo Please manually close this window.
-echo --------------------------------------------------------------------------
+echo ----------------------------------------------------
+echo Compilation complete.
+echo The file has been renamed to WinFunct_%version%.exe.
+echo ----------------------------------------------------
 echo.
-pause
+timeout /t 30
 
 endlocal
