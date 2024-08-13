@@ -264,30 +264,35 @@ class Application(tk.Tk):
         self.after(100, self.center_window)
 
     def center_window(self):
-        # Center the window using Tcl method
+        # Using Tcl method to center
         self.eval('tk::PlaceWindow . center')
 
     def reset_ui(self):
+        print("""UI reset.""")
         self.geometry(self.resolution_main)
         self.after(100, self.center_window)
 
     def open_chat(self):
+        print("""Open JChat app.""")
         if tk.messagebox.askyesno("Open JChat", "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
             chat_window = tk.Toplevel(self)
             chat_window.title("JChat")
             JChat(chat_window)  # Initialize JChat within the new window
 
     def open_pw_gen(self):
+        print("""Open Password Generator app.""")
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
         SimplePWGen(pw_window)
 
     def open_hash_stuff(self):
+        print("""Open Hash Generator app.""")
         hash_window = tk.Toplevel(self)
         hash_window.title("Hash Generator")
         HashStuff(hash_window)
 
     def open_donut(self):
+        print("""Open funny cmd ASCII Donut.""")
         donut = Donut()
         if sys.platform == 'win32':
             subprocess.Popen(['start', 'python', '-c', 'from DonutInt import Donut; Donut().run()'], shell=True)
@@ -295,6 +300,7 @@ class Application(tk.Tk):
             subprocess.Popen(['python', '-c', 'from DonutInt import Donut; Donut().run()'])
 
     def open_app_root_folder(self):
+        print("""Open root folder location.""")
         # Determine the directory of the executable or the script itself
         if getattr(sys, 'frozen', False):
             app_root = os.path.dirname(sys.executable)
@@ -310,6 +316,7 @@ class Application(tk.Tk):
             subprocess.Popen(['xdg-open', app_root])
 
     def open_ps_as_admin(self):
+        print("""Open PowerShell window as admin""")
         def run_command():
             try:
                 subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
@@ -321,6 +328,7 @@ class Application(tk.Tk):
         thread.start()
 
     def open_cmd_as_admin(self):
+        print("""Open cmd window as admin""")
         def run_command():
             try:
                 subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
@@ -332,6 +340,7 @@ class Application(tk.Tk):
         thread.start()
 
     def open_autostart_locations(self):
+        print("""Open Windows Auto-Start folders""")
         # Folder locations
         user_startup_path = os.path.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
         all_users_startup_path = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp'
@@ -355,6 +364,7 @@ class Application(tk.Tk):
         self.ip_text.delete(0, tk.END)
 
     def show_wifi_networks(self):
+        print("""Extracting Wifi profiles and passwords.""")
         try:
             cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"], stderr=subprocess.STDOUT).decode("utf-8", "ignore")
             networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
@@ -538,7 +548,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print(f"\n>>> Command was cancelled.")
+            print(f"\nCommand was cancelled.")
 
     def activate_wui(self):
         user_response = messagebox.askyesno("Open Windows Utility Improved",
@@ -552,7 +562,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print(f"\n>>> Command was cancelled.")
+            print(f"\nCommand was cancelled.")
 
 
     def shutdown_i(self):
@@ -811,7 +821,7 @@ class Application(tk.Tk):
             thread = threading.Thread(target=run_command)
             thread.start()
         else:
-            print(f"\n>>> Command was cancelled.")
+            print(f"\nCommand was cancelled.")
 
     def agh_curl(self):
         def on_link_click(event):
@@ -820,11 +830,11 @@ class Application(tk.Tk):
         def on_yes():
             AdGuardClipBoard = "curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v"
             subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
-            print("\n>>> Command copied to clipboard!")
+            print("\nCommand copied to clipboard")
             root.destroy()
 
         def on_no():
-            print("\n>>> Command execution canceled.")
+            print("\nCommand execution canceled.")
             root.destroy()
 
         root = tk.Tk()
@@ -1122,7 +1132,7 @@ class Application(tk.Tk):
             filetypes=[("CSV Files", "*.csv")])
 
         if not file_paths:
-            messagebox.showinfo("Cancelled", "No files were selected.")
+            # messagebox.showinfo("Cancelled", "No files were selected.")
             return
 
         all_systems_info = [self.read_csv_file(path) for path in file_paths]
@@ -1200,7 +1210,7 @@ class Application(tk.Tk):
             filetypes=[("CSV Files", "*.csv")])
 
         if not file_path:
-            messagebox.showinfo("Cancelled", "No file was selected.")
+            # messagebox.showinfo("Cancelled", "No file was selected.")
             return
 
         system_info = self.read_single_csv(file_path)
@@ -1441,16 +1451,16 @@ class Application(tk.Tk):
 
             # Check if updates were actually applied
             if "Already up to date." not in full_output:
-                print(f"\n>>> Update detected. Notifying user...")
+                print(f"\nUpdate detected. Notifying user...")
                 self.notify_user_of_update(full_output)
 
                 # Check if requirements.txt has changed by comparing hashes
                 after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
                 if before_pull_hash != after_pull_hash:
-                    print(f"\n>>> requirements.txt has changed. Installing new requirements...")
+                    print(f"\nrequirements.txt has changed. Installing new requirements...")
                     self.install_requirements(requirements_path)
             else:
-                print(f">>> No updates available.")
+                print(f"No updates available.")
 
             return True, full_output
         except subprocess.CalledProcessError as e:
@@ -1491,7 +1501,7 @@ class Application(tk.Tk):
             if process.returncode != 0:
                 raise subprocess.CalledProcessError(process.returncode, "pip install", process.stderr.read())
 
-            print(f"\n>>> Requirements installed successfully.")
+            print(f"\nRequirements installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"Error installing requirements: {e.stderr}")
 
@@ -1547,8 +1557,8 @@ class Application(tk.Tk):
 
     def check_dependencies(self):
         """Check if Git and Python are installed and show a message box if not."""
-        print(f"\n>>> Please select location. 'WinFunct' Folder will be created & cloned at this location.")
-        print(f">>> Checking dependencies:\n")
+        print(f"\nPlease select location. 'WinFunct' Folder will be created & cloned at this location.")
+        print(f"Checking dependencies:\n")
         dependencies = {
             "Git": ["git", "--version", "https://git-scm.com/downloads"],
             "Python": ["python", "--version", "https://www.python.org/downloads/"]
@@ -1605,19 +1615,20 @@ class Application(tk.Tk):
             messagebox.showerror("Error", f"Failed to clone repository: {e.stderr.strip()}")  # Improved: Strip extra whitespace
 
     def clone_repo_with_prompt(self):
-        """Check dependencies, prompt user for directory, and clone the repository."""
+        print("""\nCheck dependencies, prompt user for directory, and clone the repository:""")
         if not self.check_dependencies():
             messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
             return
 
         clone_path = self.select_clone_directory()
         if clone_path is None:
-            messagebox.showwarning("Clone Cancelled", "Repository clone cancelled. No directory selected.")
+            # messagebox.showwarning("Clone Cancelled", "Repository clone cancelled. No directory selected.")
             return
 
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
     def open_godmode(self):
+        print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.\n""")
         def run_command():
             try:
                 subprocess.run("explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}", shell=True)
@@ -1629,7 +1640,7 @@ class Application(tk.Tk):
         thread.start()
 
     def logoff_users(self):
-        # Run the 'quser' command to get the list of logged-in users
+        print("""\nRunning 'quser' command to get list of logged-in users""")
         try:
             result = subprocess.run(['quser'], capture_output=True, text=True, shell=True)
             output = result.stdout
@@ -1719,6 +1730,7 @@ class Application(tk.Tk):
         window.mainloop()
 
     def open_links_window(self):
+        print("""\nOpen Link summary\n""")
         window = tk.Toplevel(self)
         window.title("Download Links")
         window.resizable(True, True)
