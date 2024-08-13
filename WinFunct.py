@@ -15,10 +15,10 @@ import time
 import psutil
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, ttk
-# import ttkbootstrap as ttk
-# from ttkbootstrap import Style
 import webbrowser
 import winreg
+# import ttkbootstrap as ttk
+# from ttkbootstrap import Style
 
 # Third-Party Imports
 import requests
