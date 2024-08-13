@@ -1438,7 +1438,7 @@ class Application(tk.Tk):
                     print(f"\n>>> requirements.txt has changed. Installing new requirements...")
                     self.install_requirements(requirements_path)
             else:
-                print(f"\n>>> No updates available.")
+                print(f">>> No updates available.")
 
             return True, full_output
         except subprocess.CalledProcessError as e:
