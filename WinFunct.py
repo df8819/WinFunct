@@ -219,7 +219,7 @@ def show_logo():
     ██████████ ▓█▓███████▓    ██▓▓█▓▓█▓   ║WinFunct║   ▓█▓▓▓█▓██           
      ▓▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓▓░     ▒▓▓▓▓▓▓▓    ╚════════╝    ▓▓▓▓▓▓▓            
 
->>> Now running with admin rights. Nice (⌐■_■)  
+...Now running with admin rights. Nice (⌐■_■)  
     """)
 
 
@@ -1423,11 +1423,11 @@ class Application(tk.Tk):
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))  # Use default if _MEIPASS not present
             repo_path = os.path.dirname(sys.executable)
             print(f"""
-            ╔═════════════════════════════════ERROR═════════════════════════════════════╗
-            ║ You are running WinFunct from an .exe file.                               ║
-            ║ Please clone the repository from GitHub via 'Get from GitHub' button      ║
-            ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
-            ╚═══════════════════════════════════════════════════════════════════════════╝
+╔═════════════════════════════════ERROR═════════════════════════════════════╗
+║ You are running WinFunct from an .exe file.                               ║
+║ Please clone the repository from GitHub via 'Get from GitHub' button      ║
+║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
+╚═══════════════════════════════════════════════════════════════════════════╝
             """)
             return False, "Cannot update when running from .exe"
         else:
@@ -1990,6 +1990,7 @@ class Application(tk.Tk):
         self.function_dropdown1.set("System Info")  # Set default text
         self.function_dropdown1.bind("<<ComboboxSelected>>", self.on_function_select1)
 
+        # Dropdown menu for similar functions - Active internet connection apps
         self.selected_function2 = tk.StringVar()
         self.function_dropdown2 = ttk.Combobox(
             self.functions_frame,
