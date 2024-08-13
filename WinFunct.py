@@ -1657,34 +1657,52 @@ class Application(tk.Tk):
         y_cordinate = int((screen_height / 2) - (window_height / 2))
         window.geometry(f"+{x_cordinate}+{y_cordinate}")
 
-        # Create a Listbox for multiple selection
-        listbox = tk.Listbox(window, selectmode=tk.MULTIPLE)
-        for i, (username, session_id) in enumerate(users):
+        # Create a frame to hold the Listbox and Scrollbar
+        frame = ttk.Frame(window)
+        frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Create a Listbox for multiple selection with a Scrollbar
+        listbox = tk.Listbox(frame, selectmode=tk.MULTIPLE, width=50)
+        scrollbar = ttk.Scrollbar(frame, orient="vertical", command=listbox.yview)
+        listbox.config(yscrollcommand=scrollbar.set)
+
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        for username, session_id in users:
             listbox.insert(tk.END, f"{username} (Session ID: {session_id})")
-        listbox.pack(fill=tk.BOTH, expand=True)
 
         def on_submit():
             selected_indices = listbox.curselection()
             selected_users = [users[i] for i in selected_indices]
 
-            print(f"Debug: Selected users: {selected_users}")
-
             if not selected_users:
                 messagebox.showinfo("Info", "No users selected.")
-            else:
-                for username, session_id in selected_users:
-                    try:
-                        # Run the logoff command for the selected users
-                        print(f"Would log off: {username} (Session ID: {session_id})")
-                        subprocess.run(['logoff', session_id], shell=True)
-                        messagebox.showinfo("Success", f"Logged off: {username}")
-                    except Exception as e:
-                        messagebox.showerror("Error", f"Failed to log off {username}: {e}")
+                return
+
+            confirmation = messagebox.askyesno("Confirm", f"Are you sure you want to log off {len(selected_users)} user(s)?")
+            if not confirmation:
+                return
+
+            for username, session_id in selected_users:
+                try:
+                    subprocess.run(['logoff', session_id], shell=True, check=True)
+                    print(f"Logged off: {username} (Session ID: {session_id})")
+                except subprocess.CalledProcessError as e:
+                    messagebox.showerror("Error", f"Failed to log off {username}: {e}")
+
+            messagebox.showinfo("Success", f"Successfully logged off {len(selected_users)} user(s).")
             window.destroy()
 
-        # Add a submit button
-        submit_button = tk.Button(window, text="Log Off Selected Users", command=on_submit)
-        submit_button.pack()
+        # Add submit and cancel buttons
+        button_frame = ttk.Frame(window)
+        button_frame.pack(fill=tk.X, padx=10, pady=10)
+
+        submit_button = ttk.Button(button_frame, text="Log Off Selected Users", command=on_submit)
+        submit_button.pack(side=tk.LEFT, padx=(0, 5))
+
+        cancel_button = ttk.Button(button_frame, text="Cancel", command=window.destroy)
+        cancel_button.pack(side=tk.RIGHT)
 
         window.mainloop()
 
@@ -1960,7 +1978,7 @@ class Application(tk.Tk):
         shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i)
         shutdown_i_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
-        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff usr", command=self.logoff_users)
+        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users)
         logoff_usr_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
         godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode)
