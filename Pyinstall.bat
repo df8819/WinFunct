@@ -1,5 +1,5 @@
 @echo off
-cd %~dp0
+cd /d "%~dp0"
 
 REM Prompt for version number
 set /p version=Enter the version number (e.g., v1.234): 
