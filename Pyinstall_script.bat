@@ -22,7 +22,7 @@ if %errorlevel% NEQ 0 (
 REM Prompt for version number with validation
 :version_prompt
 set "version="
-set /p "version=Enter the version number (e.g., v1.234): "
+set /p "version=Enter the version number (e.g., v1.234) and hit Enter: "
 if "!version!"=="" (
     echo Version number cannot be empty.
     goto version_prompt
@@ -32,10 +32,13 @@ if "!version!"=="" (
 REM Prompt for pyinstaller process option with default [1]
 set "option=1"
 echo.
-echo Choose pyinstaller process:
-echo [1] Includes a Python script to create and modify the spec file with exclusions
-echo [2] Runs pyinstaller without exclusions and only with "--onefile"
-set /p "option=Enter your choice [1] or [2]: "
+echo --------------------------------------------------------------------------------
+echo Please choose a PyInstaller process:
+echo.
+echo [1] Includes a Python script to create and modify the spec file with exclusions.
+echo [2] Runs pyinstaller without exclusions and only with the "--onefile" argument.
+echo.
+set /p "option=Type [1] or [2] and hit Enter: "
 echo.
 
 REM Default to 1 if the input is empty
