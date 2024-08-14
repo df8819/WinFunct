@@ -31,7 +31,12 @@ if "!version!"=="" (
 :option_prompt
 REM Prompt for pyinstaller process option with default [1]
 set "option=1"
-set /p "option=Choose pyinstaller process: [1] With WinFunct.spec file (default) or [2] Without .spec file: "
+echo.
+echo Choose pyinstaller process:
+echo [1] Includes a Python script to create and modify the spec file with exclusions
+echo [2] Runs pyinstaller without exclusions and only with "--onefile"
+set /p "option=Enter your choice [1] or [2]: "
+echo.
 
 REM Default to 1 if the input is empty
 if "%option%"=="" set "option=1"
