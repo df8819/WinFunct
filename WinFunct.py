@@ -235,7 +235,7 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.resolution_main = "660x520"
+        self.resolution_main = "675x520"
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -565,6 +565,19 @@ class Application(tk.Tk):
         else:
             print(f"Command was cancelled.")
 
+    def install_ffmpeg(self):
+        user_response = messagebox.askyesno("Install FFMPEG",
+                                            "This will open a PowerShell instance and run a FFMPEG install script. Proceed?")
+        if user_response:
+            def run_command():
+                command = ['powershell.exe', '-Command', 'iex (irm ffmpeg.tc.ht)']
+                subprocess.run(command, shell=True)
+
+            # Run the command in a separate thread to avoid freezing the UI
+            thread = threading.Thread(target=run_command)
+            thread.start()
+        else:
+            print(f"\nCommand was cancelled.")
 
     def shutdown_i(self):
         print("""Opening Remote Shutdown Dialog.""")
@@ -2011,6 +2024,9 @@ class Application(tk.Tk):
 
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win)
         activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
+
+        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install FFMPEG", command=self.install_ffmpeg)
+        install_ffmpeg_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
         agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl)
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
