@@ -1685,96 +1685,95 @@ class Application(tk.Tk):
         options_notebook.add(utilities_frame, text='System Tools')
         options_notebook.add(tools_frame, text='RDP & Environment')
         options_notebook.add(trouble_frame, text='Trouble & Optimize')
-        options_notebook.add(netsh_frame, text='Network Shell')
+        options_notebook.add(netsh_frame, text='Shell Commands')
 
         # Packing the notebook into the options_frame
-        options_notebook.pack(fill='both', expand=True, padx=30, pady=30)
+        options_notebook.pack(fill='both', expand=True, padx=20, pady=30)
 
         # Option Buttons for Option Tab (UI element)
         # Windows Management and Configuration Tools
         windows_management_options = [
-            ("RegEdit", "regedit"),
-            ("PC Mgr", "compmgmt.msc"),
+            ("Registry Editor", "regedit"),
+            ("PC Manager", "compmgmt.msc"),
             ("Event Viewer", "eventvwr.msc"),
-            ("Services", "services.msc"),
-            ("GPO", "gpedit.msc"),
-            ("Programs", "appwiz.cpl"),
-            ("Win Version", "winver"),
-            ("Adv Sys Set", "SystemPropertiesAdvanced"),
-            ("UAC", "useraccountcontrolsettings"),
-            ("Disk Mgr", "diskmgmt.msc"),
-            ("Local Users", "lusrmgr.msc"),
-            ("Sys Name", "SystemPropertiesComputerName"),
-            ("ODBC", "odbcad32"),
+            ("Services Manager", "services.msc"),
+            ("Group Policy", "gpedit.msc"),
+            ("Programs/Features", "appwiz.cpl"),
+            ("Windows Version", "winver"),
+            ("Advanced Settings", "SystemPropertiesAdvanced"),
+            ("User Accout Control", "useraccountcontrolsettings"),
+            ("Disk Manager", "diskmgmt.msc"),
+            ("System Name", "SystemPropertiesComputerName"),
+            ("ODBC Manager", "odbcad32"),
             ("Shared Folders", "fsmgmt.msc"),
-            ("Mobility", "mblctr"),
+            ("Mobility Center", "mblctr"),
         ]
 
         # Security and Networking Tools
         security_and_networking_options = [
-            ("Sec Center", "start ms-settings:windowsdefender"),
-            ("Sec Policy", "secpol.msc"),
-            ("FW Adv", "wf.msc"),
-            ("Net Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
-            ("Internet Opt", "inetcpl.cpl"),
-            ("Cred Mgr", "control /name Microsoft.CredentialManager"),
-            ("Firewall", "firewall.cpl"),
-            ("Net Adapts", "ncpa.cpl"),
-            ("DNS Cache", "ipconfig /displaydns"),
-            ("Remote Conn", "control /name Microsoft.RemoteAppAndDesktopConnections"),
-            ("VPN", "start ms-settings:network-vpn"),
-            ("Wi-Fi", "start ms-settings:network-wifi"),
-            ("Ethernet", "start ms-settings:network-ethernet"),
-            ("Proxy", "start ms-settings:network-proxy"),
+            ("Security Center", "start ms-settings:windowsdefender"),
+            ("Security Policy", "secpol.msc"),
+            ("Firewall Advanced", "wf.msc"),
+            ("Network Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
+            ("Internet Options", "inetcpl.cpl"),
+            ("Credential Manager", "control /name Microsoft.CredentialManager"),
+            ("Windows Firewall", "firewall.cpl"),
+            ("Network Adapters", "ncpa.cpl"),
+            ("Remote Connections", "control /name Microsoft.RemoteAppAndDesktopConnections"),
+            ("VPN Settings", "start ms-settings:network-vpn"),
+            ("Wi-Fi Settings", "start ms-settings:network-wifi"),
+            ("Ethernet Settings", "start ms-settings:network-ethernet"),
+            ("Proxy Settings", "start ms-settings:network-proxy"),
         ]
 
         # System Tools and Utilities
         system_tools_options = [
-            ("Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
+            ("Edit Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
             ("Task Manager", "taskmgr"),
             ("Control Panel", "control"),
             ("Device Manager", "devmgmt.msc"),
-            ("Performance Mon", "perfmon"),
-            ("Resource Mon", "resmon"),
-            ("Device Pair", "devicepairingwizard"),
-            ("Win Features", "optionalfeatures"),
+            ("Performance Monitor", "perfmon"),
+            ("Resource Monitor", "resmon"),
+            ("Device Pairing", "devicepairingwizard"),
+            ("Windows Features", "optionalfeatures"),
             ("System Info", "msinfo32"),
         ]
 
         # Remote Management and Virtualization Tools
         remote_and_virtualization_options = [
-            ("RDP", "mstsc"),
+            ("Remote Desktop", "mstsc"),
             ("RDP Settings", "start ms-settings:remotedesktop"),
-            ("Hyper-V", "C:\\Windows\\System32\\virtmgmt.msc"),
-            ("Environ Vari", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+            ("Hyper-V Manager", "C:\\Windows\\System32\\virtmgmt.msc"),
+            ("Environment Vars", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
         ]
 
         # Troubleshooting and Optimization Tools
         troubleshooting_and_optimization_options = [
-            ("Rel Mon", "perfmon /rel"),
-            ("Disk Clean", "cleanmgr"),
-            ("Sys Restore", "rstrui"),
-            ("Opt Drives", "dfrgui"),
-            ("Memory Diag", "MdSched"),
-            ("DirectX Diag", "dxdiag"),
-            ("Sys Config", "msconfig"),
-            ("Win Update", "start ms-settings:windowsupdate"),
+            ("Reliability Monitor", "perfmon /rel"),
+            ("Disk Cleanup", "cleanmgr"),
+            ("System Restore", "rstrui"),
+            ("Optimize Drives", "dfrgui"),
+            ("Memory Diagnostics", "MdSched"),
+            ("DirectX Diagnostics", "dxdiag"),
+            ("System Config", "msconfig"),
+            ("Windows Update", "start ms-settings:windowsupdate"),
         ]
 
         netsh_commands = [
-            ("IP Config", "netsh interface ip show config"),
-            ("Interface", "netsh interface show interface"),
+            ("IP Configuration", "netsh interface ip show config"),
+            ("Interface List", "netsh interface show interface"),
             ("IPv4 Interface", "netsh interface ipv4 show interface"),
             ("IPv6 Interface", "netsh interface ipv6 show interface"),
-            ("IP Address", "netsh interface ip show addresses"),
-            ("DNS Configs", "netsh interface ip show dns"),
-            ("FW State", "netsh advfirewall show currentprofile state"),
+            ("IP Address Info", "netsh interface ip show addresses"),
+            ("DNS Configuration", "netsh interface ip show dns"),
+            ("Display DNS Cache", "ipconfig /displaydns"),
+            ("Firewall State", "netsh advfirewall show currentprofile state"),
             ("Routing Table", "netsh interface ipv4 show route"),
-            ("WiFi Profiles", "netsh wlan show profiles"),
-            ("WiFi Settings", "netsh wlan show settings"),
-            ("WiFi Networks", "netsh wlan show networks"),
-            ("Net Stats", "netstat -s"),
-            ("ARP Scan", "powershell.exe arp -a")  # Added ARP Scan command
+            ("Wi-Fi Profiles", "netsh wlan show profiles"),
+            ("Wi-Fi Settings", "netsh wlan show settings"),
+            ("Wi-Fi Networks", "netsh wlan show networks"),
+            ("Network Stats", "netstat -s"),
+            ("ARP Scan", "powershell.exe arp -a"),
         ]
 
         # Function to create buttons within a frame from a list of option tuples
