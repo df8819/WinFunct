@@ -56,8 +56,6 @@ links = {
         "Qt Designer": "https://build-system.fman.io/qt-designer-download",
     },
     "Network Tools": {
-        "AirCrack": "https://www.aircrack-ng.org",
-        "Wifi-Cracker": "https://github.com/trevatk/Wifi-Cracker",
         "WireShark": "https://www.wireshark.org/download.html",
         "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
         "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
@@ -97,7 +95,6 @@ links = {
         "MAS Script": "https://massgrave.dev/index.html",
         "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
         "NSE Lab": "https://nse.digital",
-        "Wifi-Hack": "https://hackernoon.com/how-to-hack-wifi-like-a-pro-hacker",
     },
 }
 
@@ -1625,7 +1622,7 @@ class Application(tk.Tk):
             for i, (text, link) in enumerate(items.items()):
                 var = tk.IntVar()
                 checkbox = ttk.Checkbutton(category_frame, text=text, variable=var)
-                checkbox.grid(row=i // 2, column=i % 2, sticky="w", padx=5, pady=2)
+                checkbox.grid(row=i // 3, column=i % 3, sticky="w", padx=10, pady=3)
                 self.checkbox_vars[link] = var
 
         button_frame = ttk.Frame(window)
@@ -1638,8 +1635,8 @@ class Application(tk.Tk):
         scrollbar.pack(side="right", fill="y")
 
         window.update_idletasks()
-        width = min(340, window.winfo_screenwidth() - 100)
-        height = min(770, window.winfo_screenheight() - 100)
+        width = min(500, window.winfo_screenwidth() - 100)
+        height = min(640, window.winfo_screenheight() - 100)
         x = (window.winfo_screenwidth() - width) // 2
         y = (window.winfo_screenheight() - height) // 2
         window.geometry(f"{width}x{height}+{x}+{y}")
@@ -1903,7 +1900,7 @@ class Application(tk.Tk):
 
         # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
-        self.bottom_frame.pack(fill="x", padx=10, pady=10)
+        self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
         # Left-aligned buttons
         shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20)
