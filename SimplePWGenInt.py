@@ -261,7 +261,7 @@ class SimplePWGen:
         self.root.clipboard_clear()
         self.root.clipboard_append(entry_widget.get())
 
-    def center_window(self, width=400, height=300):
+    def center_window(self, width=455, height=320):
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x = (screen_width / 2) - (width / 2)
@@ -269,14 +269,14 @@ class SimplePWGen:
         self.root.geometry(f'{width}x{height}+{int(x)}+{int(y)}')
 
     def reset_ui(self):
-        self.center_window(400, 300)
+        self.center_window(455, 320)
 
 
 def main():
     root = tk.Tk()
     root.title("Password and Random Number Generator")
     app = SimplePWGen(root)
-    app.center_window(400, 300)
+    app.center_window(455, 320)
     root.resizable(True, True)
     root.mainloop()
 

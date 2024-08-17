@@ -197,12 +197,10 @@ class Application(tk.Tk):
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
-        # Setting the background color of the main frame to light blue
-        self.main_frame = ttk.Frame(self, style='LightBlue.TFrame')
-
-        # Creating a style
+        # Setting the background color of the main frame
+        self.main_frame = ttk.Frame(self, style='Main.TFrame')
         style = ttk.Style()
-        style.configure('LightBlue.TFrame', background='#4791CC')
+        style.configure('Main.TFrame', background='#4791CC')
 
         self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.create_widgets()
@@ -1650,16 +1648,25 @@ class Application(tk.Tk):
         window.destroy()  # Close the window
 
     def create_widgets(self):
-        # Create a custom style for the tabs
         style = ttk.Style()
-        style.configure('TNotebook.Tab', padding=[10, 7])  # Increase padding to make tabs wider
+
+        # Configure tab padding and general styles
+        style.configure('TNotebook.Tab', padding=[10, 7])
+
+        # Background color of all tabs
+        style.configure('TNotebook', background='#F0F8FF')
 
         self.tabs = ttk.Notebook(self.main_frame, style='TNotebook')
 
-        # These are your original tabs
-        self.functions_frame = ttk.Frame(self.tabs)
-        self.options_frame = ttk.Frame(self.tabs)
-        self.fun_frame = ttk.Frame(self.tabs)
+        # Create frames with different background colors
+        self.functions_frame = ttk.Frame(self.tabs, style='Functions.TFrame')
+        self.options_frame = ttk.Frame(self.tabs, style='Options.TFrame')
+        self.fun_frame = ttk.Frame(self.tabs, style='Fun.TFrame')
+
+        # Configure styles for each frame
+        style.configure('Functions.TFrame', background='#F0F8FF')
+        style.configure('Options.TFrame', background='#F0F8FF')
+        style.configure('Fun.TFrame', background='#F0F8FF')
 
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
@@ -1668,15 +1675,23 @@ class Application(tk.Tk):
         self.tabs.pack(fill="both", expand=True)
 
         # Options Notebook within the options tab
-        options_notebook = ttk.Notebook(self.options_frame)
+        options_notebook = ttk.Notebook(self.options_frame, style='TNotebook')  # Apply the style here
 
-        # New Category Frames inside the Options tab
-        advanced_windows_settings_frame = ttk.Frame(options_notebook)
-        system_tools_frame = ttk.Frame(options_notebook)
-        utilities_frame = ttk.Frame(options_notebook)
-        tools_frame = ttk.Frame(options_notebook)
-        trouble_frame = ttk.Frame(options_notebook)
-        netsh_frame = ttk.Frame(options_notebook)
+        # New Category Frames inside the Options tab with different background colors
+        advanced_windows_settings_frame = ttk.Frame(options_notebook, style='Advanced.TFrame')
+        system_tools_frame = ttk.Frame(options_notebook, style='SystemTools.TFrame')
+        utilities_frame = ttk.Frame(options_notebook, style='Utilities.TFrame')
+        tools_frame = ttk.Frame(options_notebook, style='Tools.TFrame')
+        trouble_frame = ttk.Frame(options_notebook, style='Trouble.TFrame')
+        netsh_frame = ttk.Frame(options_notebook, style='Netsh.TFrame')
+
+        # Configure styles for each frame in the options notebook
+        style.configure('Advanced.TFrame', background='#F0F8FF')
+        style.configure('SystemTools.TFrame', background='#F0F8FF')
+        style.configure('Utilities.TFrame', background='#F0F8FF')
+        style.configure('Tools.TFrame', background='#F0F8FF')
+        style.configure('Trouble.TFrame', background='#F0F8FF')
+        style.configure('Netsh.TFrame', background='#F0F8FF')
 
         # Adding new frames to the options notebook
         options_notebook.add(advanced_windows_settings_frame, text='Management')
@@ -1900,8 +1915,9 @@ class Application(tk.Tk):
         show_logo_btn = ttk.Button(self.fun_frame, text="WinFunct Logo", command=self.show_logo, width=20)
         show_logo_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
-        # Frame for bottom buttons
-        self.bottom_frame = ttk.Frame(self.main_frame)
+        # Bottom frame with a different background color
+        self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
+        style.configure('Bottom.TFrame', background='#F0F8FF')
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
         # Left-aligned buttons
@@ -1918,7 +1934,7 @@ class Application(tk.Tk):
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
-        spacer = ttk.Label(self.bottom_frame)
+        spacer = tk.Label(self.bottom_frame, background="#F0F8FF")
         spacer.grid(row=0, column=2, rowspan=2, sticky="we")
         self.bottom_frame.columnconfigure(2, weight=1)
 
