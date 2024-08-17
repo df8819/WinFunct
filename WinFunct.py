@@ -184,7 +184,7 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.resolution_main = "790x480"
+        self.resolution_main = "765x480"
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -197,12 +197,16 @@ class Application(tk.Tk):
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
-        # Setting the background color of the main frame
-        self.main_frame = ttk.Frame(self, style='Main.TFrame')
+        # Create a style for the main_frame background color
         style = ttk.Style()
-        style.configure('Main.TFrame', background='#4791CC')
+        style.configure('Main.TFrame', background='#4791CC')  # Alice Blue color
 
-        self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        # Apply the style to the main_frame
+        self.main_frame = ttk.Frame(self, style='Main.TFrame')
+
+        # Remove padding if unnecessary or adjust as needed
+        self.main_frame.pack(fill="both", expand=True)  # No padding here
+
         self.create_widgets()
         self.resizable(True, True)
 
