@@ -1903,7 +1903,7 @@ class Application(tk.Tk):
 
         # Frame for bottom buttons
         self.bottom_frame = ttk.Frame(self.main_frame)
-        self.bottom_frame.pack(fill="x", padx=10, pady=5)
+        self.bottom_frame.pack(fill="x", padx=10, pady=10)
 
         # Left-aligned buttons
         shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20)
