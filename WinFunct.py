@@ -1658,7 +1658,7 @@ class Application(tk.Tk):
         style.configure('TNotebook.Tab', padding=[10, 7])
 
         # Background color of all tabs
-        style.configure('TNotebook', background='#F0F8FF')
+        # style.configure('TNotebook', background='#F0F8FF')
 
         self.tabs = ttk.Notebook(self.main_frame, style='TNotebook')
 
@@ -1808,7 +1808,14 @@ class Application(tk.Tk):
         create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
         create_option_buttons(netsh_frame, netsh_commands)
 
-        version_label = tk.Label(self, text=VERSION, anchor="se", cursor="hand2", fg="#7a7a7a")
+        version_label = tk.Label(
+            self,
+            text=VERSION,
+            anchor="se",
+            cursor="hand2",
+            fg="#7a7a7a",
+            # bg="#F0F8FF"  # Set background color here
+        )
         version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
 
         # Callback function for clicking the version label
