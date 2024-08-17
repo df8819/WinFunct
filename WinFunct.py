@@ -176,6 +176,7 @@ print(f"{VERSION_SHORT} >>> Now running with admin rights. Nice (⌐■_■)")
 
 # Command functions
 def execute_command(cmd):
+    print(f"Executing: {cmd}")
     subprocess.Popen(cmd, shell=True)
 
 
