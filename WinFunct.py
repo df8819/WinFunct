@@ -30,8 +30,12 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
 
-# Version of the app
-VERSION = "Use at your own risk and responsibility - v1.634"
+# Define the version once
+VERSION_NUMBER = "1.642"
+
+# Use the version number in different strings
+VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
+VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -169,7 +173,7 @@ def show_logo():
 
 show_logo()
 
-print("""...Now running with admin rights. Nice (⌐■_■)""")
+print(f"{VERSION_SHORT} >>> Now running with admin rights. Nice (⌐■_■)")
 
 
 # Command functions
@@ -181,7 +185,7 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.resolution_main = "790x400"
+        self.resolution_main = "790x480"
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -1266,6 +1270,7 @@ class Application(tk.Tk):
 ║ You are running WinFunct from an .exe file.                               ║
 ║ Please clone the repository from GitHub via 'Get from GitHub' button      ║
 ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
+║ Make sure "Git for Windows" and "Python 3.x" is installed!                ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
             """)
             return False, "Cannot update when running from .exe"
@@ -1683,7 +1688,7 @@ class Application(tk.Tk):
         options_notebook.add(netsh_frame, text='Network Shell')
 
         # Packing the notebook into the options_frame
-        options_notebook.pack(fill='both', expand=True, padx=10, pady=10)
+        options_notebook.pack(fill='both', expand=True, padx=30, pady=30)
 
         # Option Buttons for Option Tab (UI element)
         # Windows Management and Configuration Tools
@@ -1797,7 +1802,7 @@ class Application(tk.Tk):
         version_label.bind("<Button-1>", open_link)
 
         # Script tab Buttons and Positions 1/2
-        my_ip_btn = ttk.Button(self.functions_frame, text="My IP", command=self.show_ip_address, width=20)
+        my_ip_btn = ttk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20)
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
         self.ip_text = tk.Entry(self.functions_frame, width=20)
@@ -1812,7 +1817,7 @@ class Application(tk.Tk):
         ps_btn = ttk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin, width=20)
         ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
-        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Password", command=self.show_wifi_networks, width=20)
+        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20)
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
         winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk, width=20)
@@ -1821,7 +1826,7 @@ class Application(tk.Tk):
         clone_btn = ttk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20)
         clone_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
-        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush DNS", command=self.renew_ip_config, width=20)
+        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config, width=20)
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
 
         # Dropdown menu for similar functions - System Info Compare
@@ -1851,7 +1856,7 @@ class Application(tk.Tk):
         self.function_dropdown2.bind("<<ComboboxSelected>>", self.on_function_select2)
 
         # Script tab Buttons and Positions 2/2
-        activate_wui_btn = ttk.Button(self.functions_frame, text="CTT Winutil", command=self.activate_wui, width=20)
+        activate_wui_btn = ttk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20)
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
         activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win, width=20)
@@ -1863,7 +1868,7 @@ class Application(tk.Tk):
         logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users, width=20)
         logoff_usr_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
-        open_links_btn = ttk.Button(self.functions_frame, text="Link Opener", command=self.open_links_window, width=20)
+        open_links_btn = ttk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20)
         open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20)
@@ -1872,17 +1877,17 @@ class Application(tk.Tk):
         install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install FFMPEG", command=self.install_ffmpeg, width=20)
         install_ffmpeg_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
-        shutdown_i_btn = ttk.Button(self.functions_frame, text="shutdown -i", command=self.shutdown_i, width=20)
+        shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20)
         shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
-        godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode, width=20)
+        godmode_btn = ttk.Button(self.functions_frame, text="Windows Godmode", command=self.open_godmode, width=20)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20)
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         # Fun tab Buttons and Positions
-        chat_btn = ttk.Button(self.fun_frame, text="JChat", command=self.open_chat, width=20)
+        chat_btn = ttk.Button(self.fun_frame, text="JChat GUI", command=self.open_chat, width=20)
         chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen, width=20)
@@ -1891,7 +1896,7 @@ class Application(tk.Tk):
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff, width=20)
         hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        donut_btn = ttk.Button(self.fun_frame, text="ASCII Donut", command=self.open_donut, width=20)
+        donut_btn = ttk.Button(self.fun_frame, text="Funny ASCII Donut", command=self.open_donut, width=20)
         donut_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         show_logo_btn = ttk.Button(self.fun_frame, text="WinFunct Logo", command=self.show_logo, width=20)
@@ -1908,7 +1913,7 @@ class Application(tk.Tk):
         reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20)
         reboot_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
-        uefi_btn = ttk.Button(self.bottom_frame, text="UEFI Boot", command=self.confirm_uefi, width=20)
+        uefi_btn = ttk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20)
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
         sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep, width=20)
@@ -1923,13 +1928,13 @@ class Application(tk.Tk):
         reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui, width=20)
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
-        root_btn = ttk.Button(self.bottom_frame, text="Root Folder", command=self.open_app_root_folder, width=20)
+        root_btn = ttk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20)
         root_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
-        exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20)
+        exit_btn = ttk.Button(self.bottom_frame, text="EXIT", command=self.quit, width=20)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
-        update_btn = ttk.Button(self.bottom_frame, text="Update", command=self.git_pull, width=20)
+        update_btn = ttk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20)
         update_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
 

@@ -16,7 +16,7 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 ## Requirements
 
 - [Python 3.x](https://www.python.org/downloads/)
-- [Git for Desktop](https://git-scm.com/downloads/)
+- [Git for Windows](https://git-scm.com/downloads/)
 
 ## Usage
 
