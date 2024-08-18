@@ -39,7 +39,7 @@ VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 UI_COLOR = "#f3f3f3"
-BOTTOM_BORDER_COLOR = "#558dd2"  # Nice "Windows" blue #4791CC
+BOTTOM_BORDER_COLOR = "#42a88c"  # Nice "Windows" blue #4791CC
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
