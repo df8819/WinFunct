@@ -1920,24 +1920,26 @@ class Application(tk.Tk):
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20)
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
+        
+
         # Fun tab Buttons and Positions
         chat_btn = ttk.Button(self.fun_frame, text="JChat GUI", command=self.open_chat, width=20)
-        chat_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        chat_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen, width=20)
-        pw_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+        pw_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
         hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff, width=20)
-        hash_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+        hash_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
         donut_btn = ttk.Button(self.fun_frame, text="Funny ASCII Donut", command=self.open_donut, width=20)
-        donut_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
+        donut_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
         show_logo_btn = ttk.Button(self.fun_frame, text="WinFunct Logo", command=self.show_logo, width=20)
-        show_logo_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        show_logo_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
         color_picker_btn = ttk.Button(self.fun_frame, text="Color Picker", command=self.open_color_picker, width=20)
-        color_picker_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
+        color_picker_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
         # Bottom frame with a different background color
         self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
