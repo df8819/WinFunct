@@ -32,11 +32,14 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 
 # Define the version once
-VERSION_NUMBER = "1.642"
+VERSION_NUMBER = "1.644"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
+
+UI_COLOR = "#f3f3f3"
+BOTTOM_BORDER_COLOR = "#558dd2"  # Nice "Windows" blue #4791CC
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -200,7 +203,7 @@ class Application(tk.Tk):
 
         # Create a style for the main_frame background color
         style = ttk.Style()
-        style.configure('Main.TFrame', background='#4791CC')  # Alice Blue color
+        style.configure('Main.TFrame', background=f'{BOTTOM_BORDER_COLOR}')
 
         # Apply the style to the main_frame
         self.main_frame = ttk.Frame(self, style='Main.TFrame')
@@ -1675,9 +1678,9 @@ class Application(tk.Tk):
         self.fun_frame = ttk.Frame(self.tabs, style='Fun.TFrame')
 
         # Configure styles for each frame
-        style.configure('Functions.TFrame', background='#F0F8FF')
-        style.configure('Options.TFrame', background='#F0F8FF')
-        style.configure('Fun.TFrame', background='#F0F8FF')
+        style.configure('Functions.TFrame', background=f'{UI_COLOR}')
+        style.configure('Options.TFrame', background=f'{UI_COLOR}')
+        style.configure('Fun.TFrame', background=f'{UI_COLOR}')
 
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
@@ -1697,12 +1700,12 @@ class Application(tk.Tk):
         netsh_frame = ttk.Frame(options_notebook, style='Netsh.TFrame')
 
         # Configure styles for each frame in the options notebook
-        style.configure('Advanced.TFrame', background='#F0F8FF')
-        style.configure('SystemTools.TFrame', background='#F0F8FF')
-        style.configure('Utilities.TFrame', background='#F0F8FF')
-        style.configure('Tools.TFrame', background='#F0F8FF')
-        style.configure('Trouble.TFrame', background='#F0F8FF')
-        style.configure('Netsh.TFrame', background='#F0F8FF')
+        style.configure('Advanced.TFrame', background=f'{UI_COLOR}')
+        style.configure('SystemTools.TFrame', background=f'{UI_COLOR}')
+        style.configure('Utilities.TFrame', background=f'{UI_COLOR}')
+        style.configure('Tools.TFrame', background=f'{UI_COLOR}')
+        style.configure('Trouble.TFrame', background=f'{UI_COLOR}')
+        style.configure('Netsh.TFrame', background=f'{UI_COLOR}')
 
         # Adding new frames to the options notebook
         options_notebook.add(advanced_windows_settings_frame, text='Management')
@@ -1938,7 +1941,7 @@ class Application(tk.Tk):
 
         # Bottom frame with a different background color
         self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
-        style.configure('Bottom.TFrame', background='#F0F8FF')
+        style.configure('Bottom.TFrame', background=f'{UI_COLOR}')
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
         # Left-aligned buttons
@@ -1955,7 +1958,7 @@ class Application(tk.Tk):
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
-        spacer = tk.Label(self.bottom_frame, background="#F0F8FF")
+        spacer = tk.Label(self.bottom_frame, background=f'{UI_COLOR}')
         spacer.grid(row=0, column=2, rowspan=2, sticky="we")
         self.bottom_frame.columnconfigure(2, weight=1)
 
