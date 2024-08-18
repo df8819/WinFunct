@@ -94,9 +94,20 @@ if %errorlevel% NEQ 0 (
 
 REM Clean up
 echo Cleaning up temporary files and folders...
+
+timeout /t 1 > nul
+
 if exist dist rmdir /S /Q dist
 if exist build rmdir /S /Q build
-if exist __pycache__ rmdir /S /Q __pycache__
+
+:retry
+if exist __pycache__ (
+    echo Attempting to delete __pycache__ again...
+    rmdir /S /Q __pycache__
+    timeout /t 1 > nul
+    goto retry
+)
+
 if exist WinFunct.spec del /F WinFunct.spec
 
 echo.
