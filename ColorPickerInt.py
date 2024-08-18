@@ -76,7 +76,7 @@ class SimpleColorPicker:
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
 
-        x = (screen_width - width) // 2
+        x = (screen_width - width) // 4
         y = (screen_height - height) // 2
 
         self.root.geometry(f"{width}x{height}+{x}+{y}")

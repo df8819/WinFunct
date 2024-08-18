@@ -228,7 +228,8 @@ class Application(tk.Tk):
 
     def open_chat(self):
         print("""Open JChat app.""")
-        if tk.messagebox.askyesno("Open JChat", "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
+        if tk.messagebox.askyesno("Open JChat",
+                                  "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
             chat_window = tk.Toplevel(self)
             chat_window.title("JChat")
             JChat(chat_window)
@@ -237,18 +238,21 @@ class Application(tk.Tk):
         print("""Open Password Generator app.""")
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
+        pw_window.attributes('-topmost', True)
         SimplePWGen(pw_window)
 
     def open_hash_stuff(self):
         print("""Open Hash Generator app.""")
         hash_window = tk.Toplevel(self)
         hash_window.title("Hash Generator")
+        hash_window.attributes('-topmost', True)
         HashStuff(hash_window)
 
     def open_color_picker(self):
         print("""Open Color Picker app.""")
         color_picker_window = tk.Toplevel(self)
         color_picker_window.title("Color Picker")
+        color_picker_window.attributes('-topmost', True)
         SimpleColorPicker(color_picker_window)
 
     def open_donut(self):
@@ -258,6 +262,9 @@ class Application(tk.Tk):
             subprocess.Popen(['start', 'python', '-c', 'from DonutInt import Donut; Donut().run()'], shell=True)
         else:
             subprocess.Popen(['python', '-c', 'from DonutInt import Donut; Donut().run()'])
+
+    def show_logo(self):
+        show_logo()
 
     def open_app_root_folder(self):
         print("""Open root folder location.""")
@@ -1603,9 +1610,6 @@ class Application(tk.Tk):
 
         window.mainloop()
 
-    def show_logo(self):
-        show_logo()
-
     def open_links_window(self):
         print("""Open Link summary.""")
         window = tk.Toplevel(self)
@@ -1920,26 +1924,47 @@ class Application(tk.Tk):
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20)
         checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
-        
+        # Fun Notebook within the fun tab
+        fun_notebook = ttk.Notebook(self.fun_frame, style='TNotebook')
 
-        # Fun tab Buttons and Positions
-        chat_btn = ttk.Button(self.fun_frame, text="JChat GUI", command=self.open_chat, width=20)
-        chat_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
+        # New Category Frames inside the Fun tab with different background colors
+        apps_frame = ttk.Frame(fun_notebook, style='Apps.TFrame')
+        fun_stuff_frame = ttk.Frame(fun_notebook, style='FunStuff.TFrame')
 
-        pw_btn = ttk.Button(self.fun_frame, text="Password Generator", command=self.open_pw_gen, width=20)
-        pw_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        # Configure styles for each frame in the fun notebook
+        style.configure('Apps.TFrame', background=f'{UI_COLOR}')
+        style.configure('FunStuff.TFrame', background=f'{UI_COLOR}')
 
-        hash_btn = ttk.Button(self.fun_frame, text="Hash Generator", command=self.open_hash_stuff, width=20)
-        hash_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+        # Adding new frames to the fun notebook
+        fun_notebook.add(apps_frame, text='Apps')
+        fun_notebook.add(fun_stuff_frame, text='Fun Stuff')
 
-        donut_btn = ttk.Button(self.fun_frame, text="Funny ASCII Donut", command=self.open_donut, width=20)
-        donut_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        # Packing the notebook into the fun_frame
+        fun_notebook.pack(fill='both', expand=True, padx=20, pady=20)
 
-        show_logo_btn = ttk.Button(self.fun_frame, text="WinFunct Logo", command=self.show_logo, width=20)
-        show_logo_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
+        # Function to create buttons within a frame from a list of option tuples
+        def create_fun_buttons(frame, buttons_list):
+            for i, button in enumerate(buttons_list):
+                btn = ttk.Button(frame, text=button[0], command=button[1], width=20)
+                btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
-        color_picker_btn = ttk.Button(self.fun_frame, text="Color Picker", command=self.open_color_picker, width=20)
-        color_picker_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+        # Define buttons for Apps frame
+        apps_buttons = [
+            ("Password Generator", self.open_pw_gen),
+            ("Color Picker", self.open_color_picker),
+        ]
+
+        # Define buttons for Fun Stuff frame
+        fun_stuff_buttons = [
+            ("JChat GUI", self.open_chat),
+            ("Hash Generator", self.open_hash_stuff),
+            ("Funny ASCII Donut", self.open_donut),
+            ("WinFunct Logo", self.show_logo)
+        ]
+
+        # Create buttons in their distinct categories
+        create_fun_buttons(apps_frame, apps_buttons)
+        create_fun_buttons(fun_stuff_frame, fun_stuff_buttons)
 
         # Bottom frame with a different background color
         self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
