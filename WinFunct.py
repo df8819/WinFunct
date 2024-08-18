@@ -29,6 +29,7 @@ from HashStuffInt import HashStuff
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
+from ColorPickerInt import SimpleColorPicker
 
 # Define the version once
 VERSION_NUMBER = "1.642"
@@ -69,7 +70,7 @@ links = {
         "WinDirStat": "https://sourceforge.net/projects/windirstat/",
         "O&O ShutUp10++": "https://www.oo-software.com/de/shutup10",
         "Create answer files": "https://schneegans.de/windows/unattend-generator/",
-        "StartallBack Shell": "https://www.startallback.com/",
+        "StartIsBack Shell": "https://www.startisback.com/",
     },
     "Remote & Collaboration": {
         "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
@@ -227,7 +228,7 @@ class Application(tk.Tk):
         if tk.messagebox.askyesno("Open JChat", "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
             chat_window = tk.Toplevel(self)
             chat_window.title("JChat")
-            JChat(chat_window)  # Initialize JChat within the new window
+            JChat(chat_window)
 
     def open_pw_gen(self):
         print("""Open Password Generator app.""")
@@ -240,6 +241,12 @@ class Application(tk.Tk):
         hash_window = tk.Toplevel(self)
         hash_window.title("Hash Generator")
         HashStuff(hash_window)
+
+    def open_color_picker(self):
+        print("""Open Color Picker app.""")
+        color_picker_window = tk.Toplevel(self)
+        color_picker_window.title("Color Picker")
+        SimpleColorPicker(color_picker_window)
 
     def open_donut(self):
         print("""Open funny cmd ASCII Donut.""")
@@ -1925,6 +1932,9 @@ class Application(tk.Tk):
 
         show_logo_btn = ttk.Button(self.fun_frame, text="WinFunct Logo", command=self.show_logo, width=20)
         show_logo_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+
+        color_picker_btn = ttk.Button(self.fun_frame, text="Color Picker", command=self.open_color_picker, width=20)
+        color_picker_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
         # Bottom frame with a different background color
         self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
