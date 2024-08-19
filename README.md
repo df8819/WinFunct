@@ -14,10 +14,10 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 
 ## Requirements
-#### Release version
-- Download release, unpack, execute WinFunct.execute
+#### Release version:
+- Download [Release](https://github.com/df8819/WinFunct/releases), unpack, execute WinFunct.exe
 
-#### Cloned repository
+#### Cloned repository:
 - [Python 3.x](https://www.python.org/downloads/)
 - [Git for Windows](https://git-scm.com/downloads/)
 
