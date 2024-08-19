@@ -15,7 +15,7 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 ## Requirements
 #### Release version:
-- Download [Release](https://github.com/df8819/WinFunct/releases), unpack, execute WinFunct.exe
+- Download the latest [Release](https://github.com/df8819/WinFunct/releases), no other dependencies.
 
 #### Cloned repository:
 - [Python 3.x](https://www.python.org/downloads/)
@@ -23,7 +23,7 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 
 ## Usage
 
-- Either download the latest [Release](https://github.com/df8819/WinFunct/releases), unpack the .zip file, right-click and select **Run as administrator** or:
+- Either download the latest [Release](https://github.com/df8819/WinFunct/releases), unpack the .zip file, right-click WinFunct.exe and select **Run as administrator** or:
 
 **1.** Navigate to the directory of your choice, click into the address bar, type **"cmd"** and hit Enter.
 
