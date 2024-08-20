@@ -1534,10 +1534,10 @@ class Application(tk.Tk):
         users = []
 
         for line in lines[1:]:  # Skip the header line
-            # Adjusted regex to capture usernames and session IDs
-            match = re.match(r'^\s*(\S+)\s+\S+\s+(\d+)\s+', line)
+            # Adjusted regex to capture usernames with spaces and session IDs
+            match = re.match(r'^\s*(.+?)\s+\S+\s+(\d+)\s+', line)
             if match:
-                username = match.group(1)
+                username = match.group(1).strip()
                 session_id = match.group(2)
                 users.append((username, session_id))
 
