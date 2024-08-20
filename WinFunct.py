@@ -1981,7 +1981,7 @@ class Application(tk.Tk):
         uefi_btn = ttk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20)
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
-        sleep_btn = ttk.Button(self.bottom_frame, text="Hibernate", command=self.confirm_sleep, width=20)
+        sleep_btn = ttk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20)
         sleep_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
@@ -1990,13 +1990,13 @@ class Application(tk.Tk):
         self.bottom_frame.columnconfigure(2, weight=1)
 
         # Right-aligned buttons
-        reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset UI", command=self.reset_ui, width=20)
+        reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20)
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
         root_btn = ttk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20)
         root_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
-        exit_btn = ttk.Button(self.bottom_frame, text="EXIT", command=self.quit, width=20)
+        exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
         update_btn = ttk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20)
