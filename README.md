@@ -58,8 +58,8 @@ This app combines a lot of useful functions or scripts for managing Windows. I c
 ## Screenshots
 **May not show the latest version of the app!** 👀
 
-![Image](1701505001.png)
+![Image](1701505000.png)
 
-![Image](1701505091.png)
+![Image](1701505090.png)
 
-![Image](1709048179.png)
+![Image](1709048170.png)
