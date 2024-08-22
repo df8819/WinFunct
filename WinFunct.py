@@ -188,6 +188,9 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+
+        self.cleanup_old_script()
+
         self.resolution_main = "765x480"
         self.tabs = None
         self.checkbox_vars = None
@@ -505,6 +508,14 @@ class Application(tk.Tk):
         # Start the Tkinter event loop
         top.mainloop()
 
+    def cleanup_old_script(self):
+        check_website_script = os.path.join(os.getcwd(), "check_website.bat")
+        if os.path.exists(check_website_script):
+            try:
+                os.remove(check_website_script)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to delete old batch file: {str(e)}")
+
     def run_website_checker(self):
         def on_run():
             website_url = self.website_entry.get()
@@ -515,11 +526,18 @@ class Application(tk.Tk):
 
             try:
                 # Define the path for the temporary batch file
-                batch_file_path = os.path.join(os.getcwd(), "check_website.bat")
+                check_website_script = os.path.join(os.getcwd(), "check_website.bat")
 
                 # Write the batch script to the temporary file
                 batch_script = f"""
     @echo off
+    
+    :: =====================================================
+    :: You can delete this file if you want.
+    :: It is created/used when the function is called.
+    :: It is deleted when the scripts returns a 0 exit code. 
+    :: =====================================================
+    
     set website={website_url}
 
     if /i "%website:~0,8%" NEQ "https://" (
@@ -537,7 +555,7 @@ class Application(tk.Tk):
         echo ===================================
         echo.
         pause
-        del "{batch_file_path}"
+        del "{check_website_script}"
         exit
     ) ELSE (
         echo ==========================
@@ -546,15 +564,16 @@ class Application(tk.Tk):
         goto check
     )
 
+    :: Auto deletion of check_website.bat when the non 0 loop is running isn't working properly. I'm sorry.
     :cleanup
-    del "{batch_file_path}"
+    del "{check_website_script}"
     exit
     """
-                with open(batch_file_path, "w") as batch_file:
+                with open(check_website_script, "w") as batch_file:
                     batch_file.write(batch_script)
 
                 # Execute the batch file in a new window
-                subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', batch_file_path], shell=True)
+                subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', check_website_script], shell=True)
 
                 self.top.destroy()  # Close the input window
 
@@ -582,6 +601,7 @@ class Application(tk.Tk):
         # Create and pack the entry field for the website URL
         self.website_entry = ttk.Entry(self.top, width=50)
         self.website_entry.pack(pady=10)
+        self.website_entry.focus_set()
 
         # Create and pack the run button
         run_button = ttk.Button(self.top, text="Check Website", command=on_run)
