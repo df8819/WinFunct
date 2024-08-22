@@ -555,9 +555,25 @@ echo ============ Website Status =============
 if !status_code! equ 200 (
     echo Website is         ONLINE
 ) else if !status_code! equ 301 (
-    echo Website is         ONLINE but -redirected-
+    echo Website is         ONLINE but -Moved Permanently-
+) else if !status_code! equ 302 (
+    echo Website is         ONLINE but -Temporary Redirect-
+) else if !status_code! equ 307 (
+    echo Website is         ONLINE but -Temporary Redirect-
+) else if !status_code! equ 308 (
+    echo Website is         ONLINE but -Permanent Redirect-
+) else if !status_code! equ 400 (
+    echo Website is         ONLINE but -Bad Request-
+) else if !status_code! equ 401 (
+    echo Website is         ONLINE but -Unauthorized-
+) else if !status_code! equ 403 (
+    echo Website is         ONLINE but -Forbidden-
 ) else if !status_code! equ 404 (
     echo Website is         ONLINE but -Page Not Found-
+) else if !status_code! equ 500 (
+    echo Website is         ONLINE but -Internal Server Error-
+) else if !status_code! equ 503 (
+    echo Website is         ONLINE but -Service Unavailable-
 ) else (
     echo Website is         OFFLINE
 )
@@ -575,7 +591,31 @@ if !status_code! equ 200 (
 ) else if !status_code! equ 301 (
     pause
     exit /b 0
+) else if !status_code! equ 302 (
+    pause
+    exit /b 0
+) else if !status_code! equ 307 (
+    pause
+    exit /b 0
+) else if !status_code! equ 308 (
+    pause
+    exit /b 0
+) else if !status_code! equ 400 (
+    pause
+    exit /b 0
+) else if !status_code! equ 401 (
+    pause
+    exit /b 0
+) else if !status_code! equ 403 (
+    pause
+    exit /b 0
 ) else if !status_code! equ 404 (
+    pause
+    exit /b 0
+) else if !status_code! equ 500 (
+    pause
+    exit /b 0
+) else if !status_code! equ 503 (
     pause
     exit /b 0
 ) else (
@@ -583,7 +623,6 @@ if !status_code! equ 200 (
     timeout /t 60 >nul
     goto check
 )
-
     """
                     temp_file.write(batch_script)
 
