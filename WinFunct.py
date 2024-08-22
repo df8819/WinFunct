@@ -470,7 +470,7 @@ class Application(tk.Tk):
             drive_letter = selected_drive[0]  # Extract the drive letter from the selected option
 
             try:
-                powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/k winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
+                powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/c winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
                 subprocess.Popen(powershell_command, shell=True)
                 top.destroy()  # Close the drive selection window
             except Exception as e:
@@ -504,6 +504,88 @@ class Application(tk.Tk):
 
         # Start the Tkinter event loop
         top.mainloop()
+
+    def run_website_checker(self):
+        def on_run():
+            website_url = self.website_entry.get()
+
+            if not website_url:
+                messagebox.showwarning("No URL Provided", "Please enter a website URL.")
+                return
+
+            try:
+                # Define the path for the temporary batch file
+                batch_file_path = os.path.join(os.getcwd(), "check_website.bat")
+
+                # Write the batch script to the temporary file
+                batch_script = f"""
+    @echo off
+    set website={website_url}
+
+    if /i "%website:~0,8%" NEQ "https://" (
+        if /i "%website:~0,7%" NEQ "http://" (
+            set website=http://%website%
+        )
+    )
+
+    :check
+    curl -Is %website% | findstr "HTTP/1.1 200"
+    IF %ERRORLEVEL% EQU 0 (
+        echo.
+        echo ===================================
+        echo ======== Website is online ========
+        echo ===================================
+        echo.
+        pause
+        del "{batch_file_path}"
+        exit
+    ) ELSE (
+        echo ==========================
+        echo [%date% / %time%] "%website%" is offline. Checking again in 60 seconds.
+        timeout /t 60 >nul
+        goto check
+    )
+
+    :cleanup
+    del "{batch_file_path}"
+    exit
+    """
+                with open(batch_file_path, "w") as batch_file:
+                    batch_file.write(batch_script)
+
+                # Execute the batch file in a new window
+                subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', batch_file_path], shell=True)
+
+                self.top.destroy()  # Close the input window
+
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+        # Create a top-level window for the website URL input
+        self.top = tk.Toplevel(self.master)
+        self.top.title("Website Online State Checker")
+        self.top.geometry("400x130")
+        self.top.resizable(False, False)
+
+        # Center the window on the screen
+        self.top.update_idletasks()
+        width = self.top.winfo_width()
+        height = self.top.winfo_height()
+        x = (self.top.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.top.winfo_screenheight() // 2) - (height // 2)
+        self.top.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+
+        # Create and pack a label
+        label = ttk.Label(self.top, text="Enter the website URL/IP to check (e.g., example.com):", padding=(10, 10))
+        label.pack()
+
+        # Create and pack the entry field for the website URL
+        self.website_entry = ttk.Entry(self.top, width=50)
+        self.website_entry.pack(pady=10)
+
+        # Create and pack the run button
+        run_button = ttk.Button(self.top, text="Check Website", command=on_run)
+        run_button.pack(pady=10)
 
     def activate_win(self):
         user_response = messagebox.askyesno("Activate Microsoft Products",
@@ -1912,11 +1994,14 @@ class Application(tk.Tk):
         autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20)
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
-        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install FFMPEG", command=self.install_ffmpeg, width=20)
+        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install/Update FFMPEG", command=self.install_ffmpeg, width=20)
         install_ffmpeg_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
         shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20)
         shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
+
+        website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20)
+        website_checker_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
 
         godmode_btn = ttk.Button(self.functions_frame, text="Windows Godmode", command=self.open_godmode, width=20)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")

@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 :: BatchGotAdmin
 title WinFunct Terminal
-color 0A
+REM color 0A (green)
 
 :-------------------------------------
 :: Check for permissions
