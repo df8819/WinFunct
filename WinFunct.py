@@ -1640,8 +1640,8 @@ class Application(tk.Tk):
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
         try:
-            # Specify encoding as 'utf-8' to handle special characters correctly
-            result = subprocess.run(['quser'], capture_output=True, text=True, encoding='utf-8', shell=True)
+            # Use 'cp850' encoding which is common on Windows command line
+            result = subprocess.run(['quser'], capture_output=True, text=True, encoding='cp850', errors='replace', shell=True)
             output = result.stdout
         except Exception as e:
             messagebox.showerror("Error", f"Failed to run 'quser': {e}")
