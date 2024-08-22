@@ -34,7 +34,7 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 
 # Define the version once
-VERSION_NUMBER = "1.644"
+VERSION_NUMBER = "1.647"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
