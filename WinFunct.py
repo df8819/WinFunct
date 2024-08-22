@@ -8,6 +8,7 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 
@@ -188,9 +189,6 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
-        self.cleanup_old_script()
-
         self.resolution_main = "765x480"
         self.tabs = None
         self.checkbox_vars = None
@@ -508,36 +506,34 @@ class Application(tk.Tk):
         # Start the Tkinter event loop
         top.mainloop()
 
-    def cleanup_old_script(self):
-        check_website_script = os.path.join(os.getcwd(), "check_website.bat")
-        if os.path.exists(check_website_script):
-            try:
-                os.remove(check_website_script)
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to delete old batch file: {str(e)}")
-
     def run_website_checker(self):
         def on_run():
-            website_url = self.website_entry.get()
+            website_url = self.website_entry.get().strip()
 
+            # 1. Improved Input Validation
             if not website_url:
                 messagebox.showwarning("No URL Provided", "Please enter a website URL.")
                 return
 
-            try:
-                # Define the path for the temporary batch file
-                check_website_script = os.path.join(os.getcwd(), "check_website.bat")
+            # Simple regex for URL validation
+            url_pattern = re.compile(
+                r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?'
+                r'[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}'
+                r'(:[0-9]{1,5})?(\/.*)?$'
+            )
+            if not url_pattern.match(website_url):
+                messagebox.showwarning("Invalid URL", "Please enter a valid URL.")
+                return
 
-                # Write the batch script to the temporary file
-                batch_script = f"""
+            try:
+                # Use a temporary file for the batch script
+                with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.bat') as temp_file:
+                    check_website_script = temp_file.name
+
+                    # 2. Improved Error Handling in Batch Script
+                    batch_script = f"""
     @echo off
-    
-    :: =====================================================
-    :: You can delete this file if you want.
-    :: It is created/used when the function is called.
-    :: It is deleted when the scripts returns a 0 exit code. 
-    :: =====================================================
-    
+
     set website={website_url}
 
     if /i "%website:~0,8%" NEQ "https://" (
@@ -547,7 +543,7 @@ class Application(tk.Tk):
     )
 
     :check
-    curl -Is %website% | findstr "HTTP/1.1 200"
+    curl -Is %website% --connect-timeout 10 | findstr "HTTP/1.1 200"
     IF %ERRORLEVEL% EQU 0 (
         echo.
         echo ===================================
@@ -555,25 +551,27 @@ class Application(tk.Tk):
         echo ===================================
         echo.
         pause
-        del "{check_website_script}"
-        exit
+        exit /b 0
     ) ELSE (
-        echo ==========================
-        echo [%date% / %time%] "%website%" is offline. Checking again in 60 seconds.
+        IF %ERRORLEVEL% EQU 1 (
+            echo ==========================
+            echo [%date% / %time%] "%website%" is offline or not responding. Checking again in 60 seconds.
+        ) ELSE (
+            echo ==========================
+            echo [%date% / %time%] Error occurred while checking "%website%". Retrying in 60 seconds.
+        )
         timeout /t 60 >nul
         goto check
     )
-
-    :: Auto deletion of check_website.bat when the non 0 loop is running isn't working properly. I'm sorry.
-    :cleanup
-    del "{check_website_script}"
-    exit
     """
-                with open(check_website_script, "w") as batch_file:
-                    batch_file.write(batch_script)
+                    temp_file.write(batch_script)
 
-                # Execute the batch file in a new window
-                subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', check_website_script], shell=True)
+                # 3. Improved Cleanup Process
+                try:
+                    # Execute the batch file in a new window
+                    subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', check_website_script], shell=True)
+                finally:
+                    self.top.after(1000, lambda: os.unlink(check_website_script))  # Schedule file deletion after 1 second
 
                 self.top.destroy()  # Close the input window
 
