@@ -93,6 +93,7 @@ links = {
         "Total Commander": "https://www.ghisler.com/ddownload.htm",
         "Posy Cursors": "http://www.michieldb.nl/other/cursors",
         "Bitwarden": "https://bitwarden.com/download/",
+        "FFMPEG GUI": "https://jeanslack.github.io/Videomass/Pages/Packages/Windows.html",
     },
     "Tutorials & Resources": {
         "MAS Script": "https://massgrave.dev/index.html",
