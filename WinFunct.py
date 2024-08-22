@@ -524,8 +524,7 @@ class Application(tk.Tk):
                 return
 
             # Ensure the URL starts with http:// or https://
-            if not website_url.startswith(('http://', 'https://')):
-                website_url = 'http://' + website_url
+            website_url = 'https://' + website_url if not website_url.startswith(('http://', 'https://')) else website_url
 
             try:
                 # Create a batch script for checking and monitoring
@@ -533,51 +532,58 @@ class Application(tk.Tk):
                     check_website_script = temp_file.name
 
                     batch_script = f"""
-    @echo off
-    setlocal enabledelayedexpansion
+@echo off
+setlocal enabledelayedexpansion
 
-    set website={website_url}
+set website={website_url}
 
-    :check
-    for /f "tokens=*" %%a in ('curl -Is !website! -o nul -w "%%{{http_code}} %%{{time_total}} %%{{remote_ip}}"') do (
-        set result=%%a
-    )
+:check
+for /f "tokens=*" %%a in ('curl -Is !website! -o nul -w "%%{{http_code}} %%{{time_total}} %%{{remote_ip}}"') do (
+    set result=%%a
+)
 
-    for /f "tokens=1,2,3" %%a in ("!result!") do (
-        set status_code=%%a
-        set response_time=%%b
-        set server_ip=%%c
-    )
+for /f "tokens=1,2,3" %%a in ("!result!") do (
+    set status_code=%%a
+    set response_time=%%b
+    set server_ip=%%c
+)
 
-    set domain=%website:~7%
+set domain=%website:~7%
 
-    echo.
-    echo ============ Website Status =============
-    if !status_code! equ 200 (
-        echo Website is         ONLINE
-    ) else if !status_code! equ 301 (
-        echo Website is         ONLINE
-    ) else (
-        echo Website is         OFFLINE
-    )
-    echo Domain/URL:        %website%
-    echo Server IP:         !server_ip!    
-    echo Status Code:       !status_code!
-    echo Response Time:     !response_time! seconds
-    echo Request Timestamp: %date% %time%
-    echo =========================================
+echo.
+echo ============ Website Status =============
+if !status_code! equ 200 (
+    echo Website is         ONLINE
+) else if !status_code! equ 301 (
+    echo Website is         ONLINE but -redirected-
+) else if !status_code! equ 404 (
+    echo Website is         ONLINE but -Page Not Found-
+) else (
+    echo Website is         OFFLINE
+)
 
-    if !status_code! equ 200 (
-        pause
-        exit /b 0
-    ) else if !status_code! equ 301 (
-        pause
-        exit /b 0
-    ) else (
-        echo Checking again in 60 seconds...
-        timeout /t 60 >nul
-        goto check
-    )
+echo Domain/URL:        %website%
+echo Server IP:         !server_ip!    
+echo Status Code:       !status_code!
+echo Response Time:     !response_time! seconds
+echo Request Timestamp: %date% %time%
+echo =========================================
+
+if !status_code! equ 200 (
+    pause
+    exit /b 0
+) else if !status_code! equ 301 (
+    pause
+    exit /b 0
+) else if !status_code! equ 404 (
+    pause
+    exit /b 0
+) else (
+    echo Checking again in 60 seconds...
+    timeout /t 60 >nul
+    goto check
+)
+
     """
                     temp_file.write(batch_script)
 
