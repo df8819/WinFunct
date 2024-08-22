@@ -11,6 +11,7 @@ import sys
 import tempfile
 import threading
 import time
+from urllib.parse import urlparse
 
 # Tkinter Imports
 import psutil
@@ -525,53 +526,69 @@ class Application(tk.Tk):
                 messagebox.showwarning("Invalid URL", "Please enter a valid URL.")
                 return
 
+            # Ensure the URL starts with http:// or https://
+            if not website_url.startswith(('http://', 'https://')):
+                website_url = 'http://' + website_url
+
             try:
-                # Use a temporary file for the batch script
+                # Create a batch script for checking and monitoring
                 with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.bat') as temp_file:
                     check_website_script = temp_file.name
 
-                    # 2. Improved Error Handling in Batch Script
                     batch_script = f"""
     @echo off
+    setlocal enabledelayedexpansion
 
     set website={website_url}
 
-    if /i "%website:~0,8%" NEQ "https://" (
-        if /i "%website:~0,7%" NEQ "http://" (
-            set website=http://%website%
-        )
+    :check
+    for /f "tokens=*" %%a in ('curl -Is !website! -o nul -w "%%{{http_code}} %%{{time_total}} %%{{remote_ip}}"') do (
+        set result=%%a
     )
 
-    :check
-    curl -Is %website% --connect-timeout 10 | findstr "HTTP/1.1 200"
-    IF %ERRORLEVEL% EQU 0 (
-        echo.
-        echo ===================================
-        echo ======== Website is online ========
-        echo ===================================
-        echo.
+    for /f "tokens=1,2,3" %%a in ("!result!") do (
+        set status_code=%%a
+        set response_time=%%b
+        set server_ip=%%c
+    )
+
+    set domain=%website:~7%
+
+    echo.
+    echo ============ Website Status =============
+    if !status_code! equ 200 (
+        echo Website is         ONLINE
+    ) else if !status_code! equ 301 (
+        echo Website is         ONLINE
+    ) else (
+        echo Website is         OFFLINE
+    )
+    echo Domain/URL:        %website%
+    echo Server IP:         !server_ip!    
+    echo Status Code:       !status_code!
+    echo Response Time:     !response_time! seconds
+    echo Request Timestamp: %date% %time%
+    echo =========================================
+
+    if !status_code! equ 200 (
         pause
         exit /b 0
-    ) ELSE (
-        IF %ERRORLEVEL% EQU 1 (
-            echo ==========================
-            echo [%date% / %time%] "%website%" is offline or not responding. Checking again in 60 seconds.
-        ) ELSE (
-            echo ==========================
-            echo [%date% / %time%] Error occurred while checking "%website%". Retrying in 60 seconds.
-        )
+    ) else if !status_code! equ 301 (
+        pause
+        exit /b 0
+    ) else (
+        echo Checking again in 60 seconds...
         timeout /t 60 >nul
         goto check
     )
     """
                     temp_file.write(batch_script)
 
-                # 3. Improved Cleanup Process
-                try:
-                    # Execute the batch file in a new window
-                    subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', check_website_script], shell=True)
-                finally:
-                    self.top.after(1000, lambda: os.unlink(check_website_script))  # Schedule file deletion after 1 second
+                # Execute the batch file in a new window
+                subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/c', check_website_script], shell=True)
+
+                # Schedule file deletion after 1 second
+                self.top.after(1000, lambda: os.unlink(check_website_script))
 
                 self.top.destroy()  # Close the input window
 
