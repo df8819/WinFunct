@@ -1637,18 +1637,18 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_command)
         thread.start()
 
-    import subprocess
-    import re
-    import tkinter as tk
-    from tkinter import ttk, messagebox
-
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
         try:
-            result = subprocess.run(['quser'], capture_output=True, text=True, shell=True)
+            # Specify encoding as 'utf-8' to handle special characters correctly
+            result = subprocess.run(['quser'], capture_output=True, text=True, encoding='utf-8', shell=True)
             output = result.stdout
         except Exception as e:
             messagebox.showerror("Error", f"Failed to run 'quser': {e}")
+            return
+
+        if output is None:
+            messagebox.showerror("Error", "No output from 'quser'.")
             return
 
         # Parse the output to extract user information
@@ -1656,7 +1656,7 @@ class Application(tk.Tk):
         users = []
 
         for line in lines[1:]:  # Skip the header line
-            # Updated regex to handle usernames with spaces, special characters, etc.
+            # Adjusted regex to capture usernames with spaces and special characters
             match = re.match(r'^\s*(.*?)\s+(\d+)\s+\w+', line)
             if match:
                 username = match.group(1).strip()
