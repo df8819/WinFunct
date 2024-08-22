@@ -54,7 +54,7 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 ## Known Issues / Comments
 
-- _Several files like `ui.py` or `functions.py` are part of an unfinished refractor process that will happen. Somewhen.._ 😶
+- _Thank you for using my App. Feedback is always welcome_ ✌
 
 ## Screenshots
 
