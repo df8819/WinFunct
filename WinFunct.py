@@ -1637,6 +1637,11 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_command)
         thread.start()
 
+    import subprocess
+    import re
+    import tkinter as tk
+    from tkinter import ttk, messagebox
+
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
         try:
@@ -1651,8 +1656,8 @@ class Application(tk.Tk):
         users = []
 
         for line in lines[1:]:  # Skip the header line
-            # Adjusted regex to capture usernames with spaces and session IDs
-            match = re.match(r'^\s*(.+?)\s+\S+\s+(\d+)\s+', line)
+            # Updated regex to handle usernames with spaces, special characters, etc.
+            match = re.match(r'^\s*(.*?)\s+(\d+)\s+\w+', line)
             if match:
                 username = match.group(1).strip()
                 session_id = match.group(2)
