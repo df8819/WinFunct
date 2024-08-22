@@ -1652,7 +1652,7 @@ class Application(tk.Tk):
 
         for line in lines[1:]:  # Skip the header line
             # Adjusted regex to capture usernames with spaces and session IDs
-            match = re.match(r'^\s*(.+?)\s+\S+\s+(\d+)\s+', line)
+            match = re.match(r'^\s*(\S.*?\S?)\s+\S+\s+(\d+)\s+', line)
             if match:
                 username = match.group(1).strip()
                 session_id = match.group(2)
