@@ -1442,6 +1442,7 @@ if !status_code! equ 200 (
             # We're running in a PyInstaller bundle
             base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))  # Use default if _MEIPASS not present
             repo_path = os.path.dirname(sys.executable)
+
             print(f"""
 ╔═════════════════════════════════ERROR═════════════════════════════════════╗
 ║ You are running WinFunct from an .exe file.                               ║
@@ -1450,8 +1451,11 @@ if !status_code! equ 200 (
 ║ Make sure "Git for Windows" and "Python 3.x" is installed!                ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
             """)
+
             print("""
-    >>> Opening WinFunct 'Releases' section in default browser...""")
+>>>>> Opening the WinFunct GitHub 'Releases' section in default browser...
+            """)
+
             webbrowser.open("https://github.com/df8819/WinFunct/releases")
             return False, "Cannot update when running from .exe"
         else:
