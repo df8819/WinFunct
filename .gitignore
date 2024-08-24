@@ -1,13 +1,5 @@
 # IntelliJ IDEA files
-.idea
-.idea/.name
-.idea/codeStyles/codeStyleConfig.xml
-.idea/inspectionProfiles/Project_Default.xml
-.idea/inspectionProfiles/profiles_settings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
+/.idea
 
 # Build files
 /build/
@@ -27,25 +19,25 @@ Run.lnk
 WinFunct.lnk
 install-pyenv-win.ps1
 temp_install_script.bat
+check_website.bat
 
 # Log files
 *.log
 admin_log.txt
 netstat_exe_output.txt
 
-# Miscellaneous
+# Miscellaneous files
 *.zip
-SystemCompare.html
-functionverify.py
-SimpleNNInt.py
-functions_OLD.py
-random.py
-WinFunct_Corrected.py
-WinFunct_NEW.py
-winfunct.spec
 *.json
+ASCII.txt
+SystemCompare.html
 eff_wordlist.txt
+functionverify.py
+functions_OLD.py
 ideas.txt
 pastebin.txt
-ASCII.txt
-check_website.bat
+random.py
+SimpleNNInt.py
+winfunct.spec
+WinFunct_Corrected.py
+WinFunct_NEW.py

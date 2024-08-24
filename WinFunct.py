@@ -34,7 +34,7 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 
 # Define the version once
-VERSION_NUMBER = "1.647"
+VERSION_NUMBER = "1.648"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
@@ -1450,6 +1450,9 @@ if !status_code! equ 200 (
 ║ Make sure "Git for Windows" and "Python 3.x" is installed!                ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
             """)
+            print("""
+    >>> Opening WinFunct 'Releases' section in default browser...""")
+            webbrowser.open("https://github.com/df8819/WinFunct/releases")
             return False, "Cannot update when running from .exe"
         else:
             # We're running in a normal Python environment

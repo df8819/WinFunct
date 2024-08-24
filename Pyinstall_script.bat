@@ -30,7 +30,7 @@ if "!version!"=="" (
 
 :option_prompt
 REM Prompt for pyinstaller process option with default [1]
-set "option=1"
+set "option=2"
 echo.
 echo --------------------------------------------------------------------------------
 echo Please choose a PyInstaller process:
