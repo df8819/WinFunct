@@ -1445,18 +1445,26 @@ if !status_code! equ 200 (
 
             print(f"""
 ╔═════════════════════════════════ERROR═════════════════════════════════════╗
-║ You are running WinFunct from an .exe file.                               ║
-║ Please clone the repository from GitHub via 'Get from GitHub' button      ║
+║ You are NOT running WinFunct from an python file!                         ║
+║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                         ║
+║ Please download the latest Release via GitHub                             ║
+║                                                                           ║
+║                               ---OR---                                    ║
+║                                                                           ║
+║ Clone the repository from GitHub via 'Get from GitHub' button             ║
 ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
-║ Make sure "Git for Windows" and "Python 3.x" is installed!                ║
+║                                                                           ║
+║ Make sure ""Git for Windows"" and ""Python 3.x"" is installed or this     ║
+║ function will produce an Error.                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
             """)
 
-            print("""
->>>>> Opening the WinFunct GitHub 'Releases' section in default browser...
-            """)
+            if messagebox.askyesno("Open GitHub Releases",
+                                   "Open the WinFunct GitHub 'Releases' section in the default browser?\n\n(Read the terminal message for more information)"):
+                webbrowser.open("https://github.com/df8819/WinFunct/releases")
+            else:
+                print("Command aborted.")
 
-            webbrowser.open("https://github.com/df8819/WinFunct/releases")
             return False, "Cannot update when running from .exe"
         else:
             # We're running in a normal Python environment
@@ -2083,7 +2091,7 @@ if !status_code! equ 200 (
         autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20)
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
-        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install/Update FFMPEG", command=self.install_ffmpeg, width=20)
+        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20)
         install_ffmpeg_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
         shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20)
