@@ -40,10 +40,12 @@ VERSION_NUMBER = "1.650"
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
-UI_COLOR = "#f3f3f3"
-BOTTOM_BORDER_COLOR = "#9b3333"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
-BUTTON_TEXT_COLOR = "#ffffff"  # Text color for the button
-BUTTON_BG_COLOR = "#9b3333"    # Background color for the button
+UI_COLOR = "#f3f3f3" # neutrals grau #f3f3f3
+BUTTON_BG_COLOR = "#f3f3f3"    # Background color for the button
+
+BUTTON_TEXT_COLOR = "#000000"  # Text color for the button
+
+BOTTOM_BORDER_COLOR = "#42a88c"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -1915,7 +1917,28 @@ if !status_code! equ 200 (
         style.configure('TNotebook.Tab', padding=[10, 7])
 
         # Background color of all tabs
-        # style.configure('TNotebook', background='#F0F8FF')
+        style.configure('TNotebook', background=f'{UI_COLOR}')
+
+        # Background color for the main frames
+        style.configure('Functions.TFrame', background=f'{UI_COLOR}')
+        style.configure('Options.TFrame', background=f'{UI_COLOR}')
+        style.configure('Fun.TFrame', background=f'{UI_COLOR}')
+        style.configure('Advanced.TFrame', background=f'{UI_COLOR}')
+        style.configure('SystemTools.TFrame', background=f'{UI_COLOR}')
+        style.configure('Utilities.TFrame', background=f'{UI_COLOR}')
+        style.configure('Tools.TFrame', background=f'{UI_COLOR}')
+        style.configure('Trouble.TFrame', background=f'{UI_COLOR}')
+        style.configure('Netsh.TFrame', background=f'{UI_COLOR}')
+        style.configure('Bottom.TFrame', background=f'{UI_COLOR}')
+
+        # Define and configure a custom style for the buttons
+        style.configure(
+            'Custom.TButton',
+            background=BUTTON_BG_COLOR,
+            foreground=BUTTON_TEXT_COLOR,
+            borderwidth=1,
+            relief="solid"
+        )
 
         self.tabs = ttk.Notebook(self.main_frame, style='TNotebook')
 
@@ -1923,11 +1946,6 @@ if !status_code! equ 200 (
         self.functions_frame = ttk.Frame(self.tabs, style='Functions.TFrame')
         self.options_frame = ttk.Frame(self.tabs, style='Options.TFrame')
         self.fun_frame = ttk.Frame(self.tabs, style='Fun.TFrame')
-
-        # Configure styles for each frame
-        style.configure('Functions.TFrame', background=f'{UI_COLOR}')
-        style.configure('Options.TFrame', background=f'{UI_COLOR}')
-        style.configure('Fun.TFrame', background=f'{UI_COLOR}')
 
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
@@ -1945,14 +1963,6 @@ if !status_code! equ 200 (
         tools_frame = ttk.Frame(options_notebook, style='Tools.TFrame')
         trouble_frame = ttk.Frame(options_notebook, style='Trouble.TFrame')
         netsh_frame = ttk.Frame(options_notebook, style='Netsh.TFrame')
-
-        # Configure styles for each frame in the options notebook
-        style.configure('Advanced.TFrame', background=f'{UI_COLOR}')
-        style.configure('SystemTools.TFrame', background=f'{UI_COLOR}')
-        style.configure('Utilities.TFrame', background=f'{UI_COLOR}')
-        style.configure('Tools.TFrame', background=f'{UI_COLOR}')
-        style.configure('Trouble.TFrame', background=f'{UI_COLOR}')
-        style.configure('Netsh.TFrame', background=f'{UI_COLOR}')
 
         # Adding new frames to the options notebook
         options_notebook.add(advanced_windows_settings_frame, text='Management')
@@ -2054,7 +2064,7 @@ if !status_code! equ 200 (
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
-                btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20)
+                btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20, style="Custom.TButton")
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Create buttons in their distinct categories
@@ -2083,31 +2093,31 @@ if !status_code! equ 200 (
         version_label.bind("<Button-1>", open_link)
 
         # Script tab Buttons and Positions 1/2
-        my_ip_btn = ttk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20)
+        my_ip_btn = ttk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20, style="Custom.TButton")
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
         self.ip_text = tk.Entry(self.functions_frame, width=20)
         self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
-        internet_btn = ttk.Button(self.functions_frame, text="Are we online?", command=self.check_internet, width=20)
+        internet_btn = ttk.Button(self.functions_frame, text="Are we online?", command=self.check_internet, width=20, style="Custom.TButton")
         internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        cmd_btn = ttk.Button(self.functions_frame, text="admin cmd", command=self.open_cmd_as_admin, width=20)
+        cmd_btn = ttk.Button(self.functions_frame, text="admin cmd", command=self.open_cmd_as_admin, width=20, style="Custom.TButton")
         cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
-        ps_btn = ttk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin, width=20)
+        ps_btn = ttk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin, width=20, style="Custom.TButton")
         ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
-        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20)
+        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20, style="Custom.TButton")
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
-        winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk, width=20)
+        winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk, width=20, style="Custom.TButton")
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
-        clone_btn = ttk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20)
+        clone_btn = ttk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20, style="Custom.TButton")
         clone_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
-        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config, width=20)
+        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config, width=20, style="Custom.TButton")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
 
         # Dropdown menu for similar functions - System Info Compare
@@ -2150,34 +2160,34 @@ if !status_code! equ 200 (
         self.function_dropdown3.bind("<<ComboboxSelected>>", self.on_function_select3)
 
         # Script tab Buttons and Positions 2/2
-        activate_wui_btn = ttk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20)
+        activate_wui_btn = ttk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20, style="Custom.TButton")
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
-        activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win, width=20)
+        activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win, width=20, style="Custom.TButton")
         activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
-        agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20)
+        agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20, style="Custom.TButton")
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
-        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users, width=20)
+        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users, width=20, style="Custom.TButton")
         logoff_usr_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
-        open_links_btn = ttk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20)
+        open_links_btn = ttk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20, style="Custom.TButton")
         open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
-        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20)
+        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20, style="Custom.TButton")
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
-        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20)
+        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20, style="Custom.TButton")
         install_ffmpeg_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
-        shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20)
+        shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20, style="Custom.TButton")
         shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
-        checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20)
+        checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20, style="Custom.TButton")
         checksum_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
-        website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20)
+        website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20, style="Custom.TButton")
         website_checker_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
@@ -2201,7 +2211,7 @@ if !status_code! equ 200 (
         # Function to create buttons within a frame from a list of option tuples
         def create_fun_buttons(frame, buttons_list):
             for i, button in enumerate(buttons_list):
-                btn = ttk.Button(frame, text=button[0], command=button[1], width=20)
+                btn = ttk.Button(frame, text=button[0], command=button[1], width=20, style="Custom.TButton")
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Define buttons for Apps frame
@@ -2224,20 +2234,19 @@ if !status_code! equ 200 (
 
         # Bottom frame with a different background color
         self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
-        style.configure('Bottom.TFrame', background=f'{UI_COLOR}')
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
         # Left-aligned buttons
-        shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20)
+        shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20, style="Custom.TButton")
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
-        reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20)
+        reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20, style="Custom.TButton")
         reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
-        uefi_btn = ttk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20)
+        uefi_btn = ttk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20, style="Custom.TButton")
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
-        sleep_btn = ttk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20)
+        sleep_btn = ttk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20, style="Custom.TButton")
         sleep_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
@@ -2246,16 +2255,16 @@ if !status_code! equ 200 (
         self.bottom_frame.columnconfigure(2, weight=1)
 
         # Right-aligned buttons
-        reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20)
+        reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20, style="Custom.TButton")
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
-        root_btn = ttk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20)
+        root_btn = ttk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20, style="Custom.TButton")
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
-        exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20)
+        exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20, style="Custom.TButton")
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
-        update_btn = ttk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20)
+        update_btn = ttk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20, style="Custom.TButton")
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
 
