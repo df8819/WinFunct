@@ -41,11 +41,11 @@ VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 UI_COLOR = "#333333" # neutrals grau #f3f3f3
-BUTTON_BG_COLOR = "#888888"    # Background color for the button
+BUTTON_BG_COLOR = "#777777"    # Background color for the button
 
 BUTTON_TEXT_COLOR = "#ffffff"  # Text color for the button
 
-BOTTOM_BORDER_COLOR = "#4791CC"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
+BOTTOM_BORDER_COLOR = "#24aa85"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -1861,12 +1861,12 @@ if !status_code! equ 200 (
         window.title("Download Links")
         window.resizable(True, True)
 
-        main_frame = ttk.Frame(window)
+        main_frame = tk.Frame(window)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
         canvas = tk.Canvas(main_frame)
-        scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
-        scrollable_frame = ttk.Frame(canvas)
+        scrollbar = tk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
 
         scrollable_frame.bind(
             "<Configure>",
@@ -1879,27 +1879,27 @@ if !status_code! equ 200 (
         self.checkbox_vars = {}
 
         for category, items in links.items():
-            category_frame = ttk.LabelFrame(scrollable_frame, text=category)
+            category_frame = tk.LabelFrame(scrollable_frame, text=category)
             category_frame.pack(fill="x", expand=True, padx=10, pady=5)
 
             for i, (text, link) in enumerate(items.items()):
                 var = tk.IntVar()
-                checkbox = ttk.Checkbutton(category_frame, text=text, variable=var)
+                checkbox = tk.Checkbutton(category_frame, text=text, variable=var)
                 checkbox.grid(row=i // 3, column=i % 3, sticky="w", padx=10, pady=3)
                 self.checkbox_vars[link] = var
 
-        button_frame = ttk.Frame(window)
+        button_frame = tk.Frame(window)
         button_frame.pack(fill="x", padx=10, pady=10)
 
-        ttk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window)).pack(side="right", padx=5)
-        ttk.Button(button_frame, text="Cancel", command=window.destroy).pack(side="right", padx=5)
+        tk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window)).pack(side="right", padx=5)
+        tk.Button(button_frame, text="Cancel", command=window.destroy).pack(side="right", padx=5)
 
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
         window.update_idletasks()
         width = min(500, window.winfo_screenwidth() - 100)
-        height = min(640, window.winfo_screenheight() - 100)
+        height = min(660, window.winfo_screenheight() - 100)
         x = (window.winfo_screenwidth() - width) // 2
         y = (window.winfo_screenheight() - height) // 2
         window.geometry(f"{width}x{height}+{x}+{y}")
@@ -2225,7 +2225,7 @@ if !status_code! equ 200 (
         style.configure('FunStuff.TFrame', background=f'{UI_COLOR}')
 
         # Adding new frames to the fun notebook
-        fun_notebook.add(apps_frame, text='Apps')
+        fun_notebook.add(apps_frame, text='Tools')
         fun_notebook.add(fun_stuff_frame, text='Fun Stuff')
 
         # Packing the notebook into the fun_frame
