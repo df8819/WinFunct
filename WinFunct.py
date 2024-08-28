@@ -40,12 +40,12 @@ VERSION_NUMBER = "1.650"
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
-UI_COLOR = "#f3f3f3" # neutrals grau #f3f3f3
-BUTTON_BG_COLOR = "#f3f3f3"    # Background color for the button
+UI_COLOR = "#333333" # neutrals grau #f3f3f3
+BUTTON_BG_COLOR = "#888888"    # Background color for the button
 
-BUTTON_TEXT_COLOR = "#000000"  # Text color for the button
+BUTTON_TEXT_COLOR = "#ffffff"  # Text color for the button
 
-BOTTOM_BORDER_COLOR = "#42a88c"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
+BOTTOM_BORDER_COLOR = "#4791CC"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -191,7 +191,7 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.resolution_main = "765x480"
+        self.resolution_main = "845x450"
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -1915,8 +1915,6 @@ if !status_code! equ 200 (
 
         # Configure tab padding and general styles
         style.configure('TNotebook.Tab', padding=[10, 7])
-
-        # Background color of all tabs
         style.configure('TNotebook', background=f'{UI_COLOR}')
 
         # Background color for the main frames
@@ -1938,6 +1936,13 @@ if !status_code! equ 200 (
             foreground=BUTTON_TEXT_COLOR,
             borderwidth=1,
             relief="solid"
+        )
+
+        # Map the style to handle button state changes
+        style.map(
+            'Custom.TButton',
+            background=[('active', BUTTON_BG_COLOR)],  # This will handle button hover state
+            foreground=[('active', BUTTON_TEXT_COLOR)]
         )
 
         self.tabs = ttk.Notebook(self.main_frame, style='TNotebook')
@@ -2064,7 +2069,7 @@ if !status_code! equ 200 (
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
-                btn = ttk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20, style="Custom.TButton")
+                btn = tk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Create buttons in their distinct categories
@@ -2093,31 +2098,39 @@ if !status_code! equ 200 (
         version_label.bind("<Button-1>", open_link)
 
         # Script tab Buttons and Positions 1/2
-        my_ip_btn = ttk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20, style="Custom.TButton")
+        my_ip_btn = tk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20,
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
         self.ip_text = tk.Entry(self.functions_frame, width=20)
         self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
-        internet_btn = ttk.Button(self.functions_frame, text="Are we online?", command=self.check_internet, width=20, style="Custom.TButton")
+        internet_btn = tk.Button(self.functions_frame, text="Are we online?", command=self.check_internet, width=20,
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        cmd_btn = ttk.Button(self.functions_frame, text="admin cmd", command=self.open_cmd_as_admin, width=20, style="Custom.TButton")
+        cmd_btn = tk.Button(self.functions_frame, text="admin cmd", command=self.open_cmd_as_admin, width=20,
+                            bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
-        ps_btn = ttk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin, width=20, style="Custom.TButton")
+        ps_btn = tk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin, width=20,
+                           bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
 
-        wifi_btn = ttk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20, style="Custom.TButton")
+        wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
-        winsat_disk_btn = ttk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk, width=20, style="Custom.TButton")
+        winsat_disk_btn = tk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
-        clone_btn = ttk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20, style="Custom.TButton")
+        clone_btn = tk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         clone_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
-        renew_ip_config_btn = ttk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config, width=20, style="Custom.TButton")
+        renew_ip_config_btn = tk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
 
         # Dropdown menu for similar functions - System Info Compare
@@ -2160,34 +2173,44 @@ if !status_code! equ 200 (
         self.function_dropdown3.bind("<<ComboboxSelected>>", self.on_function_select3)
 
         # Script tab Buttons and Positions 2/2
-        activate_wui_btn = ttk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20, style="Custom.TButton")
+        activate_wui_btn = tk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
-        activate_win_btn = ttk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win, width=20, style="Custom.TButton")
+        activate_win_btn = tk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
-        agh_curl_btn = ttk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20, style="Custom.TButton")
+        agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
-        logoff_usr_btn = ttk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users, width=20, style="Custom.TButton")
+        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         logoff_usr_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
-        open_links_btn = ttk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20, style="Custom.TButton")
+        open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
-        autostart_btn = ttk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20, style="Custom.TButton")
+        autostart_btn = tk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
-        install_ffmpeg_btn = ttk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20, style="Custom.TButton")
+        install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         install_ffmpeg_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
-        shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20, style="Custom.TButton")
+        shutdown_i_btn = tk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
-        checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20, style="Custom.TButton")
+        checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         checksum_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
-        website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20, style="Custom.TButton")
+        website_checker_btn = tk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         website_checker_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
@@ -2211,7 +2234,8 @@ if !status_code! equ 200 (
         # Function to create buttons within a frame from a list of option tuples
         def create_fun_buttons(frame, buttons_list):
             for i, button in enumerate(buttons_list):
-                btn = ttk.Button(frame, text=button[0], command=button[1], width=20, style="Custom.TButton")
+                btn = tk.Button(frame, text=button[0], command=button[1], width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Define buttons for Apps frame
@@ -2237,16 +2261,20 @@ if !status_code! equ 200 (
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
         # Left-aligned buttons
-        shutdown_btn = ttk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20, style="Custom.TButton")
+        shutdown_btn = tk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
-        reboot_btn = ttk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20, style="Custom.TButton")
+        reboot_btn = tk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
-        uefi_btn = ttk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20, style="Custom.TButton")
+        uefi_btn = tk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
-        sleep_btn = ttk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20, style="Custom.TButton")
+        sleep_btn = tk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         sleep_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
@@ -2255,16 +2283,20 @@ if !status_code! equ 200 (
         self.bottom_frame.columnconfigure(2, weight=1)
 
         # Right-aligned buttons
-        reset_ui_btn = ttk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20, style="Custom.TButton")
+        reset_ui_btn = tk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
-        root_btn = ttk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20, style="Custom.TButton")
+        root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
-        exit_btn = ttk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20, style="Custom.TButton")
+        exit_btn = tk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
-        update_btn = ttk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20, style="Custom.TButton")
+        update_btn = tk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
 
