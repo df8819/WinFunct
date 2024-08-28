@@ -382,13 +382,15 @@ class Application(tk.Tk):
                     self.show_wifi_password(selected_network)
                 network_window.destroy()
 
-            ok_button = ttk.Button(network_window, text="Ok", command=ok_button_click, width=10)
+            ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             ok_button.pack(side="left", padx=(50, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
 
-            cancel_button = ttk.Button(network_window, text="Cancel", command=cancel_button_click, width=10)
+            cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             cancel_button.pack(side="right", padx=(5, 50), pady=10)
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
@@ -438,13 +440,15 @@ class Application(tk.Tk):
             button_frame = tk.Frame(password_frame)
             button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
 
-            copy_button = ttk.Button(button_frame, text="Copy Password", command=copy_password)
+            copy_button = tk.Button(button_frame, text="Copy Password", command=copy_password,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             copy_button.pack(side="left", padx=10)
 
             def cancel_button_click():
                 password_window.destroy()
 
-            cancel_button = ttk.Button(button_frame, text="Cancel", command=cancel_button_click)
+            cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             cancel_button.pack(side="left", padx=10)
         else:
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
