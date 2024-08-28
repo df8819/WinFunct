@@ -33,7 +33,7 @@ REM Prompt for pyinstaller process option with default [1]
 set "option=2"
 echo.
 echo --------------------------------------------------------------------------------
-echo Please choose a PyInstaller process:
+echo Please choose a PyInstaller process (Default is [2]):
 echo.
 echo [1] Includes a Python script to create and modify the spec file with exclusions.
 echo [2] Runs pyinstaller without exclusions and only with the "--onefile" argument.
