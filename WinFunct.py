@@ -1694,6 +1694,61 @@ if !status_code! equ 200 (
         thread = threading.Thread(target=run_command)
         thread.start()
 
+    def get_root_dir(self):
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable
+            return os.path.dirname(sys.executable)
+        else:
+            # Running as script
+            return os.path.dirname(os.path.abspath(__file__))
+
+    def open_super_godmode(self):
+        repo_url = "https://github.com/ThioJoe/Windows-Super-God-Mode"
+        repo_name = "Windows-Super-God-Mode"
+        bat_file = "SuperGodMode-EasyLauncher.bat"
+
+        # Get the root directory of your application
+        root_dir = self.get_root_dir()
+        repo_path = os.path.join(root_dir, repo_name)
+
+        # Check if the repository exists
+        if not os.path.exists(repo_path):
+            # Repository doesn't exist, ask user if they want to clone it
+            user_response = messagebox.askyesno(
+                "Clone Repository",
+                f"The {repo_name} repository is not found. Do you want to clone it?"
+            )
+
+            if user_response:
+                try:
+                    subprocess.run(["git", "clone", repo_url, repo_path], check=True)
+                    messagebox.showinfo("Success", "Repository cloned successfully.")
+                except subprocess.CalledProcessError as e:
+                    messagebox.showerror("Error", f"Failed to clone repository: {str(e)}")
+                    return
+                except FileNotFoundError:
+                    messagebox.showerror("Error", "Git is not installed or not in the system PATH.")
+                    return
+            else:
+                return
+
+        # Repository exists or has been cloned, proceed with git pull and running the bat file
+        try:
+            # Change to the repository directory
+            os.chdir(repo_path)
+
+            # Run git pull (ignoring errors)
+            subprocess.run(["git", "pull"], check=False, capture_output=True)
+
+            # Run the bat file
+            subprocess.Popen(f"cmd /c {bat_file}", shell=True)
+
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+        finally:
+            # Change back to the original directory
+            os.chdir(root_dir)
+
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
         try:
@@ -2097,14 +2152,18 @@ if !status_code! equ 200 (
         shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20)
         shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
-        website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20)
-        website_checker_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
-
-        godmode_btn = ttk.Button(self.functions_frame, text="Windows Godmode", command=self.open_godmode, width=20)
+        # Integrate in another dropdown or delete this entirely...
+        godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode, width=20)
         godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
+        godmode2_btn = ttk.Button(self.functions_frame, text="Super Godmode", command=self.open_super_godmode, width=20)
+        godmode2_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
+
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20)
-        checksum_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
+        checksum_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
+
+        website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20)
+        website_checker_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame, style='TNotebook')
