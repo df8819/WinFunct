@@ -1125,6 +1125,7 @@ if !status_code! equ 200 (
         )
         return file_path
 
+    # on_function_select are for the dropdown menus from the Button-Section in the UI part
     def on_function_select1(self, event):
         selected1 = self.selected_function1.get()
         if selected1 == "Extract Sys Info":
@@ -1140,6 +1141,13 @@ if !status_code! equ 200 (
             self.netstat_output()
         elif selected2 == "Threat Search":
             self.confirm_and_search()
+
+    def on_function_select3(self, event):
+        selected3 = self.selected_function3.get()
+        if selected3 == "God mode":
+            self.open_godmode()
+        elif selected3 == "Super God mode":
+            self.open_super_godmode()
 
     def gather_and_save_info(self):
         print("""Extracting system info.""")
@@ -1722,7 +1730,6 @@ if !status_code! equ 200 (
             if user_response:
                 try:
                     subprocess.run(["git", "clone", repo_url, repo_path], check=True)
-                    messagebox.showinfo("Success", "Repository cloned successfully.")
                 except subprocess.CalledProcessError as e:
                     messagebox.showerror("Error", f"Failed to clone repository: {str(e)}")
                     return
@@ -2127,6 +2134,19 @@ if !status_code! equ 200 (
         self.function_dropdown2.set("App Connections")  # Set default text
         self.function_dropdown2.bind("<<ComboboxSelected>>", self.on_function_select2)
 
+        # Dropdown menu for similar functions - God-mode
+        self.selected_function3 = tk.StringVar()
+        self.function_dropdown3 = ttk.Combobox(
+            self.functions_frame,
+            textvariable=self.selected_function3,
+            values=["God mode", "Super God mode"],
+            state="readonly",
+            width=20
+        )
+        self.function_dropdown3.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown3.set("Windows God mode")  # Set default text
+        self.function_dropdown3.bind("<<ComboboxSelected>>", self.on_function_select3)
+
         # Script tab Buttons and Positions 2/2
         activate_wui_btn = ttk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20)
         activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
@@ -2152,18 +2172,11 @@ if !status_code! equ 200 (
         shutdown_i_btn = ttk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20)
         shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
 
-        # Integrate in another dropdown or delete this entirely...
-        godmode_btn = ttk.Button(self.functions_frame, text="Godmode", command=self.open_godmode, width=20)
-        godmode_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
-
-        godmode2_btn = ttk.Button(self.functions_frame, text="Super Godmode", command=self.open_super_godmode, width=20)
-        godmode2_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
-
         checksum_btn = ttk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20)
-        checksum_btn.grid(row=4, column=2, padx=10, pady=5, sticky="we")
+        checksum_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
 
         website_checker_btn = ttk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20)
-        website_checker_btn.grid(row=4, column=3, padx=10, pady=5, sticky="we")
+        website_checker_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame, style='TNotebook')
