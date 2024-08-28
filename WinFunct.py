@@ -664,12 +664,13 @@ if !status_code! equ 200 (
         label.pack()
 
         # Create and pack the entry field for the website URL
-        self.website_entry = ttk.Entry(self.top, width=50)
+        self.website_entry = tk.Entry(self.top, width=50)
         self.website_entry.pack(pady=10)
         self.website_entry.focus_set()
 
         # Create and pack the run button
-        run_button = ttk.Button(self.top, text="Check Website", command=on_run)
+        run_button = tk.Button(self.top, text="Check Website", command=on_run,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         run_button.pack(pady=10)
 
     def activate_win(self):
