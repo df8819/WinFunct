@@ -40,8 +40,10 @@ VERSION_NUMBER = "1.650"
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
-UI_COLOR = "#f3f3f3"
-BOTTOM_BORDER_COLOR = "#42a88c"  # Nice "Windows" blue #4791CC
+UI_COLOR = "#505156"
+BOTTOM_BORDER_COLOR = "#9b3333"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
+BUTTON_TEXT_COLOR = "#ffffff"  # Text color for the button
+BUTTON_BG_COLOR = "#9b3333"    # Background color for the button
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
