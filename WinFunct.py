@@ -1510,6 +1510,8 @@ if !status_code! equ 200 (
             self.search_app_info(file_path)
         print("""Searching scanned apps online to check their trustworthiness.""")
 
+    # -----------------------------------------------CLONE REPO END--------------------------------------------------
+
     def git_pull(self):
         # Determine if we're running as a script or frozen executable
         if getattr(sys, 'frozen', False):
@@ -1768,6 +1770,8 @@ if !status_code! equ 200 (
             return
 
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
+
+    # -----------------------------------------------CLONE REPO END--------------------------------------------------
 
     def open_godmode(self):
         print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.""")
