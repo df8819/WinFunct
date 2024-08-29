@@ -905,7 +905,7 @@ if !status_code! equ 200 (
         root.mainloop()
 
     def get_file_checksum(self):
-        print("""Running file checksum helper.""")
+        print("Running file checksum helper.")
         file_path = filedialog.askopenfilename()
         if not file_path:
             messagebox.showinfo("Info", "No file selected.")
@@ -915,6 +915,7 @@ if !status_code! equ 200 (
         algo_window = tk.Toplevel(self)
         algo_window.title("Compute File Checksum")
         algo_window.geometry("400x250")
+        algo_window.configure(bg=UI_COLOR)
 
         # Center the window
         algo_window.update_idletasks()
@@ -925,26 +926,40 @@ if !status_code! equ 200 (
         algo_window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
         # Create and pack a label
-        label = ttk.Label(algo_window, text="Choose a checksum algorithm:")
+        label = tk.Label(algo_window, text="Choose a checksum algorithm:",
+                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
         label.pack(pady=10)
 
         # Create a variable to hold the selected algorithm
         selected_algo = tk.StringVar()
 
-        # Create a combobox for algorithm selection
+        # Create a dropdown for algorithm selection
         algorithms = ["MD5", "SHA1", "SHA256", "SHA384", "SHA512"]
-        algo_combo = ttk.Combobox(algo_window, textvariable=selected_algo, values=algorithms, state="readonly")
-        algo_combo.set("SHA256")  # Default value
-        algo_combo.pack(pady=10)
+        algo_menu = tk.OptionMenu(algo_window, selected_algo, *algorithms)
+        algo_menu.config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                         activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                         highlightthickness=0)
+        algo_menu["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        selected_algo.set("SHA256")  # Default value
+        algo_menu.pack(pady=10)
 
         # Create a label to display the selected algorithm
-        algo_label = ttk.Label(algo_window, text="")
+        algo_label = tk.Label(algo_window, text="", bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
         algo_label.pack(pady=5)
 
-        # Create a ScrolledText widget to display the result
-        result_text = scrolledtext.ScrolledText(algo_window, height=3, width=50, wrap=tk.WORD)
-        result_text.pack(pady=10, padx=10, expand=True, fill=tk.BOTH)
-        result_text.config(state=tk.DISABLED)  # Make it read-only initially
+        # Create a Text widget with Scrollbar to display the result
+        result_frame = tk.Frame(algo_window, bg=UI_COLOR)
+        result_frame.pack(pady=10, padx=10, expand=True, fill=tk.BOTH)
+
+        result_text = tk.Text(result_frame, height=3, width=50, wrap=tk.WORD,
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                              insertbackground=BUTTON_TEXT_COLOR)
+        result_text.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+
+        scrollbar = tk.Scrollbar(result_frame, command=result_text.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        result_text.config(yscrollcommand=scrollbar.set, state=tk.DISABLED)  # Make it read-only initially
 
         def run_checksum():
             algo = selected_algo.get()
@@ -972,7 +987,9 @@ if !status_code! equ 200 (
 
         # Create and pack a button
         button = tk.Button(algo_window, text="Compute Checksum", command=run_checksum,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                           bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                           activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                           borderwidth=1, relief="solid")
         button.pack(pady=10)
 
         # Make the window modal
