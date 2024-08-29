@@ -45,7 +45,8 @@ class JChat:
     def setup_gui(self):
         self.root.title("JChat")
         self.root.configure(bg=self.UI_COLOR)
-        self.center_window(self.root, width=800, height=600)
+        self.root.geometry("800x600")
+        self.center_window(self.root)
         self.root.resizable(height=True, width=True)
 
         frame = tk.Frame(self.root, bg=self.UI_COLOR)
@@ -96,11 +97,15 @@ class JChat:
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
 
-    def center_window(self, window, width=800, height=600):
+    def center_window(self, window):
         window.update_idletasks()
-        x = (window.winfo_screenwidth() // 2) - (width // 2)
-        y = (window.winfo_screenheight() // 2) - (height // 2)
-        window.geometry(f'{width}x{height}+{x}+{y}')
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        window_width = window.winfo_width()
+        window_height = window.winfo_height()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        window.geometry(f'+{x}+{y}')
 
     def display_model_info(self):
         model_info = f"I am currently using the {self.selected_model.get()} model."
@@ -117,7 +122,7 @@ class JChat:
             label = tk.Label(api_key_window, text="Enter OpenAI API Key: ", font=(self.font_family,), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
             label.pack(padx=10, pady=10)
 
-            entry = tk.Entry(api_key_window, font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
+            entry = tk.Entry(api_key_window, font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR, width=80)
             entry.pack(padx=10, pady=5)
 
             def on_set_api_key():
@@ -199,15 +204,17 @@ class JChat:
         api_key_window.title("API Key")
         api_key_window.configure(bg=self.UI_COLOR)
 
-        label = tk.Label(api_key_window, text="Enter new API Key: ", font=(self.font_family,), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
+        label = tk.Label(api_key_window, text="Enter new API Key: ", font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
         label.pack(padx=10, pady=10)
 
-        entry = tk.Entry(api_key_window, font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
+        entry = tk.Entry(api_key_window, font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR, width=80)
         entry.pack(padx=10, pady=5)
 
         set_api_key_button = tk.Button(api_key_window, text="Set API Key", command=on_set_api_key, font=(self.font_family, 12), bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR)
         set_api_key_button.pack(padx=10, pady=10)
 
+        api_key_window.geometry("600x200")  # Set the window size to 600x200
+        api_key_window.resizable(False, False)  # Disable window resizing
         self.center_window(api_key_window)
         api_key_window.wait_window()
 
@@ -311,7 +318,7 @@ class JChat:
         window.update_idletasks()  # Ensure geometry calculations are done
         window_width = max(window.winfo_reqwidth(), 400)  # Minimum width
         window_height = max(window.winfo_reqheight(), 200)  # Minimum height
-        self.center_window(window, window_width, window_height)
+        self.center_window(window)
         window.resizable(False, False)
         window.transient(self.root)
         window.grab_set()
