@@ -2206,7 +2206,7 @@ if !status_code! equ 200 (
 
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
-        # Dropdown menu for similar functions - System Info Compare
+        # System Info Compare
         self.selected_function1 = tk.StringVar()
         self.selected_function1.set("System Info")  # Set default text
 
@@ -2233,7 +2233,7 @@ if !status_code! equ 200 (
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-        # Dropdown menu for similar functions - Active internet connection apps
+        # Active internet connection apps
         self.selected_function2 = tk.StringVar()
         self.selected_function2.set("App Connections")  # Set default text
 
@@ -2259,7 +2259,7 @@ if !status_code! equ 200 (
         self.function_dropdown2.grid(row=2, column=4, padx=10, pady=5, sticky="we")
         self.selected_function2.trace('w', self.on_function_select2)
 
-        # Dropdown menu for similar functions - God-mode
+        # God-mode
         self.selected_function3 = tk.StringVar()
         self.selected_function3.set("Windows God mode")  # Set default text
 
