@@ -59,4 +59,4 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 ## Screenshots
 
-![Image](1724885566.png)
+![Image](1724970435.png)
