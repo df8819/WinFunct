@@ -240,7 +240,7 @@ class Application(tk.Tk):
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
         pw_window.attributes('-topmost', True)
-        SimplePWGen(pw_window)
+        SimplePWGen(pw_window, UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR)
 
     def open_hash_stuff(self):
         print("""Open Hash Generator app.""")

@@ -35,119 +35,139 @@ def check_and_download_wordlist(root):
 
 
 class SimplePWGen:
-    def __init__(self, parent):
+    def __init__(self, parent, ui_color, button_bg_color, button_text_color):
         self.root = parent
+        self.UI_COLOR = ui_color
+        self.BUTTON_BG_COLOR = button_bg_color
+        self.BUTTON_TEXT_COLOR = button_text_color
         self.init_ui()
         self.reset_ui()
 
     def init_ui(self):
         self.tab_control = ttk.Notebook(self.root)
-        self.password_tab = ttk.Frame(self.tab_control)
-        self.number_tab = ttk.Frame(self.tab_control)
-        self.passphrase_tab = ttk.Frame(self.tab_control)
-
+        self.password_tab = tk.Frame(self.tab_control, bg=self.UI_COLOR)
+        self.number_tab = tk.Frame(self.tab_control, bg=self.UI_COLOR)
+        self.passphrase_tab = tk.Frame(self.tab_control, bg=self.UI_COLOR)
         self.tab_control.add(self.password_tab, text='Password Generator')
         self.tab_control.add(self.passphrase_tab, text='Passphrase Generator')
         self.tab_control.add(self.number_tab, text='Random Number Generator')
-
         self.create_password_generator_ui()
         self.create_number_generator_ui()
         self.create_passphrase_generator_ui()
-
         self.tab_control.pack(expand=1, fill='both')
 
     def create_password_generator_ui(self):
-        self.password_entry = tk.Entry(self.password_tab, width=24)
+        self.password_entry = tk.Entry(self.password_tab, width=24, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.password_entry.pack(fill='x', padx=10, pady=10)
 
-        self.length_scale = tk.Scale(self.password_tab, from_=6, to_=128, orient='horizontal', label='Password length')
+        self.length_scale = tk.Scale(self.password_tab, from_=6, to_=128, orient='horizontal', label='Password length',
+                                     bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, troughcolor=self.BUTTON_BG_COLOR, activebackground=self.BUTTON_BG_COLOR)
         self.length_scale.set(20)
         self.length_scale.pack(fill='x', padx=10)
 
+        checkbutton_style = {"bg": self.UI_COLOR, "fg": self.BUTTON_TEXT_COLOR, "activebackground": self.UI_COLOR,
+                             "activeforeground": self.BUTTON_TEXT_COLOR, "selectcolor": self.BUTTON_BG_COLOR}
+
         self.var_upper = tk.BooleanVar(value=True)
-        self.check_upper = tk.Checkbutton(self.password_tab, text="Uppercase Letters", variable=self.var_upper, anchor='w')
+        self.check_upper = tk.Checkbutton(self.password_tab, text="Uppercase Letters", variable=self.var_upper, anchor='w', **checkbutton_style)
         self.check_upper.pack(fill='x', padx=10)
 
         self.var_lower = tk.BooleanVar(value=True)
-        self.check_lower = tk.Checkbutton(self.password_tab, text="Lowercase Letters", variable=self.var_lower, anchor='w')
+        self.check_lower = tk.Checkbutton(self.password_tab, text="Lowercase Letters", variable=self.var_lower, anchor='w', **checkbutton_style)
         self.check_lower.pack(fill='x', padx=10)
 
         self.var_digit = tk.BooleanVar(value=True)
-        self.check_digit = tk.Checkbutton(self.password_tab, text="Numbers", variable=self.var_digit, anchor='w')
+        self.check_digit = tk.Checkbutton(self.password_tab, text="Numbers", variable=self.var_digit, anchor='w', **checkbutton_style)
         self.check_digit.pack(fill='x', padx=10)
 
         self.var_special = tk.BooleanVar(value=False)
-        self.check_special = tk.Checkbutton(self.password_tab, text="Special Characters", variable=self.var_special, anchor='w')
+        self.check_special = tk.Checkbutton(self.password_tab, text="Special Characters", variable=self.var_special, anchor='w', **checkbutton_style)
         self.check_special.pack(fill='x', padx=10)
 
-        self.button_frame_password = tk.Frame(self.password_tab)
+        self.button_frame_password = tk.Frame(self.password_tab, bg=self.UI_COLOR)
         self.button_frame_password.pack(pady=20)
 
-        self.reset_button = tk.Button(self.button_frame_password, text="Reset UI", command=self.reset_ui, bg='grey', fg='white')
+        button_style = {"bg": self.BUTTON_BG_COLOR, "fg": self.BUTTON_TEXT_COLOR,
+                        "activebackground": self.UI_COLOR, "activeforeground": self.BUTTON_TEXT_COLOR}
+
+        self.reset_button = tk.Button(self.button_frame_password, text="Reset UI", command=self.reset_ui, **button_style)
         self.reset_button.pack(side='left', padx=(0, 50))
 
-        self.generate_button = tk.Button(self.button_frame_password, text="Generate Password", command=self.update_password, bg='light blue')
+        self.generate_button = tk.Button(self.button_frame_password, text="Generate Password", command=self.update_password, **button_style)
         self.generate_button.pack(side='right', padx=5)
 
-        self.copy_password_button = tk.Button(self.button_frame_password, text="Copy Password", command=lambda: self.copy_to_clipboard(self.password_entry))
+        self.copy_password_button = tk.Button(self.button_frame_password, text="Copy Password",
+                                              command=lambda: self.copy_to_clipboard(self.password_entry), **button_style)
         self.copy_password_button.pack(side='right', pady=5)
 
     def create_passphrase_generator_ui(self):
-        self.passphrase_entry = tk.Entry(self.passphrase_tab, width=24)
+        self.passphrase_entry = tk.Entry(self.passphrase_tab, width=24, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.passphrase_entry.pack(fill='x', padx=10, pady=10)
 
-        self.word_count_scale = tk.Scale(self.passphrase_tab, from_=2, to_=20, orient='horizontal', label='Number of Words')
+        self.word_count_scale = tk.Scale(self.passphrase_tab, from_=2, to_=20, orient='horizontal', label='Number of Words',
+                                         bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, troughcolor=self.BUTTON_BG_COLOR, activebackground=self.BUTTON_BG_COLOR)
         self.word_count_scale.set(3)
         self.word_count_scale.pack(fill='x', padx=10)
 
+        checkbutton_style = {"bg": self.UI_COLOR, "fg": self.BUTTON_TEXT_COLOR, "activebackground": self.UI_COLOR,
+                             "activeforeground": self.BUTTON_TEXT_COLOR, "selectcolor": self.BUTTON_BG_COLOR}
+
         self.var_include_number = tk.BooleanVar(value=True)
-        self.check_include_number = tk.Checkbutton(self.passphrase_tab, text="Include Number", variable=self.var_include_number, anchor='w')
+        self.check_include_number = tk.Checkbutton(self.passphrase_tab, text="Include Number", variable=self.var_include_number, anchor='w', **checkbutton_style)
         self.check_include_number.pack(fill='x', padx=10)
 
         self.var_include_upper = tk.BooleanVar(value=True)
-        self.check_include_upper = tk.Checkbutton(self.passphrase_tab, text="Include Uppercase Letter", variable=self.var_include_upper, anchor='w')
+        self.check_include_upper = tk.Checkbutton(self.passphrase_tab, text="Include Uppercase Letter", variable=self.var_include_upper, anchor='w', **checkbutton_style)
         self.check_include_upper.pack(fill='x', padx=10)
 
         self.var_include_special = tk.BooleanVar(value=False)
-        self.check_include_special = tk.Checkbutton(self.passphrase_tab, text="Include Special Character", variable=self.var_include_special, anchor='w')
+        self.check_include_special = tk.Checkbutton(self.passphrase_tab, text="Include Special Character", variable=self.var_include_special, anchor='w', **checkbutton_style)
         self.check_include_special.pack(fill='x', padx=10)
 
-        self.button_frame_passphrase = tk.Frame(self.passphrase_tab)
+        self.button_frame_passphrase = tk.Frame(self.passphrase_tab, bg=self.UI_COLOR)
         self.button_frame_passphrase.pack(pady=20)
 
-        self.reset_button_passphrase = tk.Button(self.button_frame_passphrase, text="Reset UI", command=self.reset_ui, bg='grey', fg='white')
+        button_style = {"bg": self.BUTTON_BG_COLOR, "fg": self.BUTTON_TEXT_COLOR,
+                        "activebackground": self.UI_COLOR, "activeforeground": self.BUTTON_TEXT_COLOR}
+
+        self.reset_button_passphrase = tk.Button(self.button_frame_passphrase, text="Reset UI", command=self.reset_ui, **button_style)
         self.reset_button_passphrase.pack(side='left', padx=(0, 50))
 
-        self.generate_button_passphrase = tk.Button(self.button_frame_passphrase, text="Generate Passphrase", command=self.update_passphrase, bg='light blue')
+        self.generate_button_passphrase = tk.Button(self.button_frame_passphrase, text="Generate Passphrase", command=self.update_passphrase, **button_style)
         self.generate_button_passphrase.pack(side='right', padx=5)
 
-        self.copy_passphrase_button = tk.Button(self.button_frame_passphrase, text="Copy Passphrase", command=lambda: self.copy_to_clipboard(self.passphrase_entry))
+        self.copy_passphrase_button = tk.Button(self.button_frame_passphrase, text="Copy Passphrase",
+                                                command=lambda: self.copy_to_clipboard(self.passphrase_entry), **button_style)
         self.copy_passphrase_button.pack(side='right', pady=5)
 
     def create_number_generator_ui(self):
-        self.number_entry_label = tk.Label(self.number_tab, text="Random Number:")
+        self.number_entry_label = tk.Label(self.number_tab, text="Random Number:", bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.number_entry_label.pack(side='top', pady=(10, 0))
 
-        self.number_entry = tk.Entry(self.number_tab, width=24)
+        self.number_entry = tk.Entry(self.number_tab, width=24, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.number_entry.pack(fill='x', padx=10, pady=5)
 
-        self.digits_label = tk.Label(self.number_tab, text="Amount of Digits:")
+        self.digits_label = tk.Label(self.number_tab, text="Amount of Digits:", bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.digits_label.pack(side='top', pady=(10, 0))
 
-        self.digits_entry = tk.Entry(self.number_tab, width=12)
+        self.digits_entry = tk.Entry(self.number_tab, width=12, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.digits_entry.pack(padx=10, pady=5)
         self.digits_entry.insert(0, "5")
 
-        self.button_frame_number = tk.Frame(self.number_tab)
+        self.button_frame_number = tk.Frame(self.number_tab, bg=self.UI_COLOR)
         self.button_frame_number.pack(pady=20)
 
-        self.reset_button_number = tk.Button(self.button_frame_number, text="Reset UI", command=self.reset_ui, bg='grey', fg='white')
+        button_style = {"bg": self.BUTTON_BG_COLOR, "fg": self.BUTTON_TEXT_COLOR,
+                        "activebackground": self.UI_COLOR, "activeforeground": self.BUTTON_TEXT_COLOR}
+
+        self.reset_button_number = tk.Button(self.button_frame_number, text="Reset UI", command=self.reset_ui, **button_style)
         self.reset_button_number.pack(side='left', padx=(0, 50))
 
-        self.generate_number_button = tk.Button(self.button_frame_number, text="Generate Number", command=self.update_random_number, bg='light blue')
+        self.generate_number_button = tk.Button(self.button_frame_number, text="Generate Number", command=self.update_random_number, **button_style)
         self.generate_number_button.pack(side='right', padx=5)
 
-        self.copy_number_button = tk.Button(self.button_frame_number, text="Copy Number", command=lambda: self.copy_to_clipboard(self.number_entry))
+        self.copy_number_button = tk.Button(self.button_frame_number, text="Copy Number",
+                                            command=lambda: self.copy_to_clipboard(self.number_entry), **button_style)
         self.copy_number_button.pack(side='right', pady=5)
 
     def update_passphrase(self):
