@@ -1168,32 +1168,32 @@ if !status_code! equ 200 (
     # on_function_select are for the dropdown menus from the Button-Section in the UI part
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
-        if selected1 == "Extract Sys Info":
+        if selected1 == "[1] Extract Sys Info":
             self.gather_and_save_info()
-        elif selected1 == "Compare Sys Info":
+        elif selected1 == "[2] Compare Sys Info":
             self.compare_system_info()
-        elif selected1 == "Show single Sys":
+        elif selected1 == "[3] Show single Sys":
             self.show_system_info()
         elif selected1 == "System Info":
-            print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
     def on_function_select2(self, *args):
         selected2 = self.selected_function2.get()
-        if selected2 == "Active Connections":
+        if selected2 == "[1] Active Connections":
             self.netstat_output()
-        elif selected2 == "Threat Search":
+        elif selected2 == "[2] Threat Search":
             self.confirm_and_search()
         elif selected2 == "App Connections":
-            print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
-        if selected3 == "God mode":
+        if selected3 == "[1] God mode":
             self.open_godmode()
-        elif selected3 == "Super God mode":
+        elif selected3 == "[2] Super God mode":
             self.open_super_godmode()
         elif selected3 == "Windows God mode":
-            print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
@@ -2214,9 +2214,9 @@ if !status_code! equ 200 (
             self.functions_frame,
             self.selected_function1,
             "System Info",
-            "Extract Sys Info",
-            "Compare Sys Info",
-            "Show single Sys"
+            "[1] Extract Sys Info",
+            "[2] Compare Sys Info",
+            "[3] Show single Sys"
         )
         self.function_dropdown1.config(
             width=17,
@@ -2241,8 +2241,8 @@ if !status_code! equ 200 (
             self.functions_frame,
             self.selected_function2,
             "App Connections",
-            "Active Connections",
-            "Threat Search"
+            "[1] Active Connections",
+            "[2] Threat Search"
         )
         self.function_dropdown2.config(
             width=17,
@@ -2267,8 +2267,8 @@ if !status_code! equ 200 (
             self.functions_frame,
             self.selected_function3,
             "Windows God mode",
-            "God mode",
-            "Super God mode"
+            "[1] God mode",
+            "[2] Super God mode"
         )
         self.function_dropdown3.config(
             width=17,
