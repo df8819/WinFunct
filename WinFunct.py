@@ -42,6 +42,7 @@ UI_COLOR = "#333333"    # App bg, Tab headers, Bottom frame bg
 BUTTON_BG_COLOR = "#777777"    # bg color buttons
 BUTTON_TEXT_COLOR = "#ffffff"    # Text color button
 BOTTOM_BORDER_COLOR = "#40c895"    # Color for small border at bottom (fixed buttons)
+VERSION_LABEL_TEXT = "lightgreen"
 # -------- Some nice colors ore reminders --------
 # Nice "Windows" blue #4791CC, blue-green #42a88c / #24aa85, dezentes rot #9b3333,
 
@@ -201,6 +202,7 @@ class Application(tk.Tk):
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
+        self.configure(bg=UI_COLOR)
 
         # Create the main_frame with tk.Frame
         self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
@@ -1914,7 +1916,7 @@ if !status_code! equ 200 (
         style.configure('TNotebook.Tab', padding=[10, 7], background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
         style.configure('TNotebook', background=UI_COLOR)
         style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
-        
+
         # Background color for the main frames
         style.configure('Functions.TFrame', background=f'{UI_COLOR}')
         style.configure('Options.TFrame', background=f'{UI_COLOR}')
@@ -2078,15 +2080,22 @@ if !status_code! equ 200 (
         create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
         create_option_buttons(netsh_frame, netsh_commands)
 
+        # ------------------------------VERSION LABEL-------------------------------
+
+        # Create a bottom frame for the version label
+        bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
+        bottom_frame.pack(side="bottom", fill="x")
+
         version_label = tk.Label(
-            self,
+            bottom_frame,  # Place the label in the bottom frame
             text=VERSION,
             anchor="se",
             cursor="hand2",
-            fg="#7a7a7a",
-            # bg="#F0F8FF"  # Set background color here
+            fg=VERSION_LABEL_TEXT,
+            bg=UI_COLOR,
+            # font=("Segoe UI", 8),  # Commented out as per your change
         )
-        version_label.pack(side="bottom", anchor="se", padx=5, pady=2)
+        version_label.pack(side="right", padx=5, pady=2)
 
         # Callback function for clicking the version label
         def open_link(event):
@@ -2094,6 +2103,18 @@ if !status_code! equ 200 (
 
         # Bind the callback function to the version label
         version_label.bind("<Button-1>", open_link)
+
+        # Optional: Change color on hover to provide visual feedback
+        def on_enter(event):
+            version_label.config(fg="white")  # Change text color on hover
+
+        def on_leave(event):
+            version_label.config(fg=VERSION_LABEL_TEXT)  # Restore original text color
+
+        version_label.bind("<Enter>", on_enter)
+        version_label.bind("<Leave>", on_leave)
+
+        # ----------------------------VERSION LABEL END----------------------------
 
         # Script tab Buttons and Positions 1/2
         my_ip_btn = tk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20,
