@@ -1749,6 +1749,7 @@ if !status_code! equ 200 (
             return os.path.dirname(os.path.abspath(__file__))
 
     def open_super_godmode(self):
+        print("Executing 'Windows-Super-God-Mode' Script")
         repo_url = "https://github.com/ThioJoe/Windows-Super-God-Mode"
         repo_name = "Windows-Super-God-Mode"
         bat_file = "SuperGodMode-EasyLauncher.bat"
