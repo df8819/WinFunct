@@ -97,7 +97,7 @@ class JChat:
         self.clear_button.grid(row=0, column=2, sticky="w", padx=(10, 0))
 
         self.selected_model = tk.StringVar(value="gpt-3.5-turbo")
-        models = ["gpt-4", "gpt-3.5-turbo", "gpt-4-0314", "gpt-4-32k-0314"]
+        models = ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"]
         model_menu = tk.OptionMenu(button_frame, self.selected_model, *models)
         model_menu.config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR,
                           activeforeground=self.BUTTON_TEXT_COLOR)
