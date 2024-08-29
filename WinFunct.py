@@ -1884,17 +1884,18 @@ if !status_code! equ 200 (
         window.mainloop()
 
     def open_links_window(self):
-        print("""Open Link summary.""")
+        print("Open Link summary.")
         window = tk.Toplevel(self)
         window.title("Download Links")
         window.resizable(True, True)
+        window.configure(bg=UI_COLOR)
 
-        main_frame = tk.Frame(window)
+        main_frame = tk.Frame(window, bg=UI_COLOR)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
-        canvas = tk.Canvas(main_frame)
+        canvas = tk.Canvas(main_frame, bg=UI_COLOR, highlightthickness=0)
         scrollbar = tk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas)
+        scrollable_frame = tk.Frame(canvas, bg=UI_COLOR)
 
         scrollable_frame.bind(
             "<Configure>",
@@ -1907,20 +1908,30 @@ if !status_code! equ 200 (
         self.checkbox_vars = {}
 
         for category, items in links.items():
-            category_frame = tk.LabelFrame(scrollable_frame, text=category)
+            category_frame = tk.LabelFrame(scrollable_frame, text=category, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
             category_frame.pack(fill="x", expand=True, padx=10, pady=5)
 
             for i, (text, link) in enumerate(items.items()):
                 var = tk.IntVar()
-                checkbox = tk.Checkbutton(category_frame, text=text, variable=var)
+                checkbox = tk.Checkbutton(category_frame, text=text, variable=var,
+                                          bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
+                                          selectcolor=BUTTON_BG_COLOR, activebackground=UI_COLOR,
+                                          activeforeground=BUTTON_TEXT_COLOR)
                 checkbox.grid(row=i // 3, column=i % 3, sticky="w", padx=10, pady=3)
                 self.checkbox_vars[link] = var
 
-        button_frame = tk.Frame(window)
+        button_frame = tk.Frame(window, bg=UI_COLOR)
         button_frame.pack(fill="x", padx=10, pady=10)
 
-        tk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window)).pack(side="right", padx=5)
-        tk.Button(button_frame, text="Cancel", command=window.destroy).pack(side="right", padx=5)
+        tk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window),
+                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                  activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                  borderwidth=1, relief="solid").pack(side="right", padx=5)
+
+        tk.Button(button_frame, text="Cancel", command=window.destroy,
+                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                  activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                  borderwidth=1, relief="solid").pack(side="right", padx=5)
 
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
