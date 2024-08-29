@@ -504,7 +504,8 @@ class Application(tk.Tk):
         drive_combobox.set("Select a drive")
 
         # Create and pack the run button
-        run_button = ttk.Button(top, text="Run WinSAT Disk Test", command=on_run)
+        run_button = tk.Button(top, text="Run WinSAT Disk Test", command=on_run,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         run_button.pack(pady=10)
 
         # Start the Tkinter event loop
@@ -958,7 +959,8 @@ if !status_code! equ 200 (
                 messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}")
 
         # Create and pack a button
-        button = ttk.Button(algo_window, text="Compute Checksum", command=run_checksum)
+        button = tk.Button(algo_window, text="Compute Checksum", command=run_checksum,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         button.pack(pady=10)
 
         # Make the window modal
@@ -1850,10 +1852,12 @@ if !status_code! equ 200 (
         button_frame = ttk.Frame(window)
         button_frame.pack(fill=tk.X, padx=10, pady=10)
 
-        submit_button = ttk.Button(button_frame, text="Log Off Selected Users", command=on_submit)
+        submit_button = tk.Button(button_frame, text="Log Off Selected Users", command=on_submit,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         submit_button.pack(side=tk.LEFT, padx=(0, 5))
 
-        cancel_button = ttk.Button(button_frame, text="Cancel", command=window.destroy)
+        cancel_button = tk.Button(button_frame, text="Cancel", command=window.destroy,
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         cancel_button.pack(side=tk.RIGHT)
 
         window.mainloop()
