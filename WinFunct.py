@@ -11,7 +11,6 @@ import sys
 import tempfile
 import threading
 import time
-from urllib.parse import urlparse
 
 # Tkinter Imports
 import psutil
@@ -19,8 +18,6 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, ttk
 import webbrowser
 import winreg
-# import ttkbootstrap as ttk
-# from ttkbootstrap import Style
 
 # Third-Party Imports
 import requests
@@ -40,12 +37,13 @@ VERSION_NUMBER = "1.650"
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
-UI_COLOR = "#333333" # neutrals grau #f3f3f3
-BUTTON_BG_COLOR = "#777777"    # Background color for the button
-
-BUTTON_TEXT_COLOR = "#ffffff"  # Text color for the button
-
-BOTTOM_BORDER_COLOR = "#24aa85"  # Nice "Windows" blue #4791CC, blue-green #42a88c, dezentes rot #9b3333,
+# COLOR section
+UI_COLOR = "#333333"    # App bg, Tab headers, Bottom frame bg
+BUTTON_BG_COLOR = "#777777"    # bg color buttons
+BUTTON_TEXT_COLOR = "#ffffff"    # Text color button
+BOTTOM_BORDER_COLOR = "#40c895"    # Color for small border at bottom (fixed buttons)
+# -------- Some nice colors ore reminders --------
+# Nice "Windows" blue #4791CC, blue-green #42a88c / #24aa85, dezentes rot #9b3333,
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
