@@ -1195,6 +1195,15 @@ if !status_code! equ 200 (
         elif selected3 == "Windows God mode":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
+    def on_function_select4(self, *args):
+        selected4 = self.selected_function4.get()
+        if selected4 == "[1] cmd":
+            self.open_cmd_as_admin()
+        elif selected4 == "[2] PowerShell":
+            self.open_ps_as_admin()
+        elif selected4 == "Admin Shells":
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
     def gather_and_save_info(self):
@@ -2180,14 +2189,6 @@ if !status_code! equ 200 (
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        cmd_btn = tk.Button(self.functions_frame, text="admin cmd", command=self.open_cmd_as_admin, width=20,
-                            bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        cmd_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
-
-        ps_btn = tk.Button(self.functions_frame, text="admin PowerShell", command=self.open_ps_as_admin, width=20,
-                           bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        ps_btn.grid(row=0, column=4, padx=10, pady=5, sticky="we")
-
         wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
@@ -2285,6 +2286,32 @@ if !status_code! equ 200 (
         self.function_dropdown3.grid(row=3, column=4, padx=10, pady=5, sticky="we")
         self.selected_function3.trace('w', self.on_function_select3)
 
+        # Admin Shells
+        self.selected_function4 = tk.StringVar()
+        self.selected_function4.set("Admin Shells")  # Set default text
+
+        self.function_dropdown4 = tk.OptionMenu(
+            self.functions_frame,
+            self.selected_function4,
+            "Admin Shells",
+            "[1] cmd",
+            "[2] PowerShell"
+        )
+        self.function_dropdown4.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown4["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
+        )
+        self.function_dropdown4.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function4.trace('w', self.on_function_select4)
+
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
 
@@ -2327,7 +2354,7 @@ if !status_code! equ 200 (
 
         website_checker_btn = tk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        website_checker_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
+        website_checker_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
