@@ -1908,11 +1908,13 @@ if !status_code! equ 200 (
 
     def create_widgets(self):
         style = ttk.Style()
+        style.theme_use('default')
 
         # Configure tab padding and general styles
-        style.configure('TNotebook.Tab', padding=[10, 7])
-        style.configure('TNotebook', background=f'{UI_COLOR}')
-
+        style.configure('TNotebook.Tab', padding=[10, 7], background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+        style.configure('TNotebook', background=UI_COLOR)
+        style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
+        
         # Background color for the main frames
         style.configure('Functions.TFrame', background=f'{UI_COLOR}')
         style.configure('Options.TFrame', background=f'{UI_COLOR}')
@@ -1941,29 +1943,29 @@ if !status_code! equ 200 (
             foreground=[('active', BUTTON_TEXT_COLOR)]
         )
 
-        self.tabs = ttk.Notebook(self.main_frame, style='TNotebook')
+        self.tabs = ttk.Notebook(self.main_frame)
+        self.tabs.pack(fill="both", expand=True)
 
-        # Create frames with different background colors
-        self.functions_frame = ttk.Frame(self.tabs, style='Functions.TFrame')
-        self.options_frame = ttk.Frame(self.tabs, style='Options.TFrame')
-        self.fun_frame = ttk.Frame(self.tabs, style='Fun.TFrame')
+        # Create frames with background colors
+        self.functions_frame = tk.Frame(self.tabs, bg=UI_COLOR)
+        self.options_frame = tk.Frame(self.tabs, bg=UI_COLOR)
+        self.fun_frame = tk.Frame(self.tabs, bg=UI_COLOR)
 
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
         self.tabs.add(self.fun_frame, text="Misc")
 
-        self.tabs.pack(fill="both", expand=True)
-
         # Options Notebook within the options tab
-        options_notebook = ttk.Notebook(self.options_frame, style='TNotebook')  # Apply the style here
+        options_notebook = ttk.Notebook(self.options_frame)
+        options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
 
-        # New Category Frames inside the Options tab with different background colors
-        advanced_windows_settings_frame = ttk.Frame(options_notebook, style='Advanced.TFrame')
-        system_tools_frame = ttk.Frame(options_notebook, style='SystemTools.TFrame')
-        utilities_frame = ttk.Frame(options_notebook, style='Utilities.TFrame')
-        tools_frame = ttk.Frame(options_notebook, style='Tools.TFrame')
-        trouble_frame = ttk.Frame(options_notebook, style='Trouble.TFrame')
-        netsh_frame = ttk.Frame(options_notebook, style='Netsh.TFrame')
+        # New Category Frames inside the Options tab
+        advanced_windows_settings_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        system_tools_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        utilities_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        tools_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        trouble_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        netsh_frame = tk.Frame(options_notebook, bg=UI_COLOR)
 
         # Adding new frames to the options notebook
         options_notebook.add(advanced_windows_settings_frame, text='Management')
@@ -2210,15 +2212,12 @@ if !status_code! equ 200 (
         website_checker_btn.grid(row=4, column=1, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
-        fun_notebook = ttk.Notebook(self.fun_frame, style='TNotebook')
+        fun_notebook = ttk.Notebook(self.fun_frame)
+        fun_notebook.pack(fill='both', expand=True, padx=20, pady=20)
 
-        # New Category Frames inside the Fun tab with different background colors
-        apps_frame = ttk.Frame(fun_notebook, style='Apps.TFrame')
-        fun_stuff_frame = ttk.Frame(fun_notebook, style='FunStuff.TFrame')
-
-        # Configure styles for each frame in the fun notebook
-        style.configure('Apps.TFrame', background=f'{UI_COLOR}')
-        style.configure('FunStuff.TFrame', background=f'{UI_COLOR}')
+        # New Category Frames inside the Fun tab
+        apps_frame = tk.Frame(fun_notebook, bg=UI_COLOR)
+        fun_stuff_frame = tk.Frame(fun_notebook, bg=UI_COLOR)
 
         # Adding new frames to the fun notebook
         fun_notebook.add(apps_frame, text='Tools')
@@ -2231,7 +2230,7 @@ if !status_code! equ 200 (
         def create_fun_buttons(frame, buttons_list):
             for i, button in enumerate(buttons_list):
                 btn = tk.Button(frame, text=button[0], command=button[1], width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Define buttons for Apps frame
@@ -2252,8 +2251,8 @@ if !status_code! equ 200 (
         create_fun_buttons(apps_frame, apps_buttons)
         create_fun_buttons(fun_stuff_frame, fun_stuff_buttons)
 
-        # Bottom frame with a different background color
-        self.bottom_frame = ttk.Frame(self.main_frame, style='Bottom.TFrame')
+        # Bottom frame
+        self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
         # Left-aligned buttons
