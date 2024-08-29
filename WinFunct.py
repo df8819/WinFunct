@@ -1408,9 +1408,9 @@ if !status_code! equ 200 (
             status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
 
             if online:
-                messagebox.showinfo("Internet Status", f"We're online :)\n\n{status_message}")
+                messagebox.showinfo("Internet Status", f"We're online :)\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
             else:
-                messagebox.showwarning("Internet Status", f"We're offline :(\n\n{status_message}")
+                messagebox.showwarning("Internet Status", f"We're offline :(\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
 
         # Run the internet checks in a separate thread to avoid freezing the UI
         thread = threading.Thread(target=run_checks)
@@ -2194,6 +2194,8 @@ if !status_code! equ 200 (
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
 
+        # ----------------------------------DROPDOWN SECTION-------------------------------------------------
+
         # Dropdown menu for similar functions - System Info Compare
         self.selected_function1 = tk.StringVar()
         self.function_dropdown1 = ttk.Combobox(
@@ -2232,6 +2234,9 @@ if !status_code! equ 200 (
         self.function_dropdown3.grid(row=3, column=4, padx=10, pady=5, sticky="we")
         self.function_dropdown3.set("Windows God mode")  # Set default text
         self.function_dropdown3.bind("<<ComboboxSelected>>", self.on_function_select3)
+
+        # ----------------------------------DROPDOWN SECTION END---------------------------------------------
+
 
         # Script tab Buttons and Positions 2/2
         activate_wui_btn = tk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20,
