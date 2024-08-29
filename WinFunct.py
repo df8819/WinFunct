@@ -247,14 +247,14 @@ class Application(tk.Tk):
         hash_window = tk.Toplevel(self)
         hash_window.title("Hash Generator")
         hash_window.attributes('-topmost', True)
-        HashStuff(hash_window)
+        HashStuff(hash_window, UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR)
 
     def open_color_picker(self):
         print("""Open Color Picker app.""")
         color_picker_window = tk.Toplevel(self)
         color_picker_window.title("Color Picker")
         color_picker_window.attributes('-topmost', True)
-        SimpleColorPicker(color_picker_window)
+        SimpleColorPicker(color_picker_window, UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR)
 
     def open_donut(self):
         print("""Open funny cmd ASCII Donut.""")
