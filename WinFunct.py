@@ -202,12 +202,8 @@ class Application(tk.Tk):
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.font_family = "Segoe UI Emoji"
 
-        # Create a style for the main_frame background color
-        style = ttk.Style()
-        style.configure('Main.TFrame', background=f'{BOTTOM_BORDER_COLOR}')
-
-        # Apply the style to the main_frame
-        self.main_frame = ttk.Frame(self, style='Main.TFrame')
+        # Create the main_frame with tk.Frame
+        self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
 
         # Remove padding if unnecessary or adjust as needed
         self.main_frame.pack(fill="both", expand=True)  # No padding here
@@ -217,6 +213,7 @@ class Application(tk.Tk):
 
         # Center the window after all widgets have been packed
         self.after(100, self.center_window)
+
 
     def center_window(self):
         # Using Tcl method to center
@@ -1768,7 +1765,6 @@ if !status_code! equ 200 (
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
         try:
-            # Use 'cp850' encoding which is common on Windows command line
             result = subprocess.run(['quser'], capture_output=True, text=True, encoding='cp850', errors='replace', shell=True)
             output = result.stdout
         except Exception as e:
@@ -1779,12 +1775,10 @@ if !status_code! equ 200 (
             messagebox.showerror("Error", "No output from 'quser'.")
             return
 
-        # Parse the output to extract user information
         lines = output.strip().split('\n')
         users = []
 
-        for line in lines[1:]:  # Skip the header line
-            # Adjusted regex to capture usernames with spaces and special characters
+        for line in lines[1:]:
             match = re.match(r'^\s*(.*?)\s+(\d+)\s+\w+', line)
             if match:
                 username = match.group(1).strip()
@@ -1795,29 +1789,25 @@ if !status_code! equ 200 (
             messagebox.showinfo("Info", "No users found.")
             return
 
-        # Create a Tkinter window to display a listbox for user selection
         window = tk.Tk()
         window.title("Select Users to Log Off")
+        window.configure(bg=UI_COLOR)
 
-        # Set the initial window size
         window_width = 400
         window_height = 300
         window.geometry(f"{window_width}x{window_height}")
 
-        # Center the window on the screen
         screen_width = window.winfo_screenwidth()
         screen_height = window.winfo_screenheight()
         x_cordinate = int((screen_width / 2) - (window_width / 2))
         y_cordinate = int((screen_height / 2) - (window_height / 2))
         window.geometry(f"+{x_cordinate}+{y_cordinate}")
 
-        # Create a frame to hold the Listbox and Scrollbar
-        frame = ttk.Frame(window)
+        frame = tk.Frame(window, bg=UI_COLOR)
         frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Create a Listbox for multiple selection with a Scrollbar
-        listbox = tk.Listbox(frame, selectmode=tk.MULTIPLE, width=50)
-        scrollbar = ttk.Scrollbar(frame, orient="vertical", command=listbox.yview)
+        listbox = tk.Listbox(frame, selectmode=tk.MULTIPLE, width=50, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+        scrollbar = tk.Scrollbar(frame, orient="vertical", command=listbox.yview)
         listbox.config(yscrollcommand=scrollbar.set)
 
         listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -1848,16 +1838,15 @@ if !status_code! equ 200 (
             messagebox.showinfo("Success", f"Successfully logged off {len(selected_users)} user(s).")
             window.destroy()
 
-        # Add submit and cancel buttons
-        button_frame = ttk.Frame(window)
+        button_frame = tk.Frame(window, bg=UI_COLOR)
         button_frame.pack(fill=tk.X, padx=10, pady=10)
 
         submit_button = tk.Button(button_frame, text="Log Off Selected Users", command=on_submit,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         submit_button.pack(side=tk.LEFT, padx=(0, 5))
 
         cancel_button = tk.Button(button_frame, text="Cancel", command=window.destroy,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         cancel_button.pack(side=tk.RIGHT)
 
         window.mainloop()
