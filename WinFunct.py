@@ -1164,6 +1164,7 @@ if !status_code! equ 200 (
         )
         return file_path
 
+    # ----------------------------------DROPDOWN SECTION-------------------------------------------------
     # on_function_select are for the dropdown menus from the Button-Section in the UI part
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
@@ -1193,6 +1194,8 @@ if !status_code! equ 200 (
             self.open_super_godmode()
         elif selected3 == "Windows God mode":
             print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
+
+    # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
     def gather_and_save_info(self):
         print("""Extracting system info.""")
