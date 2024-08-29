@@ -1644,9 +1644,10 @@ if !status_code! equ 200 (
 
     def create_progress_window(self, title):
         """Creates a progress window with a label and indeterminate progress bar."""
-        window = tk.Toplevel()
+        window = tk.Toplevel(self)
         window.title(title)
         window.geometry("300x100")
+        window.configure(bg=UI_COLOR)
 
         # Make the window appear on top of other windows
         window.attributes('-topmost', True)
@@ -1665,10 +1666,22 @@ if !status_code! equ 200 (
         # Set the position of the window
         window.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
 
-        progress_label = tk.Label(window, text="Starting...")
+        progress_label = tk.Label(window, text="Starting...",
+                                  bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
+                                  font=(self.font_family, 10))
         progress_label.pack(pady=10)
 
-        progress_bar = ttk.Progressbar(window, mode="indeterminate", length=200)
+        # Create a style for the progress bar
+        style = ttk.Style(window)
+        style.theme_use('default')
+        style.configure("Custom.Horizontal.TProgressbar",
+                        troughcolor=UI_COLOR,
+                        background=BUTTON_BG_COLOR,
+                        darkcolor=BUTTON_BG_COLOR,
+                        lightcolor=BUTTON_BG_COLOR)
+
+        progress_bar = ttk.Progressbar(window, mode="indeterminate", length=200,
+                                       style="Custom.Horizontal.TProgressbar")
         progress_bar.pack(pady=10)
         progress_bar.start()
 
