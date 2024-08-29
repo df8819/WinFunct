@@ -451,7 +451,8 @@ class Application(tk.Tk):
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     def run_winsat_disk(self):
-        print("""Running Disk speed test.""")
+        print("Running Disk speed test.")
+
         def get_available_drives():
             drives = []
             for partition in psutil.disk_partitions(all=False):
@@ -465,7 +466,7 @@ class Application(tk.Tk):
             return drives
 
         def on_run():
-            selected_drive = drive_combobox.get()
+            selected_drive = drive_var.get()
 
             if selected_drive == "Select a drive":
                 messagebox.showwarning("No Drive Selected", "Please select a drive from the dropdown menu.")
@@ -481,12 +482,13 @@ class Application(tk.Tk):
                 messagebox.showerror("Error", f"An error occurred while trying to run the WinSAT disk test: {str(e)}")
 
         # Create a top-level window for drive selection
-        top = tk.Tk()
+        top = tk.Toplevel(self.master)
         top.title("WinSAT Disk Performance Test")
         top.geometry("380x130")
+        top.configure(bg=UI_COLOR)
 
         # Center the window on the screen
-        top.update_idletasks()  # Update "requested size" from geometry manager
+        top.update_idletasks()
         width = top.winfo_width()
         height = top.winfo_height()
         x = (top.winfo_screenwidth() // 2) - (width // 2)
@@ -494,17 +496,26 @@ class Application(tk.Tk):
         top.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
         # Create and pack a label
-        label = ttk.Label(top, text="Select a drive to test:", padding=(10, 10))
+        label = tk.Label(top, text="Select a drive to test:",
+                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR, pady=10)
         label.pack()
 
-        # Create and pack the combobox for drive selection
-        drive_combobox = ttk.Combobox(top, values=get_available_drives(), state="readonly", width=50)
-        drive_combobox.pack(pady=10)
-        drive_combobox.set("Select a drive")
+        # Create and pack the dropdown for drive selection
+        drive_var = tk.StringVar(top)
+        drive_var.set("Select a drive")
+        drive_options = get_available_drives()
+        drive_menu = tk.OptionMenu(top, drive_var, *drive_options)
+        drive_menu.config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                          activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                          highlightthickness=0)
+        drive_menu["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        drive_menu.pack(pady=10)
 
         # Create and pack the run button
         run_button = tk.Button(top, text="Run WinSAT Disk Test", command=on_run,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                               activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                               borderwidth=1, relief="solid")
         run_button.pack(pady=10)
 
         # Start the Tkinter event loop
@@ -665,7 +676,7 @@ if !status_code! equ 200 (
                                       insertbackground=BUTTON_TEXT_COLOR)
         self.website_entry.pack(pady=10)
         self.website_entry.focus_set()
-    
+
         # Create and pack the run button
         run_button = tk.Button(self.top, text="Check Website", command=on_run,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
