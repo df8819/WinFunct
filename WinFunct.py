@@ -2377,11 +2377,11 @@ if !status_code! equ 200 (
 
         shutdown_i_btn = tk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        shutdown_i_btn.grid(row=3, column=3, padx=10, pady=5, sticky="we")
+        shutdown_i_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        checksum_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
+        checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
