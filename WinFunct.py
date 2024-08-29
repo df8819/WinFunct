@@ -190,6 +190,7 @@ def execute_command(cmd):
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+
         self.resolution_main = "845x450"
         self.tabs = None
         self.checkbox_vars = None
@@ -1164,7 +1165,7 @@ if !status_code! equ 200 (
         return file_path
 
     # on_function_select are for the dropdown menus from the Button-Section in the UI part
-    def on_function_select1(self, event):
+    def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
         if selected1 == "Extract Sys Info":
             self.gather_and_save_info()
@@ -1172,20 +1173,26 @@ if !status_code! equ 200 (
             self.compare_system_info()
         elif selected1 == "Show single Sys":
             self.show_system_info()
+        elif selected1 == "System Info":
+            print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
 
-    def on_function_select2(self, event):
+    def on_function_select2(self, *args):
         selected2 = self.selected_function2.get()
         if selected2 == "Active Connections":
             self.netstat_output()
         elif selected2 == "Threat Search":
             self.confirm_and_search()
+        elif selected2 == "App Connections":
+            print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
 
-    def on_function_select3(self, event):
+    def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
         if selected3 == "God mode":
             self.open_godmode()
         elif selected3 == "Super God mode":
             self.open_super_godmode()
+        elif selected3 == "Windows God mode":
+            print("\n>>> Please select the desired Option from the Dropdown menu. This is just a placeholder...")
 
     def gather_and_save_info(self):
         print("""Extracting system info.""")
@@ -2198,42 +2205,82 @@ if !status_code! equ 200 (
 
         # Dropdown menu for similar functions - System Info Compare
         self.selected_function1 = tk.StringVar()
-        self.function_dropdown1 = ttk.Combobox(
+        self.selected_function1.set("System Info")  # Set default text
+
+        self.function_dropdown1 = tk.OptionMenu(
             self.functions_frame,
-            textvariable=self.selected_function1,
-            values=["Extract Sys Info", "Compare Sys Info", "Show single Sys"],
-            state="readonly",
-            width=20
+            self.selected_function1,
+            "System Info",
+            "Extract Sys Info",
+            "Compare Sys Info",
+            "Show single Sys"
+        )
+        self.function_dropdown1.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown1["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
         )
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
-        self.function_dropdown1.set("System Info")  # Set default text
-        self.function_dropdown1.bind("<<ComboboxSelected>>", self.on_function_select1)
+        self.selected_function1.trace('w', self.on_function_select1)
 
         # Dropdown menu for similar functions - Active internet connection apps
         self.selected_function2 = tk.StringVar()
-        self.function_dropdown2 = ttk.Combobox(
+        self.selected_function2.set("App Connections")  # Set default text
+
+        self.function_dropdown2 = tk.OptionMenu(
             self.functions_frame,
-            textvariable=self.selected_function2,
-            values=["Active Connections", "Threat Search"],
-            state="readonly",
-            width=20
+            self.selected_function2,
+            "App Connections",
+            "Active Connections",
+            "Threat Search"
+        )
+        self.function_dropdown2.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown2["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
         )
         self.function_dropdown2.grid(row=2, column=4, padx=10, pady=5, sticky="we")
-        self.function_dropdown2.set("App Connections")  # Set default text
-        self.function_dropdown2.bind("<<ComboboxSelected>>", self.on_function_select2)
+        self.selected_function2.trace('w', self.on_function_select2)
 
         # Dropdown menu for similar functions - God-mode
         self.selected_function3 = tk.StringVar()
-        self.function_dropdown3 = ttk.Combobox(
+        self.selected_function3.set("Windows God mode")  # Set default text
+
+        self.function_dropdown3 = tk.OptionMenu(
             self.functions_frame,
-            textvariable=self.selected_function3,
-            values=["God mode", "Super God mode"],
-            state="readonly",
-            width=20
+            self.selected_function3,
+            "Windows God mode",
+            "God mode",
+            "Super God mode"
+        )
+        self.function_dropdown3.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown3["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
         )
         self.function_dropdown3.grid(row=3, column=4, padx=10, pady=5, sticky="we")
-        self.function_dropdown3.set("Windows God mode")  # Set default text
-        self.function_dropdown3.bind("<<ComboboxSelected>>", self.on_function_select3)
+        self.selected_function3.trace('w', self.on_function_select3)
 
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
