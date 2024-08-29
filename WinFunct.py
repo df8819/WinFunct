@@ -233,7 +233,7 @@ class Application(tk.Tk):
                                   "This will open a chat-app GUI that requires an OpenAI API Key.\n\nSelect 'No' if you don't have your personal Key yet."):
             chat_window = tk.Toplevel(self)
             chat_window.title("JChat")
-            JChat(chat_window)
+            JChat(chat_window, UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR)
 
     def open_pw_gen(self):
         print("""Open Password Generator app.""")

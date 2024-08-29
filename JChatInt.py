@@ -1,32 +1,26 @@
 import json
 import os
-import threading
 import tkinter as tk
-from tkinter import messagebox, scrolledtext, font
+from tkinter import messagebox, scrolledtext
 import openai
 import requests
+import threading
 import logging
-from datetime import datetime
-
-# Configure logging
-# logging.basicConfig(filename='jchat.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class JChat:
-    def __init__(self, parent):
+    def __init__(self, parent, ui_color, button_bg_color, button_text_color):
         self.root = parent
+        self.UI_COLOR = ui_color
+        self.BUTTON_BG_COLOR = button_bg_color
+        self.BUTTON_TEXT_COLOR = button_text_color
         self.font_family = "Segoe UI Emoji"
-        self.font_size = 12
 
         self.api_key = self.load_or_request_api_key()
         if not self.api_key:
             raise ValueError("API key is missing")
         os.environ["OPENAI_API_KEY"] = self.api_key
         openai.api_key = self.api_key
-
-        self.loop_text = None
-        self.loop_thread = None
-        self.loop_active = False
 
         self.behaviors = self.initialize_behaviors()
         self.pre_prompt = self.behaviors["Default"]
@@ -37,7 +31,7 @@ class JChat:
     def initialize_behaviors(self):
         return {
             "Default": "---Act as normal GPT instance--- ",
-            "(＾• ω •＾)": "---Act as cute eGirl and ALWAYS/ONLY use UwU-speech and lots of kaomojies/emojies: --- ",
+            "(^• ω •^)": "---Act as cute eGirl and ALWAYS/ONLY use UwU-speech and lots of kaomojies/emojies: --- ",
             "Mad Scientist": "---Act as mean sarcastic Einstein and answer ALWAYS/ONLY with intrinsic lyrically spoken formulas: --- ",
             "SciFi Commander": "---Act as advanced AGI-Commander onboard of a space frigate and ALWAY/ONLY answer in short, brief and precise answers: --- ",
             "Schwiizer": "---Your task is to act as guide for Switzerland and ALWAYS/ONLY speak in swiss-german: --- ",
@@ -45,77 +39,72 @@ class JChat:
             "Grow-Master": "---Act as professional gardener and assist the user in growing CBD-(legal!)-weed: --- ",
             "Alien": "---Act as confused Alien from G581c that wants to stay unnoticed and ALWAYS/ONLY answer with text in altered format and symbols: --- ",
             "Code-Guru": "---Act as senior Software engineer from a world leading dev-team who will assist the user in all coding related questions: --- ",
-            "Medical Assistant": "---Act as calming and professional medical doctor with PhD who will assist the user with precise, detailed and brief answers to medical conditions: --- ",
+            "Medical Assistant": "---Act as calming and professional medical doctor with PhD who will assist the user with precise, detailed and brief answers to medical conditions: --- "
         }
 
     def setup_gui(self):
         self.root.title("JChat")
-        self.center_window(self.root)
+        self.root.configure(bg=self.UI_COLOR)
+        self.center_window(self.root, width=800, height=600)
         self.root.resizable(height=True, width=True)
 
-        frame = tk.Frame(self.root)
+        frame = tk.Frame(self.root, bg=self.UI_COLOR)
         frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        self.conversation = scrolledtext.ScrolledText(frame, wrap='word', state='disabled')
-        self.conversation.configure(font=(self.font_family, self.font_size), bg='#edfcf0')
-        self.conversation.grid(row=0, column=0, sticky="nsew")
+        self.conversation = scrolledtext.ScrolledText(frame, wrap='word', state='disabled', bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
+        self.conversation.configure(font=(self.font_family,))
+        self.conversation.grid(row=0, column=0, columnspan=2, sticky="nsew")
 
         self.text_input = tk.StringVar()
-        entry_field = tk.Entry(self.root, textvariable=self.text_input, font=(self.font_family, self.font_size))
-        entry_field.bind('<Return>', self.send_message)
-        entry_field.grid(row=1, column=0, sticky="we", padx=10)
-        entry_field.focus_set()
+        self.user_input = tk.Entry(frame, bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR, textvariable=self.text_input)
+        self.user_input.grid(row=1, column=0, sticky="ew", pady=10)
+        self.user_input.bind("<Return>", self.send_message)
 
-        btn_frame = tk.Frame(self.root)
-        btn_frame.grid(row=2, column=0, sticky="we", padx=10, pady=5)
+        button_style = {"bg": self.BUTTON_BG_COLOR, "fg": self.BUTTON_TEXT_COLOR, "activebackground": self.UI_COLOR, "activeforeground": self.BUTTON_TEXT_COLOR}
+        self.send_button = tk.Button(frame, text="Send", command=self.send_message, **button_style)
+        self.send_button.grid(row=1, column=1, sticky="e", pady=10)
 
-        self.add_buttons(btn_frame)
+        self.behavior_label = tk.Label(frame, text="Behavior:", bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
+        self.behavior_label.grid(row=2, column=0, sticky="w")
 
-        # Adding the new label
-        model_label = tk.Label(self.root, text='Send text "what model???" to JChat to verify model selection.', font=(self.font_family, self.font_size))
-        model_label.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+        self.behavior_var = tk.StringVar(value="Default")
+        self.behavior_menu = tk.OptionMenu(frame, self.behavior_var, *self.behaviors.keys())
+        self.behavior_menu.config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR)
+        self.behavior_menu["menu"].config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR)
+        self.behavior_menu.grid(row=2, column=1, sticky="e")
 
-        # Configure grid weights to allow scaling
-        self.root.grid_rowconfigure(0, weight=1)
-        self.root.grid_columnconfigure(0, weight=1)
-        frame.grid_rowconfigure(0, weight=1)
-        frame.grid_columnconfigure(0, weight=1)
+        self.clear_button = tk.Button(frame, text="Clear Chat", command=self.clear_conversation, **button_style)
+        self.clear_button.grid(row=3, column=0, sticky="w", pady=10)
 
-    def add_buttons(self, btn_frame):
-        buttons = [
-            ("Send", self.send_message),
-            ("Clear", self.clear_conversation),
-            ("Behavior", self.change_behavior),
-            ("Loop", self.loop),
-            ("Cancel Loop", self.cancel_loop),
-            ("API Key", self.set_api_key),
-            ("Exit", self.exit_app),
-        ]
-
-        for i, (text, command) in enumerate(buttons):
-            button = tk.Button(btn_frame, text=text, command=command, font=(self.font_family, self.font_size))
-            button.grid(row=0, column=i, padx=10, pady=10, sticky="we")
-            logging.info(f'Button {text} added to GUI.')
-
-        # Add model selection dropdown
         self.selected_model = tk.StringVar(value="gpt-3.5-turbo")
-        models = ["gpt-4o", "gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"]
-        model_menu = tk.OptionMenu(btn_frame, self.selected_model, *models)
-        model_menu.configure(font=(self.font_family, self.font_size))
-        model_menu.grid(row=0, column=len(buttons), padx=10, pady=10, sticky="we")
-        btn_frame.grid_columnconfigure(len(buttons), weight=1)
-        logging.info("Model selection dropdown added to GUI.")
+        models = ["gpt-4", "gpt-3.5-turbo", "gpt-4-0314", "gpt-4-32k-0314"]
+        model_menu = tk.OptionMenu(frame, self.selected_model, *models)
+        model_menu.config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR)
+        model_menu.grid(row=3, column=1, sticky="e", pady=10)
 
-        # Configure column weights to spread buttons evenly
-        for i in range(len(buttons) + 1):
-            btn_frame.grid_columnconfigure(i, weight=1)
+        self.model_info_button = tk.Button(frame, text="What model???", command=self.display_model_info, **button_style)
+        self.model_info_button.grid(row=4, column=0, sticky="w", pady=10)
 
-    def center_window(self, window, width=760, height=620):
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
-        x = (screen_width // 2) - (width // 2)
-        y = (screen_height // 3) - (height // 2)
-        window.geometry(f"{width}x{height}+{x}+{y}")
+        self.api_button = tk.Button(frame, text="Set API Key", command=self.set_api_key, **button_style)
+        self.api_button.grid(row=4, column=1, sticky="e", pady=10)
+
+        self.exit_button = tk.Button(frame, text="Exit", command=self.exit_app, **button_style)
+        self.exit_button.grid(row=5, column=0, sticky="w", pady=10)
+
+        frame.columnconfigure(0, weight=1)
+        frame.rowconfigure(0, weight=1)
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
+
+    def center_window(self, window, width=800, height=600):
+        window.update_idletasks()
+        x = (window.winfo_screenwidth() // 2) - (width // 2)
+        y = (window.winfo_screenheight() // 2) - (height // 2)
+        window.geometry(f'{width}x{height}+{x}+{y}')
+
+    def display_model_info(self):
+        model_info = f"I am currently using the {self.selected_model.get()} model."
+        self.display_response("JChat: ", model_info, 'assistant-text')
 
     def load_or_request_api_key(self, filename: str = "apikey.json"):
         """Load API key from file or create a placeholder file and prompt the user to enter the API key."""
@@ -123,11 +112,12 @@ class JChat:
         def prompt_for_api_key():
             api_key_window = tk.Toplevel(self.root)
             api_key_window.title("API Key")
+            api_key_window.configure(bg=self.UI_COLOR)
 
-            label = tk.Label(api_key_window, text="Enter OpenAI API Key: ", font=(self.font_family, self.font_size))
+            label = tk.Label(api_key_window, text="Enter OpenAI API Key: ", font=(self.font_family,), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
             label.pack(padx=10, pady=10)
 
-            entry = tk.Entry(api_key_window, font=(self.font_family, self.font_size))
+            entry = tk.Entry(api_key_window, font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
             entry.pack(padx=10, pady=5)
 
             def on_set_api_key():
@@ -148,14 +138,14 @@ class JChat:
                         messagebox.showerror("Error", f"Could not save API key to file: {e}")
                     api_key_window.destroy()
 
-            set_api_key_button = tk.Button(api_key_window, text="Save API Key", command=on_set_api_key,
-                                           font=(self.font_family, self.font_size))
+            set_api_key_button = tk.Button(api_key_window, text="Save API Key", command=on_set_api_key, font=(self.font_family, 12), bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR)
             set_api_key_button.pack(padx=10, pady=10)
-            self.center_window(api_key_window, 400, 150)
+
+            self.center_window(api_key_window)
             api_key_window.wait_window()
 
         if not os.path.exists(filename):
-            data_structure = {"api_key": "<your-api-key-here>"}
+            data_structure = {"api_key": ""}
             try:
                 with open(filename, 'w') as f:
                     json.dump(data_structure, f)
@@ -170,7 +160,7 @@ class JChat:
             with open(filename, 'r') as f:
                 data = json.load(f)
                 api_key = data.get('api_key')
-                if not api_key or api_key == "<your-api-key-here>":
+                if not api_key or api_key == "":
                     prompt_for_api_key()
                     return self.api_key
                 else:
@@ -207,37 +197,27 @@ class JChat:
 
         api_key_window = tk.Toplevel(self.root)
         api_key_window.title("API Key")
+        api_key_window.configure(bg=self.UI_COLOR)
 
-        label = tk.Label(api_key_window, text="Enter new API Key: ", font=(self.font_family, self.font_size))
+        label = tk.Label(api_key_window, text="Enter new API Key: ", font=(self.font_family,), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
         label.pack(padx=10, pady=10)
 
-        entry = tk.Entry(api_key_window, font=(self.font_family, self.font_size))
+        entry = tk.Entry(api_key_window, font=(self.font_family, 12), bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         entry.pack(padx=10, pady=5)
 
-        set_api_key_button = tk.Button(api_key_window, text="Set API Key", command=on_set_api_key,
-                                       font=(self.font_family, self.font_size))
+        set_api_key_button = tk.Button(api_key_window, text="Set API Key", command=on_set_api_key, font=(self.font_family, 12), bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR)
         set_api_key_button.pack(padx=10, pady=10)
 
-        self.center_window(api_key_window, 400, 150)
+        self.center_window(api_key_window)
         api_key_window.wait_window()
-
-    def center_window2(self, window, width=400, height=150):
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
-        x = (screen_width // 2) - (width // 2)
-        y = (screen_height // 3) - (height // 2)
-        window.geometry(f"{width}x{height}+{x}+{y}")
 
     def get_gpt_response(self, user_prompt):
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {openai.api_key}',
         }
-
         self.conversation_history.append({'role': 'user', 'content': user_prompt})
-
         selected_model = self.selected_model.get()
-
         data = {
             'model': selected_model,
             'messages': self.conversation_history,
@@ -246,113 +226,43 @@ class JChat:
             'presence_penalty': 0.6,
             'frequency_penalty': 0.3,
         }
-
         try:
-            response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers,
-                                     data=json.dumps(data))
+            response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, data=json.dumps(data))
             response.raise_for_status()
-            if self.loop_active and self.loop_text:
-                self.root.after(1000, self.loop_request)
             return response
         except requests.RequestException as e:
             logging.error(f"API request error: {e}")
             messagebox.showerror("Error", f"An error occurred: {e}")
             return None
 
-    def loop(self):
-        if not self.loop_active:
-            self.loop_dialog()
-
-    def loop_dialog(self):
-        def on_loop():
-            self.loop_active = True
-            self.loop_text = entry.get()
-            if not self.loop_text.strip():
-                messagebox.showerror("Error", "Loop text cannot be empty.")
-                logging.error("Attempted to start loop with empty text.")
-                return
-            loop_window.destroy()
-            self.loop_request()
-
-        loop_window = tk.Toplevel(self.root)
-        loop_window.title("Loop")
-
-        label = tk.Label(loop_window, text="Enter response text to loop:\n", font=(self.font_family, self.font_size))
-        label.pack(padx=10, pady=10)
-
-        bold_font = font.Font(label, label.cget("font"))
-        bold_font.configure(weight="bold")
-
-        warning_label = tk.Label(loop_window, text="WARNING:", font=bold_font, compound="left")
-        warning_label.pack()
-
-        rest_of_text = tk.Label(loop_window, text="This will auto-loop your prompt until stopped!",
-                                font=(self.font_family, self.font_size))
-        rest_of_text.pack()
-
-        entry = tk.Entry(loop_window, font=(self.font_family, self.font_size), width=50)
-        entry.pack(padx=10, pady=5)
-
-        loop_button = tk.Button(loop_window, text="Loop", command=on_loop, font=(self.font_family, self.font_size))
-        loop_button.pack(padx=10, pady=10)
-
-        # Set the font for the labels and button
-        label.configure(font=(self.font_family, self.font_size))
-        entry.configure(font=(self.font_family, self.font_size))
-        loop_button.configure(font=(self.font_family, self.font_size))
-
-        # Set the geometry of the loop window
-        self.center_window(loop_window, 450, 220)
-        loop_window.resizable(False, False)
-
-        loop_window.transient(self.root)
-        loop_window.grab_set()
-        self.root.wait_window(loop_window)
-
-    def cancel_loop(self):
-        self.loop_active = False
-        self.loop_text = None
-        logging.info("Looping has been canceled.")
-
-    def loop_request(self):
-        if self.loop_active and self.loop_text:
-            try:
-                self.send_message(auto=True)
-                logging.info("Loop request sent with text: {}".format(self.loop_text))
-            except Exception as e:
-                logging.error("Error during loop request: {}".format(e))
-                messagebox.showerror("Error", "An error occurred during the loop request.")
-
-    def send_message(self, event=None, auto=False):
-        user_message = self.loop_text if auto else self.text_input.get()
-
+    def send_message(self, event=None):
+        user_message = self.text_input.get()
         if user_message.lower() == 'exit':
             if messagebox.askokcancel("Quit", "Do you really want to quit?"):
                 self.root.destroy()
             return
-
         self.text_input.set('')
         self.conversation.config(state='normal')  # Enable editing
         self.conversation.insert(tk.END, "You: ", 'bold-text')
-        self.conversation.insert(tk.END, user_message + '\n\n', 'red-text')
+        self.conversation.insert(tk.END, user_message + '\n\n', 'user-text')
         self.conversation_history.append({'role': 'user', 'content': user_message})
         self.conversation.config(state='disabled')  # Disable editing
-
         # Configure text tags
-        self.conversation.tag_configure('red-text', foreground='#b00707')
-        self.conversation.tag_configure('blue-text', foreground='#0707b0')
+        self.conversation.tag_configure('user-text', foreground=self.BUTTON_TEXT_COLOR)
+        self.conversation.tag_configure('assistant-text', foreground=self.BUTTON_TEXT_COLOR)
+
         self.conversation.tag_configure('line', underline=True)
-        self.conversation.tag_configure('bold-text', font=(self.font_family, self.font_size, 'bold'))
+        self.conversation.tag_configure('bold-text', font=(self.font_family, 12, 'bold'))
 
         def gpt_request():
             if user_message.lower() == 'what model???':
                 model_info = f"I am currently using the {self.selected_model.get()} model."
-                self.display_response("JChat: ", model_info, 'blue-text')
+                self.display_response("JChat: ", model_info,'assistant-text')
             else:
                 response = self.get_gpt_response(user_message)
                 if response and response.status_code == 200:
                     completion = response.json()['choices'][0]['message']['content']
-                    self.display_response("JChat: ", completion, 'blue-text')
+                    self.display_response("JChat: ", completion, 'assistant-text')
                     self.conversation_history.append({'role': 'assistant', 'content': completion})
                 else:
                     error_message = response.text if response else "No response received."
@@ -392,21 +302,15 @@ class JChat:
 
         window = tk.Toplevel(self.root)
         window.title("Select Behavior")
-
-        buttons = [tk.Button(window, text=name, command=lambda name=name: select_behavior(name)) for name in
-                   self.behaviors.keys()]
-
+        buttons = [tk.Button(window, text=name, command=lambda name=name: select_behavior(name)) for name in self.behaviors.keys()]
         rows = round(len(buttons) ** 0.5)
         cols = len(buttons) // rows + (len(buttons) % rows > 0)
-
         for i, button in enumerate(buttons):
             button.grid(row=i // cols, column=i % cols, padx=10, pady=10, sticky="we")
-            button.configure(font=(self.font_family, self.font_size))
-
+            button.configure(font=(self.font_family))
         window.update_idletasks()  # Ensure geometry calculations are done
         window_width = max(window.winfo_reqwidth(), 400)  # Minimum width
         window_height = max(window.winfo_reqheight(), 200)  # Minimum height
-
         self.center_window(window, window_width, window_height)
         window.resizable(False, False)
         window.transient(self.root)
