@@ -514,12 +514,11 @@ class Application(tk.Tk):
         def on_run():
             website_url = self.website_entry.get().strip()
 
-            # 1. Improved Input Validation
+            # Input validation (keep as is)
             if not website_url:
                 messagebox.showwarning("No URL Provided", "Please enter a website URL.")
                 return
 
-            # Simple regex for URL validation
             url_pattern = re.compile(
                 r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?'
                 r'[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}'
@@ -529,14 +528,12 @@ class Application(tk.Tk):
                 messagebox.showwarning("Invalid URL", "Please enter a valid URL.")
                 return
 
-            # Ensure the URL starts with http:// or https://
             website_url = 'https://' + website_url if not website_url.startswith(('http://', 'https://')) else website_url
 
             try:
-                # Create a batch script for checking and monitoring
+                # Create a batch script for checking and monitoring (keep as is)
                 with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.bat') as temp_file:
                     check_website_script = temp_file.name
-
                     batch_script = f"""
 @echo off
 setlocal enabledelayedexpansion
@@ -648,6 +645,7 @@ if !status_code! equ 200 (
         self.top.title("Website Online State Checker")
         self.top.geometry("400x130")
         self.top.resizable(False, False)
+        self.top.configure(bg=UI_COLOR)  # Set background color
 
         # Center the window on the screen
         self.top.update_idletasks()
@@ -658,17 +656,21 @@ if !status_code! equ 200 (
         self.top.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
         # Create and pack a label
-        label = ttk.Label(self.top, text="Enter the website URL/IP to check (e.g., example.com):", padding=(10, 10))
+        label = tk.Label(self.top, text="Enter the website URL/IP to check (e.g., example.com):",
+                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR, pady=10)
         label.pack()
 
         # Create and pack the entry field for the website URL
-        self.website_entry = tk.Entry(self.top, width=50)
+        self.website_entry = tk.Entry(self.top, width=50, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                      insertbackground=BUTTON_TEXT_COLOR)
         self.website_entry.pack(pady=10)
         self.website_entry.focus_set()
-
+    
         # Create and pack the run button
         run_button = tk.Button(self.top, text="Check Website", command=on_run,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                               activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                               borderwidth=1, relief="solid")
         run_button.pack(pady=10)
 
     def activate_win(self):
