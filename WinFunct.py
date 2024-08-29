@@ -1204,6 +1204,15 @@ if !status_code! equ 200 (
         elif selected4 == "Admin Shells":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
+    def on_function_select5(self, *args):
+        selected5 = self.selected_function5.get()
+        if selected5 == "[1] This PC":
+            self.check_internet()
+        elif selected5 == "[2] Website":
+            self.run_website_checker()
+        elif selected5 == "Check online status":
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
     def gather_and_save_info(self):
@@ -2185,10 +2194,6 @@ if !status_code! equ 200 (
         self.ip_text = tk.Entry(self.functions_frame, width=20)
         self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
-        internet_btn = tk.Button(self.functions_frame, text="Are we online?", command=self.check_internet, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        internet_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
-
         wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
@@ -2312,6 +2317,32 @@ if !status_code! equ 200 (
         self.function_dropdown4.grid(row=0, column=4, padx=10, pady=5, sticky="we")
         self.selected_function4.trace('w', self.on_function_select4)
 
+        # Check online status
+        self.selected_function5 = tk.StringVar()
+        self.selected_function5.set("Check online status")  # Set default text
+
+        self.function_dropdown5 = tk.OptionMenu(
+            self.functions_frame,
+            self.selected_function5,
+            "Check online status",
+            "[1] This PC",
+            "[2] Website"
+        )
+        self.function_dropdown5.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown5["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
+        )
+        self.function_dropdown5.grid(row=4, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function5.trace('w', self.on_function_select5)
+
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
 
@@ -2351,10 +2382,6 @@ if !status_code! equ 200 (
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         checksum_btn.grid(row=4, column=0, padx=10, pady=5, sticky="we")
-
-        website_checker_btn = tk.Button(self.functions_frame, text="Check website status", command=self.run_website_checker, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        website_checker_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
