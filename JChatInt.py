@@ -69,7 +69,7 @@ class JChat:
         self.behavior_label.grid(row=2, column=0, sticky="w")
 
         self.behavior_var = tk.StringVar(value="Default")
-        self.behavior_menu = tk.OptionMenu(frame, self.behavior_var, *self.behaviors.keys())
+        self.behavior_menu = tk.OptionMenu(frame, self.behavior_var, *self.behaviors.keys(), command=self.change_behavior)
         self.behavior_menu.config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR)
         self.behavior_menu["menu"].config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.behavior_menu.grid(row=2, column=1, sticky="e")
@@ -300,7 +300,13 @@ class JChat:
         logging.info("Application exited by user.")
         self.root.destroy()
 
-    def change_behavior(self):
+# WINDOW FOR BEHAVIOUR STILL OPENS EVEN WITH THE IMPLEMENTATION OF THE DROPDOWN. PLEASE DELETE THE WINDOW AND MAKE THE SELECTION INSTANT UPON SELECTING WITH THE DROPDOWN PLEASE.
+
+    def change_behavior(self, behavior):
+        self.pre_prompt = self.behaviors[behavior]
+        self.conversation_history = [{'role': 'system', 'content': self.pre_prompt}]
+        logging.info(f"Behavior changed to: {behavior}")
+
         def select_behavior(behavior):
             self.pre_prompt = self.behaviors[behavior]
             self.conversation_history = [{'role': 'system', 'content': self.pre_prompt}]
@@ -314,7 +320,7 @@ class JChat:
         cols = len(buttons) // rows + (len(buttons) % rows > 0)
         for i, button in enumerate(buttons):
             button.grid(row=i // cols, column=i % cols, padx=10, pady=10, sticky="we")
-            button.configure(font=(self.font_family))
+            button.configure(font=(self.font_family, 12))
         window.update_idletasks()  # Ensure geometry calculations are done
         window_width = max(window.winfo_reqwidth(), 400)  # Minimum width
         window_height = max(window.winfo_reqheight(), 200)  # Minimum height
