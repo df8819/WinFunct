@@ -60,7 +60,7 @@ class SimplePWGen:
         self.password_entry = tk.Entry(self.password_tab, width=24, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.password_entry.pack(fill='x', padx=10, pady=10)
 
-        self.length_scale = tk.Scale(self.password_tab, from_=6, to_=128, orient='horizontal', label='Password length',
+        self.length_scale = tk.Scale(self.password_tab, from_=6, to=128, orient='horizontal', label='Password length',
                                      bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, troughcolor=self.BUTTON_BG_COLOR, activebackground=self.BUTTON_BG_COLOR)
         self.length_scale.set(20)
         self.length_scale.pack(fill='x', padx=10)
@@ -104,7 +104,7 @@ class SimplePWGen:
         self.passphrase_entry = tk.Entry(self.passphrase_tab, width=24, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.passphrase_entry.pack(fill='x', padx=10, pady=10)
 
-        self.word_count_scale = tk.Scale(self.passphrase_tab, from_=2, to_=20, orient='horizontal', label='Number of Words',
+        self.word_count_scale = tk.Scale(self.passphrase_tab, from_=2, to=20, orient='horizontal', label='Number of Words',
                                          bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR, troughcolor=self.BUTTON_BG_COLOR, activebackground=self.BUTTON_BG_COLOR)
         self.word_count_scale.set(3)
         self.word_count_scale.pack(fill='x', padx=10)
@@ -152,7 +152,7 @@ class SimplePWGen:
 
         self.digits_entry = tk.Entry(self.number_tab, width=12, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, insertbackground=self.BUTTON_TEXT_COLOR)
         self.digits_entry.pack(padx=10, pady=5)
-        self.digits_entry.insert(0, "5")
+        self.digits_entry.insert(0, "10")
 
         self.button_frame_number = tk.Frame(self.number_tab, bg=self.UI_COLOR)
         self.button_frame_number.pack(pady=20)
