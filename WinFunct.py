@@ -647,6 +647,13 @@ class Application(tk.Tk):
         drive_menu["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         drive_menu.pack(pady=10)
 
+        # Create and pack the run button
+        run_button = tk.Button(top, text="Run WinSAT Disk Test", command=on_run,
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                               activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                               borderwidth=1, relief="solid")
+        run_button.pack(pady=10)
+
     def run_website_checker(self):
         def on_run():
             website_url = self.website_entry.get().strip()
