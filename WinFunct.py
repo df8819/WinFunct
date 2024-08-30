@@ -225,6 +225,9 @@ class Application(tk.Tk):
         self.geometry(self.resolution_main)
         self.after(100, self.center_window)
 
+    def update_ui(self, new_theme):
+        self.main_frame.configure(bg=new_theme["BOTTOM_BORDER_COLOR"])
+
     def open_chat(self):
         print("""Open JChat app.""")
         if tk.messagebox.askyesno("Open JChat",

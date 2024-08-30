@@ -92,7 +92,8 @@ class UISelector:
 
         self.update_callback(new_theme)
         self.current_theme = new_theme
-        self.update_ui()  # Add this line to update the UISelector's own UI
+        self.update_ui()  # Update the UISelector's own UI
+        self.master.update_ui(new_theme)  # Update the Application's UI
 
     def update_ui(self):
         self.window.configure(bg=self.current_theme["UI_COLOR"])
