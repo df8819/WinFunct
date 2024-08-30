@@ -2294,7 +2294,7 @@ if !status_code! equ 200 (
 
         logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff local user(s)", command=self.logoff_users, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        logoff_usr_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
+        logoff_usr_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
         open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
