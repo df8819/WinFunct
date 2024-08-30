@@ -2676,11 +2676,6 @@ if !status_code! equ 200 (
         spacer.grid(row=0, column=2, rowspan=2, sticky="we")
         self.bottom_frame.columnconfigure(2, weight=1)
 
-        # Right-aligned buttons
-        # reset_ui_btn = tk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20,
-        #                         bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        # reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
-
         root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
