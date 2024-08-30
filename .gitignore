@@ -28,7 +28,7 @@ netstat_exe_output.txt
 
 # Miscellaneous files
 *.zip
-*.json
+apikey.json
 ASCII.txt
 SystemCompare.html
 eff_wordlist.txt
