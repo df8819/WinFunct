@@ -40,7 +40,7 @@ VERSION_SHORT = f"v{VERSION_NUMBER}"
 # COLOR section (#RR-GG-BB)
 UI_COLOR = "#2A2727"    # App bg, Tab headers, Bottom frame bg
 BUTTON_BG_COLOR = "#564A47"    # bg color buttons
-BUTTON_TEXT_COLOR = "#ffffff"    # Text color button
+BUTTON_TEXT_COLOR = "#fffff5"    # Text color button
 BOTTOM_BORDER_COLOR = "#E06F38"    # Color for small border at bottom (fixed buttons)
 VERSION_LABEL_TEXT = "#D85804"
 # -------- Some nice colors ore reminders --------
@@ -372,6 +372,67 @@ class Application(tk.Tk):
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
         copy_button.pack(pady=10)
+
+    def show_disk_info(self):
+        print("Showing Disk Information")
+
+        # Create a new window
+        disk_window = tk.Toplevel(self)
+        disk_window.title("Disk Information")
+        disk_window.configure(bg=UI_COLOR)
+
+        # Set window size and position
+        window_width, window_height = 500, 600
+        screen_width = disk_window.winfo_screenwidth()
+        screen_height = disk_window.winfo_screenheight()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        disk_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+        # Create a text widget to display disk information
+        disk_info_text = scrolledtext.ScrolledText(disk_window, wrap=tk.WORD, width=60, height=20,
+                                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                   insertbackground=BUTTON_TEXT_COLOR)
+        disk_info_text.pack(expand=True, fill='both', padx=10, pady=10)
+
+        # Fetch disk information
+        try:
+            # Get list of disks
+            disks_cmd = 'echo list disk | diskpart'
+            disks_output = subprocess.check_output(disks_cmd, shell=True, text=True)
+
+            # Filter out the DISKPART> prompts and empty lines
+            cleaned_output = '\n'.join(line for line in disks_output.split('\n') if line.strip() and not line.strip().startswith('DISKPART>'))
+
+            disk_info = """
+            
+    ========================
+    *** Disk Information ***
+    ========================
+
+            """
+            disk_info += cleaned_output + "\n\n"
+
+            # Additional helpful information
+            disk_info += """
+            
+    ==============================
+    *** Additional Information ***
+    ==============================
+
+"""
+            disk_info += "1. Disk Status: Online/Offline\n"
+            disk_info += "2. Partition Types: Primary, Extended, Logical\n"
+            disk_info += "3. File Systems: NTFS, FAT32, exFAT\n"
+            disk_info += "4. Disk Signature: GPT or MBR\n"
+            disk_info += "5. Free Space: Check for unallocated space\n\n"
+            disk_info += "Use 'chkdsk' for NTFS volumes to check disk health\n"
+
+        except Exception as e:
+            disk_info = f"Error fetching disk information: {str(e)}"
+
+        disk_info_text.insert(tk.END, disk_info)
+        disk_info_text.config(state='disabled')  # Make the text widget read-only
 
     def copy_to_clipboard(self, text):
         self.clipboard_clear()
@@ -2216,6 +2277,10 @@ if !status_code! equ 200 (
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+
+        disk_info_btn = tk.Button(self.functions_frame, text="Show Disk Info", command=self.show_disk_info, width=20,
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        disk_info_btn.grid(row=6, column=2, padx=10, pady=5, sticky="we")
 
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
