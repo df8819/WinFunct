@@ -2192,7 +2192,7 @@ if !status_code! equ 200 (
         options_notebook.add(netsh_frame, text='Shell Commands')
 
         # Packing the notebook into the options_frame
-        options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
+        options_notebook.pack(fill='both', expand=True, padx=25, pady=10)
 
         # Option Buttons for Option Tab (UI element)
         # Windows Management and Configuration Tools
