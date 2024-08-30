@@ -38,11 +38,11 @@ VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 # COLOR section (#RR-GG-BB)
-UI_COLOR = "#2A2727"  # App bg, Tab headers, Bottom frame bg
-BUTTON_BG_COLOR = "#564A47"  # bg color buttons
-BUTTON_TEXT_COLOR = "#fffff5"  # Text color button
-BOTTOM_BORDER_COLOR = "#E06F38"  # Color for small border at bottom (fixed buttons)
-VERSION_LABEL_TEXT = "#D85804"
+UI_COLOR = "#2A2727"  # App BG, Tab headers
+BUTTON_BG_COLOR = "#564A47"  # BG color for buttons
+BUTTON_TEXT_COLOR = "#fffff5"  # Text color
+BOTTOM_BORDER_COLOR = "#E06F38"  # Small bottom border
+VERSION_LABEL_TEXT = "#D85804"  # Label text color
 # -------- Some nice colors ore reminders --------
 # Nice "Windows" blue #4791CC, blue-green #42a88c / #24aa85, dezentes rot #9b3333,
 
