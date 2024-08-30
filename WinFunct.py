@@ -611,7 +611,7 @@ class Application(tk.Tk):
                     powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/c winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
                     subprocess.Popen(powershell_command, shell=True)
                 except Exception as e:
-                    messagebox.showerror("Error", f"An error occurred while trying to run the WinSAT disk test: {str(e)}")
+                    messagebox.showerror("Error", f"An error occurred while trying to run the WinSAT disk Speedtest test: {str(e)}")
                 finally:
                     top.destroy()
 
@@ -648,7 +648,7 @@ class Application(tk.Tk):
         drive_menu.pack(pady=10)
 
         # Create and pack the run button
-        run_button = tk.Button(top, text="Run WinSAT Disk Test", command=on_run,
+        run_button = tk.Button(top, text="Run Disk Speedtest", command=on_run,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
                                borderwidth=1, relief="solid")
@@ -1268,7 +1268,7 @@ if !status_code! equ 200 (
 
     def on_function_select7(self, *args):
         selected7 = self.selected_function7.get()
-        if selected7 == "[1] Run WinSAT Disk":
+        if selected7 == "[1] Disk Speedtest":
             self.run_winsat_disk()
         elif selected7 == "[2] Show Disk Info":
             self.show_disk_info()
@@ -2477,7 +2477,7 @@ if !status_code! equ 200 (
             self.functions_frame,
             self.selected_function7,
             "Disk Operations",
-            "[1] Run WinSAT Disk",
+            "[1] Disk Speedtest",
             "[2] Show Disk Info"
         )
         self.function_dropdown7.config(
