@@ -732,32 +732,26 @@ if !status_code! equ 200 (
         run_button.pack(pady=10)
 
     def activate_win(self):
-        user_response = messagebox.askyesno("Activate Microsoft Products",
-                                            "This will open a PowerShell instance and run the MAS User Interface. Proceed?")
-        if user_response:
-            def run_command():
-                command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
-                subprocess.run(command, shell=True)
+        print("Activating Microsoft Products")
 
-            # Run the command in a separate thread to avoid freezing the UI
-            thread = threading.Thread(target=run_command)
-            thread.start()
-        else:
-            print(f"\nCommand was cancelled.")
+        def run_command():
+            command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
+            subprocess.run(command, shell=True)
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
 
     def activate_wui(self):
-        user_response = messagebox.askyesno("Open Windows Utility Improved",
-                                            "This will open a PowerShell instance run Chris Titus Tech Windows Utility. Proceed?")
-        if user_response:
-            def run_command():
-                command = ['powershell.exe', '-Command', 'irm christitus.com/win | iex']
-                subprocess.run(command, shell=True)
+        print("Opening Windows Utility Improved")
 
-            # Run the command in a separate thread to avoid freezing the UI
-            thread = threading.Thread(target=run_command)
-            thread.start()
-        else:
-            print(f"Command was cancelled.")
+        def run_command():
+            command = ['powershell.exe', '-Command', 'irm christitus.com/win | iex']
+            subprocess.run(command, shell=True)
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
 
     def install_ffmpeg(self):
         user_response = messagebox.askyesno("Install FFMPEG",
@@ -1253,6 +1247,15 @@ if !status_code! equ 200 (
         elif selected5 == "[2] Website":
             self.run_website_checker()
         elif selected5 == "Check online status":
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+
+    def on_function_select6(self, *args):
+        selected6 = self.selected_function6.get()
+        if selected6 == "[1] CTT Winutils":
+            self.activate_wui()
+        elif selected6 == "[2] Activate Win/Office":
+            self.activate_win()
+        elif selected6 == "Interactive Shells":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
@@ -2402,18 +2405,36 @@ if !status_code! equ 200 (
         self.function_dropdown5.grid(row=4, column=4, padx=10, pady=5, sticky="we")
         self.selected_function5.trace('w', self.on_function_select5)
 
+        # Interactive Shells
+        self.selected_function6 = tk.StringVar()
+        self.selected_function6.set("Interactive Shells")  # Set default text
+
+        self.function_dropdown6 = tk.OptionMenu(
+            self.functions_frame,
+            self.selected_function6,
+            "Interactive Shells",
+            "[1] CTT Winutils",
+            "[2] Activate Win/Office"
+        )
+        self.function_dropdown6.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown6["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
+        )
+        self.function_dropdown6.grid(row=5, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function6.trace('w', self.on_function_select6)
+
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
 
         # Script tab Buttons and Positions 2/2
-        activate_wui_btn = tk.Button(self.functions_frame, text="Open CTT Winutil", command=self.activate_wui, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        activate_wui_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
-
-        activate_win_btn = tk.Button(self.functions_frame, text="Activate Win/Office", command=self.activate_win,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        activate_win_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
-
         agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
