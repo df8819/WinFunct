@@ -328,7 +328,7 @@ class Application(tk.Tk):
         ip_window.configure(bg=UI_COLOR)
 
         # Set window size and position
-        window_width, window_height = 400, 300
+        window_width, window_height = 420, 320
         screen_width = ip_window.winfo_screenwidth()
         screen_height = ip_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -346,14 +346,20 @@ class Application(tk.Tk):
             response = requests.get("https://ipapi.co/json/")
             data = response.json()
 
-            ip_info = f"IP Address: {data['ip']}\n"
-            ip_info += f"City: {data['city']}\n"
-            ip_info += f"Region: {data['region']}\n"
-            ip_info += f"Country: {data['country_name']}\n"
-            ip_info += f"ISP: {data['org']}\n"
-            ip_info += f"Latitude: {data['latitude']}\n"
-            ip_info += f"Longitude: {data['longitude']}\n"
-            ip_info += f"Timezone: {data['timezone']}\n"
+            ip_info = f"IP Address:    {data['ip']}\n"
+            ip_info += f"ISP:           {data.get('org', 'N/A')}\n"
+            ip_info += f"Country:       {data['country_name']}\n"
+            ip_info += f"Region:        {data['region']}\n"
+            ip_info += f"City:          {data['city']}\n"
+            ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
+
+            ip_info += f"Latitude:      {data['latitude']}\n"
+            ip_info += f"Longitude:     {data['longitude']}\n"
+            ip_info += f"Timezone:      {data['timezone']}\n\n"
+
+            ip_info += f"Country Code:  {data['country']}\n"
+            ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
+            ip_info += f"Languages:     {data.get('languages', 'N/A')}\n"
         except Exception as e:
             ip_info = f"Error fetching IP information: {str(e)}"
 
