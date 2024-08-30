@@ -559,14 +559,14 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
             ok_button.pack(side="left", padx=(50, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
 
             cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
-                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
             cancel_button.pack(side="right", padx=(5, 50), pady=10)
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
@@ -617,14 +617,14 @@ class Application(tk.Tk):
             button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
 
             copy_button = tk.Button(button_frame, text="Copy Password", command=copy_password,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
             copy_button.pack(side="left", padx=10)
 
             def cancel_button_click():
                 password_window.destroy()
 
             cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click,
-                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
             cancel_button.pack(side="left", padx=10)
         else:
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
@@ -698,7 +698,7 @@ class Application(tk.Tk):
         run_button = tk.Button(top, text="Run Disk Speedtest", command=on_run,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                               borderwidth=1, relief="solid")
+                               borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         run_button.pack(pady=10)
 
     def run_website_checker(self):
@@ -861,7 +861,7 @@ if !status_code! equ 200 (
         run_button = tk.Button(self.top, text="Check Website", command=on_run,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                               borderwidth=1, relief="solid")
+                               borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         run_button.pack(pady=10)
 
     def activate_win(self):
@@ -1081,7 +1081,7 @@ if !status_code! equ 200 (
         button = tk.Button(algo_window, text="Compute Checksum", command=run_checksum,
                            bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                            activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                           borderwidth=1, relief="solid")
+                           borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         button.pack(pady=10)
 
         # Make the window modal
@@ -2096,11 +2096,11 @@ if !status_code! equ 200 (
         button_frame.pack(fill=tk.X, padx=10, pady=10)
 
         submit_button = tk.Button(button_frame, text="Log Off Selected Users", command=on_submit,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         submit_button.pack(side=tk.LEFT, padx=(0, 5))
 
         cancel_button = tk.Button(button_frame, text="Cancel", command=window.destroy,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         cancel_button.pack(side=tk.RIGHT)
 
         window.mainloop()
@@ -2148,12 +2148,12 @@ if !status_code! equ 200 (
         tk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window),
                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                  borderwidth=1, relief="solid").pack(side="right", padx=5)
+                  borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE).pack(side="right", padx=5)
 
         tk.Button(button_frame, text="Cancel", command=window.destroy,
                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                  borderwidth=1, relief="solid").pack(side="right", padx=5)
+                  borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE).pack(side="right", padx=5)
 
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
@@ -2197,8 +2197,8 @@ if !status_code! equ 200 (
             'Custom.TButton',
             background=BUTTON_BG_COLOR,
             foreground=BUTTON_TEXT_COLOR,
-            borderwidth=1,
-            relief="solid"
+            borderwidth=BORDER_WIDTH,
+            relief=BUTTON_STYLE
         )
 
         # Map the style to handle button state changes
@@ -2335,7 +2335,7 @@ if !status_code! equ 200 (
             for i, option in enumerate(options_list):
                 btn = tk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20,
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR,
-                                activeforeground=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                activeforeground=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Create buttons in their distinct categories
@@ -2386,43 +2386,43 @@ if !status_code! equ 200 (
         my_ip_btn = tk.Button(self.functions_frame, text="Show IP Info", command=self.show_ip_info, width=20,
                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                               activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                              borderwidth=1, relief="solid")
+                              borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
         wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
         clone_btn = tk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20,
-                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         clone_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
         renew_ip_config_btn = tk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config,
-                                        bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                        bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         renew_ip_config_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
         agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
         logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff local user(s)", command=self.logoff_users, width=20,
-                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         logoff_usr_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
         open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
-                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         open_links_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
         autostart_btn = tk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         autostart_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
         install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
-                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         install_ffmpeg_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
@@ -2631,7 +2631,7 @@ if !status_code! equ 200 (
         def create_fun_buttons(frame, buttons_list):
             for i, button in enumerate(buttons_list):
                 btn = tk.Button(frame, text=button[0], command=button[1], width=20,
-                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Define buttons for Apps frame
@@ -2660,19 +2660,19 @@ if !status_code! equ 200 (
 
         # Left-aligned buttons
         shutdown_btn = tk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
         reboot_btn = tk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20,
-                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         uefi_btn = tk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
         sleep_btn = tk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20,
-                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         sleep_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
@@ -2681,15 +2681,15 @@ if !status_code! equ 200 (
         self.bottom_frame.columnconfigure(2, weight=1)
 
         root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
         exit_btn = tk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
         update_btn = tk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20,
-                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
 # UI utility
