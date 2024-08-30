@@ -1314,30 +1314,33 @@ if !status_code! equ 200 (
         self.configure(bg=UI_COLOR)
         self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
 
-        for frame in [self.functions_frame, self.options_frame, self.fun_frame, self.bottom_frame]:
-            frame.configure(bg=UI_COLOR)
-            for widget in frame.winfo_children():
-                if isinstance(widget, (tk.Button, tk.OptionMenu)):
-                    widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-                elif isinstance(widget, tk.Label):
-                    widget.configure(bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+        def update_widget_colors(widget):
+            if isinstance(widget, tk.Button):
+                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+            elif isinstance(widget, tk.Label):
+                widget.configure(bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+            elif isinstance(widget, tk.Frame):
+                widget.configure(bg=UI_COLOR)
+            elif isinstance(widget, tk.OptionMenu):
+                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+                widget["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
 
-        for dropdown in [self.function_dropdown1, self.function_dropdown2, self.function_dropdown3,
-                         self.function_dropdown4, self.function_dropdown5, self.function_dropdown6,
-                         self.function_dropdown7, self.function_dropdown8]:
-            dropdown.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-            dropdown["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+            for child in widget.winfo_children():
+                update_widget_colors(child)
 
-        self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
+        update_widget_colors(self)
 
+        # Update ttk styles
         style = ttk.Style()
+        style.configure('TNotebook', background=UI_COLOR)
         style.configure('TNotebook.Tab', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
         style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
-
-        # Update all ttk widgets
         style.configure('TFrame', background=UI_COLOR)
-        style.configure('TLabel', background=UI_COLOR, foreground=BUTTON_TEXT_COLOR)
         style.configure('TButton', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+
+        # Update the version label
+        if hasattr(self, 'version_label'):
+            self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
 
         self.update_idletasks()
 
@@ -2284,7 +2287,9 @@ if !status_code! equ 200 (
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
-                btn = tk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                btn = tk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20,
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR,
+                                activeforeground=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
                 btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
 
         # Create buttons in their distinct categories
