@@ -1,12 +1,12 @@
 {
   "themes": [
     {
-      "name": "ORIGINAL",
-      "UI_COLOR": "#2A2727",
-      "BUTTON_BG_COLOR": "#564A47",
-      "BUTTON_TEXT_COLOR": "#fffff5",
-      "BOTTOM_BORDER_COLOR": "#E06F38",
-      "VERSION_LABEL_TEXT": "#D85804"
+      "name": "Steam",
+      "UI_COLOR": "#272A27",
+      "BUTTON_BG_COLOR": "#47564A",
+      "BUTTON_TEXT_COLOR": "#ffa451",
+      "BOTTOM_BORDER_COLOR": "#ae5300",
+      "VERSION_LABEL_TEXT": "#7d4d28"
     },
     {
       "name": "Earthy Tones",
