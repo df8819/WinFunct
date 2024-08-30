@@ -31,6 +31,7 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
+
 # Define the version once
 VERSION_NUMBER = "1.654"
 
@@ -104,6 +105,44 @@ links = {
     },
 }
 
+class GitUpdater:
+    @staticmethod
+    def check_status():
+        try:
+            # Run git status and capture output
+            result = subprocess.run(['git', 'status'], capture_output=True, text=True, check=True)
+            return result.stdout
+        except subprocess.CalledProcessError as e:
+            print(f"Error checking git status: {e}")
+            return ""
+
+    @staticmethod
+    def prompt_update():
+        status = GitUpdater.check_status()
+
+        # Check if the branch is up to date
+        if "Your branch is up to date" not in status:
+            user_choice = input("Your branch is not up to date. Do you want to update? (y/n): ").strip().lower()
+            if user_choice == 'y':
+                return True  # User wants to update
+        return False
+
+    @staticmethod
+    def execute_update():
+        if GitUpdater.prompt_update():
+            print('Executing git pull...')
+            try:
+                # Run git pull silently
+                subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                print('Repository updated.')
+            except subprocess.CalledProcessError as e:
+                print(f"Error during git pull: {e}")
+        else:
+            print(f'No update needed. *** {VERSION_SHORT} ***')
+
+
+# Execute the update check before any class instantiation
+GitUpdater.execute_update()
 
 def is_admin():
     try:
@@ -176,7 +215,7 @@ def show_logo():
 
 show_logo()
 
-print(f"{VERSION_SHORT} >>> Now running with admin rights. Nice (⌐■_■)")
+print(f"Awaiting user input (⌐■_■)")
 
 
 # Command functions
