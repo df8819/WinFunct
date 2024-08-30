@@ -799,88 +799,9 @@ if !status_code! equ 200 (
 
             return stderr == ""
 
-    def uninstall_package(self, package_name, results):
-        success = self.run_powershell_command(f"Get-AppxPackage {package_name} | Remove-AppxPackage")
-        results[f"Removing {package_name}"] = "Succeeded" if success else "Failed"
-
-    def uninstall_pwa(self, display_name, results):
-        # Use Get-AppxPackage to find the full package name
-        find_package_cmd = f"Get-AppxPackage -Name '*{display_name}*'"  # Added wildcard for better matching
-        stdout, stderr = self.run_powershell_command(find_package_cmd, return_output=True)
-
-        if stderr:
-            # Log the error if the package can't be found
-            results[f"Finding {display_name}"] = f"Failed: Package not found or other error. {stderr.strip()}"
-            return
-
-        # Parse the stdout to find the full package name (assuming the package is found)
-        package_full_name = None
-        for line in stdout.split('\n'):
-            if "PackageFullName" in line:
-                package_full_name = line.split(":")[-1].strip()
-                break
-
-        if package_full_name:
-            # Now that we have the full package name, attempt to remove it
-            remove_package_cmd = f"Remove-AppxPackage '{package_full_name}'"  # Removed '-Package' for correctness
-            stdout, stderr = self.run_powershell_command(remove_package_cmd, return_output=True)
-
-            # Log the results of the removal command
-            result_text = f"Removing PWA {package_full_name}"  # Added 'PWA' for clarity
-            results[result_text] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
-        else:
-            results[f"Finding {display_name}"] = "Failed: Full package name not found in the output."
-
-    def run_script_async(self, app_list, pwa_list):
-        thread = threading.Thread(target=self.handle_uninstall, args=(app_list, pwa_list), daemon=True)
-        thread.start()
-
-    def handle_uninstall(self, app_list, pwa_list):
-        uninstall_results = {}
-        for app in app_list:
-            stdout, stderr = self.run_powershell_command(f"Get-AppxPackage {app} | Remove-AppxPackage", return_output=True)
-            uninstall_results[f"Removing {app}"] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
-
-        for pwa_display_name in pwa_list:
-            # Search for the PWA by display name to get its details
-            find_package_cmd = f"Get-AppxPackage -Name '*{pwa_display_name}*'"
-            stdout, stderr = self.run_powershell_command(find_package_cmd, return_output=True)
-
-            if stderr:
-                # If there's an error, the package might not exist; log this case
-                uninstall_results[
-                    f"Finding {pwa_display_name}"] = f"Failed: Package not found or other error. {stderr.strip()}"
-                continue
-
-            # Parse stdout to find the full package name
-            package_full_name = None
-            for line in stdout.split('\n'):
-                if "PackageFullName" in line:
-                    package_full_name = line.split(":")[-1].strip()
-                    break
-
-            if package_full_name:
-                # Use the derived full package name to uninstall the PWA
-                remove_package_cmd = f"Remove-AppxPackage '{package_full_name}'"
-                stdout, stderr = self.run_powershell_command(remove_package_cmd, return_output=True)
-                result_text = f"Removing PWA {package_full_name}"
-                uninstall_results[result_text] = "Succeeded" if stderr == "" else f"Failed: {stderr.strip()}"
-            else:
-                # This case may happen if the PWA was listed but not installed for the current user
-                uninstall_results[f"Finding {pwa_display_name}"] = "Failed: Full package name not found in the output."
-
-        self.on_script_complete(uninstall_results)
-
-    def on_script_complete(self, uninstall_results):
-        result_message = "The uninstallation process has completed. Here are the results:\n\n"
-        for app, result in uninstall_results.items():
-            result_message += f"{app}: {result}\n"
-
-        messagebox.showinfo("Uninstall Completed", result_message)
-
     def renew_ip_config(self):
         if messagebox.askyesno("Renew IP Configuration",
-                               "Are you sure you want to release/renew the IP config and flush DNS?"):
+                               "Are you sure you want to release/renew the IP config and flush DNS?\n\nIMPORTANT:\n- Active downloads may pause or fail, but they won't be explicitly cancelled.\n- Internet connection will be temporarily lost and then reestablished.\n- Any ongoing network activities will be disrupted."):
             def run_command():
                 commands = [
                     ("ipconfig /release", "Releasing IP configuration..."),
@@ -2503,6 +2424,8 @@ if !status_code! equ 200 (
         self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
+# ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
+
         # Left-aligned buttons
         shutdown_btn = tk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
@@ -2541,6 +2464,9 @@ if !status_code! equ 200 (
         update_btn = tk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
+
+# ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
+
 
 
 app = Application()
