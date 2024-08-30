@@ -1282,7 +1282,7 @@ if !status_code! equ 200 (
             self.open_theme_selector()
         elif selected8 == "[2] Reset UI":
             self.reset_ui()
-        elif selected8 == "UI Operations":
+        elif selected8 == "GUI Options":
             print("\n>>> Please select the desired function [1, 2] from the dropdown menu.")
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
@@ -2653,12 +2653,12 @@ if !status_code! equ 200 (
 
 # UI utility
         self.selected_function8 = tk.StringVar()
-        self.selected_function8.set("UI Operations")  # Set default text
+        self.selected_function8.set("GUI Options")  # Set default text
 
         self.function_dropdown8 = tk.OptionMenu(
             self.bottom_frame,
             self.selected_function8,
-            "UI Operations",
+            "GUI Options",
             "[1] Theme Selector",
             "[2] Reset UI"
         )
