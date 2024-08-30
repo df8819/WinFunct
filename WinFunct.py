@@ -2191,7 +2191,31 @@ if !status_code! equ 200 (
 
         renew_ip_config_btn = tk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        renew_ip_config_btn.grid(row=1, column=3, padx=10, pady=5, sticky="we")
+        renew_ip_config_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+
+        agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
+
+        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff local user(s)", command=self.logoff_users, width=20,
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        logoff_usr_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
+
+        open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        open_links_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
+
+        autostart_btn = tk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20,
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        autostart_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
+
+        install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
+                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        install_ffmpeg_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+
+        checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
@@ -2245,7 +2269,7 @@ if !status_code! equ 200 (
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown2.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown2.grid(row=1, column=3, padx=10, pady=5, sticky="we")
         self.selected_function2.trace('w', self.on_function_select2)
 
         # God-mode
@@ -2271,7 +2295,7 @@ if !status_code! equ 200 (
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown3.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown3.grid(row=2, column=4, padx=10, pady=5, sticky="we")
         self.selected_function3.trace('w', self.on_function_select3)
 
         # Admin Shells
@@ -2323,7 +2347,7 @@ if !status_code! equ 200 (
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown5.grid(row=4, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown5.grid(row=2, column=3, padx=10, pady=5, sticky="we")
         self.selected_function5.trace('w', self.on_function_select5)
 
         # Interactive Shells
@@ -2349,36 +2373,10 @@ if !status_code! equ 200 (
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown6.grid(row=5, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown6.grid(row=0, column=3, padx=10, pady=5, sticky="we")
         self.selected_function6.trace('w', self.on_function_select6)
 
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
-
-
-        # Script tab Buttons and Positions 2/2
-        agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
-
-        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff local user(s)", command=self.logoff_users, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        logoff_usr_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
-
-        open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        open_links_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
-
-        autostart_btn = tk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        autostart_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
-
-        install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        install_ffmpeg_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
-
-        checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
