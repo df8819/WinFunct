@@ -319,18 +319,58 @@ class Application(tk.Tk):
         if os.path.exists(all_users_startup_path):
             os.startfile(all_users_startup_path)
 
-    def show_ip_address(self):
-        print("""Temporary showing IP address""")
-        response = requests.get("https://ifconfig.me/ip")
-        ip_address = response.text
-        self.ip_text.delete(0, tk.END)
-        self.ip_text.insert(tk.END, ip_address)
+    def show_ip_info(self):
+        print("Showing IP information")
 
-        # Schedule the removal of the IP address
-        self.ip_text.after(3000, self.clear_ip_text)
+        # Create a new window
+        ip_window = tk.Toplevel(self)
+        ip_window.title("IP Information")
+        ip_window.configure(bg=UI_COLOR)
 
-    def clear_ip_text(self):
-        self.ip_text.delete(0, tk.END)
+        # Set window size and position
+        window_width, window_height = 400, 300
+        screen_width = ip_window.winfo_screenwidth()
+        screen_height = ip_window.winfo_screenheight()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        ip_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+        # Create a text widget to display IP information
+        ip_info_text = scrolledtext.ScrolledText(ip_window, wrap=tk.WORD, width=40, height=10,
+                                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                 insertbackground=BUTTON_TEXT_COLOR)
+        ip_info_text.pack(expand=True, fill='both', padx=10, pady=10)
+
+        # Fetch IP information
+        try:
+            response = requests.get("https://ipapi.co/json/")
+            data = response.json()
+
+            ip_info = f"IP Address: {data['ip']}\n"
+            ip_info += f"City: {data['city']}\n"
+            ip_info += f"Region: {data['region']}\n"
+            ip_info += f"Country: {data['country_name']}\n"
+            ip_info += f"ISP: {data['org']}\n"
+            ip_info += f"Latitude: {data['latitude']}\n"
+            ip_info += f"Longitude: {data['longitude']}\n"
+            ip_info += f"Timezone: {data['timezone']}\n"
+        except Exception as e:
+            ip_info = f"Error fetching IP information: {str(e)}"
+
+        ip_info_text.insert(tk.END, ip_info)
+        ip_info_text.config(state='disabled')  # Make the text widget read-only
+
+        # Create a copy button
+        copy_button = tk.Button(ip_window, text="Copy to Clipboard",
+                                command=lambda: self.copy_to_clipboard(ip_info),
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+        copy_button.pack(pady=10)
+
+    def copy_to_clipboard(self, text):
+        self.clipboard_clear()
+        self.clipboard_append(text)
+        self.update()  # To make sure the clipboard is updated
 
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles and passwords.""")
@@ -726,10 +766,6 @@ if !status_code! equ 200 (
             thread.start()
         else:
             print(f"\nCommand was cancelled.")
-
-    def shutdown_i(self):
-        print("""Opening Remote Shutdown Dialog.""")
-        subprocess.run("shutdown -i", shell=True)
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shut down your PC?"):
@@ -2151,6 +2187,7 @@ if !status_code! equ 200 (
             ("Wi-Fi Networks", "netsh wlan show networks"),
             ("Network Stats", "netstat -s"),
             ("ARP Scan", "powershell.exe arp -a"),
+            ("Shutdown -i", "shutdown -i"),
         ]
 
         # Function to create buttons within a frame from a list of option tuples
@@ -2204,12 +2241,11 @@ if !status_code! equ 200 (
         # ----------------------------VERSION LABEL END----------------------------
 
         # Script tab Buttons and Positions 1/2
-        my_ip_btn = tk.Button(self.functions_frame, text="Show my IP", command=self.show_ip_address, width=20,
-                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        my_ip_btn = tk.Button(self.functions_frame, text="Show IP Info", command=self.show_ip_info, width=20,
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                              activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                              borderwidth=1, relief="solid")
         my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
-
-        self.ip_text = tk.Entry(self.functions_frame, width=20)
-        self.ip_text.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
         wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
@@ -2376,7 +2412,7 @@ if !status_code! equ 200 (
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         agh_curl_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
-        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff user(s)", command=self.logoff_users, width=20,
+        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff local user(s)", command=self.logoff_users, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         logoff_usr_btn.grid(row=2, column=3, padx=10, pady=5, sticky="we")
 
@@ -2390,11 +2426,7 @@ if !status_code! equ 200 (
 
         install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        install_ffmpeg_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
-
-        shutdown_i_btn = tk.Button(self.functions_frame, text="Execute shutdown -i", command=self.shutdown_i, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        shutdown_i_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
+        install_ffmpeg_btn.grid(row=0, column=3, padx=10, pady=5, sticky="we")
 
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
