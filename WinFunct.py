@@ -29,6 +29,7 @@ from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
+from UISelectorInt import UISelector
 
 # Define the version once
 VERSION_NUMBER = "1.653"
@@ -1275,7 +1276,70 @@ if !status_code! equ 200 (
         elif selected7 == "Disk Operations":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
+    def on_function_select8(self, *args):
+        selected8 = self.selected_function8.get()
+        if selected8 == "[1] Theme Selector":
+            self.open_theme_selector()
+        elif selected8 == "[2] Reset UI":
+            self.reset_ui()
+        elif selected8 == "UI Operations":
+            print("\n>>> Please select the desired function [1, 2] from the dropdown menu.")
+
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
+
+    def open_theme_selector(self):
+        self.current_theme = {
+            "UI_COLOR": UI_COLOR,
+            "BUTTON_BG_COLOR": BUTTON_BG_COLOR,
+            "BUTTON_TEXT_COLOR": BUTTON_TEXT_COLOR,
+            "BOTTOM_BORDER_COLOR": BOTTOM_BORDER_COLOR,
+            "VERSION_LABEL_TEXT": VERSION_LABEL_TEXT
+        }
+
+        UISelector(self, self.current_theme, self.update_theme)
+
+    def update_theme(self, new_theme):
+        global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
+
+        UI_COLOR = new_theme['UI_COLOR']
+        BUTTON_BG_COLOR = new_theme['BUTTON_BG_COLOR']
+        BUTTON_TEXT_COLOR = new_theme['BUTTON_TEXT_COLOR']
+        BOTTOM_BORDER_COLOR = new_theme['BOTTOM_BORDER_COLOR']
+        VERSION_LABEL_TEXT = new_theme['VERSION_LABEL_TEXT']
+
+        self.current_theme = new_theme
+        self.apply_theme()
+
+    def apply_theme(self):
+        self.configure(bg=UI_COLOR)
+        self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
+
+        for frame in [self.functions_frame, self.options_frame, self.fun_frame, self.bottom_frame]:
+            frame.configure(bg=UI_COLOR)
+            for widget in frame.winfo_children():
+                if isinstance(widget, (tk.Button, tk.OptionMenu)):
+                    widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+                elif isinstance(widget, tk.Label):
+                    widget.configure(bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+
+        for dropdown in [self.function_dropdown1, self.function_dropdown2, self.function_dropdown3,
+                         self.function_dropdown4, self.function_dropdown5, self.function_dropdown6,
+                         self.function_dropdown7, self.function_dropdown8]:
+            dropdown.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+            dropdown["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+
+        self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
+
+        style = ttk.Style()
+        style.configure('TNotebook.Tab', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+        style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
+
+        # Update all ttk widgets
+        style.configure('TFrame', background=UI_COLOR)
+        style.configure('TLabel', background=UI_COLOR, foreground=BUTTON_TEXT_COLOR)
+        style.configure('TButton', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+
+        self.update_idletasks()
 
     def gather_and_save_info(self):
         print("""Extracting system info.""")
@@ -2237,7 +2301,7 @@ if !status_code! equ 200 (
         bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         bottom_frame.pack(side="bottom", fill="x")
 
-        version_label = tk.Label(
+        self.version_label = tk.Label(
             bottom_frame,  # Place the label in the bottom frame
             text=VERSION,
             anchor="se",
@@ -2246,24 +2310,24 @@ if !status_code! equ 200 (
             bg=UI_COLOR,
             # font=("Segoe UI", 8),  # Commented out as per your change
         )
-        version_label.pack(side="right", padx=5, pady=2)
+        self.version_label.pack(side="right", padx=5, pady=2)
 
         # Callback function for clicking the version label
         def open_link(event):
             webbrowser.open(LINK)
 
         # Bind the callback function to the version label
-        version_label.bind("<Button-1>", open_link)
+        self.version_label.bind("<Button-1>", open_link)
 
         # Optional: Change color on hover to provide visual feedback
         def on_enter(event):
-            version_label.config(fg="white")  # Change text color on hover
+            self.version_label.config(fg="white")  # Change text color on hover
 
         def on_leave(event):
-            version_label.config(fg=VERSION_LABEL_TEXT)  # Restore original text color
+            self.version_label.config(fg=VERSION_LABEL_TEXT)  # Restore original text color
 
-        version_label.bind("<Enter>", on_enter)
-        version_label.bind("<Leave>", on_leave)
+        self.version_label.bind("<Enter>", on_enter)
+        self.version_label.bind("<Leave>", on_leave)
 
         # ----------------------------VERSION LABEL END----------------------------
 
@@ -2566,9 +2630,9 @@ if !status_code! equ 200 (
         self.bottom_frame.columnconfigure(2, weight=1)
 
         # Right-aligned buttons
-        reset_ui_btn = tk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
+        # reset_ui_btn = tk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20,
+        #                         bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+        # reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
         root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
@@ -2581,6 +2645,32 @@ if !status_code! equ 200 (
         update_btn = tk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
+
+# UI utility
+        self.selected_function8 = tk.StringVar()
+        self.selected_function8.set("UI Operations")  # Set default text
+
+        self.function_dropdown8 = tk.OptionMenu(
+            self.bottom_frame,
+            self.selected_function8,
+            "UI Operations",
+            "[1] Theme Selector",
+            "[2] Reset UI"
+        )
+        self.function_dropdown8.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown8["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
+        )
+        self.function_dropdown8.grid(row=0, column=5, padx=10, pady=5, sticky="we")
+        self.selected_function8.trace('w', self.on_function_select8)
 
 
 # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
