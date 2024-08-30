@@ -2145,12 +2145,12 @@ if !status_code! equ 200 (
         button_frame = tk.Frame(window, bg=UI_COLOR)
         button_frame.pack(fill="x", padx=10, pady=10)
 
-        tk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window),
+        tk.Button(button_frame, text="Open Links", command=lambda: self.on_ok(window), width=20,
                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
                   borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE).pack(side="right", padx=5)
 
-        tk.Button(button_frame, text="Cancel", command=window.destroy,
+        tk.Button(button_frame, text="Cancel", command=window.destroy, width=20,
                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
                   borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE).pack(side="right", padx=5)
