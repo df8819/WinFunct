@@ -405,7 +405,6 @@ class Application(tk.Tk):
             cleaned_output = '\n'.join(line for line in disks_output.split('\n') if line.strip() and not line.strip().startswith('DISKPART>'))
 
             disk_info = """
-            
     ========================
     *** Disk Information ***
     ========================
@@ -415,17 +414,16 @@ class Application(tk.Tk):
 
             # Additional helpful information
             disk_info += """
-            
     ==============================
     *** Additional Information ***
     ==============================
 
 """
-            disk_info += "1. Disk Status: Online/Offline\n"
-            disk_info += "2. Partition Types: Primary, Extended, Logical\n"
-            disk_info += "3. File Systems: NTFS, FAT32, exFAT\n"
-            disk_info += "4. Disk Signature: GPT or MBR\n"
-            disk_info += "5. Free Space: Check for unallocated space\n\n"
+            disk_info += "1. Disk Status:       Online/Offline\n"
+            disk_info += "2. Partition Types:   Primary, Extended, Logical\n"
+            disk_info += "3. File Systems:      NTFS, FAT32, exFAT\n"
+            disk_info += "4. Disk Signature:    GPT or MBR\n"
+            disk_info += "5. Free Space:        Check for unallocated space\n\n"
             disk_info += "Use 'chkdsk' for NTFS volumes to check disk health\n"
 
         except Exception as e:
