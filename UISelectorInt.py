@@ -11,6 +11,7 @@ class UISelector:
         self.window.geometry("500x300")
         self.window.configure(bg=current_theme["UI_COLOR"])
 
+
         self.current_theme = current_theme
         self.update_callback = update_callback
         self.theme_elements = [
@@ -45,7 +46,8 @@ class UISelector:
             entry.grid(row=i, column=1, padx=5, pady=5)
             tk.Button(self.window, text="Pick", command=lambda e=entry: self.pick_color(e),
                       bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
-                      activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=i, column=2, padx=5, pady=5)
+                      activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"],
+                      width=10).grid(row=i, column=2, padx=5, pady=5, sticky="nsew")
 
         self.theme_var = tk.StringVar(self.window)
         self.theme_var.set("Select a theme")
@@ -58,6 +60,24 @@ class UISelector:
         tk.Button(self.window, text="Set UI", command=self.set_ui, width=20,
                   bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
                   activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=len(self.theme_elements), column=2, pady=10, padx=5, sticky="e")
+        self.center_window()
+
+    def center_window(self):
+        # Get the window size
+        window_width = self.window.winfo_width()
+        window_height = self.window.winfo_height()
+
+        # Get the screen size
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+
+        # Calculate position
+        x = (screen_width - window_width) // 2
+        y = (screen_height - window_height) // 2
+
+        # Set the window position
+        self.window.geometry(f'+{x}+{y}')
+        self.window.deiconify()  # Show the window
 
     def pick_color(self, entry):
         color = colorchooser.askcolor()[1]
