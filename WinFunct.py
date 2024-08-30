@@ -39,12 +39,16 @@ VERSION_NUMBER = "1.654"
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
-# UI COLOR section (#RR-GG-BB) - More themes in "UI_themes.txt"
+# UI COLOR section
 UI_COLOR = "#2A2727"  # App BG, Tab headers
 BUTTON_BG_COLOR = "#564A47"  # BG color for buttons
 BUTTON_TEXT_COLOR = "#fffff5"  # Text color
 BOTTOM_BORDER_COLOR = "#E06F38"  # Small bottom border
 VERSION_LABEL_TEXT = "#D85804"  # Label text color
+
+# UI STYLE section
+BUTTON_STYLE = "raised" # flat, solid, raised, sunken, ridge, groove
+BORDER_WIDTH = "1" # thiccness in pixel
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
