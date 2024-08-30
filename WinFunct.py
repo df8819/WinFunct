@@ -38,10 +38,10 @@ VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 # COLOR section (#RR-GG-BB)
-UI_COLOR = "#2A2727"    # App bg, Tab headers, Bottom frame bg
-BUTTON_BG_COLOR = "#564A47"    # bg color buttons
-BUTTON_TEXT_COLOR = "#fffff5"    # Text color button
-BOTTOM_BORDER_COLOR = "#E06F38"    # Color for small border at bottom (fixed buttons)
+UI_COLOR = "#2A2727"  # App bg, Tab headers, Bottom frame bg
+BUTTON_BG_COLOR = "#564A47"  # bg color buttons
+BUTTON_TEXT_COLOR = "#fffff5"  # Text color button
+BOTTOM_BORDER_COLOR = "#E06F38"  # Color for small border at bottom (fixed buttons)
 VERSION_LABEL_TEXT = "#D85804"
 # -------- Some nice colors ore reminders --------
 # Nice "Windows" blue #4791CC, blue-green #42a88c / #24aa85, dezentes rot #9b3333,
@@ -217,7 +217,6 @@ class Application(tk.Tk):
         # Center the window after all widgets have been packed
         self.after(100, self.center_window)
 
-
     def center_window(self):
         # Using Tcl method to center
         self.eval('tk::PlaceWindow . center')
@@ -285,6 +284,7 @@ class Application(tk.Tk):
 
     def open_ps_as_admin(self):
         print("""Open PowerShell window as admin.""")
+
         def run_command():
             try:
                 subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
@@ -297,6 +297,7 @@ class Application(tk.Tk):
 
     def open_cmd_as_admin(self):
         print("""Open cmd window as admin.""")
+
         def run_command():
             try:
                 subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
@@ -395,42 +396,69 @@ class Application(tk.Tk):
                                                    insertbackground=BUTTON_TEXT_COLOR)
         disk_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
-        # Fetch disk information
-        try:
-            # Get list of disks
-            disks_cmd = 'echo list disk | diskpart'
-            disks_output = subprocess.check_output(disks_cmd, shell=True, text=True)
+        def fetch_disk_info():
+            try:
+                # Get list of disks
+                disks_cmd = 'echo list disk | diskpart'
+                disks_output = subprocess.check_output(disks_cmd, shell=True, text=True)
 
-            # Filter out the DISKPART> prompts and empty lines
-            cleaned_output = '\n'.join(line for line in disks_output.split('\n') if line.strip() and not line.strip().startswith('DISKPART>'))
+                # Filter out the DISKPART> prompts and empty lines
+                cleaned_lines = [line.strip() for line in disks_output.split('\n') if line.strip() and not line.strip().startswith('DISKPART>')]
 
-            disk_info = """
+                # Process the cleaned lines
+                processed_lines = []
+                for i, line in enumerate(cleaned_lines):
+                    if i == 0:  # First line (Microsoft DiskPart version)
+                        processed_lines.append(line)
+                    elif "JULIEN-DESKTOP" in line:
+                        processed_lines.append(line + "\n")  # Add an extra newline after this line
+                    else:
+                        processed_lines.append(line)
+
+                cleaned_output = '\n'.join(processed_lines)
+
+                disk_info = """
     ========================
     *** Disk Information ***
     ========================
 
-            """
-            disk_info += cleaned_output + "\n\n"
+    """
+                disk_info += cleaned_output + "\n\n"
 
-            # Additional helpful information
-            disk_info += """
+                # Additional helpful information
+                disk_info += """
     ==============================
     *** Additional Information ***
     ==============================
 
-"""
-            disk_info += "1. Disk Status:       Online/Offline\n"
-            disk_info += "2. Partition Types:   Primary, Extended, Logical\n"
-            disk_info += "3. File Systems:      NTFS, FAT32, exFAT\n"
-            disk_info += "4. Disk Signature:    GPT or MBR\n"
-            disk_info += "5. Free Space:        Check for unallocated space\n\n"
-            disk_info += "Use 'chkdsk' for NTFS volumes to check disk health\n"
+    """
+                disk_info += "1. Disk Status:       Online/Offline\n"
+                disk_info += "2. Partition Types:   Primary, Extended, Logical\n"
+                disk_info += "3. File Systems:      NTFS, FAT32, exFAT\n"
+                disk_info += "4. Disk Signature:    GPT or MBR\n"
+                disk_info += "5. Free Space:        Check for unallocated space\n\n"
+                disk_info += "Use 'chkdsk' for NTFS volumes to check disk health\n"
 
-        except Exception as e:
-            disk_info = f"Error fetching disk information: {str(e)}"
+                disk_window.after(0, lambda: update_disk_info(disk_info))
+            except Exception as e:
+                error_message = f"Error fetching disk information: {str(e)}"
+                disk_window.after(0, lambda: update_disk_info(error_message))
 
-        disk_info_text.insert(tk.END, disk_info)
-        disk_info_text.config(state='disabled')  # Make the text widget read-only
+        def update_disk_info(info):
+            disk_info_text.config(state='normal')
+            disk_info_text.delete('1.0', tk.END)
+            disk_info_text.insert(tk.END, info)
+            disk_info_text.config(state='disabled')
+
+        # Create a copy button
+        copy_button = tk.Button(disk_window, text="Copy to Clipboard",
+                                command=lambda: self.copy_to_clipboard(disk_info_text.get("1.0", tk.END)),
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+        copy_button.pack(pady=10)
+
+        # Start fetching disk info in a separate thread
+        threading.Thread(target=fetch_disk_info, daemon=True).start()
 
     def copy_to_clipboard(self, text):
         self.clipboard_clear()
@@ -486,14 +514,14 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             ok_button.pack(side="left", padx=(50, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
 
             cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             cancel_button.pack(side="right", padx=(5, 50), pady=10)
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
@@ -551,7 +579,7 @@ class Application(tk.Tk):
                 password_window.destroy()
 
             cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
             cancel_button.pack(side="left", padx=10)
         else:
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
@@ -578,17 +606,21 @@ class Application(tk.Tk):
                 messagebox.showwarning("No Drive Selected", "Please select a drive from the dropdown menu.")
                 return
 
-            drive_letter = selected_drive[0]  # Extract the drive letter from the selected option
+            drive_letter = selected_drive[0]
 
-            try:
-                powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/c winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
-                subprocess.Popen(powershell_command, shell=True)
-                top.destroy()  # Close the drive selection window
-            except Exception as e:
-                messagebox.showerror("Error", f"An error occurred while trying to run the WinSAT disk test: {str(e)}")
+            def run_winsat():
+                try:
+                    powershell_command = f'powershell.exe -Command "Start-Process cmd -ArgumentList \'/c winsat disk -drive {drive_letter} && pause\' -Verb RunAs"'
+                    subprocess.Popen(powershell_command, shell=True)
+                except Exception as e:
+                    messagebox.showerror("Error", f"An error occurred while trying to run the WinSAT disk test: {str(e)}")
+                finally:
+                    top.destroy()
+
+            threading.Thread(target=run_winsat, daemon=True).start()
 
         # Create a top-level window for drive selection
-        top = tk.Toplevel(self.master)
+        top = tk.Toplevel(self)
         top.title("WinSAT Disk Performance Test")
         top.geometry("380x130")
         top.configure(bg=UI_COLOR)
@@ -623,9 +655,6 @@ class Application(tk.Tk):
                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
                                borderwidth=1, relief="solid")
         run_button.pack(pady=10)
-
-        # Start the Tkinter event loop
-        top.mainloop()
 
     def run_website_checker(self):
         def on_run():
@@ -885,6 +914,7 @@ if !status_code! equ 200 (
 
     def agh_curl(self):
         print("""Executing 'AdGuard Home' install helper.""")
+
         def on_link_click(event):
             webbrowser.open("https://github.com/AdguardTeam/AdGuardHome")
 
@@ -1236,6 +1266,15 @@ if !status_code! equ 200 (
         elif selected6 == "[2] Activate Win/Office":
             self.activate_win()
         elif selected6 == "Interactive Shells":
+            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+
+    def on_function_select7(self, *args):
+        selected7 = self.selected_function7.get()
+        if selected7 == "[1] Run WinSAT Disk":
+            self.run_winsat_disk()
+        elif selected7 == "[2] Show Disk Info":
+            self.show_disk_info()
+        elif selected7 == "Disk Operations":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
@@ -1800,6 +1839,7 @@ if !status_code! equ 200 (
 
     def open_godmode(self):
         print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.""")
+
         def run_command():
             try:
                 subprocess.run("explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}", shell=True)
@@ -2240,16 +2280,12 @@ if !status_code! equ 200 (
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
-        winsat_disk_btn = tk.Button(self.functions_frame, text="Disk Speedtest", command=self.run_winsat_disk, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        winsat_disk_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
-
         clone_btn = tk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         clone_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
         renew_ip_config_btn = tk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                        bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         renew_ip_config_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
         agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
@@ -2276,13 +2312,9 @@ if !status_code! equ 200 (
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        disk_info_btn = tk.Button(self.functions_frame, text="Show Disk Info", command=self.show_disk_info, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
-        disk_info_btn.grid(row=6, column=2, padx=10, pady=5, sticky="we")
-
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
-        # System Info Compare
+# System Info Compare
         self.selected_function1 = tk.StringVar()
         self.selected_function1.set("System Info")  # Set default text
 
@@ -2309,7 +2341,7 @@ if !status_code! equ 200 (
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-        # Active internet connection apps
+# Active internet connection apps
         self.selected_function2 = tk.StringVar()
         self.selected_function2.set("App Connections")  # Set default text
 
@@ -2335,7 +2367,7 @@ if !status_code! equ 200 (
         self.function_dropdown2.grid(row=1, column=3, padx=10, pady=5, sticky="we")
         self.selected_function2.trace('w', self.on_function_select2)
 
-        # God-mode
+# God-mode
         self.selected_function3 = tk.StringVar()
         self.selected_function3.set("Windows God mode")  # Set default text
 
@@ -2361,7 +2393,7 @@ if !status_code! equ 200 (
         self.function_dropdown3.grid(row=2, column=4, padx=10, pady=5, sticky="we")
         self.selected_function3.trace('w', self.on_function_select3)
 
-        # Admin Shells
+# Admin Shells
         self.selected_function4 = tk.StringVar()
         self.selected_function4.set("Admin Shells")  # Set default text
 
@@ -2387,7 +2419,7 @@ if !status_code! equ 200 (
         self.function_dropdown4.grid(row=0, column=4, padx=10, pady=5, sticky="we")
         self.selected_function4.trace('w', self.on_function_select4)
 
-        # Check online status
+# Check online status
         self.selected_function5 = tk.StringVar()
         self.selected_function5.set("Check online status")  # Set default text
 
@@ -2413,7 +2445,7 @@ if !status_code! equ 200 (
         self.function_dropdown5.grid(row=2, column=3, padx=10, pady=5, sticky="we")
         self.selected_function5.trace('w', self.on_function_select5)
 
-        # Interactive Shells
+# Interactive Shells
         self.selected_function6 = tk.StringVar()
         self.selected_function6.set("Interactive Shells")  # Set default text
 
@@ -2438,6 +2470,32 @@ if !status_code! equ 200 (
         )
         self.function_dropdown6.grid(row=0, column=3, padx=10, pady=5, sticky="we")
         self.selected_function6.trace('w', self.on_function_select6)
+
+# Disk utility
+        self.selected_function7 = tk.StringVar()
+        self.selected_function7.set("Disk Operations")  # Set default text
+
+        self.function_dropdown7 = tk.OptionMenu(
+            self.functions_frame,
+            self.selected_function7,
+            "Disk Operations",
+            "[1] Run WinSAT Disk",
+            "[2] Show Disk Info"
+        )
+        self.function_dropdown7.config(
+            width=17,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown7["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
+        )
+        self.function_dropdown7.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function7.trace('w', self.on_function_select7)
 
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
@@ -2485,23 +2543,23 @@ if !status_code! equ 200 (
         self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
-# ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
+        # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
 
         # Left-aligned buttons
         shutdown_btn = tk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
         reboot_btn = tk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
         uefi_btn = tk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
 
         sleep_btn = tk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         sleep_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
         # Spacer label to fill the space between left and right groups
@@ -2511,23 +2569,23 @@ if !status_code! equ 200 (
 
         # Right-aligned buttons
         reset_ui_btn = tk.Button(self.bottom_frame, text="Reset App UI", command=self.reset_ui, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         reset_ui_btn.grid(row=0, column=5, padx=5, pady=5, sticky="we")
 
         root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
         exit_btn = tk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
         update_btn = tk.Button(self.bottom_frame, text="Update WinFunct", command=self.git_pull, width=20,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=1, relief="solid")
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
-# ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
 
+# ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
 
 
 app = Application()
