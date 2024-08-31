@@ -111,7 +111,13 @@ links = {
 
 class GitUpdater:
     @staticmethod
+    def is_frozen():
+        return getattr(sys, 'frozen', False)
+
+    @staticmethod
     def check_status():
+        if GitUpdater.is_frozen():
+            return ""  # Ignore update check for frozen executable
         try:
             # Run git status and capture output
             result = subprocess.run(['git', 'status'], capture_output=True, text=True, check=True)
@@ -133,16 +139,19 @@ class GitUpdater:
 
     @staticmethod
     def execute_update():
-        if GitUpdater.prompt_update():
-            print('Executing git pull...')
-            try:
-                # Run git pull silently
-                subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-                print('Repository updated.')
-            except subprocess.CalledProcessError as e:
-                print(f"Error during git pull: {e}")
+        if GitUpdater.is_frozen():
+            print(f'Running as pyinstalled ".exe". Skipping update check. *** {VERSION_SHORT} ***')
         else:
-            print(f'No update needed. *** {VERSION_SHORT} ***')
+            if GitUpdater.prompt_update():
+                print('Executing git pull...')
+                try:
+                    # Run git pull silently
+                    subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                    print('Repository updated.')
+                except subprocess.CalledProcessError as e:
+                    print(f"Error during git pull: {e}")
+            else:
+                print(f'No update needed. *** {VERSION_SHORT} ***')
 
 
 # Execute the update check before any class instantiation
