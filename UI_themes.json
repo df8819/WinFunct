@@ -1,76 +1,52 @@
 {
   "themes": [
-    {
-      "name": "Steam",
-      "UI_COLOR": "#272A27",
-      "BUTTON_BG_COLOR": "#47564A",
-      "BUTTON_TEXT_COLOR": "#ffa451",
-      "BOTTOM_BORDER_COLOR": "#ae5300",
-      "VERSION_LABEL_TEXT": "#7d4d28"
-    },
-    {
-      "name": "Earthy Tones",
-      "UI_COLOR": "#2A2727",
-      "BUTTON_BG_COLOR": "#4E4540",
-      "BUTTON_TEXT_COLOR": "#F5F5F0",
-      "BOTTOM_BORDER_COLOR": "#A86335",
-      "VERSION_LABEL_TEXT": "#B86B3A"
-    },
-    {
-      "name": "Cool Grays",
-      "UI_COLOR": "#2A2A2A",
-      "BUTTON_BG_COLOR": "#4D5057",
-      "BUTTON_TEXT_COLOR": "#F0F0F0",
-      "BOTTOM_BORDER_COLOR": "#6D7684",
-      "VERSION_LABEL_TEXT": "#8792A6"
-    },
-    {
-      "name": "Muted Greens",
-      "UI_COLOR": "#272A27",
-      "BUTTON_BG_COLOR": "#47564A",
-      "BUTTON_TEXT_COLOR": "#F5FFF5",
-      "BOTTOM_BORDER_COLOR": "#38E06F",
-      "VERSION_LABEL_TEXT": "#04D858"
-    },
-    {
-      "name": "Deep Blues",
-      "UI_COLOR": "#272A2A",
-      "BUTTON_BG_COLOR": "#475664",
-      "BUTTON_TEXT_COLOR": "#F5FFFF",
-      "BOTTOM_BORDER_COLOR": "#3894E0",
-      "VERSION_LABEL_TEXT": "#0473D8"
-    },
-    {
-      "name": "Midnight Blue",
-      "UI_COLOR": "#1C1F2B",
-      "BUTTON_BG_COLOR": "#2C3E50",
-      "BUTTON_TEXT_COLOR": "#F0F0F0",
-      "BOTTOM_BORDER_COLOR": "#3498DB",
-      "VERSION_LABEL_TEXT": "#2980B9"
-    },
-    {
-      "name": "Forest Green",
-      "UI_COLOR": "#1E2A1E",
-      "BUTTON_BG_COLOR": "#2E7D32",
-      "BUTTON_TEXT_COLOR": "#F0FFF0",
-      "BOTTOM_BORDER_COLOR": "#66BB6A",
-      "VERSION_LABEL_TEXT": "#43A047"
-    },
-    {
-      "name": "Charcoal Gray",
-      "UI_COLOR": "#212121",
-      "BUTTON_BG_COLOR": "#424242",
-      "BUTTON_TEXT_COLOR": "#F5F5F5",
-      "BOTTOM_BORDER_COLOR": "#616161",
-      "VERSION_LABEL_TEXT": "#9E9E9E"
-    },
-    {
-      "name": "Burgundy Red",
-      "UI_COLOR": "#2A1E1E",
-      "BUTTON_BG_COLOR": "#6A1B1B",
-      "BUTTON_TEXT_COLOR": "#FFF0F0",
-      "BOTTOM_BORDER_COLOR": "#B03A3A",
-      "VERSION_LABEL_TEXT": "#8E2424"
-    }
+{
+"name": "Steam like",
+"UI_COLOR": "#2f3128",
+"BUTTON_BG_COLOR": "#575a4b",
+"BUTTON_TEXT_COLOR": "#ffffff",
+"BOTTOM_BORDER_COLOR": "#ff8f20",
+"VERSION_LABEL_TEXT": "#B8C1B0"
+},
+{
+"name": "Earthy Tones",
+"UI_COLOR": "#2A2727",
+"BUTTON_BG_COLOR": "#4E4540",
+"BUTTON_TEXT_COLOR": "#F5F5F0",
+"BOTTOM_BORDER_COLOR": "#A86335",
+"VERSION_LABEL_TEXT": "#B86B3A"
+},
+{
+"name": "Cool Grays",
+"UI_COLOR": "#2A2A2A",
+"BUTTON_BG_COLOR": "#4D5057",
+"BUTTON_TEXT_COLOR": "#F0F0F0",
+"BOTTOM_BORDER_COLOR": "#6D7684",
+"VERSION_LABEL_TEXT": "#8792A6"
+},
+{
+"name": "Muted Greens",
+"UI_COLOR": "#272A27",
+"BUTTON_BG_COLOR": "#47564A",
+"BUTTON_TEXT_COLOR": "#F5FFF5",
+"BOTTOM_BORDER_COLOR": "#38E06F",
+"VERSION_LABEL_TEXT": "#04D858"
+},
+{
+"name": "Deep Blues",
+"UI_COLOR": "#272A2A",
+"BUTTON_BG_COLOR": "#475664",
+"BUTTON_TEXT_COLOR": "#F5FFFF",
+"BOTTOM_BORDER_COLOR": "#3894E0",
+"VERSION_LABEL_TEXT": "#0473D8"
+},
+{
+"name": "Aubergine Dream",
+"UI_COLOR": "#2C1E3D",
+"BUTTON_BG_COLOR": "#4A3C68",
+"BUTTON_TEXT_COLOR": "#ffffff",
+"BOTTOM_BORDER_COLOR": "#9B59B6",
+"VERSION_LABEL_TEXT": "#BE90D4"
+}
   ]
 }
