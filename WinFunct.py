@@ -33,7 +33,7 @@ from UISelectorInt import UISelector
 
 
 # Define the version once
-VERSION_NUMBER = "1.654"
+VERSION_NUMBER = "1.655"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
