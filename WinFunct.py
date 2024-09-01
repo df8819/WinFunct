@@ -1270,10 +1270,13 @@ if !status_code! equ 200 (
         selected1 = self.selected_function1.get()
         if selected1 == "[1] Extract Sys Info":
             self.gather_and_save_info()
+            self.selected_function1.set("System Info")
         elif selected1 == "[2] Compare Sys Info":
             self.compare_system_info()
+            self.selected_function1.set("System Info")
         elif selected1 == "[3] Show single Sys":
             self.show_system_info()
+            self.selected_function1.set("System Info")
         elif selected1 == "System Info":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1281,8 +1284,10 @@ if !status_code! equ 200 (
         selected2 = self.selected_function2.get()
         if selected2 == "[1] Active Connections":
             self.netstat_output()
+            self.selected_function2.set("App Connections")
         elif selected2 == "[2] Threat Search":
             self.confirm_and_search()
+            self.selected_function2.set("App Connections")
         elif selected2 == "App Connections":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1290,8 +1295,10 @@ if !status_code! equ 200 (
         selected3 = self.selected_function3.get()
         if selected3 == "[1] God mode":
             self.open_godmode()
+            self.selected_function3.set("Windows God mode")
         elif selected3 == "[2] Super God mode":
             self.open_super_godmode()
+            self.selected_function3.set("Windows God mode")
         elif selected3 == "Windows God mode":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1299,8 +1306,10 @@ if !status_code! equ 200 (
         selected4 = self.selected_function4.get()
         if selected4 == "[1] cmd":
             self.open_cmd_as_admin()
+            self.selected_function4.set("Admin Shells")
         elif selected4 == "[2] PowerShell":
             self.open_ps_as_admin()
+            self.selected_function4.set("Admin Shells")
         elif selected4 == "Admin Shells":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1308,8 +1317,10 @@ if !status_code! equ 200 (
         selected5 = self.selected_function5.get()
         if selected5 == "[1] This PC":
             self.check_internet()
+            self.selected_function5.set("Check online status")
         elif selected5 == "[2] Website":
             self.run_website_checker()
+            self.selected_function5.set("Check online status")
         elif selected5 == "Check online status":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1317,8 +1328,10 @@ if !status_code! equ 200 (
         selected6 = self.selected_function6.get()
         if selected6 == "[1] CTT Winutils":
             self.activate_wui()
+            self.selected_function6.set("Interactive Shells")
         elif selected6 == "[2] Activate Win/Office":
             self.activate_win()
+            self.selected_function6.set("Interactive Shells")
         elif selected6 == "Interactive Shells":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1326,8 +1339,10 @@ if !status_code! equ 200 (
         selected7 = self.selected_function7.get()
         if selected7 == "[1] Disk Speedtest":
             self.run_winsat_disk()
+            self.selected_function7.set("Disk Operations")
         elif selected7 == "[2] Show Disk Info":
             self.show_disk_info()
+            self.selected_function7.set("Disk Operations")
         elif selected7 == "Disk Operations":
             print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
 
@@ -1335,8 +1350,10 @@ if !status_code! equ 200 (
         selected8 = self.selected_function8.get()
         if selected8 == "[1] Theme Selector":
             self.open_theme_selector()
+            self.selected_function8.set("GUI Options")
         elif selected8 == "[2] Reset UI":
             self.reset_ui()
+            self.selected_function8.set("GUI Options")
         elif selected8 == "GUI Options":
             print("\n>>> Please select the desired function [1, 2] from the dropdown menu.")
 
@@ -2438,7 +2455,7 @@ if !status_code! equ 200 (
 
 # System Info Compare
         self.selected_function1 = tk.StringVar()
-        self.selected_function1.set("System Info")  # Set default text
+        self.selected_function1.set("System Info")
 
         self.function_dropdown1 = tk.OptionMenu(
             self.functions_frame,
@@ -2465,7 +2482,7 @@ if !status_code! equ 200 (
 
 # Active internet connection apps
         self.selected_function2 = tk.StringVar()
-        self.selected_function2.set("App Connections")  # Set default text
+        self.selected_function2.set("App Connections")
 
         self.function_dropdown2 = tk.OptionMenu(
             self.functions_frame,
@@ -2491,7 +2508,7 @@ if !status_code! equ 200 (
 
 # God-mode
         self.selected_function3 = tk.StringVar()
-        self.selected_function3.set("Windows God mode")  # Set default text
+        self.selected_function3.set("Windows God mode")
 
         self.function_dropdown3 = tk.OptionMenu(
             self.functions_frame,
@@ -2517,7 +2534,7 @@ if !status_code! equ 200 (
 
 # Admin Shells
         self.selected_function4 = tk.StringVar()
-        self.selected_function4.set("Admin Shells")  # Set default text
+        self.selected_function4.set("Admin Shells")
 
         self.function_dropdown4 = tk.OptionMenu(
             self.functions_frame,
@@ -2543,7 +2560,7 @@ if !status_code! equ 200 (
 
 # Check online status
         self.selected_function5 = tk.StringVar()
-        self.selected_function5.set("Check online status")  # Set default text
+        self.selected_function5.set("Check online status")
 
         self.function_dropdown5 = tk.OptionMenu(
             self.functions_frame,
@@ -2569,7 +2586,7 @@ if !status_code! equ 200 (
 
 # Interactive Shells
         self.selected_function6 = tk.StringVar()
-        self.selected_function6.set("Interactive Shells")  # Set default text
+        self.selected_function6.set("Interactive Shells")
 
         self.function_dropdown6 = tk.OptionMenu(
             self.functions_frame,
@@ -2595,7 +2612,7 @@ if !status_code! equ 200 (
 
 # Disk utility
         self.selected_function7 = tk.StringVar()
-        self.selected_function7.set("Disk Operations")  # Set default text
+        self.selected_function7.set("Disk Operations")
 
         self.function_dropdown7 = tk.OptionMenu(
             self.functions_frame,
@@ -2703,7 +2720,7 @@ if !status_code! equ 200 (
 
 # UI utility
         self.selected_function8 = tk.StringVar()
-        self.selected_function8.set("GUI Options")  # Set default text
+        self.selected_function8.set("GUI Options")
 
         self.function_dropdown8 = tk.OptionMenu(
             self.bottom_frame,
