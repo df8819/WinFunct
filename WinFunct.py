@@ -522,7 +522,8 @@ class Application(tk.Tk):
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles and passwords.""")
         try:
-            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"], stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"],
+                                                 stderr=subprocess.STDOUT).decode("utf-8", "ignore")
             networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to execute netsh command: {e.output.decode('utf-8', 'ignore')}")
@@ -531,6 +532,7 @@ class Application(tk.Tk):
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
+            network_window.configure(bg=UI_COLOR)
 
             window_width = 420
             window_height = 380
@@ -544,14 +546,15 @@ class Application(tk.Tk):
             network_window.resizable(False, False)
 
             label_text = "Select a Wi-Fi Network from the list below to copy its password:"
-            label = tk.Label(network_window, text=label_text)
+            label = tk.Label(network_window, text=label_text, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
             label.pack(pady=10)
 
-            list_frame = tk.Frame(network_window)
+            list_frame = tk.Frame(network_window, bg=UI_COLOR)
             list_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
             scrollbar = tk.Scrollbar(list_frame, orient="vertical")
-            network_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set, exportselection=False)
+            network_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set, exportselection=False,
+                                         bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
 
             scrollbar.config(command=network_listbox.yview)
             scrollbar.pack(side="right", fill="y")
@@ -568,14 +571,16 @@ class Application(tk.Tk):
                 network_window.destroy()
 
             ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                  relief=BUTTON_STYLE)
             ok_button.pack(side="left", padx=(50, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
 
             cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
-                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                      relief=BUTTON_STYLE)
             cancel_button.pack(side="right", padx=(5, 50), pady=10)
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
@@ -594,6 +599,7 @@ class Application(tk.Tk):
         if password:
             password_window = tk.Toplevel(self)
             password_window.title(f"Password for {network}")
+            password_window.configure(bg=UI_COLOR)
 
             window_width = 320
             window_height = 120
@@ -606,34 +612,35 @@ class Application(tk.Tk):
             password_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
             password_window.resizable(False, False)
 
-            password_frame = tk.Frame(password_window)
+            password_frame = tk.Frame(password_window, bg=UI_COLOR)
             password_frame.pack(padx=20, pady=20)
 
-            password_label = tk.Label(password_frame, text="Password:")
+            password_label = tk.Label(password_frame, text="Password:", bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
             password_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
 
-            password_text = tk.Entry(password_frame, width=30)
+            password_text = tk.Entry(password_frame, width=30, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
             password_text.insert(0, password.group(1))
             password_text.grid(row=0, column=1, padx=5, pady=5)
-            password_text.config(state="readonly")
 
             def copy_password():
                 self.clipboard_clear()
                 self.clipboard_append(password_text.get())
                 self.update()
 
-            button_frame = tk.Frame(password_frame)
+            button_frame = tk.Frame(password_frame, bg=UI_COLOR)
             button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
 
             copy_button = tk.Button(button_frame, text="Copy Password", command=copy_password,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                    relief=BUTTON_STYLE)
             copy_button.pack(side="left", padx=10)
 
             def cancel_button_click():
                 password_window.destroy()
 
             cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click,
-                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                      relief=BUTTON_STYLE)
             cancel_button.pack(side="left", padx=10)
         else:
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
