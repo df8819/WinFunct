@@ -1269,93 +1269,77 @@ if !status_code! equ 200 (
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
         if selected1 == "[1] Extract Sys Info":
-            self.gather_and_save_info()
-            self.selected_function1.set("System Info")
+            self.function_dropdown1.after(0, self.gather_and_save_info)
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
         elif selected1 == "[2] Compare Sys Info":
-            self.compare_system_info()
-            self.selected_function1.set("System Info")
+            self.function_dropdown1.after(0, self.compare_system_info)
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
         elif selected1 == "[3] Show single Sys":
-            self.show_system_info()
-            self.selected_function1.set("System Info")
-        elif selected1 == "System Info":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown1.after(0, self.show_system_info)
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
 
     def on_function_select2(self, *args):
         selected2 = self.selected_function2.get()
         if selected2 == "[1] Active Connections":
-            self.netstat_output()
-            self.selected_function2.set("App Connections")
+            self.function_dropdown2.after(0, self.netstat_output)
+            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
         elif selected2 == "[2] Threat Search":
-            self.confirm_and_search()
-            self.selected_function2.set("App Connections")
-        elif selected2 == "App Connections":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown2.after(0, self.confirm_and_search)
+            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
-        if selected3 == "[1] God mode":
-            self.open_godmode()
-            self.selected_function3.set("Windows God mode")
+        if selected3 == "[1] Simple God mode":
+            self.function_dropdown3.after(0, self.open_godmode)
+            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
         elif selected3 == "[2] Super God mode":
-            self.open_super_godmode()
-            self.selected_function3.set("Windows God mode")
-        elif selected3 == "Windows God mode":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown3.after(0, self.open_super_godmode)
+            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
 
     def on_function_select4(self, *args):
         selected4 = self.selected_function4.get()
         if selected4 == "[1] cmd":
-            self.open_cmd_as_admin()
-            self.selected_function4.set("Admin Shells")
+            self.function_dropdown4.after(0, self.open_cmd_as_admin)
+            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
         elif selected4 == "[2] PowerShell":
-            self.open_ps_as_admin()
-            self.selected_function4.set("Admin Shells")
-        elif selected4 == "Admin Shells":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown4.after(0, self.open_ps_as_admin)
+            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
 
     def on_function_select5(self, *args):
         selected5 = self.selected_function5.get()
         if selected5 == "[1] This PC":
-            self.check_internet()
-            self.selected_function5.set("Check online status")
+            self.function_dropdown5.after(0, self.check_internet)
+            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
         elif selected5 == "[2] Website":
-            self.run_website_checker()
-            self.selected_function5.set("Check online status")
-        elif selected5 == "Check online status":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown5.after(0, self.run_website_checker)
+            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
 
     def on_function_select6(self, *args):
         selected6 = self.selected_function6.get()
         if selected6 == "[1] CTT Winutils":
-            self.activate_wui()
-            self.selected_function6.set("Interactive Shells")
+            self.function_dropdown6.after(0, self.activate_wui)
+            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
         elif selected6 == "[2] Activate Win/Office":
-            self.activate_win()
-            self.selected_function6.set("Interactive Shells")
-        elif selected6 == "Interactive Shells":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown6.after(0, self.activate_win)
+            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
 
     def on_function_select7(self, *args):
         selected7 = self.selected_function7.get()
         if selected7 == "[1] Disk Speedtest":
-            self.run_winsat_disk()
-            self.selected_function7.set("Disk Operations")
+            self.function_dropdown7.after(0, self.run_winsat_disk)
+            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
         elif selected7 == "[2] Show Disk Info":
-            self.show_disk_info()
-            self.selected_function7.set("Disk Operations")
-        elif selected7 == "Disk Operations":
-            print("\n>>> Please select the desired function [1, 2, 3, ...] from the dropdown menu.")
+            self.function_dropdown7.after(0, self.show_disk_info)
+            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
 
     def on_function_select8(self, *args):
         selected8 = self.selected_function8.get()
         if selected8 == "[1] Theme Selector":
-            self.open_theme_selector()
-            self.selected_function8.set("GUI Options")
+            self.function_dropdown8.after(0, self.open_theme_selector)
+            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
         elif selected8 == "[2] Reset UI":
-            self.reset_ui()
-            self.selected_function8.set("GUI Options")
-        elif selected8 == "GUI Options":
-            print("\n>>> Please select the desired function [1, 2] from the dropdown menu.")
+            self.function_dropdown8.after(0, self.reset_ui)
+            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
@@ -2508,13 +2492,13 @@ if !status_code! equ 200 (
 
 # God-mode
         self.selected_function3 = tk.StringVar()
-        self.selected_function3.set("Windows God mode")
+        self.selected_function3.set("God mode")
 
         self.function_dropdown3 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function3,
-            "Windows God mode",
-            "[1] God mode",
+            "God mode",
+            "[1] Simple God mode",
             "[2] Super God mode"
         )
         self.function_dropdown3.config(
@@ -2558,14 +2542,14 @@ if !status_code! equ 200 (
         self.function_dropdown4.grid(row=0, column=4, padx=10, pady=5, sticky="we")
         self.selected_function4.trace('w', self.on_function_select4)
 
-# Check online status
+# Check Online Status
         self.selected_function5 = tk.StringVar()
-        self.selected_function5.set("Check online status")
+        self.selected_function5.set("Online Status")
 
         self.function_dropdown5 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function5,
-            "Check online status",
+            "Online Status",
             "[1] This PC",
             "[2] Website"
         )

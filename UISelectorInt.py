@@ -8,7 +8,7 @@ class UISelector:
         self.master = master
         self.window = tk.Toplevel(master)
         self.window.title("Theme Selector")
-        self.window.geometry("500x300")
+        self.window.geometry("380x230")
         self.window.configure(bg=current_theme["UI_COLOR"])
 
 
@@ -47,7 +47,7 @@ class UISelector:
             tk.Button(self.window, text="Pick", command=lambda e=entry: self.pick_color(e),
                       bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
                       activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"],
-                      width=10).grid(row=i, column=2, padx=5, pady=5, sticky="nsew")
+                      width=7).grid(row=i, column=2, padx=5, pady=5)
 
         self.theme_var = tk.StringVar(self.window)
         self.theme_var.set("Select a theme")
@@ -55,9 +55,9 @@ class UISelector:
         self.theme_dropdown.config(width=20, bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
                                    activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"])
         self.theme_dropdown["menu"].config(bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"])
-        self.theme_dropdown.grid(row=len(self.theme_elements), column=0, columnspan=2, pady=10, padx=5, sticky="w")
+        self.theme_dropdown.grid(row=len(self.theme_elements), column=0, columnspan=2, pady=10, padx=5, sticky="ew")
 
-        tk.Button(self.window, text="Set UI", command=self.set_ui, width=20,
+        tk.Button(self.window, text="Set UI", command=self.set_ui, width=10,
                   bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
                   activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=len(self.theme_elements), column=2, pady=10, padx=5, sticky="e")
         self.center_window()
