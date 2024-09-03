@@ -1,5 +1,3 @@
-import os
-
 spec_content = """
 # -*- mode: python ; coding: utf-8 -*-
 import sys ; sys.setrecursionlimit(sys.getrecursionlimit() * 5)
@@ -40,4 +38,3 @@ exe = EXE(pyz,
 
 with open("WinFunct.spec", "w") as spec_file:
     spec_file.write(spec_content)
-print("Spec file created successfully.")
