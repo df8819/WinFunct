@@ -124,6 +124,7 @@ echo 	__pycache__/
 echo 	WinFunct.spec
 echo -----------------------------------------------------------
 echo.
-timeout /t 60
+echo Press any button to exit...
+pause > nul 2>&1
 
 endlocal
