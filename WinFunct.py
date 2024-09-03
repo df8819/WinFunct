@@ -383,7 +383,7 @@ class Application(tk.Tk):
         ip_window.configure(bg=UI_COLOR)
 
         # Set window size and position
-        window_width, window_height = 420, 320
+        window_width, window_height = 420, 680
         screen_width = ip_window.winfo_screenwidth()
         screen_height = ip_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -398,18 +398,17 @@ class Application(tk.Tk):
 
         # Fetch IP information
         try:
-            ip_info = "--- Local IP Info ---\n"
+            ip_info = "========== Local ==========\n"
 
-            # Fetch local IP information
-            local_ip = socket.gethostbyname(socket.gethostname())
-            local_hostname = socket.gethostname()
-            subnet_ip = socket.gethostbyname(socket.gethostname() + ".local")
+            # Fetch adapter names and IP addresses
+            adapters = psutil.net_if_addrs()
+            for adapter, addresses in adapters.items():
+                for addr in addresses:
+                    if addr.family == 2:  # IPv4
+                        ip_address = addr.address
+                        ip_info += f"{adapter}:\n{ip_address}\n\n"
 
-            ip_info += f"Local IP:      {local_ip}\n"
-            ip_info += f"Hostname:      {local_hostname}\n"
-            ip_info += f"Subnet IP:     {subnet_ip}\n\n"
-
-            ip_info += "--- Internet IP Info ---\n"
+            ip_info += "\n========== Internet ==========\n"
 
             response = requests.get("https://ipapi.co/json/")
             data = response.json()
@@ -421,13 +420,13 @@ class Application(tk.Tk):
             ip_info += f"City:          {data['city']}\n"
             ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
 
-            ip_info += "--- Network Topology ---\n"
+            ip_info += "\n========== Topology ==========\n"
 
             ip_info += f"Latitude:      {data['latitude']}\n"
             ip_info += f"Longitude:     {data['longitude']}\n"
             ip_info += f"Timezone:      {data['timezone']}\n\n"
 
-            ip_info += "--- Additional Info ---\n"
+            ip_info += "\n========== Additional Info ==========\n"
 
             ip_info += f"Country Code:  {data['country']}\n"
             ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
