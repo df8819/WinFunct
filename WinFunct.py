@@ -47,8 +47,9 @@ BOTTOM_BORDER_COLOR = "#ff8f20"  # Small bottom border
 VERSION_LABEL_TEXT = "#ba8027"  # Label text color
 
 # UI STYLE section
-BUTTON_STYLE = "raised" # flat, solid, raised, sunken, ridge, groove
-BORDER_WIDTH = "1" # thiccness in pixel
+BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
+# noinspection SpellCheckingInspection
+BORDER_WIDTH = "1"  # thiccness in pixel
 
 # GitHub repo link
 LINK = "https://github.com/df8819/WinFunct"
@@ -109,6 +110,7 @@ links = {
     },
 }
 
+
 class GitUpdater:
     @staticmethod
     def is_frozen():
@@ -130,7 +132,7 @@ class GitUpdater:
     def prompt_update():
         status = GitUpdater.check_status()
 
-        # Check if the branch is up to date
+        # Check if the branch is up-to-date
         if "Your branch is up to date" not in status:
             user_choice = input("Your branch is not up to date. Do you want to update? (y/n): ").strip().lower()
             if user_choice == 'y':
@@ -140,7 +142,7 @@ class GitUpdater:
     @staticmethod
     def execute_update():
         if GitUpdater.is_frozen():
-            print(f'Running as pyinstalled ".exe". Skipping update check. *** {VERSION_SHORT} ***')
+            print(f'Running as ".exe". Skipping update check. *** {VERSION_SHORT} ***')
         else:
             if GitUpdater.prompt_update():
                 print('Executing git pull...')
@@ -156,6 +158,7 @@ class GitUpdater:
 
 # Execute the update check before any class instantiation
 GitUpdater.execute_update()
+
 
 def is_admin():
     try:
@@ -238,7 +241,7 @@ def execute_command(cmd):
 
 
 # App Window
-# noinspection PyTypeChecker
+# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -280,6 +283,11 @@ class Application(tk.Tk):
 
     def update_ui(self, new_theme):
         self.main_frame.configure(bg=new_theme["BOTTOM_BORDER_COLOR"])
+
+    def copy_to_clipboard(self, text):
+        self.clipboard_clear()
+        self.clipboard_append(text)
+        self.update()  # To make sure the clipboard is updated
 
     def open_chat(self):
         print("""Open JChat app.""")
@@ -525,11 +533,6 @@ class Application(tk.Tk):
 
         # Start fetching disk info in a separate thread
         threading.Thread(target=fetch_disk_info, daemon=True).start()
-
-    def copy_to_clipboard(self, text):
-        self.clipboard_clear()
-        self.clipboard_append(text)
-        self.update()  # To make sure the clipboard is updated
 
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles and passwords.""")
