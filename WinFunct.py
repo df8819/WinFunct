@@ -739,9 +739,9 @@ class Application(tk.Tk):
                 return
 
             url_pattern = re.compile(
-                r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?'
-                r'[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}'
-                r'(:[0-9]{1,5})?(\/.*)?$'
+                r'^(?:https?:\/\/)?(?:www\.)?'
+                r'[a-zA-Z0-9]+(?:[\-\.][a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}'
+                r'(?::[0-9]{1,5})?(?:\/.*)?$'
             )
             if not url_pattern.match(website_url):
                 messagebox.showwarning("Invalid URL", "Please enter a valid URL.")
