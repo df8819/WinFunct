@@ -41,14 +41,18 @@ if %errorlevel% NEQ 0 (
 :: Success message
 echo.
 echo.
-echo -------------------------------------------
-echo Installation/Update complete.
+echo ***********************************************
+echo *                                             *
+echo *    Installation/Update complete.            *
+echo *                                             *
+echo *    You can use the "Update WinFunct"        *
+echo *    button in the App for future updates.    *
+echo *                                             *
+echo *    Thank you for using WinFunct :)          *
+echo *                                             *
+echo ***********************************************
 echo.
-echo You can use the "Update" button in the App 
-echo for future updates.
-echo.
-echo Thank you for using WinFunct :)
-echo -------------------------------------------
-echo.
-timeout /t 60
+echo Press any button to start WinFunct via run.bat...
+pause > nul 2>&1
+run.bat
 exit /B 0

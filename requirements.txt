@@ -1,6 +1,14 @@
-requests>=2.32.0
-WMI~=1.5.1
-openai~=1.3.7
-pyperclip~=1.8.2
+# Library for making HTTP requests
+requests
 
-psutil~=5.9.6
+# Windows Management Instrumentation (WMI) module for Python
+WMI
+
+# OpenAI API library for Python
+openai
+
+# Cross-platform clipboard module for Python
+pyperclip
+
+# Cross-platform library for retrieving information about running processes and system utilization
+psutil
