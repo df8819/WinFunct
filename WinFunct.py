@@ -398,19 +398,36 @@ class Application(tk.Tk):
 
         # Fetch IP information
         try:
+            ip_info = "--- Local IP Info ---\n"
+
+            # Fetch local IP information
+            local_ip = socket.gethostbyname(socket.gethostname())
+            local_hostname = socket.gethostname()
+            subnet_ip = socket.gethostbyname(socket.gethostname() + ".local")
+
+            ip_info += f"Local IP:      {local_ip}\n"
+            ip_info += f"Hostname:      {local_hostname}\n"
+            ip_info += f"Subnet IP:     {subnet_ip}\n\n"
+
+            ip_info += "--- Internet IP Info ---\n"
+
             response = requests.get("https://ipapi.co/json/")
             data = response.json()
 
-            ip_info = f"IP Address:    {data['ip']}\n"
+            ip_info += f"Public IP:     {data['ip']}\n"
             ip_info += f"ISP:           {data.get('org', 'N/A')}\n"
             ip_info += f"Country:       {data['country_name']}\n"
             ip_info += f"Region:        {data['region']}\n"
             ip_info += f"City:          {data['city']}\n"
             ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
 
+            ip_info += "--- Network Topology ---\n"
+
             ip_info += f"Latitude:      {data['latitude']}\n"
             ip_info += f"Longitude:     {data['longitude']}\n"
             ip_info += f"Timezone:      {data['timezone']}\n\n"
+
+            ip_info += "--- Additional Info ---\n"
 
             ip_info += f"Country Code:  {data['country']}\n"
             ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
