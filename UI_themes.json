@@ -1,12 +1,12 @@
 {
   "themes": [
 {
-"name": "Steam like",
+"name": "OG Steam",
 "UI_COLOR": "#2f3128",
 "BUTTON_BG_COLOR": "#575a4b",
 "BUTTON_TEXT_COLOR": "#ffffff",
 "BOTTOM_BORDER_COLOR": "#ff8f20",
-"VERSION_LABEL_TEXT": "#ba8027"
+"VERSION_LABEL_TEXT": "#535e3e"
 },
 {
 "name": "Earthy Tones",
