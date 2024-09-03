@@ -238,6 +238,7 @@ def execute_command(cmd):
 
 
 # App Window
+# noinspection PyTypeChecker
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
