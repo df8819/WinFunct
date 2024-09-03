@@ -776,10 +776,20 @@ echo.
 echo ============ Website Status =============
 if !status_code! equ 200 (
     echo Website is         ONLINE
+) else if !status_code! equ 201 (
+    echo Website is         ONLINE but -Created-
+) else if !status_code! equ 202 (
+    echo Website is         ONLINE but -Accepted-
+) else if !status_code! equ 204 (
+    echo Website is         ONLINE but -No Content-
 ) else if !status_code! equ 301 (
     echo Website is         ONLINE but -Moved Permanently-
 ) else if !status_code! equ 302 (
-    echo Website is         ONLINE but -Temporary Redirect-
+    echo Website is         ONLINE but -Found-
+) else if !status_code! equ 303 (
+    echo Website is         ONLINE but -See Other-
+) else if !status_code! equ 304 (
+    echo Website is         ONLINE but -Not Modified-
 ) else if !status_code! equ 307 (
     echo Website is         ONLINE but -Temporary Redirect-
 ) else if !status_code! equ 308 (
@@ -792,10 +802,26 @@ if !status_code! equ 200 (
     echo Website is         ONLINE but -Forbidden-
 ) else if !status_code! equ 404 (
     echo Website is         ONLINE but -Page Not Found-
+) else if !status_code! equ 405 (
+    echo Website is         ONLINE but -Method Not Allowed-
+) else if !status_code! equ 406 (
+    echo Website is         ONLINE but -Not Acceptable-
+) else if !status_code! equ 408 (
+    echo Website is         ONLINE but -Request Timeout-
+) else if !status_code! equ 410 (
+    echo Website is         ONLINE but -Gone-
+) else if !status_code! equ 429 (
+    echo Website is         ONLINE but -Too Many Requests-
 ) else if !status_code! equ 500 (
     echo Website is         ONLINE but -Internal Server Error-
+) else if !status_code! equ 501 (
+    echo Website is         ONLINE but -Not Implemented-
+) else if !status_code! equ 502 (
+    echo Website is         ONLINE but -Bad Gateway-
 ) else if !status_code! equ 503 (
     echo Website is         ONLINE but -Service Unavailable-
+) else if !status_code! equ 504 (
+    echo Website is         ONLINE but -Gateway Timeout-
 ) else (
     echo Website is         OFFLINE
 )
@@ -810,42 +836,82 @@ echo =========================================
 if !status_code! equ 200 (
     pause
     exit /b 0
+) else if !status_code! equ 201 (
+    pause
+    exit /b 201
+) else if !status_code! equ 202 (
+    pause
+    exit /b 202
+) else if !status_code! equ 204 (
+    pause
+    exit /b 204
 ) else if !status_code! equ 301 (
     pause
-    exit /b 0
+    exit /b 301
 ) else if !status_code! equ 302 (
     pause
-    exit /b 0
+    exit /b 302
+) else if !status_code! equ 303 (
+    pause
+    exit /b 303
+) else if !status_code! equ 304 (
+    pause
+    exit /b 304
 ) else if !status_code! equ 307 (
     pause
-    exit /b 0
+    exit /b 307
 ) else if !status_code! equ 308 (
     pause
-    exit /b 0
+    exit /b 308
 ) else if !status_code! equ 400 (
     pause
-    exit /b 0
+    exit /b 400
 ) else if !status_code! equ 401 (
     pause
-    exit /b 0
+    exit /b 401
 ) else if !status_code! equ 403 (
     pause
-    exit /b 0
+    exit /b 403
 ) else if !status_code! equ 404 (
     pause
-    exit /b 0
+    exit /b 404
+) else if !status_code! equ 405 (
+    pause
+    exit /b 405
+) else if !status_code! equ 406 (
+    pause
+    exit /b 406
+) else if !status_code! equ 408 (
+    pause
+    exit /b 408
+) else if !status_code! equ 410 (
+    pause
+    exit /b 410
+) else if !status_code! equ 429 (
+    pause
+    exit /b 429
 ) else if !status_code! equ 500 (
     pause
-    exit /b 0
+    exit /b 500
+) else if !status_code! equ 501 (
+    pause
+    exit /b 501
+) else if !status_code! equ 502 (
+    pause
+    exit /b 502
 ) else if !status_code! equ 503 (
     pause
-    exit /b 0
+    exit /b 503
+) else if !status_code! equ 504 (
+    pause
+    exit /b 504
 ) else (
     echo Checking again in 60 seconds...
     timeout /t 60 >nul
     goto check
 )
-    """
+                        """
+
                     temp_file.write(batch_script)
 
                 # Execute the batch file in a new window
