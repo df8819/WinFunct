@@ -477,13 +477,8 @@ class Application(tk.Tk):
 
                 # Process the cleaned lines
                 processed_lines = []
-                for i, line in enumerate(cleaned_lines):
-                    if i == 0:  # First line (Microsoft DiskPart version)
-                        processed_lines.append(line)
-                    elif "JULIEN-DESKTOP" in line:
-                        processed_lines.append(line + "\n")  # Add an extra newline after this line
-                    else:
-                        processed_lines.append(line)
+                for line in cleaned_lines:
+                    processed_lines.append(line)
 
                 cleaned_output = '\n'.join(processed_lines)
 
