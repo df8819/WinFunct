@@ -25,91 +25,13 @@ import requests
 import wmi
 
 # Local Imports
-# from config import *
+from config import *
 from HashStuffInt import HashStuff
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
-
-# Define the version once
-VERSION_NUMBER = "1.657"
-
-# Use the version number in different strings
-VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
-VERSION_SHORT = f"v{VERSION_NUMBER}"
-
-# UI COLOR section
-UI_COLOR = "#2f3128"  # App BG, Tab headers
-BUTTON_BG_COLOR = "#575a4b"  # BG color for buttons
-BUTTON_TEXT_COLOR = "#ffffff"  # Text color
-BOTTOM_BORDER_COLOR = "#ff8f20"  # Small bottom border
-VERSION_LABEL_TEXT = "#535e3e"  # Label text color
-
-# UI STYLE section
-BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
-# noinspection SpellCheckingInspection
-BORDER_WIDTH = "1"  # thiccness in pixel
-
-# GitHub repo link
-LINK = "https://github.com/df8819/WinFunct"
-
-# The curl-command to copy to the clipboard
-AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v'
-
-# Links for the "Link Opener" window
-links = {
-    "Dev Tools": {
-        "Python": "https://www.python.org/downloads/",
-        "Git": "https://git-scm.com/downloads",
-        "GitHub Desktop": "https://desktop.github.com",
-        "Visual Studio Code": "https://code.visualstudio.com/download",
-        "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
-    },
-    "Network Tools": {
-        "WireShark": "https://www.wireshark.org/download.html",
-        "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
-        "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
-        "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
-        "NetManSet": "https://www.netsetman.com/en/freeware",
-    },
-    "System Utilities": {
-        "Process Explorer": "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
-        "HxD Hex Editor": "https://mh-nexus.de/en/programs.php",
-        "HWInfo64": "https://www.hwinfo.com/download/",
-        "MSI Afterburner": "https://www.msi.com/Landing/afterburner/graphics-cards",
-        "WinDirStat": "https://sourceforge.net/projects/windirstat/",
-        "Create answer files": "https://schneegans.de/windows/unattend-generator/",
-        "StartIsBack Shell": "https://www.startisback.com/",
-    },
-    "Remote & Collaboration": {
-        "TeamViewer": "https://www.teamviewer.com/de/download/windows/",
-        "RustDesk": "https://github.com/rustdesk/rustdesk/releases/tag/1.2.3",
-        "MS PowerToys": "https://github.com/microsoft/PowerToys/releases/tag/v0.75.1",
-    },
-    "Disk & Partition Tools": {
-        "Etcher USB Creator": "https://etcher.balena.io",
-        "Raspberry Pi Imager": "https://www.raspberrypi.com/software/",
-        "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
-        "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
-        "Rufus USB Creator": "https://rufus.ie/en/",
-        "AnyBurn": "http://www.anyburn.com/download.php",
-    },
-    "Productivity": {
-        "PicPick": "https://picpick.app/en/download/",
-        "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
-        "Total Commander": "https://www.ghisler.com/ddownload.htm",
-        "Posy Cursors": "http://www.michieldb.nl/other/cursors",
-        "Bitwarden": "https://bitwarden.com/download/",
-        "FFMPEG GUI": "https://jeanslack.github.io/Videomass/Pages/Packages/Windows.html",
-    },
-    "Tutorials & Resources": {
-        "MAS Script": "https://massgrave.dev/index.html",
-        "AdGuard Home": "https://youtu.be/B2V_8M9cjYw?si=Z_AeA4hCFGiElOHB",
-        "NSE Lab": "https://nse.digital",
-    },
-}
 
 
 class GitUpdater:
@@ -2362,92 +2284,6 @@ if !status_code! equ 200 (
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=25, pady=10)
 
-        # Option Buttons for Option Tab (UI element)
-        # Windows Management and Configuration Tools
-        windows_management_options = [
-            ("Registry Editor", "regedit"),
-            ("PC Manager", "compmgmt.msc"),
-            ("Event Viewer", "eventvwr.msc"),
-            ("Services Manager", "services.msc"),
-            ("Group Policy", "gpedit.msc"),
-            ("Programs/Features", "appwiz.cpl"),
-            ("Windows Version", "winver"),
-            ("Advanced Settings", "SystemPropertiesAdvanced"),
-            ("User Accout Control", "useraccountcontrolsettings"),
-            ("Disk Manager", "diskmgmt.msc"),
-            ("System Name", "SystemPropertiesComputerName"),
-            ("ODBC Manager", "odbcad32"),
-            ("Shared Folders", "fsmgmt.msc"),
-            ("Mobility Center", "mblctr"),
-        ]
-
-        # Security and Networking Tools
-        security_and_networking_options = [
-            ("Security Center", "start ms-settings:windowsdefender"),
-            ("Security Policy", "secpol.msc"),
-            ("Firewall Advanced", "wf.msc"),
-            ("Network Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
-            ("Internet Options", "inetcpl.cpl"),
-            ("Credential Manager", "control /name Microsoft.CredentialManager"),
-            ("Windows Firewall", "firewall.cpl"),
-            ("Network Adapters", "ncpa.cpl"),
-            ("Remote Connections", "control /name Microsoft.RemoteAppAndDesktopConnections"),
-            ("VPN Settings", "start ms-settings:network-vpn"),
-            ("Wi-Fi Settings", "start ms-settings:network-wifi"),
-            ("Ethernet Settings", "start ms-settings:network-ethernet"),
-            ("Proxy Settings", "start ms-settings:network-proxy"),
-        ]
-
-        # System Tools and Utilities
-        system_tools_options = [
-            ("Edit Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
-            ("Task Manager", "taskmgr"),
-            ("Control Panel", "control"),
-            ("Device Manager", "devmgmt.msc"),
-            ("Performance Monitor", "perfmon"),
-            ("Resource Monitor", "resmon"),
-            ("Device Pairing", "devicepairingwizard"),
-            ("Windows Features", "optionalfeatures"),
-            ("System Info", "msinfo32"),
-        ]
-
-        # Remote Management and Virtualization Tools
-        remote_and_virtualization_options = [
-            ("Remote Desktop", "mstsc"),
-            ("RDP Settings", "start ms-settings:remotedesktop"),
-            ("Hyper-V Manager", "C:\\Windows\\System32\\virtmgmt.msc"),
-            ("Environment Vars", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
-        ]
-
-        # Troubleshooting and Optimization Tools
-        troubleshooting_and_optimization_options = [
-            ("Reliability Monitor", "perfmon /rel"),
-            ("Disk Cleanup", "cleanmgr"),
-            ("System Restore", "rstrui"),
-            ("Optimize Drives", "dfrgui"),
-            ("Memory Diagnostics", "MdSched"),
-            ("DirectX Diagnostics", "dxdiag"),
-            ("System Config", "msconfig"),
-            ("Windows Update", "start ms-settings:windowsupdate"),
-        ]
-
-        netsh_commands = [
-            ("IP Configuration", "netsh interface ip show config"),
-            ("Interface List", "netsh interface show interface"),
-            ("IPv4 Interface", "netsh interface ipv4 show interface"),
-            ("IPv6 Interface", "netsh interface ipv6 show interface"),
-            ("IP Address Info", "netsh interface ip show addresses"),
-            ("DNS Configuration", "netsh interface ip show dns"),
-            ("Display DNS Cache", "ipconfig /displaydns"),
-            ("Firewall State", "netsh advfirewall show currentprofile state"),
-            ("Routing Table", "netsh interface ipv4 show route"),
-            ("Wi-Fi Profiles", "netsh wlan show profiles"),
-            ("Wi-Fi Settings", "netsh wlan show settings"),
-            ("Wi-Fi Networks", "netsh wlan show networks"),
-            ("Network Stats", "netstat -s"),
-            ("ARP Scan", "powershell.exe arp -a"),
-            ("Shutdown -i", "shutdown -i"),
-        ]
 
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):

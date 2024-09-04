@@ -1,4 +1,4 @@
-# config.py
+# File for variables/configs - Less clutter in main file
 
 # Define the version once
 VERSION_NUMBER = "1.657"
