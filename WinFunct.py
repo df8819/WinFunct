@@ -133,8 +133,8 @@ class GitUpdater:
         status = GitUpdater.check_status()
 
         # Check if the branch is up-to-date
-        if "Your branch is up to date" not in status:
-            user_choice = input("Your branch is not up to date. Do you want to update? (y/n): ").strip().lower()
+        if "Your branch is up to date with 'origin/main'" not in status:
+            user_choice = input("WinFunct is not up to date. Do you want to update? (y/n): ").strip().lower()
             if user_choice == 'y':
                 return True  # User wants to update
         return False
