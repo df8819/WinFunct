@@ -74,7 +74,13 @@ class GitUpdater:
     @staticmethod
     def prompt_update():
         if GitUpdater.check_update_status():
-            user_choice = input("WinFunct has updates available. Do you want to update? (y/n): ").strip().lower()
+            user_choice = input(f"""
+    ╔═════════════════════════════════════════════════════════════╗
+    ║                                                             ║
+    ║   WinFunct update available. Do you want to update? (y/n)   ║
+    ║                                                             ║
+    ╚═════════════════════════════════════════════════════════════╝
+    """).strip().lower()
             if user_choice == 'y':
                 return True  # User wants to update
         return False
@@ -82,9 +88,9 @@ class GitUpdater:
     @staticmethod
     def execute_update():
         if GitUpdater.is_frozen():
-            print(f'Running as ".exe". Skipping update check. *** {VERSION_SHORT} ***')
+            print(f'Running as ".exe". Skipping update check. *{VERSION_SHORT}*')
         elif not GitUpdater.is_git_repository():
-            print(f'Not running in a Git repository. Skipping update check. *** {VERSION_SHORT} ***')
+            print(f'Not running in a Git repository. Skipping update check. *{VERSION_SHORT}*')
         else:
             if GitUpdater.prompt_update():
                 print('Executing git pull...')
@@ -126,12 +132,10 @@ def run_as_admin():
         cmd = [sys.executable] + sys.argv
         cmd_line = ' '.join('"' + item.replace('"', '\\"') + '"' for item in cmd)
         try:
-            log_message("Script is not running with admin rights. Trying to obtain them...")
+            log_message("Initial checks completed. Running as intended...")
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
         except Exception as e:
             log_message(f"Error re-running the script with admin rights: {e}")
-    else:
-        log_message("Current platform is not Windows, skipping admin check.")
 
 
 def is_running_in_ide():
