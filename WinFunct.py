@@ -43,6 +43,9 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
+import subprocess
+import sys
+
 
 class GitUpdater:
     @staticmethod
@@ -50,24 +53,31 @@ class GitUpdater:
         return getattr(sys, 'frozen', False)
 
     @staticmethod
-    def check_status():
-        if GitUpdater.is_frozen():
-            return ""  # Ignore update check for frozen executable
+    def is_git_repository():
         try:
-            # Run git status and capture output
-            result = subprocess.run(['git', 'status'], capture_output=True, text=True, check=True)
-            return result.stdout
+            subprocess.run(['git', 'rev-parse', '--is-inside-work-tree'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+    @staticmethod
+    def check_update_status():
+        if GitUpdater.is_frozen() or not GitUpdater.is_git_repository():
+            return False  # Ignore update check for frozen executable or non-Git repository
+        try:
+            # Run git fetch to get updates from the remote
+            subprocess.run(['git', 'fetch'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # Run git diff to check if there are updates
+            result = subprocess.run(['git', 'status', '-uno'], capture_output=True, text=True, check=True)
+            return "Your branch is behind" in result.stdout
         except subprocess.CalledProcessError as e:
-            print(f"Error checking git status: {e}")
-            return ""
+            print(f"Error checking update status: {e}")
+            return False
 
     @staticmethod
     def prompt_update():
-        status = GitUpdater.check_status()
-
-        # Check if the branch is up-to-date
-        if "Your branch is up to date with 'origin/main'" not in status:
-            user_choice = input("WinFunct is not up to date. Do you want to update? (y/n): ").strip().lower()
+        if GitUpdater.check_update_status():
+            user_choice = input("WinFunct has updates available. Do you want to update? (y/n): ").strip().lower()
             if user_choice == 'y':
                 return True  # User wants to update
         return False
@@ -76,17 +86,18 @@ class GitUpdater:
     def execute_update():
         if GitUpdater.is_frozen():
             print(f'Running as ".exe". Skipping update check. *** {VERSION_SHORT} ***')
+        elif not GitUpdater.is_git_repository():
+            print(f'Not running in a Git repository. Skipping update check. *** {VERSION_SHORT} ***')
         else:
             if GitUpdater.prompt_update():
                 print('Executing git pull...')
                 try:
-                    # Run git pull silently
                     subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
                     print('Repository updated.')
                 except subprocess.CalledProcessError as e:
                     print(f"Error during git pull: {e}")
             else:
-                print(f'No update needed. *** {VERSION_SHORT} ***')
+                print(f'No update needed. *{VERSION_SHORT}*')
 
 
 # Execute the update check before any class instantiation
@@ -109,11 +120,11 @@ def check_admin_cmd():
 
 
 if is_admin():
-    print("Running with administrative privileges (detected by ctypes).")
+    print("Running with admin rights (detected by ctypes)...")
 elif check_admin_cmd():
-    print("Running with administrative privileges (detected by command line check).")
+    print("Running with admin rights (detected by command line check)...")
 else:
-    print("Not running with administrative privileges.")
+    print("Not running with administrative privileges...")
 
 
 def log_message(message):
@@ -222,7 +233,7 @@ class Application(tk.Tk):
         self.clipboard_append(text)
         self.update()  # To make sure the clipboard is updated
 
-# ----------------------------------DROPDOWN SECTION-------------------------------------------------
+    # ----------------------------------DROPDOWN SECTION-------------------------------------------------
     # on_function_select are for the dropdown menus from the Button-Section in the UI part
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
@@ -299,7 +310,7 @@ class Application(tk.Tk):
             self.function_dropdown8.after(0, self.reset_ui)
             self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
 
-# ----------------------------------DROPDOWN SECTION END---------------------------------------------
+    # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
     # Theme selector
     def open_theme_selector(self):
@@ -528,7 +539,7 @@ class Application(tk.Tk):
                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
         copy_button.pack(pady=10)
 
-# ----------------------------------DISK INFO-------------------------------------------------
+    # ----------------------------------DISK INFO-------------------------------------------------
 
     def show_disk_info(self):
         print("Showing Disk Information")
@@ -611,8 +622,8 @@ class Application(tk.Tk):
         # Start fetching disk info in a separate thread
         threading.Thread(target=fetch_disk_info, daemon=True).start()
 
-# ----------------------------------DISK INFO END-------------------------------------------------
-# ----------------------------------WIFI PASSWORDS-------------------------------------------------
+    # ----------------------------------DISK INFO END-------------------------------------------------
+    # ----------------------------------WIFI PASSWORDS-------------------------------------------------
 
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles and passwords.""")
@@ -740,8 +751,8 @@ class Application(tk.Tk):
         else:
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
-# ----------------------------------WIFI PASSWORDS END-------------------------------------------------
-# ----------------------------------DISK SPEEDTEST-------------------------------------------------
+    # ----------------------------------WIFI PASSWORDS END-------------------------------------------------
+    # ----------------------------------DISK SPEEDTEST-------------------------------------------------
 
     def run_winsat_disk(self):
         print("Running Disk speed test.")
@@ -818,8 +829,8 @@ class Application(tk.Tk):
                                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         run_button.pack(pady=10)
 
-# ----------------------------------DISK SPEEDTEST END-------------------------------------------------
-# ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER-------------------------------------------------
+    # ----------------------------------DISK SPEEDTEST END-------------------------------------------------
+    # ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER-------------------------------------------------
 
     def run_website_checker(self):
         def on_run():
@@ -946,8 +957,8 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_checks)
         thread.start()
 
-# ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER END-------------------------------------------------
-# ----------------------------------(INTERACTIVE) SHELL COMMANDS-------------------------------------------------
+    # ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER END-------------------------------------------------
+    # ----------------------------------(INTERACTIVE) SHELL COMMANDS-------------------------------------------------
 
     def activate_win(self):
         print("Activating Microsoft Products")
@@ -1017,8 +1028,8 @@ class Application(tk.Tk):
 
             return stderr == ""
 
-# ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
-# ----------------------------------FLUSH DNS-------------------------------------------------
+    # ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
+    # ----------------------------------FLUSH DNS-------------------------------------------------
 
     def renew_ip_config(self):
         if messagebox.askyesno("Renew IP Configuration",
@@ -1045,8 +1056,8 @@ class Application(tk.Tk):
         else:
             print(f"Command was cancelled.")
 
-# ----------------------------------FLUSH DNS END-------------------------------------------------
-# ----------------------------------ADGUARD HOME INSTALL HELPER-------------------------------------------------
+    # ----------------------------------FLUSH DNS END-------------------------------------------------
+    # ----------------------------------ADGUARD HOME INSTALL HELPER-------------------------------------------------
 
     def agh_curl(self):
         print("""Executing 'AdGuard Home' install helper.""")
@@ -1087,8 +1098,8 @@ class Application(tk.Tk):
 
         root.mainloop()
 
-# ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
-# ----------------------------------CHECKDUM HELPER-------------------------------------------------
+    # ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
+    # ----------------------------------CHECKDUM HELPER-------------------------------------------------
 
     def get_file_checksum(self):
         print("Running file checksum helper.")
@@ -1183,8 +1194,8 @@ class Application(tk.Tk):
         algo_window.grab_set()
         self.wait_window(algo_window)
 
-# ----------------------------------CHECKDUM HELPER END-------------------------------------------------
-# ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
+    # ----------------------------------CHECKDUM HELPER END-------------------------------------------------
+    # ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
     def get_installed_software(self):
         software_list = []
         logging.basicConfig(level=logging.INFO)
@@ -1525,8 +1536,8 @@ class Application(tk.Tk):
 
             htmlfile.write('</table></body></html>')
 
-# ----------------------------------SYSTEM INFO COMPARE END-------------------------------------------------
-# ----------------------------------ACTIVE CONNECTIONS CHECKER-------------------------------------------------
+    # ----------------------------------SYSTEM INFO COMPARE END-------------------------------------------------
+    # ----------------------------------ACTIVE CONNECTIONS CHECKER-------------------------------------------------
 
     def netstat_output(self):
         print("""Executing Network Shell command to extract apps with active internet connection.""")
@@ -1594,8 +1605,8 @@ class Application(tk.Tk):
             self.search_app_info(file_path)
         print("""Searching scanned apps online to check their trustworthiness.""")
 
-# ----------------------------------ACTIVE CONNECTIONS CHECKER END-------------------------------------------------
-# -----------------------------------------------CLONE REPO--------------------------------------------------
+    # ----------------------------------ACTIVE CONNECTIONS CHECKER END-------------------------------------------------
+    # -----------------------------------------------CLONE REPO--------------------------------------------------
 
     def git_pull(self):
         # Determine if we're running as a script or frozen executable
@@ -1856,8 +1867,8 @@ class Application(tk.Tk):
 
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
-# -----------------------------------------------CLONE REPO END--------------------------------------------------
-# -----------------------------------------------GODMODE--------------------------------------------------
+    # -----------------------------------------------CLONE REPO END--------------------------------------------------
+    # -----------------------------------------------GODMODE--------------------------------------------------
 
     def open_godmode(self):
         print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.""")
@@ -1927,8 +1938,8 @@ class Application(tk.Tk):
             # Change back to the original directory
             os.chdir(root_dir)
 
-# -----------------------------------------------GODMODE END--------------------------------------------------
-# -----------------------------------------------LOGOFF USER(S)--------------------------------------------------
+    # -----------------------------------------------GODMODE END--------------------------------------------------
+    # -----------------------------------------------LOGOFF USER(S)--------------------------------------------------
 
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
@@ -2019,8 +2030,8 @@ class Application(tk.Tk):
 
         window.mainloop()
 
-# -----------------------------------------------LOGOFF USER(S) END--------------------------------------------------
-# -----------------------------------------------LINK SUMMARY--------------------------------------------------
+    # -----------------------------------------------LOGOFF USER(S) END--------------------------------------------------
+    # -----------------------------------------------LINK SUMMARY--------------------------------------------------
 
     def open_links_window(self):
         print("Open Link summary.")
@@ -2088,9 +2099,9 @@ class Application(tk.Tk):
                 webbrowser.open_new_tab(link)
         window.destroy()  # Close the window
 
-# -----------------------------------------------LINK SUMMARY END--------------------------------------------------
-# --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION-----------------VVVVVVVVVVVVVVVVVVVV---------------
-        # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
+    # -----------------------------------------------LINK SUMMARY END--------------------------------------------------
+    # --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION-----------------VVVVVVVVVVVVVVVVVVVV---------------
+    # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
 
     def create_widgets(self):
         style = ttk.Style()
