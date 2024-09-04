@@ -96,7 +96,7 @@ GitUpdater.execute_update()
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
-    except:
+    except WindowsError:
         return False
 
 
@@ -174,7 +174,7 @@ def execute_command(cmd):
 
 
 # App Window
-# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection
+# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -608,9 +608,12 @@ class Application(tk.Tk):
                     try:
                         usage = psutil.disk_usage(partition.mountpoint)
                         drives.append(f"{partition.device[0]}: ({usage.total / (1024 ** 3):.2f} GB)")
-                    except Exception:
-                        # Skip drives that can't be accessed
-                        pass
+                    except PermissionError:
+                        # Skip drives that we don't have permission to access
+                        print(f"Permission denied for {partition.device}")
+                    except OSError as e:
+                        # Handle other OS-related errors
+                        print(f"Error accessing {partition.device}: {e}")
             return drives
 
         def on_run():
@@ -703,7 +706,6 @@ class Application(tk.Tk):
                 self.top.after(1000, lambda: os.unlink(check_website_script))
 
                 self.top.destroy()  # Close the input window
-
 
             except Exception as e:
                 messagebox.showerror("Error", f"An error occurred: {str(e)}")
