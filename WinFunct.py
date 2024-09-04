@@ -1,5 +1,4 @@
 # Standard Library Imports
-# Standard Library Imports
 import base64
 import csv
 import ctypes
@@ -76,11 +75,13 @@ class GitUpdater:
     def prompt_update():
         if GitUpdater.check_update_status():
             user_choice = input(f"""
-    ╔═════════════════════════════════════════════════════════════╗
-    ║                                                             ║
-    ║   WinFunct update available. Do you want to update? (y/n)   ║
-    ║                                                             ║
-    ╚═════════════════════════════════════════════════════════════╝
+    ╔═══════════════════════════════════════════════════════╗
+    ║                                                       ║
+    ║   WinFunct update available. Do you want to update?   ║
+    ║   Type [y/n] and press Enter to proceed please...     ║
+    ║         ‾ ‾                                           ║
+    ╚═══════════════════════════════════════════════════════╝
+    
     """).strip().lower()
             if user_choice == 'y':
                 return True  # User wants to update
