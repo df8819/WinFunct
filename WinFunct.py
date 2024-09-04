@@ -25,7 +25,17 @@ import requests
 import wmi
 
 # Local Imports
-from config import *
+# noinspection PyUnresolvedReferences
+from config import (
+    LOGO, VERSION_NUMBER, VERSION, VERSION_SHORT,
+    UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT,
+    BUTTON_STYLE, BORDER_WIDTH,
+    LINK, AdGuardClipBoard,
+    links, batch_script,
+    windows_management_options, security_and_networking_options,
+    system_tools_options, remote_and_virtualization_options,
+    troubleshooting_and_optimization_options, netsh_commands
+)
 from HashStuffInt import HashStuff
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
