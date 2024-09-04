@@ -1,4 +1,5 @@
 # Standard Library Imports
+import base64
 import csv
 import ctypes
 import hashlib
@@ -350,7 +351,10 @@ class Application(tk.Tk):
 
         def run_command():
             try:
-                subprocess.run('powershell Start-Process powershell -Verb runAs', shell=True)
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                ps_command = f'Set-Location "{script_dir}"'
+                encoded_command = base64.b64encode(ps_command.encode('utf-16le')).decode('ascii')
+                subprocess.run(f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
 
