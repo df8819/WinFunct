@@ -363,7 +363,9 @@ class Application(tk.Tk):
 
         def run_command():
             try:
-                subprocess.run('start cmd.exe /k cd C:\\ & title Command Prompt as Admin', shell=True)
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                cmd_command = f'start cmd.exe /k cd "{script_dir}" & title Command Prompt as Admin'
+                subprocess.run(cmd_command, shell=True)
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open Command Prompt as admin: {e}")
 
