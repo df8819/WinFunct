@@ -150,25 +150,10 @@ if __name__ == "__main__":
 
 
 def show_logo():
-    print("""
-   ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒  
-  █████████ ░█████████▓ ██████████████████████████████████████████████████ 
-  ▓█      █▒██       █▓▓█      █ █                  █                   █▓ 
-   █░     ███        ▓██▓     █▓▓█             ░▒▒▒▓█░▒▒▒░        ▒▒▒▒▒▓█  
-   █▓     ██         ▓█▓     ██ ██     ████████████████████     ░████████  
-   ██     █▓         ▒█     ██  █▓     ██▓▓▓▓▓█▓         ▓█     ██         
-   ██                      ▓█░ ▓█             █          ██     ██         
-   ██          █▓          █▓  ██     █████████          █▒     █░         
-   ▓█         ▓█▓         ██   █▓     █▓▓▓▓▓▓▓          ▓█     ▓█          
-   ▓█        ▒██▓        ██   ▒█     ▓█                 ██     ██          
-    █░       █▓▓█       ▓█    ██     ██   ╔════════╗    █░     █▓          
-    ██████████ ▓█▓███████▓    ██▓▓█▓▓█▓   ║WinFunct║   ▓█▓▓▓█▓██           
-     ▓▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓▓░     ▒▓▓▓▓▓▓▓    ╚════════╝    ▓▓▓▓▓▓▓            
-""")
+    print(LOGO)
 
 
 show_logo()
-
 print(f"Awaiting user input (⌐■_■)")
 
 
@@ -2125,7 +2110,6 @@ class Application(tk.Tk):
 
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=25, pady=10)
-
 
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
