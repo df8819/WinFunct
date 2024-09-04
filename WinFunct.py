@@ -110,8 +110,8 @@ def is_admin():
 
 def check_admin_cmd():
     try:
-        output = subprocess.check_output('whoami /groups', shell=True).decode('utf-8')
-        return "S-1-16-12288" in output  # This SID corresponds to high mandatory level
+        output = subprocess.check_output('whoami /groups', shell=True).decode('cp850', errors='replace')
+        return "S-1-16-12288" in output
     except subprocess.CalledProcessError:
         return False
 
