@@ -18,7 +18,7 @@ LOGO = f"""
 """
 
 # Define the version once
-VERSION_NUMBER = "1.657"
+VERSION_NUMBER = "1.660"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
