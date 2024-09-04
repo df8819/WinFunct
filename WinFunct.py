@@ -431,7 +431,12 @@ class Application(tk.Tk):
 
         def run_command():
             try:
-                script_dir = os.path.dirname(os.path.abspath(__file__))
+                if getattr(sys, 'frozen', False):
+                    # Running as a PyInstaller executable
+                    script_dir = sys._MEIPASS
+                else:
+                    # Running as a script
+                    script_dir = os.path.dirname(os.path.abspath(__file__))
                 ps_command = f'Set-Location "{script_dir}"'
                 encoded_command = base64.b64encode(ps_command.encode('utf-16le')).decode('ascii')
                 subprocess.run(f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
@@ -447,7 +452,12 @@ class Application(tk.Tk):
 
         def run_command():
             try:
-                script_dir = os.path.dirname(os.path.abspath(__file__))
+                if getattr(sys, 'frozen', False):
+                    # Running as a PyInstaller executable
+                    script_dir = sys._MEIPASS
+                else:
+                    # Running as a script
+                    script_dir = os.path.dirname(os.path.abspath(__file__))
                 cmd_command = f'start cmd.exe /k cd "{script_dir}" & title Command Prompt as Admin'
                 subprocess.run(cmd_command, shell=True)
             except Exception as e:

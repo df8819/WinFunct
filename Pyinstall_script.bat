@@ -32,7 +32,7 @@ if "!version!"=="" (
 REM Prompt for pyinstaller process option with default [1]
 set "option=2"
 echo.
-echo --------------------------------------------------------------------------------
+echo ================================================================================
 echo Please choose a PyInstaller process (Default is [2]):
 echo.
 echo [1] Includes a Python script to create and modify the spec file with exclusions.
@@ -112,7 +112,7 @@ if exist WinFunct.spec del /F WinFunct.spec
 
 echo.
 echo.
-echo -----------------------------------------------------------
+echo ===========================================================
 echo Compilation complete. Process took %elapsed_time% seconds.
 echo.
 echo WinFunct_%version%.exe created and moved to root directory.
@@ -122,7 +122,7 @@ echo 	dist/
 echo 	build/
 echo 	__pycache__/
 echo 	WinFunct.spec
-echo -----------------------------------------------------------
+echo ===========================================================
 echo.
 echo Press any button to exit...
 pause > nul 2>&1
