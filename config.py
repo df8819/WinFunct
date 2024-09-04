@@ -78,11 +78,11 @@ links = {
     },
 }
 
-batch_script = f"""
+batchX_script = """
 @echo off
 setlocal enabledelayedexpansion
 
-set website={website_url}
+set website={{website_url}}
 
 :check
 for /f "tokens=*" %%a in ('curl -Is !website! -o nul -w "%%{{http_code}} %%{{time_total}} %%{{remote_ip}}"') do (
