@@ -29,7 +29,7 @@ UI_COLOR = "#2f3128"  # General App/Tab/Button Background
 BUTTON_BG_COLOR = "#575a4b"  # Background color for buttons
 BUTTON_TEXT_COLOR = "#ffffff"  # Text color
 BOTTOM_BORDER_COLOR = "#ff8f20"  # Bottom border color
-VERSION_LABEL_TEXT = "#535e3e"  # Label text color
+VERSION_LABEL_TEXT = "#bf6000"  # Label text color
 
 # UI STYLE section
 BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
