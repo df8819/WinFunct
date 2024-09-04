@@ -24,8 +24,8 @@ import winreg
 import requests
 import wmi
 
-# Local Imports
 # noinspection PyUnresolvedReferences
+# Local Imports
 from config import (
     LOGO, VERSION_NUMBER, VERSION, VERSION_SHORT,
     UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT,
@@ -42,9 +42,6 @@ from SimplePWGenInt import SimplePWGen
 from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
-
-import subprocess
-import sys
 
 
 class GitUpdater:
