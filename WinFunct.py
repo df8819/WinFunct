@@ -25,6 +25,7 @@ import requests
 import wmi
 
 # Local Imports
+# from config import *
 from HashStuffInt import HashStuff
 from JChatInt import JChat
 from SimplePWGenInt import SimplePWGen
