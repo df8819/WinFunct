@@ -128,7 +128,6 @@ def run_as_admin():
         try:
             log_message("Script is not running with admin rights. Trying to obtain them...")
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
-            sys.exit()  # Exit after trying to elevate privileges
         except Exception as e:
             log_message(f"Error re-running the script with admin rights: {e}")
     else:
@@ -151,18 +150,15 @@ def print_log():
 if __name__ == "__main__":
     # Bypass admin check if running in an IDE
     if not is_running_in_ide():
-        if is_admin():
-            print("Running with admin rights (detected by ctypes)...")
-            # Print log messages in the elevated terminal
-            print_log()
-        elif check_admin_cmd():
-            print("Running with admin rights (detected by command line check)...")
+        if is_admin() or check_admin_cmd():
+            print("Running with admin rights...")
             # Print log messages in the elevated terminal
             print_log()
         else:
             print("Not running with administrative privileges...")
             run_as_admin()
             # The script will exit here if not running as admin
+            sys.exit()
     else:
         # Print log messages if running in an IDE
         print_log()
