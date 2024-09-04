@@ -222,6 +222,143 @@ class Application(tk.Tk):
         self.clipboard_append(text)
         self.update()  # To make sure the clipboard is updated
 
+# ----------------------------------DROPDOWN SECTION-------------------------------------------------
+    # on_function_select are for the dropdown menus from the Button-Section in the UI part
+    def on_function_select1(self, *args):
+        selected1 = self.selected_function1.get()
+        if selected1 == "[1] Extract Sys Info":
+            self.function_dropdown1.after(0, self.gather_and_save_info)
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
+        elif selected1 == "[2] Compare Sys Info":
+            self.function_dropdown1.after(0, self.compare_system_info)
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
+        elif selected1 == "[3] Show single Sys":
+            self.function_dropdown1.after(0, self.show_system_info)
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
+
+    def on_function_select2(self, *args):
+        selected2 = self.selected_function2.get()
+        if selected2 == "[1] Active Connections":
+            self.function_dropdown2.after(0, self.netstat_output)
+            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
+        elif selected2 == "[2] Threat Search":
+            self.function_dropdown2.after(0, self.confirm_and_search)
+            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
+
+    def on_function_select3(self, *args):
+        selected3 = self.selected_function3.get()
+        if selected3 == "[1] Simple God mode":
+            self.function_dropdown3.after(0, self.open_godmode)
+            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
+        elif selected3 == "[2] Super God mode":
+            self.function_dropdown3.after(0, self.open_super_godmode)
+            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
+
+    def on_function_select4(self, *args):
+        selected4 = self.selected_function4.get()
+        if selected4 == "[1] cmd":
+            self.function_dropdown4.after(0, self.open_cmd_as_admin)
+            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
+        elif selected4 == "[2] PowerShell":
+            self.function_dropdown4.after(0, self.open_ps_as_admin)
+            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
+
+    def on_function_select5(self, *args):
+        selected5 = self.selected_function5.get()
+        if selected5 == "[1] This PC":
+            self.function_dropdown5.after(0, self.check_internet)
+            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
+        elif selected5 == "[2] Website":
+            self.function_dropdown5.after(0, self.run_website_checker)
+            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
+
+    def on_function_select6(self, *args):
+        selected6 = self.selected_function6.get()
+        if selected6 == "[1] CTT Winutils":
+            self.function_dropdown6.after(0, self.activate_wui)
+            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
+        elif selected6 == "[2] Activate Win/Office":
+            self.function_dropdown6.after(0, self.activate_win)
+            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
+
+    def on_function_select7(self, *args):
+        selected7 = self.selected_function7.get()
+        if selected7 == "[1] Disk Speedtest":
+            self.function_dropdown7.after(0, self.run_winsat_disk)
+            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
+        elif selected7 == "[2] Show Disk Info":
+            self.function_dropdown7.after(0, self.show_disk_info)
+            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
+
+    def on_function_select8(self, *args):
+        selected8 = self.selected_function8.get()
+        if selected8 == "[1] Theme Selector":
+            self.function_dropdown8.after(0, self.open_theme_selector)
+            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
+        elif selected8 == "[2] Reset UI":
+            self.function_dropdown8.after(0, self.reset_ui)
+            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
+
+# ----------------------------------DROPDOWN SECTION END---------------------------------------------
+
+    # Theme selector
+    def open_theme_selector(self):
+        self.current_theme = {
+            "UI_COLOR": UI_COLOR,
+            "BUTTON_BG_COLOR": BUTTON_BG_COLOR,
+            "BUTTON_TEXT_COLOR": BUTTON_TEXT_COLOR,
+            "BOTTOM_BORDER_COLOR": BOTTOM_BORDER_COLOR,
+            "VERSION_LABEL_TEXT": VERSION_LABEL_TEXT
+        }
+
+        UISelector(self, self.current_theme, self.update_theme)
+
+    def update_theme(self, new_theme):
+        global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
+
+        UI_COLOR = new_theme['UI_COLOR']
+        BUTTON_BG_COLOR = new_theme['BUTTON_BG_COLOR']
+        BUTTON_TEXT_COLOR = new_theme['BUTTON_TEXT_COLOR']
+        BOTTOM_BORDER_COLOR = new_theme['BOTTOM_BORDER_COLOR']
+        VERSION_LABEL_TEXT = new_theme['VERSION_LABEL_TEXT']
+
+        self.current_theme = new_theme
+        self.apply_theme()
+
+    def apply_theme(self):
+        self.configure(bg=UI_COLOR)
+        self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
+
+        def update_widget_colors(widget):
+            if isinstance(widget, tk.Button):
+                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+            elif isinstance(widget, tk.Label):
+                widget.configure(bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+            elif isinstance(widget, tk.Frame):
+                widget.configure(bg=UI_COLOR)
+            elif isinstance(widget, tk.OptionMenu):
+                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+                widget["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+
+            for child in widget.winfo_children():
+                update_widget_colors(child)
+
+        update_widget_colors(self)
+
+        # Update ttk styles
+        style = ttk.Style()
+        style.configure('TNotebook', background=UI_COLOR)
+        style.configure('TNotebook.Tab', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+        style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
+        style.configure('TFrame', background=UI_COLOR)
+        style.configure('TButton', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+
+        # Update the version label
+        if hasattr(self, 'version_label'):
+            self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
+
+        self.update_idletasks()
+
     def open_chat(self):
         print("""Open JChat app.""")
         if tk.messagebox.askyesno("Open JChat",
@@ -391,6 +528,8 @@ class Application(tk.Tk):
                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
         copy_button.pack(pady=10)
 
+# ----------------------------------DISK INFO-------------------------------------------------
+
     def show_disk_info(self):
         print("Showing Disk Information")
 
@@ -471,6 +610,9 @@ class Application(tk.Tk):
 
         # Start fetching disk info in a separate thread
         threading.Thread(target=fetch_disk_info, daemon=True).start()
+
+# ----------------------------------DISK INFO END-------------------------------------------------
+# ----------------------------------WIFI PASSWORDS-------------------------------------------------
 
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles and passwords.""")
@@ -598,6 +740,9 @@ class Application(tk.Tk):
         else:
             messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
+# ----------------------------------WIFI PASSWORDS END-------------------------------------------------
+# ----------------------------------DISK SPEEDTEST-------------------------------------------------
+
     def run_winsat_disk(self):
         print("Running Disk speed test.")
 
@@ -673,6 +818,9 @@ class Application(tk.Tk):
                                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         run_button.pack(pady=10)
 
+# ----------------------------------DISK SPEEDTEST END-------------------------------------------------
+# ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER-------------------------------------------------
+
     def run_website_checker(self):
         def on_run():
             website_url = self.website_entry.get().strip()
@@ -743,6 +891,64 @@ class Application(tk.Tk):
                                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         run_button.pack(pady=10)
 
+    def check_internet(self):
+        print("""Running various 'is online?' checks.""")
+
+        def run_checks():
+            results = []
+            methods = [
+                ("Ping", '8.8.8.8'),
+                ("Socket", ('8.8.8.8', 53)),
+                ("HTTP", 'http://www.google.com')
+            ]
+
+            for method_name, target in methods:
+                start_time = time.time()
+                success, message = False, f"{method_name} failed"
+
+                if method_name == "Ping":
+                    try:
+                        param = '-n' if sys.platform.lower() == 'win32' else '-c'
+                        subprocess.run(['ping', param, '1', target],
+                                       stdout=subprocess.DEVNULL,
+                                       stderr=subprocess.DEVNULL,
+                                       check=True)
+                        success, message = True, f"{method_name} (8.8.8.8) successful"
+                    except subprocess.CalledProcessError:
+                        pass
+                elif method_name == "Socket":
+                    try:
+                        socket.create_connection(target, timeout=3)
+                        success, message = True, f"{method_name} (8.8.8.8 - Port 53) connection successful"
+                    except socket.error:
+                        pass
+                elif method_name == "HTTP":
+                    try:
+                        response = requests.get(target, timeout=5)
+                        if response.status_code == 200:
+                            success, message = True, f"{method_name} (http://www.google.com) request successful"
+                    except requests.RequestException:
+                        pass
+
+                end_time = time.time()
+                latency = round((end_time - start_time) * 1000, 2)  # Convert to ms
+                results.append((success, message, latency))
+
+            online = any(result[0] for result in results)
+            status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
+
+            if online:
+                messagebox.showinfo("Internet Status", f"We're online :)\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
+            else:
+                messagebox.showwarning("Internet Status", f"We're offline :(\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
+
+        # Run the internet checks in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_checks)
+        thread.start()
+
+# ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER END-------------------------------------------------
+# ----------------------------------(INTERACTIVE) SHELL COMMANDS-------------------------------------------------
+
     def activate_win(self):
         print("Activating Microsoft Products")
 
@@ -811,6 +1017,9 @@ class Application(tk.Tk):
 
             return stderr == ""
 
+# ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
+# ----------------------------------FLUSH DNS-------------------------------------------------
+
     def renew_ip_config(self):
         if messagebox.askyesno("Renew IP Configuration",
                                "Are you sure you want to release/renew the IP config and flush DNS?\n\nIMPORTANT:\n- Active downloads may pause or fail, but they won't be explicitly cancelled.\n- Internet connection will be temporarily lost and then reestablished.\n- Any ongoing network activities will be disrupted."):
@@ -835,6 +1044,9 @@ class Application(tk.Tk):
             thread.start()
         else:
             print(f"Command was cancelled.")
+
+# ----------------------------------FLUSH DNS END-------------------------------------------------
+# ----------------------------------ADGUARD HOME INSTALL HELPER-------------------------------------------------
 
     def agh_curl(self):
         print("""Executing 'AdGuard Home' install helper.""")
@@ -874,6 +1086,9 @@ class Application(tk.Tk):
         no_button.pack(side=tk.LEFT, padx=5, pady=5)
 
         root.mainloop()
+
+# ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
+# ----------------------------------CHECKDUM HELPER-------------------------------------------------
 
     def get_file_checksum(self):
         print("Running file checksum helper.")
@@ -968,6 +1183,8 @@ class Application(tk.Tk):
         algo_window.grab_set()
         self.wait_window(algo_window)
 
+# ----------------------------------CHECKDUM HELPER END-------------------------------------------------
+# ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
     def get_installed_software(self):
         software_list = []
         logging.basicConfig(level=logging.INFO)
@@ -1133,142 +1350,6 @@ class Application(tk.Tk):
             title="Choose a location to save the file"
         )
         return file_path
-
-    # ----------------------------------DROPDOWN SECTION-------------------------------------------------
-    # on_function_select are for the dropdown menus from the Button-Section in the UI part
-    def on_function_select1(self, *args):
-        selected1 = self.selected_function1.get()
-        if selected1 == "[1] Extract Sys Info":
-            self.function_dropdown1.after(0, self.gather_and_save_info)
-            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
-        elif selected1 == "[2] Compare Sys Info":
-            self.function_dropdown1.after(0, self.compare_system_info)
-            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
-        elif selected1 == "[3] Show single Sys":
-            self.function_dropdown1.after(0, self.show_system_info)
-            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
-
-    def on_function_select2(self, *args):
-        selected2 = self.selected_function2.get()
-        if selected2 == "[1] Active Connections":
-            self.function_dropdown2.after(0, self.netstat_output)
-            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
-        elif selected2 == "[2] Threat Search":
-            self.function_dropdown2.after(0, self.confirm_and_search)
-            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
-
-    def on_function_select3(self, *args):
-        selected3 = self.selected_function3.get()
-        if selected3 == "[1] Simple God mode":
-            self.function_dropdown3.after(0, self.open_godmode)
-            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
-        elif selected3 == "[2] Super God mode":
-            self.function_dropdown3.after(0, self.open_super_godmode)
-            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
-
-    def on_function_select4(self, *args):
-        selected4 = self.selected_function4.get()
-        if selected4 == "[1] cmd":
-            self.function_dropdown4.after(0, self.open_cmd_as_admin)
-            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
-        elif selected4 == "[2] PowerShell":
-            self.function_dropdown4.after(0, self.open_ps_as_admin)
-            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
-
-    def on_function_select5(self, *args):
-        selected5 = self.selected_function5.get()
-        if selected5 == "[1] This PC":
-            self.function_dropdown5.after(0, self.check_internet)
-            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
-        elif selected5 == "[2] Website":
-            self.function_dropdown5.after(0, self.run_website_checker)
-            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
-
-    def on_function_select6(self, *args):
-        selected6 = self.selected_function6.get()
-        if selected6 == "[1] CTT Winutils":
-            self.function_dropdown6.after(0, self.activate_wui)
-            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
-        elif selected6 == "[2] Activate Win/Office":
-            self.function_dropdown6.after(0, self.activate_win)
-            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
-
-    def on_function_select7(self, *args):
-        selected7 = self.selected_function7.get()
-        if selected7 == "[1] Disk Speedtest":
-            self.function_dropdown7.after(0, self.run_winsat_disk)
-            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
-        elif selected7 == "[2] Show Disk Info":
-            self.function_dropdown7.after(0, self.show_disk_info)
-            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
-
-    def on_function_select8(self, *args):
-        selected8 = self.selected_function8.get()
-        if selected8 == "[1] Theme Selector":
-            self.function_dropdown8.after(0, self.open_theme_selector)
-            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
-        elif selected8 == "[2] Reset UI":
-            self.function_dropdown8.after(0, self.reset_ui)
-            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
-
-    # ----------------------------------DROPDOWN SECTION END---------------------------------------------
-
-    def open_theme_selector(self):
-        self.current_theme = {
-            "UI_COLOR": UI_COLOR,
-            "BUTTON_BG_COLOR": BUTTON_BG_COLOR,
-            "BUTTON_TEXT_COLOR": BUTTON_TEXT_COLOR,
-            "BOTTOM_BORDER_COLOR": BOTTOM_BORDER_COLOR,
-            "VERSION_LABEL_TEXT": VERSION_LABEL_TEXT
-        }
-
-        UISelector(self, self.current_theme, self.update_theme)
-
-    def update_theme(self, new_theme):
-        global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
-
-        UI_COLOR = new_theme['UI_COLOR']
-        BUTTON_BG_COLOR = new_theme['BUTTON_BG_COLOR']
-        BUTTON_TEXT_COLOR = new_theme['BUTTON_TEXT_COLOR']
-        BOTTOM_BORDER_COLOR = new_theme['BOTTOM_BORDER_COLOR']
-        VERSION_LABEL_TEXT = new_theme['VERSION_LABEL_TEXT']
-
-        self.current_theme = new_theme
-        self.apply_theme()
-
-    def apply_theme(self):
-        self.configure(bg=UI_COLOR)
-        self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
-
-        def update_widget_colors(widget):
-            if isinstance(widget, tk.Button):
-                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-            elif isinstance(widget, tk.Label):
-                widget.configure(bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
-            elif isinstance(widget, tk.Frame):
-                widget.configure(bg=UI_COLOR)
-            elif isinstance(widget, tk.OptionMenu):
-                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-                widget["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-
-            for child in widget.winfo_children():
-                update_widget_colors(child)
-
-        update_widget_colors(self)
-
-        # Update ttk styles
-        style = ttk.Style()
-        style.configure('TNotebook', background=UI_COLOR)
-        style.configure('TNotebook.Tab', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
-        style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
-        style.configure('TFrame', background=UI_COLOR)
-        style.configure('TButton', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
-
-        # Update the version label
-        if hasattr(self, 'version_label'):
-            self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
-
-        self.update_idletasks()
 
     def gather_and_save_info(self):
         print("""Extracting system info.""")
@@ -1444,60 +1525,8 @@ class Application(tk.Tk):
 
             htmlfile.write('</table></body></html>')
 
-    def check_internet(self):
-        print("""Running various 'is online?' checks.""")
-
-        def run_checks():
-            results = []
-            methods = [
-                ("Ping", '8.8.8.8'),
-                ("Socket", ('8.8.8.8', 53)),
-                ("HTTP", 'http://www.google.com')
-            ]
-
-            for method_name, target in methods:
-                start_time = time.time()
-                success, message = False, f"{method_name} failed"
-
-                if method_name == "Ping":
-                    try:
-                        param = '-n' if sys.platform.lower() == 'win32' else '-c'
-                        subprocess.run(['ping', param, '1', target],
-                                       stdout=subprocess.DEVNULL,
-                                       stderr=subprocess.DEVNULL,
-                                       check=True)
-                        success, message = True, f"{method_name} (8.8.8.8) successful"
-                    except subprocess.CalledProcessError:
-                        pass
-                elif method_name == "Socket":
-                    try:
-                        socket.create_connection(target, timeout=3)
-                        success, message = True, f"{method_name} (8.8.8.8 - Port 53) connection successful"
-                    except socket.error:
-                        pass
-                elif method_name == "HTTP":
-                    try:
-                        response = requests.get(target, timeout=5)
-                        if response.status_code == 200:
-                            success, message = True, f"{method_name} (http://www.google.com) request successful"
-                    except requests.RequestException:
-                        pass
-
-                end_time = time.time()
-                latency = round((end_time - start_time) * 1000, 2)  # Convert to ms
-                results.append((success, message, latency))
-
-            online = any(result[0] for result in results)
-            status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
-
-            if online:
-                messagebox.showinfo("Internet Status", f"We're online :)\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
-            else:
-                messagebox.showwarning("Internet Status", f"We're offline :(\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
-
-        # Run the internet checks in a separate thread to avoid freezing the UI
-        thread = threading.Thread(target=run_checks)
-        thread.start()
+# ----------------------------------SYSTEM INFO COMPARE END-------------------------------------------------
+# ----------------------------------ACTIVE CONNECTIONS CHECKER-------------------------------------------------
 
     def netstat_output(self):
         print("""Executing Network Shell command to extract apps with active internet connection.""")
@@ -1565,7 +1594,8 @@ class Application(tk.Tk):
             self.search_app_info(file_path)
         print("""Searching scanned apps online to check their trustworthiness.""")
 
-    # -----------------------------------------------CLONE REPO END--------------------------------------------------
+# ----------------------------------ACTIVE CONNECTIONS CHECKER END-------------------------------------------------
+# -----------------------------------------------CLONE REPO--------------------------------------------------
 
     def git_pull(self):
         # Determine if we're running as a script or frozen executable
@@ -1826,7 +1856,8 @@ class Application(tk.Tk):
 
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
 
-    # -----------------------------------------------CLONE REPO END--------------------------------------------------
+# -----------------------------------------------CLONE REPO END--------------------------------------------------
+# -----------------------------------------------GODMODE--------------------------------------------------
 
     def open_godmode(self):
         print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.""")
@@ -1895,6 +1926,9 @@ class Application(tk.Tk):
         finally:
             # Change back to the original directory
             os.chdir(root_dir)
+
+# -----------------------------------------------GODMODE END--------------------------------------------------
+# -----------------------------------------------LOGOFF USER(S)--------------------------------------------------
 
     def logoff_users(self):
         print("""Running 'quser' command to get list of logged-in users.""")
@@ -1985,6 +2019,9 @@ class Application(tk.Tk):
 
         window.mainloop()
 
+# -----------------------------------------------LOGOFF USER(S) END--------------------------------------------------
+# -----------------------------------------------LINK SUMMARY--------------------------------------------------
+
     def open_links_window(self):
         print("Open Link summary.")
         window = tk.Toplevel(self)
@@ -2050,6 +2087,10 @@ class Application(tk.Tk):
             if var.get():
                 webbrowser.open_new_tab(link)
         window.destroy()  # Close the window
+
+# -----------------------------------------------LINK SUMMARY END--------------------------------------------------
+# --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION-----------------VVVVVVVVVVVVVVVVVVVV---------------
+        # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
 
     def create_widgets(self):
         style = ttk.Style()
@@ -2139,6 +2180,7 @@ class Application(tk.Tk):
         create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
         create_option_buttons(netsh_frame, netsh_commands)
 
+        # ------------------------------MAIN WINDOW/TABS/STYLES END-------------------------------
         # ------------------------------VERSION LABEL-------------------------------
 
         # Create a bottom frame for the version label
@@ -2174,6 +2216,7 @@ class Application(tk.Tk):
         self.version_label.bind("<Leave>", on_leave)
 
         # ----------------------------VERSION LABEL END----------------------------
+        # ----------------------------MAIN BUTTONS----------------------------
 
         # Script tab Buttons and Positions 1/2
         my_ip_btn = tk.Button(self.functions_frame, text="Show IP Info", command=self.show_ip_info, width=20,
@@ -2217,7 +2260,7 @@ class Application(tk.Tk):
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
-
+        # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
         # System Info Compare
@@ -2404,6 +2447,7 @@ class Application(tk.Tk):
         self.selected_function7.trace('w', self.on_function_select7)
 
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
+        # ---------------------------------- TABS/FRAME FOR OPTION BUTTONS --------------------------------------------
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
@@ -2448,7 +2492,7 @@ class Application(tk.Tk):
         # Bottom frame
         self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
-
+        # ---------------------------------- TABS/FRAME FOR OPTION BUTTONS END --------------------------------------------
         # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
 
         # Left-aligned buttons
