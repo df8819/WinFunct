@@ -325,7 +325,7 @@ troubleshooting_and_optimization_options = [
     ("Windows Update", "start ms-settings:windowsupdate"),
 ]
 
-# Network Shell commands
+# Shell commands
 netsh_commands = [
     ("IP Configuration", "netsh interface ip show config"),
     ("Interface List", "netsh interface show interface"),
