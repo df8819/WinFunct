@@ -885,7 +885,7 @@ class Application(tk.Tk):
         self.top.geometry('{}x{}+{}+{}'.format(width, height, x, y))
 
         # Create and pack a label
-        label = tk.Label(self.top, text="Enter the website URL/IP to check (e.g., example.com):",
+        label = tk.Label(self.top, text="Enter the website URL to check (e.g., example.com):",
                          bg=UI_COLOR, fg=BUTTON_TEXT_COLOR, pady=10)
         label.pack()
 
