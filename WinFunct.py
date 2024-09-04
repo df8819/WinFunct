@@ -78,7 +78,7 @@ class GitUpdater:
     ╔═══════════════════════════════════════════════════════╗
     ║                                                       ║
     ║   WinFunct update available. Do you want to update?   ║
-    ║   Type [y/n] and press Enter to proceed please...     ║
+    ║   Type [y/n] and press Enter to proceed...            ║
     ║         ‾ ‾                                           ║
     ╚═══════════════════════════════════════════════════════╝
     
