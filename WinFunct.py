@@ -1,4 +1,3 @@
-# AAAAAAAAAAAAHHHHHHHHHH
 # Standard Library Imports
 import base64
 import csv
