@@ -32,7 +32,6 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
-
 # Define the version once
 VERSION_NUMBER = "1.657"
 
@@ -164,9 +163,24 @@ GitUpdater.execute_update()
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
-    except Exception as e:
-        log_message(f"Error checking admin status: {e}")
+    except:
         return False
+
+
+def check_admin_cmd():
+    try:
+        output = subprocess.check_output('whoami /groups', shell=True).decode('utf-8')
+        return "S-1-16-12288" in output  # This SID corresponds to high mandatory level
+    except subprocess.CalledProcessError:
+        return False
+
+
+if is_admin():
+    print("Running with administrative privileges (detected by ctypes).")
+elif check_admin_cmd():
+    print("Running with administrative privileges (detected by command line check).")
+else:
+    print("Not running with administrative privileges.")
 
 
 def log_message(message):
@@ -2531,7 +2545,7 @@ if !status_code! equ 200 (
 
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
-# System Info Compare
+        # System Info Compare
         self.selected_function1 = tk.StringVar()
         self.selected_function1.set("System Info")
 
@@ -2558,7 +2572,7 @@ if !status_code! equ 200 (
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-# Active internet connection apps
+        # Active internet connection apps
         self.selected_function2 = tk.StringVar()
         self.selected_function2.set("App Connections")
 
@@ -2584,7 +2598,7 @@ if !status_code! equ 200 (
         self.function_dropdown2.grid(row=1, column=3, padx=10, pady=5, sticky="we")
         self.selected_function2.trace('w', self.on_function_select2)
 
-# God-mode
+        # God-mode
         self.selected_function3 = tk.StringVar()
         self.selected_function3.set("God mode")
 
@@ -2610,7 +2624,7 @@ if !status_code! equ 200 (
         self.function_dropdown3.grid(row=2, column=4, padx=10, pady=5, sticky="we")
         self.selected_function3.trace('w', self.on_function_select3)
 
-# Admin Shells
+        # Admin Shells
         self.selected_function4 = tk.StringVar()
         self.selected_function4.set("Admin Shells")
 
@@ -2636,7 +2650,7 @@ if !status_code! equ 200 (
         self.function_dropdown4.grid(row=0, column=4, padx=10, pady=5, sticky="we")
         self.selected_function4.trace('w', self.on_function_select4)
 
-# Check Online Status
+        # Check Online Status
         self.selected_function5 = tk.StringVar()
         self.selected_function5.set("Online Status")
 
@@ -2662,7 +2676,7 @@ if !status_code! equ 200 (
         self.function_dropdown5.grid(row=2, column=3, padx=10, pady=5, sticky="we")
         self.selected_function5.trace('w', self.on_function_select5)
 
-# Interactive Shells
+        # Interactive Shells
         self.selected_function6 = tk.StringVar()
         self.selected_function6.set("Interactive Shells")
 
@@ -2688,7 +2702,7 @@ if !status_code! equ 200 (
         self.function_dropdown6.grid(row=0, column=3, padx=10, pady=5, sticky="we")
         self.selected_function6.trace('w', self.on_function_select6)
 
-# Disk utility
+        # Disk utility
         self.selected_function7 = tk.StringVar()
         self.selected_function7.set("Disk Operations")
 
@@ -2796,7 +2810,7 @@ if !status_code! equ 200 (
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
 
-# UI utility
+        # UI utility
         self.selected_function8 = tk.StringVar()
         self.selected_function8.set("GUI Options")
 
