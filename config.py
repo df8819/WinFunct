@@ -17,7 +17,7 @@ LOGO = f"""
      ▓▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓▓░     ▒▓▓▓▓▓▓▓    ╚════════╝    ▓▓▓▓▓▓▓            
 """
 
-# Define the version once
+# WinFunct version number
 VERSION_NUMBER = "1.660"
 
 # Use the version number in different strings
@@ -25,14 +25,15 @@ VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 # UI COLOR section
-UI_COLOR = "#2f3128"  # App BG, Tab headers
-BUTTON_BG_COLOR = "#575a4b"  # BG color for buttons
+UI_COLOR = "#2f3128"  # General App/Tab/Button Background
+BUTTON_BG_COLOR = "#575a4b"  # Background color for buttons
 BUTTON_TEXT_COLOR = "#ffffff"  # Text color
-BOTTOM_BORDER_COLOR = "#ff8f20"  # Small bottom border
+BOTTOM_BORDER_COLOR = "#ff8f20"  # Bottom border color
 VERSION_LABEL_TEXT = "#535e3e"  # Label text color
 
 # UI STYLE section
 BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
+
 # noinspection SpellCheckingInspection
 BORDER_WIDTH = "1"  # thiccness in pixel
 
@@ -95,6 +96,7 @@ links = {
     },
 }
 
+# Script for Website online status checker
 batch_script = r"""
 @echo off
 setlocal enabledelayedexpansion
@@ -323,6 +325,7 @@ troubleshooting_and_optimization_options = [
     ("Windows Update", "start ms-settings:windowsupdate"),
 ]
 
+# Network Shell commands
 netsh_commands = [
     ("IP Configuration", "netsh interface ip show config"),
     ("Interface List", "netsh interface show interface"),
