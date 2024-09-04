@@ -116,14 +116,6 @@ def check_admin_cmd():
         return False
 
 
-if is_admin():
-    print("Running with admin rights (detected by ctypes)...")
-elif check_admin_cmd():
-    print("Running with admin rights (detected by command line check)...")
-else:
-    print("Not running with administrative privileges...")
-
-
 def log_message(message):
     with open("admin_log.txt", "a") as log_file:
         log_file.write(message + "\n")
@@ -159,12 +151,21 @@ def print_log():
 if __name__ == "__main__":
     # Bypass admin check if running in an IDE
     if not is_running_in_ide():
-        if not is_admin():
+        if is_admin():
+            print("Running with admin rights (detected by ctypes)...")
+            # Print log messages in the elevated terminal
+            print_log()
+        elif check_admin_cmd():
+            print("Running with admin rights (detected by command line check)...")
+            # Print log messages in the elevated terminal
+            print_log()
+        else:
+            print("Not running with administrative privileges...")
             run_as_admin()
             # The script will exit here if not running as admin
-
-    # Print log messages in the elevated terminal
-    print_log()
+    else:
+        # Print log messages if running in an IDE
+        print_log()
 
 
 def show_logo():
