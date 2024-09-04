@@ -269,7 +269,7 @@ windows_management_options = [
     ("Advanced Settings", "SystemPropertiesAdvanced"),
     ("User Accout Control", "useraccountcontrolsettings"),
     ("Disk Manager", "diskmgmt.msc"),
-    ("System Name", "SystemPropertiesComputerName"),
+    ("Computer Name", "SystemPropertiesComputerName"),
     ("ODBC Manager", "odbcad32"),
     ("Shared Folders", "fsmgmt.msc"),
     ("Mobility Center", "mblctr"),
