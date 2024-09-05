@@ -1713,20 +1713,20 @@ class Application(tk.Tk):
             repo_path = os.path.dirname(sys.executable)
 
             print(f"""
-╔═════════════════════════════════ERROR═════════════════════════════════════╗
-║ You are NOT running WinFunct from an python file!                         ║
-║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                         ║
-║ Please download the latest Release from GitHub                            ║
-║                                                                           ║
-║                               ---OR---                                    ║
-║                                                                           ║
-║ Clone this repository from GitHub via 'Get from GitHub' button            ║
-║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
-║                                                                           ║
-║ Make sure "Git for Windows" and "Python 3.x" is installed or this         ║
-║ function will produce an Error!                                           ║
-╚═══════════════════════════════════════════════════════════════════════════╝
-            """)
+    ╔═════════════════════════════════ERROR═════════════════════════════════════╗
+    ║ You are NOT running WinFunct from an python file!                         ║
+    ║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                         ║
+    ║ Please download the latest Release from GitHub                            ║
+    ║                                                                           ║
+    ║                               ---OR---                                    ║
+    ║                                                                           ║
+    ║ Clone this repository from GitHub via 'Get from GitHub' button            ║
+    ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
+    ║                                                                           ║
+    ║ Make sure "Git for Windows" and "Python 3.x" is installed or this         ║
+    ║ function will produce an Error!                                           ║
+    ╚═══════════════════════════════════════════════════════════════════════════╝
+""")
 
             if messagebox.askyesno("Open GitHub Releases",
                                    "Open the WinFunct GitHub 'Releases' section in the default browser?\n\n(Read the terminal message for more information)"):
