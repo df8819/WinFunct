@@ -289,7 +289,7 @@ class Application(tk.Tk):
         }
         if selected1 in actions:
             self.function_dropdown1.after(0, actions[selected1])
-            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
+            self.function_dropdown1.after(0, lambda: self.selected_function1.set("*System Info*"))
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
@@ -299,7 +299,7 @@ class Application(tk.Tk):
         }
         if selected3 in actions:
             self.function_dropdown3.after(0, actions[selected3])
-            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
+            self.function_dropdown3.after(0, lambda: self.selected_function3.set("*God Mode*"))
 
     def on_function_select4(self, *args):
         selected4 = self.selected_function4.get()
@@ -309,7 +309,7 @@ class Application(tk.Tk):
         }
         if selected4 in actions:
             self.function_dropdown4.after(0, actions[selected4])
-            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
+            self.function_dropdown4.after(0, lambda: self.selected_function4.set("*Admin Shells*"))
 
     def on_function_select5(self, *args):
         selected5 = self.selected_function5.get()
@@ -321,7 +321,7 @@ class Application(tk.Tk):
         }
         if selected5 in actions:
             self.function_dropdown5.after(0, actions[selected5])
-            self.function_dropdown5.after(0, lambda: self.selected_function5.set("IP & Online Status"))
+            self.function_dropdown5.after(0, lambda: self.selected_function5.set("*IP & Online Status*"))
 
     def on_function_select6(self, *args):
         selected6 = self.selected_function6.get()
@@ -332,7 +332,7 @@ class Application(tk.Tk):
         }
         if selected6 in actions:
             self.function_dropdown6.after(0, actions[selected6])
-            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
+            self.function_dropdown6.after(0, lambda: self.selected_function6.set("*Interactive Shells*"))
 
     def on_function_select7(self, *args):
         selected7 = self.selected_function7.get()
@@ -342,7 +342,7 @@ class Application(tk.Tk):
         }
         if selected7 in actions:
             self.function_dropdown7.after(0, actions[selected7])
-            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
+            self.function_dropdown7.after(0, lambda: self.selected_function7.set("*Disk Operations*"))
 
     def on_function_select8(self, *args):
         selected8 = self.selected_function8.get()
@@ -2327,18 +2327,7 @@ class Application(tk.Tk):
         # ----------------------------VERSION LABEL END----------------------------
         # ----------------------------MAIN BUTTONS----------------------------
 
-        # Script tab Buttons and Positions 1/2
-
-        # my_ip_btn = tk.Button(self.functions_frame, text="Show IP Info", command=self.show_ip_info, width=20,
-        #                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
-        #                       activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-        #                       borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        # my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
-
-        # netstat_output_btn = tk.Button(self.functions_frame, text="Check online Apps", command=self.netstat_output, width=20,
-        #                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        # netstat_output_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
-
+        # Script tab Buttons and Positions
         wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         wifi_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
@@ -2376,12 +2365,12 @@ class Application(tk.Tk):
 
         # System Info Compare
         self.selected_function1 = tk.StringVar()
-        self.selected_function1.set("System Info")
+        self.selected_function1.set("*System Info*")
 
         self.function_dropdown1 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function1,
-            "System Info",
+            "*System Info*",
             "[1] Extract Sys Info",
             "[2] Compare Sys Info"
         )
@@ -2404,12 +2393,12 @@ class Application(tk.Tk):
 
         # God-mode
         self.selected_function3 = tk.StringVar()
-        self.selected_function3.set("God mode")
+        self.selected_function3.set("*God Mode*")
 
         self.function_dropdown3 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function3,
-            "God mode",
+            "*God Mode*",
             "[1] Simple God mode",
             "[2] Super God mode"
         )
@@ -2430,12 +2419,12 @@ class Application(tk.Tk):
 
         # Admin Shells
         self.selected_function4 = tk.StringVar()
-        self.selected_function4.set("Admin Shells")
+        self.selected_function4.set("*Admin Shells*")
 
         self.function_dropdown4 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function4,
-            "Admin Shells",
+            "*Admin Shells*",
             "[1] cmd",
             "[2] PowerShell"
         )
@@ -2456,12 +2445,12 @@ class Application(tk.Tk):
 
         # Check Online Status
         self.selected_function5 = tk.StringVar()
-        self.selected_function5.set("IP & Online Status")
+        self.selected_function5.set("*IP & Online Status*")
 
         self.function_dropdown5 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function5,
-            "IP & Online Status",
+            "*IP & Online Status*",
             "[1] PC online status",
             "[2] Website online status",
             "[3] Current IP info",
@@ -2484,12 +2473,12 @@ class Application(tk.Tk):
 
         # Interactive Shells
         self.selected_function6 = tk.StringVar()
-        self.selected_function6.set("Interactive Shells")
+        self.selected_function6.set("*Interactive Shells*")
 
         self.function_dropdown6 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function6,
-            "Interactive Shells",
+            "*Interactive Shells*",
             "[1] CTT Winutils",
             "[2] Activate Win/Office",
             "[3] Install/Upd. FFMPEG"
@@ -2511,12 +2500,12 @@ class Application(tk.Tk):
 
         # Disk utility
         self.selected_function7 = tk.StringVar()
-        self.selected_function7.set("Disk Operations")
+        self.selected_function7.set("*Disk Operations*")
 
         self.function_dropdown7 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function7,
-            "Disk Operations",
+            "*Disk Operations*",
             "[1] Disk Speedtest",
             "[2] Show Disk Info"
         )
