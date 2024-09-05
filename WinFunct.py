@@ -549,13 +549,6 @@ class Application(tk.Tk):
         ip_info_text.insert(tk.END, ip_info)
         ip_info_text.config(state='disabled')  # Make the text widget read-only
 
-        # Create a copy button
-        copy_button = tk.Button(ip_window, text="Copy to Clipboard",
-                                command=lambda: self.copy_to_clipboard(ip_info),
-                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
-                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-        copy_button.pack(pady=10)
-
     # ----------------------------------DISK INFO-------------------------------------------------
 
     def show_disk_info(self):
@@ -601,7 +594,7 @@ class Application(tk.Tk):
     *** Disk Information ***
     ========================
 
-    """
+"""
                 disk_info += cleaned_output + "\n\n"
 
                 # Additional helpful information
@@ -610,7 +603,7 @@ class Application(tk.Tk):
     *** Additional Information ***
     ==============================
 
-    """
+"""
                 disk_info += "1. Disk Status:       Online/Offline\n"
                 disk_info += "2. Partition Types:   Primary, Extended, Logical\n"
                 disk_info += "3. File Systems:      NTFS, FAT32, exFAT\n"
@@ -628,13 +621,6 @@ class Application(tk.Tk):
             disk_info_text.delete('1.0', tk.END)
             disk_info_text.insert(tk.END, info)
             disk_info_text.config(state='disabled')
-
-        # Create a copy button
-        copy_button = tk.Button(disk_window, text="Copy to Clipboard",
-                                command=lambda: self.copy_to_clipboard(disk_info_text.get("1.0", tk.END)),
-                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
-                                activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-        copy_button.pack(pady=10)
 
         # Start fetching disk info in a separate thread
         threading.Thread(target=fetch_disk_info, daemon=True).start()
