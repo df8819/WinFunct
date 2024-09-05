@@ -248,7 +248,6 @@ class Application(tk.Tk):
         self.bottom_frame = None
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
-        self.font_family = "Segoe UI Emoji"
         self.configure(bg=UI_COLOR)
 
         # Create the main_frame with tk.Frame
@@ -1863,8 +1862,7 @@ class Application(tk.Tk):
         window.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
 
         progress_label = tk.Label(window, text="Starting...",
-                                  bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
-                                  font=(self.font_family, 10))
+                                  bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
         progress_label.pack(pady=10)
 
         # Create a style for the progress bar
@@ -2303,7 +2301,6 @@ class Application(tk.Tk):
             cursor="hand2",
             fg=VERSION_LABEL_TEXT,
             bg=UI_COLOR,
-            # font=("Segoe UI", 8),  # Commented out as per your change
         )
         self.version_label.pack(side="right", padx=5, pady=2)
 
