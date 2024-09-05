@@ -58,6 +58,17 @@ class GitUpdater:
             return False
 
     @staticmethod
+    def check_internet_connection():
+        hosts = [("8.8.8.8", 53), ("1.1.1.1", 53), ("208.67.222.222", 53)]
+        for host, port in hosts:
+            try:
+                socket.create_connection((host, port), timeout=3)
+                return True
+            except OSError:
+                continue
+        return False
+
+    @staticmethod
     def check_update_status():
         if GitUpdater.is_frozen() or not GitUpdater.is_git_repository():
             return False  # Ignore update check for frozen executable or non-Git repository
@@ -81,7 +92,7 @@ class GitUpdater:
     ║   Type [y/n] and press Enter to proceed...            ║
     ║         ‾ ‾                                           ║
     ╚═══════════════════════════════════════════════════════╝
-    
+
     """).strip().lower()
             if user_choice == 'y':
                 return True  # User wants to update
@@ -89,6 +100,10 @@ class GitUpdater:
 
     @staticmethod
     def execute_update():
+        if not GitUpdater.check_internet_connection():
+            print("No internet connection. Skipping update check.")
+            return
+
         if GitUpdater.is_frozen():
             print(f'Running as ".exe". Skipping update check. *{VERSION_SHORT}*')
         elif not GitUpdater.is_git_repository():
