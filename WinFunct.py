@@ -58,17 +58,6 @@ class GitUpdater:
             return False
 
     @staticmethod
-    def check_internet_connection():
-        hosts = [("8.8.8.8", 53), ("1.1.1.1", 53), ("208.67.222.222", 53)]
-        for host, port in hosts:
-            try:
-                socket.create_connection((host, port), timeout=3)
-                return True
-            except OSError:
-                continue
-        return False
-
-    @staticmethod
     def check_update_status():
         if GitUpdater.is_frozen() or not GitUpdater.is_git_repository():
             return False  # Ignore update check for frozen executable or non-Git repository
@@ -100,25 +89,25 @@ class GitUpdater:
 
     @staticmethod
     def execute_update():
-        if not GitUpdater.check_internet_connection():
-            print("No internet connection. Skipping update check.")
-            return
-
-        if GitUpdater.is_frozen():
-            print(f'Running as ".exe". Skipping update check. *{VERSION_SHORT}*')
-        elif not GitUpdater.is_git_repository():
-            print(f'Not running in a Git repository. Skipping update check. *{VERSION_SHORT}*')
-        else:
-            if GitUpdater.prompt_update():
-                print('Executing git pull...')
-                try:
-                    subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-                    print('Repository updated.')
-                except subprocess.CalledProcessError as e:
-                    print(f"Error during git pull: {e}")
+        try:
+            if GitUpdater.is_frozen():
+                print(f'Running as ".exe". Skipping update check. *{VERSION_SHORT}*')
+            elif not GitUpdater.is_git_repository():
+                print(f'Not running in a Git repository. Skipping update check. *{VERSION_SHORT}*')
             else:
-                print(f'No update needed. *{VERSION_SHORT}*')
-
+                if GitUpdater.prompt_update():
+                    print('Executing git pull...')
+                    try:
+                        subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                        print('Repository updated. Restarting application...')
+                        os._exit(0)  # This will immediately terminate the script
+                    except subprocess.CalledProcessError as e:
+                        print(f"Error during git pull: {e}")
+                else:
+                    print(f'No update needed. *{VERSION_SHORT}*')
+        except Exception as e:
+            print(f"An error occurred during the update process: {e}")
+            print("Continuing with the current version.")
 
 # Execute the update check before any class instantiation
 GitUpdater.execute_update()
