@@ -247,14 +247,14 @@ class Application(tk.Tk):
             self.function_dropdown1.after(0, self.show_system_info)
             self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
 
-    def on_function_select2(self, *args):
-        selected2 = self.selected_function2.get()
-        if selected2 == "[1] Active Connections":
-            self.function_dropdown2.after(0, self.netstat_output)
-            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
-        elif selected2 == "[2] Threat Search":
-            self.function_dropdown2.after(0, self.confirm_and_search)
-            self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
+    # def on_function_select2(self, *args):
+        # selected2 = self.selected_function2.get()
+        # if selected2 == "[1] Active Connections":
+            # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
+            # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
+        # elif selected2 == "[2] Threat Search":
+            # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
+            # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
@@ -290,6 +290,9 @@ class Application(tk.Tk):
             self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
         elif selected6 == "[2] Activate Win/Office":
             self.function_dropdown6.after(0, self.activate_win)
+            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
+        elif selected6 == "[3] Install/Upd. FFMPEG":
+            self.function_dropdown6.after(0, self.install_ffmpeg)
             self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
 
     def on_function_select7(self, *args):
@@ -996,19 +999,33 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_command)
         thread.start()
 
-    def install_ffmpeg(self):
-        user_response = messagebox.askyesno("Install FFMPEG",
-                                            "This will open a PowerShell instance and run a FFMPEG install script. Proceed?")
-        if user_response:
-            def run_command():
-                command = ['powershell.exe', '-Command', 'iex (irm ffmpeg.tc.ht)']
-                subprocess.run(command, shell=True)
+# ------------------------------------------FFMPEG INSTALLER SCRIPT-----------------------------------------------
 
-            # Run the command in a separate thread to avoid freezing the UI
-            thread = threading.Thread(target=run_command)
-            thread.start()
+    def install_ffmpeg(self):
+        # Check if Chocolatey is installed
+        chocolatey_installed = os.path.exists(r'C:\ProgramData\chocolatey\bin\choco.exe')
+
+        if chocolatey_installed:
+            print('Chocolatey is installed. Attempting to update Chocolatey...')
+            try:
+                subprocess.run(['powershell.exe', '-Command', 'choco upgrade chocolatey -y'], check=True)
+                print('Chocolatey updated successfully.')
+            except subprocess.CalledProcessError:
+                print('Failed to update Chocolatey. Proceeding with the FFMPEG installation/update anyway.')
         else:
-            print(f"\nCommand was cancelled.")
+            print('Chocolatey is not installed.')
+
+        print('Proceeding with the FFMPEG installation/update script...')
+
+        def run_ffmpeg_script():
+            command = ['powershell.exe', '-Command', 'iex (irm ffmpeg.tc.ht)']
+            subprocess.run(command, shell=True)
+
+        # Run the FFMPEG script command in a separate thread
+        thread = threading.Thread(target=run_ffmpeg_script)
+        thread.start()
+
+# ------------------------------------------FFMPEG INSTALLER SCRIPT END-----------------------------------------------
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shut down your PC?"):
@@ -1551,75 +1568,50 @@ class Application(tk.Tk):
             htmlfile.write('</table></body></html>')
 
     # ----------------------------------SYSTEM INFO COMPARE END-------------------------------------------------
-    # ----------------------------------ACTIVE CONNECTIONS CHECKER-------------------------------------------------
 
+    # Detect Apps with an active internet connection
     def netstat_output(self):
-        print("""Executing Network Shell command to extract apps with active internet connection.""")
+        print("Executing Network Shell command to extract apps with active internet connection.")
         try:
-            # Ask user if they want to create the file
-            if not messagebox.askyesno("Create File", "This will create the file 'netstat_exe_output.txt', which contains a list with all apps that have an active internet connection?"):
-                return
-
             # Execute the netstat command and capture the output
             result = subprocess.check_output('netstat -b -n', shell=True).decode()
 
-            # Define the file path
-            file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
-
-            # Write the command output to a file
-            with open(file_path, 'w') as file:
-                file.write(result)
-
-            # Read and process the file
-            with open(file_path, 'r') as file:
-                lines = file.readlines()
-
-            # Filter and format the content
+            # Process the command output
+            lines = result.split('\n')
             processed_lines = [re.findall(r'\[(.*?)]', line) for line in lines]
             processed_lines = [item for sublist in processed_lines for item in sublist]
-
-            # Remove duplicates by converting the list to a set and back to a list
             unique_lines = list(set(processed_lines))
 
-            # Save the processed content, now without duplicates
-            with open(file_path, 'w') as file:
-                for line in unique_lines:
-                    file.write(line + '\n')
+            # Create a new window to display the apps with active internet connection
+            netstat_window = tk.Toplevel(self)
+            netstat_window.title("Apps with Active Internet Connection")
+            netstat_window.configure(bg=UI_COLOR)
 
-            messagebox.showinfo("Success", "'netstat_exe_output.txt' successfully created in the app's root folder.\n\n'Threat Search' will lookup each one in a separate Google search tab.")
+            # Set window size and position
+            window_width, window_height = 420, 580
+            screen_width = netstat_window.winfo_screenwidth()
+            screen_height = netstat_window.winfo_screenheight()
+            x = (screen_width // 2) - (window_width // 2)
+            y = (screen_height // 2) - (window_height // 2)
+            netstat_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+            # Create a text widget to display the apps
+            app_text = scrolledtext.ScrolledText(netstat_window, wrap=tk.WORD, width=40, height=10,
+                                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                 insertbackground=BUTTON_TEXT_COLOR)
+            app_text.pack(expand=True, fill='both', padx=10, pady=10)
+
+            # Insert the apps into the text widget
+            for line in unique_lines:
+                app_text.insert(tk.END, line + '\n')
+
+            app_text.config(state='disabled')  # Make the text widget read-only
+
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred: {e}")
 
-    def search_app_info(self, file_path=None):
-        if file_path is None:
-            file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
-        search_base_url = "https://www.google.com/search?q="
-
-        # Read the application names from the file
-        with open(file_path, 'r') as file:
-            app_list = [line.strip() for line in file if line.strip()]
-
-        # Perform a search for each application
-        for app in app_list:
-            query = f"Is {app} dangerous?"
-            webbrowser.open(search_base_url + query.replace(' ', '+'))
-
-    def confirm_and_search(self):
-        file_path = os.path.join(os.path.dirname(__file__), 'netstat_exe_output.txt')
-
-        # Check if the file exists
-        if not os.path.exists(file_path):
-            messagebox.showinfo("File Not Found", f"netstat_exe_output.txt not found\n\nPlease click 'Active Connections' first and try again.")
-            return
-
-        response = messagebox.askyesno("Confirm Search", "Do you want to check scanned App information online?\n\nWARNING: This will open a new google search tab for every entry in netstat_exe_output.txt")
-        if response:
-            self.search_app_info(file_path)
-        print("""Searching scanned apps online to check their trustworthiness.""")
-
-    # ----------------------------------ACTIVE CONNECTIONS CHECKER END-------------------------------------------------
     # -----------------------------------------------CLONE REPO--------------------------------------------------
 
     def git_pull(self):
@@ -2278,13 +2270,17 @@ class Application(tk.Tk):
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         autostart_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
-        install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
-                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        install_ffmpeg_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+        # install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
+        #                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        # install_ffmpeg_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+
+        netstat_output_btn = tk.Button(self.functions_frame, text="Check online Apps", command=self.netstat_output, width=20,
+                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        netstat_output_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
@@ -2315,31 +2311,31 @@ class Application(tk.Tk):
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-        # Active internet connection apps
-        self.selected_function2 = tk.StringVar()
-        self.selected_function2.set("App Connections")
-
-        self.function_dropdown2 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function2,
-            "App Connections",
-            "[1] Active Connections",
-            "[2] Threat Search"
-        )
-        self.function_dropdown2.config(
-            width=17,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown2["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown2.grid(row=1, column=3, padx=10, pady=5, sticky="we")
-        self.selected_function2.trace('w', self.on_function_select2)
+        # NEW DROPDOWM
+        # self.selected_function2 = tk.StringVar()
+        # self.selected_function2.set("App Connections")
+        #
+        # self.function_dropdown2 = tk.OptionMenu(
+        #     self.functions_frame,
+        #     self.selected_function2,
+        #     "DROPDOWN LABEL",
+        #     "[1] OPTION...",
+        #     "[2] OPTION..."
+        # )
+        # self.function_dropdown2.config(
+        #     width=17,
+        #     bg=BUTTON_BG_COLOR,
+        #     fg=BUTTON_TEXT_COLOR,
+        #     activebackground=UI_COLOR,
+        #     activeforeground=BUTTON_TEXT_COLOR,
+        #     highlightthickness=0
+        # )
+        # self.function_dropdown2["menu"].config(
+        #     bg=BUTTON_BG_COLOR,
+        #     fg=BUTTON_TEXT_COLOR
+        # )
+        # self.function_dropdown2.grid(row=1, column=3, padx=10, pady=5, sticky="we")
+        # self.selected_function2.trace('w', self.on_function_select2)
 
         # God-mode
         self.selected_function3 = tk.StringVar()
@@ -2416,7 +2412,7 @@ class Application(tk.Tk):
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown5.grid(row=2, column=3, padx=10, pady=5, sticky="we")
+        self.function_dropdown5.grid(row=1, column=3, padx=10, pady=5, sticky="we")
         self.selected_function5.trace('w', self.on_function_select5)
 
         # Interactive Shells
@@ -2428,7 +2424,8 @@ class Application(tk.Tk):
             self.selected_function6,
             "Interactive Shells",
             "[1] CTT Winutils",
-            "[2] Activate Win/Office"
+            "[2] Activate Win/Office",
+            "[3] Install/Upd. FFMPEG"
         )
         self.function_dropdown6.config(
             width=17,
@@ -2468,7 +2465,7 @@ class Application(tk.Tk):
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown7.grid(row=3, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown7.grid(row=2, column=3, padx=10, pady=5, sticky="we")
         self.selected_function7.trace('w', self.on_function_select7)
 
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
