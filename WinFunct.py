@@ -978,7 +978,7 @@ class Application(tk.Tk):
         result_window.configure(bg=UI_COLOR)
 
         # Set window size and position
-        window_width, window_height = 420, 340
+        window_width, window_height = 470, 250
         screen_width = result_window.winfo_screenwidth()
         screen_height = result_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -991,11 +991,20 @@ class Application(tk.Tk):
                                                 insertbackground=BUTTON_TEXT_COLOR)
         result_text.pack(expand=True, fill='both', padx=10, pady=10)
 
-        # Set the result message based on whether online or offline
+        # Replace this part in the show_result_window function
         if online:
-            result_text.insert(tk.END, f'We are online :)\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}')
+            result_text.insert(tk.END, "==============================\n", "center")
+            result_text.insert(tk.END, "***       ONLINE :)       ***\n", "center")
+            result_text.insert(tk.END, "==============================\n\n", "center")
+            result_text.insert(tk.END, status_message)
         else:
-            result_text.insert(tk.END, f'We are offline :(\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}')
+            result_text.insert(tk.END, "==============================\n", "center")
+            result_text.insert(tk.END, "***      OFFLINE :(      ***\n", "center")
+            result_text.insert(tk.END, "==============================\n\n", "center")
+            result_text.insert(tk.END, status_message)
+
+        # Add this line after creating the result_text widget
+        result_text.tag_configure("center", justify='center')
 
         result_text.config(state='disabled')  # Make the text widget read-only
 
