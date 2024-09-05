@@ -1403,40 +1403,33 @@ class Application(tk.Tk):
 
     def gather_and_save_info(self):
         print("Extracting system info.")
-        if tk.messagebox.askyesno("Extract", "This may take some time to extract data. Proceed?"):
-            info = self.get_system_info()  # Gathers system info
+        info = self.get_system_info()  # Gathers system info
 
-            # Ask user if they want single system view or multi-system comparison
-            choice = tk.messagebox.askquestion("Choose Option", "Do you want to view a single system?\nSelect: [Yes]\n\nOr prepare for multi-system comparison\nSelect: [No]")
+        # Ask user if they want single system view or multi-system comparison
+        choice = tk.messagebox.askquestion("Choose Option", "Do you want to view a single system?\nSelect: [Yes]\n\nOr prepare for multi-system comparison\nSelect: [No]")
 
-            # Get default filename (hostname)
-            default_filename = socket.gethostname()
+        # Get default filename (hostname)
+        default_filename = socket.gethostname()
 
-            if choice == 'yes':  # Single system view
-                save_path = filedialog.asksaveasfilename(
-                    defaultextension='.html',
-                    filetypes=[("HTML Files", "*.html")],
-                    initialfile=f"{default_filename}.html",
-                    title="Save HTML Report"
-                )
-                if save_path:
-                    self.save_to_html(info, save_path)
-                    messagebox.showinfo("Success", f"System information saved to {save_path}")
-                    os.startfile(save_path)  # Open the HTML file
-                else:
-                    messagebox.showinfo("Cancelled", "Operation cancelled by user")
-            else:  # Multi-system comparison
-                save_path = filedialog.asksaveasfilename(
-                    defaultextension='.csv',
-                    filetypes=[("CSV Files", "*.csv")],
-                    initialfile=f"{default_filename}.csv",
-                    title="Save CSV for Comparison"
-                )
-                if save_path:
-                    self.save_to_file(info, save_path)  # We still need this method for CSV creation
-                    messagebox.showinfo("Success", f"System information saved to {save_path} for future comparison")
-                else:
-                    messagebox.showinfo("Cancelled", "Operation cancelled by user")
+        if choice == 'yes':  # Single system view
+            save_path = filedialog.asksaveasfilename(
+                defaultextension='.html',
+                filetypes=[("HTML Files", "*.html")],
+                initialfile=f"{default_filename}.html",
+                title="Save HTML Report"
+            )
+            if save_path:
+                self.save_to_html(info, save_path)
+                os.startfile(save_path)  # Open the HTML file
+        else:  # Multi-system comparison
+            save_path = filedialog.asksaveasfilename(
+                defaultextension='.csv',
+                filetypes=[("CSV Files", "*.csv")],
+                initialfile=f"{default_filename}.csv",
+                title="Save CSV for Comparison"
+            )
+            if save_path:
+                self.save_to_file(info, save_path)  # We still need this method for CSV creation
 
     def save_to_html(self, info, file_path):
         with open(file_path, 'w', encoding='utf-8') as file:
@@ -1495,10 +1488,7 @@ class Application(tk.Tk):
 
             if save_path:
                 self.write_differences_to_html(differences, save_path)
-                messagebox.showinfo("Success", f"System comparison saved to {save_path}")
                 os.startfile(save_path)  # Open the HTML file
-            else:
-                messagebox.showinfo("Cancelled", "Save file operation was cancelled.")
         else:
             messagebox.showinfo("No Differences", "No differences found among the selected files.")
 
@@ -1563,14 +1553,9 @@ class Application(tk.Tk):
             filetypes=[("CSV Files", "*.csv")])
 
         if not file_path:
-            # messagebox.showinfo("Cancelled", "No file was selected.")
             return
 
         system_info = self.read_single_csv(file_path)
-
-        print("\nSystem Info before writing to HTML:")
-        for key, value in system_info.items():
-            print(f"{key}: {value}")
 
         save_path = filedialog.asksaveasfilename(
             title="Save System Info File",
@@ -1581,11 +1566,8 @@ class Application(tk.Tk):
         if save_path:
             try:
                 self.write_system_info_to_file(system_info, save_path)
-                messagebox.showinfo("Success", f"System info saved to {save_path}")
             except PermissionError as e:
                 messagebox.showerror("Permission Error", f"Permission denied: {str(e)}")
-        else:
-            messagebox.showinfo("Cancelled", "Save file operation was cancelled.")
 
     def read_single_csv(self, file_path):
         system_info = {}
@@ -1607,10 +1589,6 @@ class Application(tk.Tk):
                 elif current_field and len(row) > 1:
                     # Append to existing value if it's a continuation
                     system_info[current_field] += f", {row[1]}"
-
-        print("Processed system_info:")
-        for key, value in system_info.items():
-            print(f"{key}: {value}")
 
         return system_info
 
