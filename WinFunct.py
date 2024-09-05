@@ -281,80 +281,77 @@ class Application(tk.Tk):
         self.update()  # To make sure the clipboard is updated
 
     # ----------------------------------DROPDOWN SECTION-------------------------------------------------
-    # on_function_select are for the dropdown menus from the Button-Section in the UI part
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
-        if selected1 == "[1] Extract Sys Info":
-            self.function_dropdown1.after(0, self.gather_and_save_info)
+        actions = {
+            "[1] Extract Sys Info": lambda: self.gather_and_save_info(),
+            "[2] Compare Sys Info": lambda: self.compare_system_info()
+        }
+        if selected1 in actions:
+            self.function_dropdown1.after(0, actions[selected1])
             self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
-        elif selected1 == "[2] Compare Sys Info":
-            self.function_dropdown1.after(0, self.compare_system_info)
-            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
-
-    # def on_function_select2(self, *args):
-    # selected2 = self.selected_function2.get()
-    # if selected2 == "[1] Active Connections":
-    # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
-    # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
-    # elif selected2 == "[2] Threat Search":
-    # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
-    # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
-        if selected3 == "[1] Simple God mode":
-            self.function_dropdown3.after(0, self.open_godmode)
-            self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
-        elif selected3 == "[2] Super God mode":
-            self.function_dropdown3.after(0, self.open_super_godmode)
+        actions = {
+            "[1] Simple God mode": lambda: self.open_godmode(),
+            "[2] Super God mode": lambda: self.open_super_godmode()
+        }
+        if selected3 in actions:
+            self.function_dropdown3.after(0, actions[selected3])
             self.function_dropdown3.after(0, lambda: self.selected_function3.set("God mode"))
 
     def on_function_select4(self, *args):
         selected4 = self.selected_function4.get()
-        if selected4 == "[1] cmd":
-            self.function_dropdown4.after(0, self.open_cmd_as_admin)
-            self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
-        elif selected4 == "[2] PowerShell":
-            self.function_dropdown4.after(0, self.open_ps_as_admin)
+        actions = {
+            "[1] cmd": lambda: self.open_cmd_as_admin(),
+            "[2] PowerShell": lambda: self.open_ps_as_admin()
+        }
+        if selected4 in actions:
+            self.function_dropdown4.after(0, actions[selected4])
             self.function_dropdown4.after(0, lambda: self.selected_function4.set("Admin Shells"))
 
     def on_function_select5(self, *args):
         selected5 = self.selected_function5.get()
-        if selected5 == "[1] This PC":
-            self.function_dropdown5.after(0, self.check_internet)
-            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
-        elif selected5 == "[2] Website":
-            self.function_dropdown5.after(0, self.run_website_checker)
-            self.function_dropdown5.after(0, lambda: self.selected_function5.set("Online Status"))
+        actions = {
+            "[1] PC online status": lambda: self.check_internet(),
+            "[2] Website online status": lambda: self.run_website_checker(),
+            "[3] Current IP info": lambda: self.show_ip_info(),
+            "[4] Apps with internet connection": lambda: self.netstat_output()
+        }
+        if selected5 in actions:
+            self.function_dropdown5.after(0, actions[selected5])
+            self.function_dropdown5.after(0, lambda: self.selected_function5.set("IP & Online Status"))
 
     def on_function_select6(self, *args):
         selected6 = self.selected_function6.get()
-        if selected6 == "[1] CTT Winutils":
-            self.function_dropdown6.after(0, self.activate_wui)
-            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
-        elif selected6 == "[2] Activate Win/Office":
-            self.function_dropdown6.after(0, self.activate_win)
-            self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
-        elif selected6 == "[3] Install/Upd. FFMPEG":
-            self.function_dropdown6.after(0, self.install_ffmpeg)
+        actions = {
+            "[1] CTT Winutils": lambda: self.activate_wui(),
+            "[2] Activate Win/Office": lambda: self.activate_win(),
+            "[3] Install/Upd. FFMPEG": lambda: self.install_ffmpeg()
+        }
+        if selected6 in actions:
+            self.function_dropdown6.after(0, actions[selected6])
             self.function_dropdown6.after(0, lambda: self.selected_function6.set("Interactive Shells"))
 
     def on_function_select7(self, *args):
         selected7 = self.selected_function7.get()
-        if selected7 == "[1] Disk Speedtest":
-            self.function_dropdown7.after(0, self.run_winsat_disk)
-            self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
-        elif selected7 == "[2] Show Disk Info":
-            self.function_dropdown7.after(0, self.show_disk_info)
+        actions = {
+            "[1] Disk Speedtest": lambda: self.run_winsat_disk(),
+            "[2] Show Disk Info": lambda: self.show_disk_info()
+        }
+        if selected7 in actions:
+            self.function_dropdown7.after(0, actions[selected7])
             self.function_dropdown7.after(0, lambda: self.selected_function7.set("Disk Operations"))
 
     def on_function_select8(self, *args):
         selected8 = self.selected_function8.get()
-        if selected8 == "[1] Theme Selector":
-            self.function_dropdown8.after(0, self.open_theme_selector)
-            self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
-        elif selected8 == "[2] Reset UI":
-            self.function_dropdown8.after(0, self.reset_ui)
+        actions = {
+            "[1] Theme Selector": lambda: self.open_theme_selector(),
+            "[2] Reset UI": lambda: self.reset_ui()
+        }
+        if selected8 in actions:
+            self.function_dropdown8.after(0, actions[selected8])
             self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
@@ -950,7 +947,7 @@ class Application(tk.Tk):
         run_button.pack(pady=10)
 
     def check_internet(self):
-        print("Running various 'is online?' checks.")
+        print("Running various online checks.")
 
         def run_checks():
             results = []
@@ -2331,11 +2328,16 @@ class Application(tk.Tk):
         # ----------------------------MAIN BUTTONS----------------------------
 
         # Script tab Buttons and Positions 1/2
-        my_ip_btn = tk.Button(self.functions_frame, text="Show IP Info", command=self.show_ip_info, width=20,
-                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
-                              activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                              borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+
+        # my_ip_btn = tk.Button(self.functions_frame, text="Show IP Info", command=self.show_ip_info, width=20,
+        #                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+        #                       activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+        #                       borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        # my_ip_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+
+        # netstat_output_btn = tk.Button(self.functions_frame, text="Check online Apps", command=self.netstat_output, width=20,
+        #                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        # netstat_output_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
@@ -2365,17 +2367,9 @@ class Application(tk.Tk):
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         autostart_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
-        # install_ffmpeg_btn = tk.Button(self.functions_frame, text="Install/Upd. FFMPEG", command=self.install_ffmpeg, width=20,
-        #                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        # install_ffmpeg_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
-
         checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         checksum_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
-
-        netstat_output_btn = tk.Button(self.functions_frame, text="Check online Apps", command=self.netstat_output, width=20,
-                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        netstat_output_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
@@ -2406,31 +2400,7 @@ class Application(tk.Tk):
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-        # NEW DROPDOWM
-        # self.selected_function2 = tk.StringVar()
-        # self.selected_function2.set("App Connections")
-        #
-        # self.function_dropdown2 = tk.OptionMenu(
-        #     self.functions_frame,
-        #     self.selected_function2,
-        #     "DROPDOWN LABEL",
-        #     "[1] OPTION...",
-        #     "[2] OPTION..."
-        # )
-        # self.function_dropdown2.config(
-        #     width=17,
-        #     bg=BUTTON_BG_COLOR,
-        #     fg=BUTTON_TEXT_COLOR,
-        #     activebackground=UI_COLOR,
-        #     activeforeground=BUTTON_TEXT_COLOR,
-        #     highlightthickness=0
-        # )
-        # self.function_dropdown2["menu"].config(
-        #     bg=BUTTON_BG_COLOR,
-        #     fg=BUTTON_TEXT_COLOR
-        # )
-        # self.function_dropdown2.grid(row=1, column=3, padx=10, pady=5, sticky="we")
-        # self.selected_function2.trace('w', self.on_function_select2)
+        # NEW DROPDOWM WITH NUMBER [2] ######################
 
         # God-mode
         self.selected_function3 = tk.StringVar()
@@ -2486,14 +2456,16 @@ class Application(tk.Tk):
 
         # Check Online Status
         self.selected_function5 = tk.StringVar()
-        self.selected_function5.set("Online Status")
+        self.selected_function5.set("IP & Online Status")
 
         self.function_dropdown5 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function5,
-            "Online Status",
-            "[1] This PC",
-            "[2] Website"
+            "IP & Online Status",
+            "[1] PC online status",
+            "[2] Website online status",
+            "[3] Current IP info",
+            "[4] Apps with internet connection"
         )
         self.function_dropdown5.config(
             width=17,
