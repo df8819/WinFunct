@@ -243,9 +243,6 @@ class Application(tk.Tk):
         elif selected1 == "[2] Compare Sys Info":
             self.function_dropdown1.after(0, self.compare_system_info)
             self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
-        elif selected1 == "[3] Show single Sys":
-            self.function_dropdown1.after(0, self.show_system_info)
-            self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
 
     # def on_function_select2(self, *args):
         # selected2 = self.selected_function2.get()
@@ -2344,8 +2341,7 @@ class Application(tk.Tk):
             self.selected_function1,
             "System Info",
             "[1] Extract Sys Info",
-            "[2] Compare Sys Info",
-            "[3] Show single Sys"
+            "[2] Compare Sys Info"
         )
         self.function_dropdown1.config(
             width=17,
