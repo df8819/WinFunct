@@ -2526,7 +2526,7 @@ class Application(tk.Tk):
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
-        fun_notebook.pack(fill='both', expand=True, padx=20, pady=20)
+        fun_notebook.pack(fill='both', expand=True, padx=25, pady=10)
 
         # New Category Frames inside the Fun tab
         apps_frame = tk.Frame(fun_notebook, bg=UI_COLOR)
@@ -2537,7 +2537,7 @@ class Application(tk.Tk):
         fun_notebook.add(fun_stuff_frame, text='Fun Stuff')
 
         # Packing the notebook into the fun_frame
-        fun_notebook.pack(fill='both', expand=True, padx=20, pady=20)
+        fun_notebook.pack(fill='both', expand=True, padx=25, pady=10)
 
         # Function to create buttons within a frame from a list of option tuples
         def create_fun_buttons(frame, buttons_list):
