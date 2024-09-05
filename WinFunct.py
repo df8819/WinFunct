@@ -111,6 +111,7 @@ class GitUpdater:
             print(f"An error occurred during the update process: {e}")
             print("Continuing with the current version.")
 
+
 # Execute the update check before any class instantiation
 GitUpdater.execute_update()
 
@@ -251,13 +252,13 @@ class Application(tk.Tk):
             self.function_dropdown1.after(0, lambda: self.selected_function1.set("System Info"))
 
     # def on_function_select2(self, *args):
-        # selected2 = self.selected_function2.get()
-        # if selected2 == "[1] Active Connections":
-            # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
-            # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
-        # elif selected2 == "[2] Threat Search":
-            # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
-            # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
+    # selected2 = self.selected_function2.get()
+    # if selected2 == "[1] Active Connections":
+    # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
+    # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
+    # elif selected2 == "[2] Threat Search":
+    # self.function_dropdown2.after(0, self.xxxxxxxxxxx)
+    # self.function_dropdown2.after(0, lambda: self.selected_function2.set("App Connections"))
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
@@ -1022,7 +1023,7 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_command)
         thread.start()
 
-# ------------------------------------------FFMPEG INSTALLER SCRIPT-----------------------------------------------
+    # ------------------------------------------FFMPEG INSTALLER SCRIPT-----------------------------------------------
 
     def install_ffmpeg(self):
         # Check if Chocolatey is installed
@@ -1048,7 +1049,7 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_ffmpeg_script)
         thread.start()
 
-# ------------------------------------------FFMPEG INSTALLER SCRIPT END-----------------------------------------------
+    # ------------------------------------------FFMPEG INSTALLER SCRIPT END-----------------------------------------------
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shut down your PC?"):
