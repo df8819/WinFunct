@@ -1680,15 +1680,15 @@ class Application(tk.Tk):
 ╔═════════════════════════════════ERROR═════════════════════════════════════╗
 ║ You are NOT running WinFunct from an python file!                         ║
 ║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                         ║
-║ Please download the latest Release via GitHub                             ║
+║ Please download the latest Release from GitHub                            ║
 ║                                                                           ║
 ║                               ---OR---                                    ║
 ║                                                                           ║
-║ Clone the repository from GitHub via 'Get from GitHub' button             ║
+║ Clone this repository from GitHub via 'Get from GitHub' button            ║
 ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
 ║                                                                           ║
-║ Make sure ""Git for Windows"" and ""Python 3.x"" is installed or this     ║
-║ function will produce an Error.                                           ║
+║ Make sure "Git for Windows" and "Python 3.x" is installed or this         ║
+║ function will produce an Error!                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
             """)
 
@@ -2161,7 +2161,7 @@ class Application(tk.Tk):
         window.destroy()  # Close the window
 
     # -----------------------------------------------LINK SUMMARY END--------------------------------------------------
-    # --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION-----------------VVVVVVVVVVVVVVVVVVVV---------------
+    # --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION BELOW HERE-----------------VVVVVVVVVVVVVVVVVVVV---------------
     # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
 
     def create_widgets(self):
@@ -2336,6 +2336,7 @@ class Application(tk.Tk):
         netstat_output_btn = tk.Button(self.functions_frame, text="Check online Apps", command=self.netstat_output, width=20,
                                        bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         netstat_output_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
@@ -2568,6 +2569,7 @@ class Application(tk.Tk):
         # Bottom frame
         self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
+
         # ---------------------------------- TABS/FRAME FOR OPTION BUTTONS END --------------------------------------------
         # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
 
