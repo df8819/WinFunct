@@ -1407,7 +1407,7 @@ class Application(tk.Tk):
             info = self.get_system_info()  # Gathers system info
 
             # Ask user if they want single system view or multi-system comparison
-            choice = tk.messagebox.askquestion("Choose Option", "Do you want to view a single system (Yes) or prepare for multi-system comparison (No)?")
+            choice = tk.messagebox.askquestion("Choose Option", "Do you want to view a single system?\nSelect: [Yes]\n\nOr prepare for multi-system comparison\nSelect: [No]")
 
             # Get default filename (hostname)
             default_filename = socket.gethostname()
