@@ -1386,68 +1386,117 @@ class Application(tk.Tk):
         return system_info
 
     def save_to_file(self, info, file_path):
-        print("""Saving system info to .csv file.""")
+        print("Saving system info to .csv file.")
         with open(file_path, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
-            # Write header
             writer.writerow(['Field', 'Value'])
             for key, value in info.items():
                 if isinstance(value, list):
                     if key == 'Installed Software':
-                        # Write the software list with each entry on a new line
-                        writer.writerow([key, ''])  # Write the key with an empty value
+                        writer.writerow([key, ''])
                         for software in value:
-                            writer.writerow(['', software])  # Write each software on a new line with an empty key
+                            writer.writerow(['', software])
                     else:
-                        # For other lists, join elements into a single string separated by commas
                         writer.writerow([key, ', '.join(value)])
                 else:
                     writer.writerow([key, value])
 
-    def select_file(self):
-        file_path = filedialog.asksaveasfilename(
-            parent=self,
-            defaultextension='.csv',
-            filetypes=[("CSV Files", "*.csv"), ("All Files", "*.*")],
-            title="Choose a location to save the file"
-        )
-        return file_path
-
     def gather_and_save_info(self):
-        print("""Extracting system info.""")
-        global info
+        print("Extracting system info.")
         if tk.messagebox.askyesno("Extract", "This may take some time to extract data. Proceed?"):
             info = self.get_system_info()  # Gathers system info
-            save_path = self.select_file()  # Opens the file selection dialog
-            if save_path:
-                self.save_to_file(info, save_path)  # Saves the info to the selected file
-                messagebox.showinfo("Success", f"System information saved to {save_path}")
-            else:
-                messagebox.showinfo("Cancelled", "Operation cancelled by user")
+
+            # Ask user if they want single system view or multi-system comparison
+            choice = tk.messagebox.askquestion("Choose Option", "Do you want to view a single system (Yes) or prepare for multi-system comparison (No)?")
+
+            # Get default filename (hostname)
+            default_filename = socket.gethostname()
+
+            if choice == 'yes':  # Single system view
+                save_path = filedialog.asksaveasfilename(
+                    defaultextension='.html',
+                    filetypes=[("HTML Files", "*.html")],
+                    initialfile=f"{default_filename}.html",
+                    title="Save HTML Report"
+                )
+                if save_path:
+                    self.save_to_html(info, save_path)
+                    messagebox.showinfo("Success", f"System information saved to {save_path}")
+                    os.startfile(save_path)  # Open the HTML file
+                else:
+                    messagebox.showinfo("Cancelled", "Operation cancelled by user")
+            else:  # Multi-system comparison
+                save_path = filedialog.asksaveasfilename(
+                    defaultextension='.csv',
+                    filetypes=[("CSV Files", "*.csv")],
+                    initialfile=f"{default_filename}.csv",
+                    title="Save CSV for Comparison"
+                )
+                if save_path:
+                    self.save_to_file(info, save_path)  # We still need this method for CSV creation
+                    messagebox.showinfo("Success", f"System information saved to {save_path} for future comparison")
+                else:
+                    messagebox.showinfo("Cancelled", "Operation cancelled by user")
+
+    def save_to_html(self, info, file_path):
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write('''
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    table { border-collapse: collapse; width: 100%; }
+                    th, td { border: 1px solid #ddd; padding: 8px; }
+                    tr:nth-child(even) { background-color: #f2f2f2; }
+                    th { padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white; }
+                </style>
+            </head>
+            <body>
+                <h1>System Information</h1>
+                <table>
+                    <tr><th>Field</th><th>Value</th></tr>
+            ''')
+
+            for key, value in info.items():
+                if isinstance(value, list):
+                    if key == 'Installed Software':
+                        file.write(f'<tr><td>{key}</td><td><ul>')
+                        for software in value:
+                            file.write(f'<li>{software}</li>')
+                        file.write('</ul></td></tr>')
+                    else:
+                        file.write(f'<tr><td>{key}</td><td>{", ".join(value)}</td></tr>')
+                else:
+                    file.write(f'<tr><td>{key}</td><td>{value}</td></tr>')
+
+            file.write('''
+                </table>
+            </body>
+            </html>
+            ''')
 
     def compare_system_info(self):
         file_paths = filedialog.askopenfilenames(
-            title="Select CSV files",
+            title="Select CSV files for comparison",
             filetypes=[("CSV Files", "*.csv")])
 
         if not file_paths:
-            # messagebox.showinfo("Cancelled", "No files were selected.")
             return
 
         all_systems_info = [self.read_csv_file(path) for path in file_paths]
-
         differences = self.find_differences(all_systems_info)
 
         if differences:
             save_path = filedialog.asksaveasfilename(
-                title="Save System Compare File",
-                defaultextension=".csv",
-                filetypes=[("CSV Files", "*.csv")],
+                title="Save System Comparison Report",
+                defaultextension=".html",
+                filetypes=[("HTML Files", "*.html")],
                 initialfile="SystemCompare.html")
 
             if save_path:
-                self.write_differences_to_file(differences, save_path)
+                self.write_differences_to_html(differences, save_path)
                 messagebox.showinfo("Success", f"System comparison saved to {save_path}")
+                os.startfile(save_path)  # Open the HTML file
             else:
                 messagebox.showinfo("Cancelled", "Save file operation was cancelled.")
         else:
@@ -1479,30 +1528,34 @@ class Application(tk.Tk):
         # Remove fields where no differences were found
         return {field: vals for field, vals in differences.items() if vals}
 
-    def write_differences_to_file(self, differences, file_path):
-        print("""Merging system info for comparison.""")
-        with open(file_path, mode='w', encoding='utf-8') as htmlfile:
-            # Write the beginning of the HTML file with updated styles
-            htmlfile.write('<html><head><style>')
-            htmlfile.write('body { background-color: #2b2b2b; color: #f0f0f0; font-family: Arial, sans-serif; }')
-            htmlfile.write('table {border-collapse: separate; border-spacing: 0 10px; width: 100%;}')
-            htmlfile.write('th, td {border: 1px solid #ddd; padding: 8px; background-color: #5b8ea6;}')
-            htmlfile.write('th {padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #3a7ca5;}')
-            htmlfile.write('tr:nth-child(even) {background-color: #f2f2f2; color: #333;}')
-            htmlfile.write('</style></head><body>')
-            htmlfile.write('<table>')
-            htmlfile.write('<tr><th>Field</th><th>Value</th><th>Files</th></tr>')
+    def write_differences_to_html(self, differences, file_path):
+        print("Creating system comparison report.")
+        with open(file_path, 'w', encoding='utf-8') as htmlfile:
+            htmlfile.write('''
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; }
+                    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+                    th, td { border: 1px solid #ddd; padding: 8px; }
+                    tr:nth-child(even) { background-color: #f2f2f2; }
+                    th { padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white; }
+                </style>
+            </head>
+            <body>
+                <h1>System Comparison Report</h1>
+            ''')
 
             for field, values in differences.items():
+                htmlfile.write(f'<h2>{field}</h2>')
+                htmlfile.write('<table><tr><th>Value</th><th>Files</th></tr>')
                 for value, files in values.items():
-                    # Extract just the file names from the paths and remove the '.csv' extension
-                    file_names = set(os.path.splitext(os.path.basename(file))[0] for file in files)  # Use a set to get unique filenames
-                    file_names_with_count = ', '.join(sorted(file_names))  # Sort the filenames
-                    # row_color = color_scheme.get(field, "#ffffff")
-                    htmlfile.write(f'<tr><td>{field}</td><td>{value}</td><td>{file_names_with_count}</td></tr>')
+                    file_names = [os.path.basename(f) for f in files]
+                    file_names_with_count = f"{', '.join(file_names)} ({len(files)})"
+                    htmlfile.write(f'<tr><td>{value}</td><td>{file_names_with_count}</td></tr>')
+                htmlfile.write('</table>')
 
-            # End the HTML file
-            htmlfile.write('</table></body></html>')
+            htmlfile.write('</body></html>')
 
     def show_system_info(self):
         file_path = filedialog.askopenfilename(
