@@ -920,7 +920,7 @@ class Application(tk.Tk):
         run_button.pack(pady=10)
 
     def check_internet(self):
-        print("""Running various 'is online?' checks.""")
+        print("Running various 'is online?' checks.")
 
         def run_checks():
             results = []
@@ -965,14 +965,39 @@ class Application(tk.Tk):
             online = any(result[0] for result in results)
             status_message = "\n".join(f"{msg} \n(Latency: {lat} ms)\n" for _, msg, lat in results)
 
-            if online:
-                messagebox.showinfo("Internet Status", f"We're online :)\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
-            else:
-                messagebox.showwarning("Internet Status", f"We're offline :(\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}")
+            self.show_result_window(online, status_message)
 
         # Run the internet checks in a separate thread to avoid freezing the UI
         thread = threading.Thread(target=run_checks)
         thread.start()
+
+    def show_result_window(self, online, status_message):
+        # Create a new window to display internet check results
+        result_window = tk.Toplevel(self)
+        result_window.title("Internet Status")
+        result_window.configure(bg=UI_COLOR)
+
+        # Set window size and position
+        window_width, window_height = 420, 340
+        screen_width = result_window.winfo_screenwidth()
+        screen_height = result_window.winfo_screenheight()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        result_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+        # Create a text widget to display results
+        result_text = scrolledtext.ScrolledText(result_window, wrap=tk.WORD, width=40, height=10,
+                                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                insertbackground=BUTTON_TEXT_COLOR)
+        result_text.pack(expand=True, fill='both', padx=10, pady=10)
+
+        # Set the result message based on whether online or offline
+        if online:
+            result_text.insert(tk.END, f'We are online :)\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}')
+        else:
+            result_text.insert(tk.END, f'We are offline :(\n¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\n\n{status_message}')
+
+        result_text.config(state='disabled')  # Make the text widget read-only
 
     # ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER END-------------------------------------------------
     # ----------------------------------(INTERACTIVE) SHELL COMMANDS-------------------------------------------------
