@@ -44,6 +44,7 @@ from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 class GitUpdater:
     @staticmethod
     def is_frozen():
@@ -102,7 +103,46 @@ class GitUpdater:
                     try:
                         subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
                         print('Repository updated. Restarting application...')
-                        os._exit(0)  # This will immediately terminate the script
+
+                        # Create a new window for the timer
+                        root = tk.Tk()
+                        root.title("Update Complete")
+                        root.configure(bg=UI_COLOR)
+
+                        # Set window size and position
+                        window_width, window_height = 420, 150
+                        screen_width = root.winfo_screenwidth()
+                        screen_height = root.winfo_screenheight()
+                        x = (screen_width // 2) - (window_width // 2)
+                        y = (screen_height // 2) - (window_height // 2)
+                        root.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+                        label = tk.Label(root, text="Repository updated. The application will restart in 30 seconds.",
+                                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+                        label.pack(pady=10)
+
+                        def update_timer(seconds):
+                            if seconds > 0:
+                                label.config(text=f"Repository updated. The application will restart in {seconds} seconds.")
+                                root.after(1000, update_timer, seconds - 1)
+                            else:
+                                root.destroy()
+                                os._exit(0)  # This will immediately terminate the script
+
+                        def manual_close():
+                            root.destroy()
+                            os._exit(0)  # This will immediately terminate the script
+
+                        close_button = tk.Button(root, text="Close Now", command=manual_close,
+                                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+                        close_button.pack(pady=10)
+
+                        # Start the timer
+                        update_timer(30)
+
+                        root.mainloop()
+
                     except subprocess.CalledProcessError as e:
                         print(f"Error during git pull: {e}")
                 else:
