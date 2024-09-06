@@ -55,7 +55,7 @@ This app combines a lot of useful functions or scripts for managing Windows:
 ## Known Issues / Comments
 
 - _Thank you for using my App. Feedback is always welcome_ ✌
-- _This is still my 'learning by doing' app. It may provide useful functions, but the code for sure could use some refactoring and love in general_ 😇
+- _This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave from time to time_ 😇
 
 ## Screenshots
 
