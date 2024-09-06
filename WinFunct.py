@@ -1958,7 +1958,6 @@ class Application(tk.Tk):
 
         clone_path = self.select_clone_directory()
         if clone_path is None:
-            # messagebox.showwarning("Clone Cancelled", "Repository clone cancelled. No directory selected.")
             return
 
         self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
