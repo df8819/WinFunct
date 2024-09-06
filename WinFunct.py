@@ -1910,8 +1910,11 @@ class Application(tk.Tk):
                 missing_deps.append((dep, commands[2]))
 
         if missing_deps:
+            print(f"Missing dependencies: {missing_deps}")
             self.notify_missing_dependencies(missing_deps)
             return False
+        else:
+            print("All dependencies are installed.")
         return True
 
     def notify_missing_dependencies(self, missing_deps):
