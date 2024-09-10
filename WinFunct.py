@@ -2441,7 +2441,7 @@ class Application(tk.Tk):
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         checksum_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
-        wifi_btn = tk.Button(self.functions_frame, text="Wifi Passwords", command=self.show_wifi_networks, width=20,
+        wifi_btn = tk.Button(self.functions_frame, text="Wi-Fi Profile Info", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         wifi_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
