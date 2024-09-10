@@ -765,7 +765,9 @@ class Application(tk.Tk):
                         return
 
                 if ssid_passwords:
-                    file_path = filedialog.asksaveasfilename(defaultextension='.json',
+                    hostname = socket.gethostname()
+                    default_filename = f"pwlist_{hostname}.json"
+                    file_path = filedialog.asksaveasfilename(defaultextension='.json', initialfile=default_filename,
                                                              filetypes=[("JSON Files", '*.json'), ("All Files", '*.*')])
                     if file_path:
                         with open(file_path, 'w') as json_file:
