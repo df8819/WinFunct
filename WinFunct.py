@@ -359,6 +359,11 @@ class Application(tk.Tk):
 
     # Theme selector
     def open_theme_selector(self):
+        if not os.path.exists("UI_themes.json"):
+            download_theme = messagebox.askyesno("Download Theme", "The UI_themes.json file was not found. Do you want to download it?")
+            if download_theme:
+                self.download_theme_file()
+
         self.current_theme = {
             "UI_COLOR": UI_COLOR,
             "BUTTON_BG_COLOR": BUTTON_BG_COLOR,
@@ -368,6 +373,15 @@ class Application(tk.Tk):
         }
 
         UISelector(self, self.current_theme, self.update_theme)
+
+    def download_theme_file(self):
+        url = "https://raw.githubusercontent.com/df8819/WinFunct/main/UI_themes.json"
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open("UI_themes.json", "wb") as file:
+                file.write(response.content)
+        else:
+            messagebox.showerror("Download Error", "Failed to download the UI_themes.json file.")
 
     def update_theme(self, new_theme):
         global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
