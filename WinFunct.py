@@ -690,7 +690,7 @@ class Application(tk.Tk):
         try:
             cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"],
                                                  stderr=subprocess.STDOUT).decode("utf-8", "ignore")
-            networks = re.findall(r"All User Profile\s*: \s*(.+)", cmd_output)
+            networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to execute netsh command: {e.output.decode('utf-8', 'ignore')}")
             return
@@ -739,7 +739,7 @@ class Application(tk.Tk):
             ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10,
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                   relief=BUTTON_STYLE)
-            ok_button.pack(side="left", padx=(50, 5), pady=10)
+            ok_button.pack(side="left", padx=(20, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
@@ -747,9 +747,8 @@ class Application(tk.Tk):
             cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                       relief=BUTTON_STYLE)
-            cancel_button.pack(side="right", padx=(5, 50), pady=10)
+            cancel_button.pack(side="right", padx=(5, 20), pady=10)
 
-            # New Extract All button
             def extract_all_passwords():
                 ssid_passwords = {}
                 for network in networks:
@@ -759,7 +758,7 @@ class Application(tk.Tk):
                                                              stderr=subprocess.STDOUT).decode("utf-8", "ignore")
                         password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
                         if password:
-                            password_text = password.group(1).rstrip("\r")  # Remove trailing "\r" characters
+                            password_text = password.group(1).rstrip("\r")
                             ssid_passwords[network_profile] = password_text
                     except subprocess.CalledProcessError as e:
                         messagebox.showerror("Error", f"Failed to execute command for {network}: {e.output.decode('utf-8', 'ignore')}")
@@ -771,7 +770,6 @@ class Application(tk.Tk):
                     if file_path:
                         with open(file_path, 'w') as json_file:
                             json.dump(ssid_passwords, json_file, indent=4)
-                        messagebox.showinfo("Success", "Passwords have been extracted successfully!")
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
@@ -779,6 +777,35 @@ class Application(tk.Tk):
                                            width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                            relief=BUTTON_STYLE)
             extract_all_button.pack(side="left", padx=(5, 10), pady=10)
+
+            def fast_extract_passwords():
+                ssid_passwords = {}
+                for network in networks:
+                    network_profile = network.strip()
+                    try:
+                        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
+                                                             stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+                        password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
+                        if password:
+                            password_text = password.group(1).rstrip("\r")
+                            ssid_passwords[network_profile] = password_text
+                    except subprocess.CalledProcessError as e:
+                        messagebox.showerror("Error", f"Failed to execute command for {network}: {e.output.decode('utf-8', 'ignore')}")
+                        return
+
+                if ssid_passwords:
+                    hostname = socket.gethostname()
+                    script_dir = os.path.dirname(os.path.abspath(__file__))
+                    file_path = os.path.join(script_dir, f"pwlist_{hostname}.json")
+                    with open(file_path, 'w') as json_file:
+                        json.dump(ssid_passwords, json_file, indent=4)
+                else:
+                    messagebox.showinfo("No Passwords", "No passwords found to extract.")
+
+            fast_extract_button = tk.Button(network_window, text="Fst Extr", command=fast_extract_passwords,
+                                            width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                            relief=BUTTON_STYLE)
+            fast_extract_button.pack(side="left", padx=(5, 10), pady=10)
 
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
