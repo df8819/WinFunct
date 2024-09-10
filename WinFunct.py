@@ -82,8 +82,8 @@ class GitUpdater:
     ║   WinFunct update available. Do you want to update?   ║
     ║   Type [y/n] and press Enter to proceed...            ║
     ║         ‾ ‾                                           ║
-    ║   Please manually restart after updating WinFunct.    ║
-    ║          ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                             ║
+    ║   Please restart after updating WinFunct.             ║
+    ║          ‾‾‾‾‾‾‾                                      ║
     ╚═══════════════════════════════════════════════════════╝
 
     """).strip().lower()
