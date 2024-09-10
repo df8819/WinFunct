@@ -797,8 +797,16 @@ class Application(tk.Tk):
 
                 if ssid_passwords:
                     hostname = socket.gethostname()
-                    script_dir = os.path.dirname(os.path.abspath(__file__))
-                    file_path = os.path.join(script_dir, f"pwlist_{hostname}.json")
+                    if getattr(sys, 'frozen', False):
+                        # Running as a packaged executable
+                        executable_path = sys.executable
+                        executable_dir = os.path.dirname(executable_path)
+                        file_path = os.path.join(executable_dir, f"pwlist_{hostname}.json")
+                    else:
+                        # Running as a script
+                        script_dir = os.path.dirname(os.path.abspath(__file__))
+                        file_path = os.path.join(script_dir, f"pwlist_{hostname}.json")
+
                     with open(file_path, 'w') as json_file:
                         json.dump(ssid_passwords, json_file, indent=4)
                 else:
