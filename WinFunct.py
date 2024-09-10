@@ -616,7 +616,7 @@ class Application(tk.Tk):
         disk_window.configure(bg=UI_COLOR)
 
         # Set window size and position
-        window_width, window_height = 500, 600
+        window_width, window_height = 520, 600
         screen_width = disk_window.winfo_screenwidth()
         screen_height = disk_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
