@@ -757,9 +757,10 @@ class Application(tk.Tk):
                     try:
                         cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
                                                              stderr=subprocess.STDOUT).decode("utf-8", "ignore")
-                        password = re.search(r"Key Content\s*: \s*(.+)", cmd_output)
+                        password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
                         if password:
-                            ssid_passwords[network_profile] = password.group(1)
+                            password_text = password.group(1).rstrip("\r")  # Remove trailing "\r" characters
+                            ssid_passwords[network_profile] = password_text
                     except subprocess.CalledProcessError as e:
                         messagebox.showerror("Error", f"Failed to execute command for {network}: {e.output.decode('utf-8', 'ignore')}")
                         return
