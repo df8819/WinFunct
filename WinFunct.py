@@ -865,7 +865,7 @@ class Application(tk.Tk):
             button_frame = tk.Frame(password_frame, bg=UI_COLOR)
             button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
 
-            copy_button = tk.Button(button_frame, text="Copy", command=copy_password,
+            copy_button = tk.Button(button_frame, text="Copy", command=copy_password, width=10,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                     relief=BUTTON_STYLE)
             copy_button.pack(side="left", padx=10)
@@ -873,7 +873,7 @@ class Application(tk.Tk):
             def cancel_button_click():
                 password_window.destroy()
 
-            cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click,
+            cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click, width=10,
                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                       relief=BUTTON_STYLE)
             cancel_button.pack(side="left", padx=10)
