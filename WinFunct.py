@@ -683,7 +683,7 @@ class Application(tk.Tk):
         threading.Thread(target=fetch_disk_info, daemon=True).start()
 
     # ----------------------------------DISK INFO END-------------------------------------------------
-    # ----------------------------------WIFI PASSWORDS-------------------------------------------------
+    # ----------------------------------WIFI PASSWORD EXTRACTION-------------------------------------------------
 
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles.""")
