@@ -549,7 +549,7 @@ class Application(tk.Tk):
                                                  insertbackground=BUTTON_TEXT_COLOR)
         ip_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
-        max_retries = 3
+        max_retries = 5
         retry_delay = 1
 
         for attempt in range(max_retries):
