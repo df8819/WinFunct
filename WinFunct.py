@@ -739,7 +739,7 @@ class Application(tk.Tk):
             ok_button = tk.Button(network_window, text="Select", command=ok_button_click, width=10,
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                   relief=BUTTON_STYLE)
-            ok_button.pack(side="left", padx=(10, 5), pady=10)
+            ok_button.pack(side="left", padx=(5, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
@@ -747,7 +747,7 @@ class Application(tk.Tk):
             cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                       relief=BUTTON_STYLE)
-            cancel_button.pack(side="right", padx=(5, 10), pady=10)
+            cancel_button.pack(side="right", padx=(5, 5), pady=10)
 
             def extract_all_passwords():
                 ssid_passwords = {}
