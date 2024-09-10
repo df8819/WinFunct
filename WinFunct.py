@@ -2202,7 +2202,7 @@ class Application(tk.Tk):
 
         window.update_idletasks()
         width = min(500, window.winfo_screenwidth() - 100)
-        height = min(660, window.winfo_screenheight() - 100)
+        height = min(700, window.winfo_screenheight() - 100)
         x = (window.winfo_screenwidth() - width) // 2
         y = (window.winfo_screenheight() - height) // 2
         window.geometry(f"{width}x{height}+{x}+{y}")

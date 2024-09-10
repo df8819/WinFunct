@@ -80,6 +80,7 @@ links = {
         "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
         "Rufus USB Creator": "https://rufus.ie/en/",
         "AnyBurn": "http://www.anyburn.com/download.php",
+        "Drive SnapShot": "http://drivesnapshot.de/de/index.htm",
     },
     "Productivity": {
         "PicPick": "https://picpick.app/en/download/",
