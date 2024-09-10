@@ -736,10 +736,10 @@ class Application(tk.Tk):
                     self.show_wifi_password(selected_network)
                 network_window.destroy()
 
-            ok_button = tk.Button(network_window, text="Extract", command=ok_button_click, width=10,
+            ok_button = tk.Button(network_window, text="Select", command=ok_button_click, width=10,
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                   relief=BUTTON_STYLE)
-            ok_button.pack(side="left", padx=(20, 5), pady=10)
+            ok_button.pack(side="left", padx=(10, 5), pady=10)
 
             def cancel_button_click():
                 network_window.destroy()
@@ -747,7 +747,7 @@ class Application(tk.Tk):
             cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                       relief=BUTTON_STYLE)
-            cancel_button.pack(side="right", padx=(5, 20), pady=10)
+            cancel_button.pack(side="right", padx=(5, 10), pady=10)
 
             def extract_all_passwords():
                 ssid_passwords = {}
@@ -775,10 +775,10 @@ class Application(tk.Tk):
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            extract_all_button = tk.Button(network_window, text="Extract ALL", command=extract_all_passwords,
-                                           width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+            extract_all_button = tk.Button(network_window, text="<ALL>", command=extract_all_passwords,
+                                           width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                            relief=BUTTON_STYLE)
-            extract_all_button.pack(side="left", padx=(5, 10), pady=10)
+            extract_all_button.pack(side="left", padx=(5, 5), pady=10)
 
             def fast_extract_passwords():
                 ssid_passwords = {}
@@ -812,10 +812,10 @@ class Application(tk.Tk):
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            fast_extract_button = tk.Button(network_window, text="Extract AUTO", command=fast_extract_passwords,
-                                            width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+            fast_extract_button = tk.Button(network_window, text="<AUTO>", command=fast_extract_passwords,
+                                            width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                             relief=BUTTON_STYLE)
-            fast_extract_button.pack(side="left", padx=(5, 10), pady=10)
+            fast_extract_button.pack(side="left", padx=(5, 5), pady=10)
 
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
