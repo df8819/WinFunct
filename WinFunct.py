@@ -3,6 +3,7 @@ import base64
 import csv
 import ctypes
 import hashlib
+import json
 import logging
 import os
 import random
@@ -689,7 +690,7 @@ class Application(tk.Tk):
         try:
             cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"],
                                                  stderr=subprocess.STDOUT).decode("utf-8", "ignore")
-            networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
+            networks = re.findall(r"All User Profile\s*: \s*(.+)", cmd_output)
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to execute netsh command: {e.output.decode('utf-8', 'ignore')}")
             return
@@ -747,6 +748,37 @@ class Application(tk.Tk):
                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                       relief=BUTTON_STYLE)
             cancel_button.pack(side="right", padx=(5, 50), pady=10)
+
+            # New Extract All button
+            def extract_all_passwords():
+                ssid_passwords = {}
+                for network in networks:
+                    network_profile = network.strip()
+                    try:
+                        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
+                                                             stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+                        password = re.search(r"Key Content\s*: \s*(.+)", cmd_output)
+                        if password:
+                            ssid_passwords[network_profile] = password.group(1)
+                    except subprocess.CalledProcessError as e:
+                        messagebox.showerror("Error", f"Failed to execute command for {network}: {e.output.decode('utf-8', 'ignore')}")
+                        return
+
+                if ssid_passwords:
+                    file_path = filedialog.asksaveasfilename(defaultextension='.json',
+                                                             filetypes=[("JSON Files", '*.json'), ("All Files", '*.*')])
+                    if file_path:
+                        with open(file_path, 'w') as json_file:
+                            json.dump(ssid_passwords, json_file, indent=4)
+                        messagebox.showinfo("Success", "Passwords have been extracted successfully!")
+                else:
+                    messagebox.showinfo("No Passwords", "No passwords found to extract.")
+
+            extract_all_button = tk.Button(network_window, text="Extract all", command=extract_all_passwords,
+                                           width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                           relief=BUTTON_STYLE)
+            extract_all_button.pack(side="left", padx=(5, 10), pady=10)
+
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
 
