@@ -5,6 +5,7 @@ import ctypes
 import hashlib
 import logging
 import os
+import random
 import re
 import socket
 import subprocess
@@ -548,46 +549,61 @@ class Application(tk.Tk):
                                                  insertbackground=BUTTON_TEXT_COLOR)
         ip_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
-        # Fetch IP information
-        try:
-            ip_info = "========== Local ==========\n"
+        max_retries = 3
+        retry_delay = 1
 
-            # Fetch adapter names and IP addresses
-            adapters = psutil.net_if_addrs()
-            for adapter, addresses in adapters.items():
-                for addr in addresses:
-                    if addr.family == 2:  # IPv4
-                        ip_address = addr.address
-                        ip_info += f"{adapter}:\n{ip_address}\n\n"
+        for attempt in range(max_retries):
+            try:
+                ip_info = "========== Local ==========\n"
 
-            ip_info += "\n========== Internet ==========\n"
+                # Fetch adapter names and IP addresses
+                adapters = psutil.net_if_addrs()
+                for adapter, addresses in adapters.items():
+                    for addr in addresses:
+                        if addr.family == 2:  # IPv4
+                            ip_address = addr.address
+                            ip_info += f"{adapter}:\n{ip_address}\n\n"
 
-            response = requests.get("https://ipapi.co/json/")
-            data = response.json()
+                ip_info += "\n========== Internet ==========\n"
 
-            ip_info += f"Public IP:     {data['ip']}\n"
-            ip_info += f"ISP:           {data.get('org', 'N/A')}\n"
-            ip_info += f"Country:       {data['country_name']}\n"
-            ip_info += f"Region:        {data['region']}\n"
-            ip_info += f"City:          {data['city']}\n"
-            ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
+                response = requests.get("https://ipapi.co/json/")
+                data = response.json()
 
-            ip_info += "\n========== Topology ==========\n"
+                ip_info += f"Public IP:     {data['ip']}\n"
+                ip_info += f"ISP:           {data.get('org', 'N/A')}\n"
+                ip_info += f"Country:       {data['country_name']}\n"
+                ip_info += f"Region:        {data['region']}\n"
+                ip_info += f"City:          {data['city']}\n"
+                ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
 
-            ip_info += f"Latitude:      {data['latitude']}\n"
-            ip_info += f"Longitude:     {data['longitude']}\n"
-            ip_info += f"Timezone:      {data['timezone']}\n\n"
+                ip_info += "\n========== Topology ==========\n"
 
-            ip_info += "\n========== Additional Info ==========\n"
+                ip_info += f"Latitude:      {data['latitude']}\n"
+                ip_info += f"Longitude:     {data['longitude']}\n"
+                ip_info += f"Timezone:      {data['timezone']}\n\n"
 
-            ip_info += f"Country Code:  {data['country']}\n"
-            ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
-            ip_info += f"Languages:     {data.get('languages', 'N/A')}\n"
-        except Exception as e:
-            ip_info = f"Error fetching IP information: {str(e)}"
+                ip_info += "\n========== Additional Info ==========\n"
+
+                ip_info += f"Country Code:  {data['country']}\n"
+                ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
+                ip_info += f"Languages:     {data.get('languages', 'N/A')}\n"
+
+                break  # If successful, break out of the retry loop
+            except KeyError as e:
+                if str(e) == "'ip'" and attempt < max_retries - 1:
+                    print(f"Error fetching IP information: {str(e)}. Retrying in {retry_delay} seconds...")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2
+                    retry_delay += random.uniform(0, 1)
+                else:
+                    ip_info = f"Error fetching IP information: {str(e)}"
+                    break
+            except Exception as e:
+                ip_info = f"Error fetching IP information: {str(e)}"
+                break
 
         ip_info_text.insert(tk.END, ip_info)
-        ip_info_text.config(state='disabled')  # Make the text widget read-only
+        ip_info_text.config(state='disabled')
 
     # ----------------------------------DISK INFO-------------------------------------------------
 
