@@ -686,7 +686,7 @@ class Application(tk.Tk):
     # ----------------------------------WIFI PASSWORDS-------------------------------------------------
 
     def show_wifi_networks(self):
-        print("""Extracting Wifi profiles and passwords.""")
+        print("""Extracting Wifi profiles.""")
         try:
             cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"],
                                                  stderr=subprocess.STDOUT).decode("utf-8", "ignore")
@@ -711,7 +711,7 @@ class Application(tk.Tk):
             network_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
             network_window.resizable(False, False)
 
-            label_text = "Select a Wi-Fi Network from the list below to copy its password:"
+            label_text = "Select a Wi-Fi Network from the list to extract its information:"
             label = tk.Label(network_window, text=label_text, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
             label.pack(pady=10)
 
@@ -736,7 +736,7 @@ class Application(tk.Tk):
                     self.show_wifi_password(selected_network)
                 network_window.destroy()
 
-            ok_button = tk.Button(network_window, text="Ok", command=ok_button_click, width=10,
+            ok_button = tk.Button(network_window, text="Extract", command=ok_button_click, width=10,
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                   relief=BUTTON_STYLE)
             ok_button.pack(side="left", padx=(20, 5), pady=10)
@@ -775,7 +775,7 @@ class Application(tk.Tk):
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            extract_all_button = tk.Button(network_window, text="Extract all", command=extract_all_passwords,
+            extract_all_button = tk.Button(network_window, text="Extract ALL", command=extract_all_passwords,
                                            width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                            relief=BUTTON_STYLE)
             extract_all_button.pack(side="left", padx=(5, 10), pady=10)
@@ -812,7 +812,7 @@ class Application(tk.Tk):
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            fast_extract_button = tk.Button(network_window, text="Fst Extr", command=fast_extract_passwords,
+            fast_extract_button = tk.Button(network_window, text="Extract AUTO", command=fast_extract_passwords,
                                             width=15, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                             relief=BUTTON_STYLE)
             fast_extract_button.pack(side="left", padx=(5, 10), pady=10)
@@ -833,7 +833,7 @@ class Application(tk.Tk):
 
         if password:
             password_window = tk.Toplevel(self)
-            password_window.title(f"Password for {network}")
+            password_window.title(f"Information for {network}")
             password_window.configure(bg=UI_COLOR)
 
             window_width = 320
@@ -865,7 +865,7 @@ class Application(tk.Tk):
             button_frame = tk.Frame(password_frame, bg=UI_COLOR)
             button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
 
-            copy_button = tk.Button(button_frame, text="Copy Password", command=copy_password,
+            copy_button = tk.Button(button_frame, text="Copy", command=copy_password,
                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                     relief=BUTTON_STYLE)
             copy_button.pack(side="left", padx=10)
