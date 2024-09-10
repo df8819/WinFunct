@@ -111,7 +111,7 @@ class GitUpdater:
                         root.configure(bg=UI_COLOR)
 
                         # Set window size and position
-                        window_width, window_height = 420, 150
+                        window_width, window_height = 400, 120
                         screen_width = root.winfo_screenwidth()
                         screen_height = root.winfo_screenheight()
                         x = (screen_width // 2) - (window_width // 2)
