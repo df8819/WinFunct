@@ -369,7 +369,6 @@ class Application(tk.Tk):
             self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
-
     # ----------------------------------THEME SELECTOR FOR MAIN APP----------------------------------
     def load_last_selected_theme(self):
         global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
