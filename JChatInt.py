@@ -8,6 +8,7 @@ import threading
 import logging
 
 
+# noinspection PyAttributeOutsideInit
 class JChat:
     def __init__(self, parent, ui_color, button_bg_color, button_text_color):
         self.root = parent
