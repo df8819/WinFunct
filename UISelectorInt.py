@@ -11,7 +11,6 @@ class UISelector:
         self.window.geometry("380x230")
         self.window.configure(bg=current_theme["UI_COLOR"])
 
-
         self.current_theme = current_theme
         self.update_callback = update_callback
         self.theme_elements = [
