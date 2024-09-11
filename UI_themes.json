@@ -9,6 +9,14 @@
 "VERSION_LABEL_TEXT": "#bf6000"
 },
 {
+"name": "Modern Brightness",
+"UI_COLOR": "#eaeeee",
+"BUTTON_BG_COLOR": "#d0d9d9",
+"BUTTON_TEXT_COLOR": "#151a1a",
+"BOTTOM_BORDER_COLOR": "#455656",
+"VERSION_LABEL_TEXT": "#536666"
+},
+{
 "name": "Earthy Tones",
 "UI_COLOR": "#2A2727",
 "BUTTON_BG_COLOR": "#4E4540",
