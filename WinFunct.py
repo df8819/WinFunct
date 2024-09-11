@@ -248,13 +248,22 @@ class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
-        # Load the last selected theme before initializing UI components
         self.load_last_selected_theme()
 
         self.resolution_main = "845x450"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
+
+        # Create the main_frame with tk.Frame
+        self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
+        self.main_frame.pack(fill="both", expand=True)
+        self.resizable(True, True)
+        self.create_widgets()
+
+        # Load the last selected theme after the main UI is initialized & Center window
+        self.after(100, self.load_last_selected_theme)
+        self.after(100, self.center_window)
 
         # Declare variables that will be assigned values later in the program's execution
         self.tabs = None
@@ -265,18 +274,6 @@ class Application(tk.Tk):
         self.ip_text = None
         self.functions_frame = None
         self.bottom_frame = None
-
-        # Create the main_frame with tk.Frame
-        self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
-        self.main_frame.pack(fill="both", expand=True)
-        self.resizable(True, True)
-        self.create_widgets()
-
-        # Load the last selected theme after the main UI is initialized
-        self.after(100, self.load_last_selected_theme)
-
-        # Center the window after all widgets have been packed
-        self.after(100, self.center_window)
 
     def center_window(self):
         # Using Tcl method to center
