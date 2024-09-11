@@ -3,6 +3,7 @@ import time
 import os
 
 
+# noinspection PyMethodMayBeStatic,PyTypeChecker
 class Donut:
     def run(self):
         A = 0
