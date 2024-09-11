@@ -6,7 +6,6 @@ import hashlib
 import json
 import logging
 import os
-import random
 import re
 import socket
 import subprocess
@@ -614,6 +613,7 @@ class Application(tk.Tk):
 
         max_retries = 5
         retry_delay = 1
+        max_delay = 2
 
         for attempt in range(max_retries):
             try:
@@ -656,8 +656,7 @@ class Application(tk.Tk):
                 if str(e) == "'ip'" and attempt < max_retries - 1:
                     print(f"Error fetching IP information: {str(e)}. Retrying in {retry_delay} seconds...")
                     time.sleep(retry_delay)
-                    retry_delay *= 2
-                    retry_delay += random.uniform(0, 1)
+                    retry_delay = min(retry_delay * 2, max_delay)  # Limit the maximum delay to 2 seconds
                 else:
                     ip_info = f"Error fetching IP information: {str(e)}"
                     break
