@@ -1,5 +1,5 @@
 {
-  "themes": [
+"themes": [
 {
 "name": "OG Steam",
 "UI_COLOR": "#2f3128",
@@ -43,10 +43,10 @@
 {
 "name": "Classic Gray",
 "UI_COLOR": "#e4e4e4",
-"BUTTON_BG_COLOR": "#f7f7f9",
+"BUTTON_BG_COLOR": "#d4d4d4",
 "BUTTON_TEXT_COLOR": "#000000",
-"BOTTOM_BORDER_COLOR": "#6c6c6c",
-"VERSION_LABEL_TEXT": "#666666"
+"BOTTOM_BORDER_COLOR": "#5b5b5b",
+"VERSION_LABEL_TEXT": "#5f5f5f"
 },
 {
 "name": "Night Violet",

@@ -25,11 +25,11 @@ VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
 VERSION_SHORT = f"v{VERSION_NUMBER}"
 
 # UI COLOR section
-UI_COLOR = "#2f3128"  # General App/Tab/Button Background
-BUTTON_BG_COLOR = "#575a4b"  # Background color for buttons
-BUTTON_TEXT_COLOR = "#ffffff"  # Text color
-BOTTOM_BORDER_COLOR = "#ff8f20"  # Bottom border color
-VERSION_LABEL_TEXT = "#bf6000"  # Label text color
+UI_COLOR = "#e4e4e4"  # General App/Tab/Button Background
+BUTTON_BG_COLOR = "#d4d4d4"  # Background color for buttons
+BUTTON_TEXT_COLOR = "#000000"  # Text color
+BOTTOM_BORDER_COLOR = "#5b5b5b"  # Bottom border color
+VERSION_LABEL_TEXT = "#5f5f5f"  # Label text color
 
 # UI STYLE section
 BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
