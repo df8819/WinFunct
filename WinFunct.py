@@ -592,7 +592,7 @@ class Application(tk.Tk):
         # Create a new window
         ip_window = tk.Toplevel(self)
         ip_window.title("IP Information")
-        ip_window.configure(bg=UI_COLOR)
+        ip_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
         window_width, window_height = 420, 680
@@ -604,7 +604,7 @@ class Application(tk.Tk):
 
         # Create a text widget to display IP information
         ip_info_text = scrolledtext.ScrolledText(ip_window, wrap=tk.WORD, width=40, height=10,
-                                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                 bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
                                                  insertbackground=BUTTON_TEXT_COLOR)
         ip_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
@@ -672,7 +672,7 @@ class Application(tk.Tk):
         # Create a new window
         disk_window = tk.Toplevel(self)
         disk_window.title("Disk Information")
-        disk_window.configure(bg=UI_COLOR)
+        disk_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
         window_width, window_height = 520, 600
@@ -684,7 +684,7 @@ class Application(tk.Tk):
 
         # Create a text widget to display disk information
         disk_info_text = scrolledtext.ScrolledText(disk_window, wrap=tk.WORD, width=60, height=20,
-                                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                   bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
                                                    insertbackground=BUTTON_TEXT_COLOR)
         disk_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
@@ -756,7 +756,7 @@ class Application(tk.Tk):
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
-            network_window.configure(bg=UI_COLOR)
+            network_window.configure(bg=BUTTON_BG_COLOR)
 
             window_width = 420
             window_height = 380
@@ -778,7 +778,7 @@ class Application(tk.Tk):
 
             scrollbar = tk.Scrollbar(list_frame, orient="vertical")
             network_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set, exportselection=False,
-                                         bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+                                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
 
             scrollbar.config(command=network_listbox.yview)
             scrollbar.pack(side="right", fill="y")
@@ -1145,7 +1145,7 @@ class Application(tk.Tk):
         # Create a new window to display internet check results
         result_window = tk.Toplevel(self)
         result_window.title("Internet Status")
-        result_window.configure(bg=UI_COLOR)
+        result_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
         window_width, window_height = 470, 250
@@ -1157,7 +1157,7 @@ class Application(tk.Tk):
 
         # Create a text widget to display results
         result_text = scrolledtext.ScrolledText(result_window, wrap=tk.WORD, width=40, height=10,
-                                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
                                                 insertbackground=BUTTON_TEXT_COLOR)
         result_text.pack(expand=True, fill='both', padx=10, pady=10)
 
@@ -1334,7 +1334,7 @@ class Application(tk.Tk):
         root.mainloop()
 
     # ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
-    # ----------------------------------CHECKDUM HELPER-------------------------------------------------
+    # ----------------------------------CHECKSUM HELPER-------------------------------------------------
 
     def get_file_checksum(self):
         print("Running file checksum helper.")
@@ -1429,7 +1429,7 @@ class Application(tk.Tk):
         algo_window.grab_set()
         self.wait_window(algo_window)
 
-    # ----------------------------------CHECKDUM HELPER END-------------------------------------------------
+    # ----------------------------------CHECKSUM HELPER END-------------------------------------------------
     # ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
     def get_installed_software(self):
         software_list = []
@@ -1820,7 +1820,7 @@ class Application(tk.Tk):
             # Create a new window to display the apps with active internet connection
             netstat_window = tk.Toplevel(self)
             netstat_window.title("Apps with Active Internet Connection")
-            netstat_window.configure(bg=UI_COLOR)
+            netstat_window.configure(bg=BUTTON_BG_COLOR)
 
             # Set window size and position
             window_width, window_height = 420, 580
@@ -1832,7 +1832,7 @@ class Application(tk.Tk):
 
             # Create a text widget to display the apps
             app_text = scrolledtext.ScrolledText(netstat_window, wrap=tk.WORD, width=40, height=10,
-                                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                 bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
                                                  insertbackground=BUTTON_TEXT_COLOR)
             app_text.pack(expand=True, fill='both', padx=10, pady=10)
 
@@ -2282,12 +2282,12 @@ class Application(tk.Tk):
         window.resizable(True, True)
         window.configure(bg=UI_COLOR)
 
-        main_frame = tk.Frame(window, bg=UI_COLOR)
+        main_frame = tk.Frame(window, bg=BUTTON_BG_COLOR)
         main_frame.pack(fill=tk.BOTH, expand=True)
 
         canvas = tk.Canvas(main_frame, bg=UI_COLOR, highlightthickness=0)
         scrollbar = tk.Scrollbar(main_frame, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas, bg=UI_COLOR)
+        scrollable_frame = tk.Frame(canvas, bg=BUTTON_BG_COLOR)
 
         scrollable_frame.bind(
             "<Configure>",
@@ -2300,7 +2300,9 @@ class Application(tk.Tk):
         self.checkbox_vars = {}
 
         for category, items in links.items():
-            category_frame = tk.LabelFrame(scrollable_frame, text=category, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+            category_frame = tk.LabelFrame(scrollable_frame, text=category, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
+                                           highlightbackground=UI_COLOR, highlightcolor=UI_COLOR,
+                                           highlightthickness=5)
             category_frame.pack(fill="x", expand=True, padx=10, pady=5)
 
             for i, (text, link) in enumerate(items.items()):
@@ -2329,8 +2331,8 @@ class Application(tk.Tk):
         scrollbar.pack(side="right", fill="y")
 
         window.update_idletasks()
-        width = min(500, window.winfo_screenwidth() - 100)
-        height = min(700, window.winfo_screenheight() - 100)
+        width = min(512, window.winfo_screenwidth() - 100)
+        height = min(770, window.winfo_screenheight() - 100)
         x = (window.winfo_screenwidth() - width) // 2
         y = (window.winfo_screenheight() - height) // 2
         window.geometry(f"{width}x{height}+{x}+{y}")
