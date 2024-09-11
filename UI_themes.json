@@ -17,7 +17,7 @@
 "VERSION_LABEL_TEXT": "#B86B3A"
 },
 {
-"name": "Cool Grays",
+"name": "Dark Grays",
 "UI_COLOR": "#2A2A2A",
 "BUTTON_BG_COLOR": "#4D5057",
 "BUTTON_TEXT_COLOR": "#F0F0F0",
@@ -39,6 +39,22 @@
 "BUTTON_TEXT_COLOR": "#F5FFFF",
 "BOTTOM_BORDER_COLOR": "#3894E0",
 "VERSION_LABEL_TEXT": "#0473D8"
+},
+{
+"name": "Classic Gray",
+"UI_COLOR": "#e4e4e4",
+"BUTTON_BG_COLOR": "#f7f7f9",
+"BUTTON_TEXT_COLOR": "#000000",
+"BOTTOM_BORDER_COLOR": "#6c6c6c",
+"VERSION_LABEL_TEXT": "#666666"
+},
+{
+"name": "Night Violet",
+"UI_COLOR": "#180c14",
+"BUTTON_BG_COLOR": "#582c49",
+"BUTTON_TEXT_COLOR": "#F5FFF5",
+"BOTTOM_BORDER_COLOR": "#b12eb1",
+"VERSION_LABEL_TEXT": "#7d227d"
 }
-  ]
+]
 }
