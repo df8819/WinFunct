@@ -6,6 +6,8 @@ import json
 # noinspection PyUnresolvedReferences,PyMethodMayBeStatic
 class UISelector:
     def __init__(self, master, current_theme, update_callback):
+        self.theme_dropdown = None
+        self.theme_var = None
         self.master = master
         self.window = tk.Toplevel(master)
         self.window.title("Theme Selector")
