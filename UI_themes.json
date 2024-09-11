@@ -1,52 +1,12 @@
 {
 "themes": [
 {
-"name": "OG Steam",
-"UI_COLOR": "#2f3128",
-"BUTTON_BG_COLOR": "#575a4b",
-"BUTTON_TEXT_COLOR": "#ffffff",
-"BOTTOM_BORDER_COLOR": "#ff8f20",
-"VERSION_LABEL_TEXT": "#bf6000"
-},
-{
-"name": "Modern Brightness",
-"UI_COLOR": "#eaeeee",
-"BUTTON_BG_COLOR": "#d0d9d9",
-"BUTTON_TEXT_COLOR": "#151a1a",
-"BOTTOM_BORDER_COLOR": "#455656",
-"VERSION_LABEL_TEXT": "#536666"
-},
-{
-"name": "Earthy Tones",
-"UI_COLOR": "#2A2727",
-"BUTTON_BG_COLOR": "#4E4540",
-"BUTTON_TEXT_COLOR": "#F5F5F0",
-"BOTTOM_BORDER_COLOR": "#A86335",
-"VERSION_LABEL_TEXT": "#B86B3A"
-},
-{
-"name": "Dark Grays",
-"UI_COLOR": "#2A2A2A",
-"BUTTON_BG_COLOR": "#4D5057",
-"BUTTON_TEXT_COLOR": "#F0F0F0",
-"BOTTOM_BORDER_COLOR": "#6D7684",
-"VERSION_LABEL_TEXT": "#8792A6"
-},
-{
-"name": "Muted Greens",
-"UI_COLOR": "#272A27",
-"BUTTON_BG_COLOR": "#47564A",
-"BUTTON_TEXT_COLOR": "#F5FFF5",
-"BOTTOM_BORDER_COLOR": "#38E06F",
-"VERSION_LABEL_TEXT": "#04D858"
-},
-{
-"name": "Deep Blues",
-"UI_COLOR": "#272A2A",
-"BUTTON_BG_COLOR": "#475664",
-"BUTTON_TEXT_COLOR": "#F5FFFF",
-"BOTTOM_BORDER_COLOR": "#3894E0",
-"VERSION_LABEL_TEXT": "#0473D8"
+"name": "Bronze Desert",
+"UI_COLOR": "#f1f1dc",
+"BUTTON_BG_COLOR": "#e0e0b4",
+"BUTTON_TEXT_COLOR": "#272710",
+"BOTTOM_BORDER_COLOR": "#886637",
+"VERSION_LABEL_TEXT": "#79792f"
 },
 {
 "name": "Classic Gray",
@@ -57,12 +17,92 @@
 "VERSION_LABEL_TEXT": "#5f5f5f"
 },
 {
+"name": "Dark Grays",
+"UI_COLOR": "#2A2A2A",
+"BUTTON_BG_COLOR": "#4D5057",
+"BUTTON_TEXT_COLOR": "#F0F0F0",
+"BOTTOM_BORDER_COLOR": "#6D7684",
+"VERSION_LABEL_TEXT": "#8792A6"
+},
+{
+"name": "Deep Blues",
+"UI_COLOR": "#272A2A",
+"BUTTON_BG_COLOR": "#475664",
+"BUTTON_TEXT_COLOR": "#F5FFFF",
+"BOTTOM_BORDER_COLOR": "#3894E0",
+"VERSION_LABEL_TEXT": "#0473D8"
+},
+{
+"name": "Earthy Tones",
+"UI_COLOR": "#2A2727",
+"BUTTON_BG_COLOR": "#4E4540",
+"BUTTON_TEXT_COLOR": "#F5F5F0",
+"BOTTOM_BORDER_COLOR": "#A86335",
+"VERSION_LABEL_TEXT": "#B86B3A"
+},
+{
+"name": "Ferrari Accident",
+"UI_COLOR": "#3d0404",
+"BUTTON_BG_COLOR": "#a32020",
+"BUTTON_TEXT_COLOR": "#fdf7f7",
+"BOTTOM_BORDER_COLOR": "#da6b6b",
+"VERSION_LABEL_TEXT": "#ce3939"
+},
+{
+"name": "Fresh Mint",
+"UI_COLOR": "#e3f4ea",
+"BUTTON_BG_COLOR": "#c7e9d5",
+"BUTTON_TEXT_COLOR": "#151a1a",
+"BOTTOM_BORDER_COLOR": "#2b6c45",
+"VERSION_LABEL_TEXT": "#44a86c"
+},
+{
+"name": "Modern Brightness",
+"UI_COLOR": "#eaeeee",
+"BUTTON_BG_COLOR": "#d0d9d9",
+"BUTTON_TEXT_COLOR": "#151a1a",
+"BOTTOM_BORDER_COLOR": "#455656",
+"VERSION_LABEL_TEXT": "#536666"
+},
+{
+"name": "Muted Greens",
+"UI_COLOR": "#272A27",
+"BUTTON_BG_COLOR": "#47564A",
+"BUTTON_TEXT_COLOR": "#F5FFF5",
+"BOTTOM_BORDER_COLOR": "#38E06F",
+"VERSION_LABEL_TEXT": "#04D858"
+},
+{
 "name": "Night Violet",
 "UI_COLOR": "#180c14",
 "BUTTON_BG_COLOR": "#582c49",
 "BUTTON_TEXT_COLOR": "#F5FFF5",
 "BOTTOM_BORDER_COLOR": "#b12eb1",
 "VERSION_LABEL_TEXT": "#7d227d"
+},
+{
+"name": "Oceanic Depths",
+"UI_COLOR": "#0c1821",
+"BUTTON_BG_COLOR": "#1c4a6e",
+"BUTTON_TEXT_COLOR": "#e0f7fa",
+"BOTTOM_BORDER_COLOR": "#455aa5",
+"VERSION_LABEL_TEXT": "#405499"
+},
+{
+"name": "OG Steam",
+"UI_COLOR": "#2f3128",
+"BUTTON_BG_COLOR": "#575a4b",
+"BUTTON_TEXT_COLOR": "#ffffff",
+"BOTTOM_BORDER_COLOR": "#ff8f20",
+"VERSION_LABEL_TEXT": "#bf6000"
+},
+{
+"name": "Rose Invasion",
+"UI_COLOR": "#f7ede2",
+"BUTTON_BG_COLOR": "#f5cac3",
+"BUTTON_TEXT_COLOR": "#27101b",
+"BOTTOM_BORDER_COLOR": "#9f426f",
+"VERSION_LABEL_TEXT": "#783253"
 }
 ]
 }
