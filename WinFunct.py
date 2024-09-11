@@ -357,7 +357,7 @@ class Application(tk.Tk):
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
-    # Theme selector
+    # ----------------------------------THEME SELECTOR / MAIN APP----------------------------------
     def open_theme_selector(self):
         if not os.path.exists("UI_themes.json"):
             download_theme = messagebox.askyesno("Download Theme", "The UI_themes.json file was not found. Do you want to download it?")
@@ -428,6 +428,8 @@ class Application(tk.Tk):
             self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
 
         self.update_idletasks()
+
+        # ----------------------------------THEME SELECTOR / MAIN APP END----------------------------------
 
     def open_chat(self):
         print("""Open JChat app.""")
