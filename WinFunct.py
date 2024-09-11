@@ -1858,8 +1858,8 @@ class Application(tk.Tk):
 
             print(f"""
     ╔═════════════════════════════════ERROR═════════════════════════════════════╗
-    ║ You are NOT running WinFunct from an python file!                         ║
-    ║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                         ║
+    ║ You are NOT running WinFunct from a python file!                          ║
+    ║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                          ║
     ║ Please download the latest Release from GitHub                            ║
     ║                                                                           ║
     ║                               ---OR---                                    ║
