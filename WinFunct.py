@@ -756,7 +756,7 @@ class Application(tk.Tk):
         if networks:
             network_window = tk.Toplevel(self)
             network_window.title("Wi-Fi Networks")
-            network_window.configure(bg=BUTTON_BG_COLOR)
+            network_window.configure(bg=UI_COLOR)
 
             window_width = 420
             window_height = 380
