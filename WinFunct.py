@@ -2341,7 +2341,7 @@ class Application(tk.Tk):
         scrollbar.pack(side="right", fill="y")
 
         window.update_idletasks()
-        width = min(512, window.winfo_screenwidth() - 100)
+        width = min(496, window.winfo_screenwidth() - 100)
         height = min(770, window.winfo_screenheight() - 100)
         x = (window.winfo_screenwidth() - width) // 2
         y = (window.winfo_screenheight() - height) // 2
