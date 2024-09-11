@@ -243,7 +243,7 @@ def load_theme_from_file():
 
 
 # App Window
-# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined
+# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
