@@ -233,11 +233,24 @@ def execute_command(cmd):
     subprocess.Popen(cmd, shell=True)
 
 
+def load_theme_from_file():
+    try:
+        with open('last_selected_theme.json', 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return None
+    except json.JSONDecodeError:
+        return None
+
+
 # App Window
 # noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+
+        # Load the last selected theme before initializing UI components
+        self.load_last_selected_theme()
 
         self.resolution_main = "845x450"
         self.tabs = None
@@ -254,12 +267,13 @@ class Application(tk.Tk):
 
         # Create the main_frame with tk.Frame
         self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
-
-        # Remove padding if unnecessary or adjust as needed
-        self.main_frame.pack(fill="both", expand=True)  # No padding here
+        self.main_frame.pack(fill="both", expand=True)
 
         self.create_widgets()
         self.resizable(True, True)
+
+        # Load the last selected theme after the main UI is initialized
+        self.after(100, self.load_last_selected_theme)
 
         # Center the window after all widgets have been packed
         self.after(100, self.center_window)
@@ -282,6 +296,7 @@ class Application(tk.Tk):
         self.update()  # To make sure the clipboard is updated
 
     # ----------------------------------DROPDOWN SECTION-------------------------------------------------
+
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
         actions = {
@@ -357,7 +372,35 @@ class Application(tk.Tk):
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
 
-    # ----------------------------------THEME SELECTOR / MAIN APP----------------------------------
+    # ----------------------------------THEME SELECTOR FOR MAIN APP----------------------------------
+    def load_last_selected_theme(self):
+        global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
+        try:
+            with open('last_selected_theme.json', 'r') as file:
+                theme = json.load(file)
+                UI_COLOR = theme['UI_COLOR']
+                BUTTON_BG_COLOR = theme['BUTTON_BG_COLOR']
+                BUTTON_TEXT_COLOR = theme['BUTTON_TEXT_COLOR']
+                BOTTOM_BORDER_COLOR = theme['BOTTOM_BORDER_COLOR']
+                VERSION_LABEL_TEXT = theme['VERSION_LABEL_TEXT']
+                self.current_theme = theme
+        except (FileNotFoundError, json.JSONDecodeError):
+            # If file doesn't exist or is invalid, use default theme
+            pass
+
+    def save_theme_to_file(self, theme_data):
+        with open('last_selected_theme.json', 'w') as file:
+            json.dump(theme_data, file)
+
+    def load_theme_from_file(self):
+        try:
+            with open('last_selected_theme.json', 'r') as file:
+                return json.load(file)
+        except FileNotFoundError:
+            return None
+        except json.JSONDecodeError:
+            return None
+
     def open_theme_selector(self):
         if not os.path.exists("UI_themes.json"):
             download_theme = messagebox.askyesno("Download Theme", "The UI_themes.json file was not found. Do you want to download it?")
@@ -393,11 +436,14 @@ class Application(tk.Tk):
         VERSION_LABEL_TEXT = new_theme['VERSION_LABEL_TEXT']
 
         self.current_theme = new_theme
+        self.save_theme_to_file(new_theme)
         self.apply_theme()
 
     def apply_theme(self):
         self.configure(bg=UI_COLOR)
         self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
+        # Apply theme to other widgets as needed
+        self.update_ui(self.current_theme)
 
         def update_widget_colors(widget):
             if isinstance(widget, tk.Button):
@@ -429,7 +475,7 @@ class Application(tk.Tk):
 
         self.update_idletasks()
 
-        # ----------------------------------THEME SELECTOR / MAIN APP END----------------------------------
+        # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
 
     def open_chat(self):
         print("""Open JChat app.""")
