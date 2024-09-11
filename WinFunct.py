@@ -2305,14 +2305,24 @@ class Application(tk.Tk):
                                            highlightthickness=5)
             category_frame.pack(fill="x", expand=True, padx=10, pady=5)
 
+            num_columns = 3
+            num_items = len(items)
+            num_rows = (num_items + num_columns - 1) // num_columns
+
             for i, (text, link) in enumerate(items.items()):
                 var = tk.IntVar()
                 checkbox = tk.Checkbutton(category_frame, text=text, variable=var,
                                           bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
                                           selectcolor=BUTTON_BG_COLOR, activebackground=UI_COLOR,
                                           activeforeground=BUTTON_TEXT_COLOR)
-                checkbox.grid(row=i // 3, column=i % 3, sticky="w", padx=10, pady=3)
+                row = i % num_rows
+                col = i // num_rows
+                checkbox.grid(row=row, column=col, sticky="w", padx=10, pady=3)
                 self.checkbox_vars[link] = var
+
+            # Configure column weights to distribute space evenly
+            for col in range(num_columns):
+                category_frame.columnconfigure(col, weight=1)
 
         button_frame = tk.Frame(window, bg=UI_COLOR)
         button_frame.pack(fill="x", padx=10, pady=10)
