@@ -81,11 +81,11 @@ class JChat:
         self.text_input = tk.StringVar()
         self.user_input = tk.Entry(frame, bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR,
                                    insertbackground=self.BUTTON_TEXT_COLOR, textvariable=self.text_input)
-        self.user_input.grid(row=1, column=0, sticky="ew", pady=10)
+        self.user_input.grid(row=1, column=0, sticky="ew", pady=10, padx=(10, 10))
         self.user_input.bind("<Return>", self.send_message)
 
         button_style = {"bg": self.BUTTON_BG_COLOR, "fg": self.BUTTON_TEXT_COLOR, "activebackground": self.UI_COLOR,
-                        "activeforeground": self.BUTTON_TEXT_COLOR}
+                        "activeforeground": self.BUTTON_TEXT_COLOR, "width": 15}
         self.send_button = tk.Button(frame, text="Send", command=self.send_message, **button_style)
         self.send_button.grid(row=1, column=1, sticky="e", pady=10)
 
@@ -94,35 +94,36 @@ class JChat:
         button_frame.grid(row=2, column=0, columnspan=2, sticky="ew")
 
         self.behavior_label = tk.Label(button_frame, text="Behavior:", bg=self.UI_COLOR, fg=self.BUTTON_TEXT_COLOR)
-        self.behavior_label.grid(row=0, column=0, sticky="w", padx=(0, 10))
+        self.behavior_label.grid(row=0, column=0, sticky="w", padx=(10, 10))
 
         self.behavior_var = tk.StringVar(value="Default")
         self.behavior_menu = tk.OptionMenu(button_frame, self.behavior_var, *self.behaviors.keys(),
                                            command=self.change_behavior)
         self.behavior_menu.config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR,
-                                  activeforeground=self.BUTTON_TEXT_COLOR)
+                                  activeforeground=self.BUTTON_TEXT_COLOR, width=15)
         self.behavior_menu["menu"].config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.behavior_menu.grid(row=0, column=1, sticky="w")
-
-        self.clear_button = tk.Button(button_frame, text="Clear Chat", command=self.clear_conversation, **button_style)
-        self.clear_button.grid(row=0, column=2, sticky="w", padx=(10, 0))
 
         self.selected_model = tk.StringVar(value="gpt-3.5-turbo")
         models = ["gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"]
         model_menu = tk.OptionMenu(button_frame, self.selected_model, *models)
         model_menu.config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR,
-                          activeforeground=self.BUTTON_TEXT_COLOR)
-        model_menu.grid(row=0, column=3, sticky="w", padx=(10, 0))
+                          activeforeground=self.BUTTON_TEXT_COLOR, width=15)
+        model_menu.grid(row=0, column=2, sticky="w", padx=(10, 10))
 
-        self.model_info_button = tk.Button(button_frame, text="What model???", command=self.display_model_info,
+        # All buttons on one row
+        self.clear_button = tk.Button(button_frame, text="Clear Chat", command=self.clear_conversation, **button_style)
+        self.clear_button.grid(row=0, column=3, sticky="w", padx=(10, 10))
+
+        self.model_info_button = tk.Button(button_frame, text="What model?", command=self.display_model_info,
                                            **button_style)
-        self.model_info_button.grid(row=0, column=4, sticky="w", padx=(10, 0))
+        self.model_info_button.grid(row=0, column=4, sticky="w", padx=(10, 10))
 
         self.api_button = tk.Button(button_frame, text="Set API Key", command=self.set_api_key, **button_style)
-        self.api_button.grid(row=0, column=5, sticky="w", padx=(10, 0))
+        self.api_button.grid(row=0, column=5, sticky="w", padx=(10, 10))
 
         self.exit_button = tk.Button(button_frame, text="Exit", command=self.exit_app, **button_style)
-        self.exit_button.grid(row=0, column=6, sticky="w", padx=(10, 0))
+        self.exit_button.grid(row=0, column=6, sticky="w", padx=(10, 10))
 
         frame.columnconfigure(0, weight=1)
         frame.rowconfigure(0, weight=1)
