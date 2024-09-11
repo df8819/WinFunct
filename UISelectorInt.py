@@ -3,6 +3,7 @@ from tkinter import colorchooser, messagebox
 import json
 
 
+# noinspection PyUnresolvedReferences,PyMethodMayBeStatic
 class UISelector:
     def __init__(self, master, current_theme, update_callback):
         self.master = master
