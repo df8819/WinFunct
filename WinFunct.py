@@ -253,6 +253,11 @@ class Application(tk.Tk):
         self.load_last_selected_theme()
 
         self.resolution_main = "845x450"
+        self.geometry(self.resolution_main)
+        self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
+        self.configure(bg=UI_COLOR)
+
+        # Declare variables that will be assigned values later in the program's execution
         self.tabs = None
         self.checkbox_vars = None
         self.fun_frame = None
@@ -261,16 +266,12 @@ class Application(tk.Tk):
         self.ip_text = None
         self.functions_frame = None
         self.bottom_frame = None
-        self.geometry(self.resolution_main)
-        self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
-        self.configure(bg=UI_COLOR)
 
         # Create the main_frame with tk.Frame
         self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
         self.main_frame.pack(fill="both", expand=True)
-
-        self.create_widgets()
         self.resizable(True, True)
+        self.create_widgets()
 
         # Load the last selected theme after the main UI is initialized
         self.after(100, self.load_last_selected_theme)
@@ -286,9 +287,6 @@ class Application(tk.Tk):
         print("""UI reset.""")
         self.geometry(self.resolution_main)
         self.after(100, self.center_window)
-
-    def update_ui(self, new_theme):
-        self.main_frame.configure(bg=new_theme["BOTTOM_BORDER_COLOR"])
 
     def copy_to_clipboard(self, text):
         self.clipboard_clear()
@@ -425,6 +423,9 @@ class Application(tk.Tk):
                 file.write(response.content)
         else:
             messagebox.showerror("Download Error", "Failed to download the UI_themes.json file.")
+
+    def update_ui(self, new_theme):
+        self.main_frame.configure(bg=new_theme["BOTTOM_BORDER_COLOR"])
 
     def update_theme(self, new_theme):
         global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
