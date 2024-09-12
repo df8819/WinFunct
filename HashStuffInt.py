@@ -208,11 +208,9 @@ class HashStuff:
 
     def stop_calculation(self):
         print("""
-    ╔══════════════════════════╗
-    ║                          ║
-    ║   Calculation Stopped!   ║
-    ║   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   ║
-    ╚══════════════════════════╝        
+    ╔══════════════════════╗
+    ║ Calculation Stopped! ║
+    ╚══════════════════════╝        
 """)
         self.stop_event.set()
 
