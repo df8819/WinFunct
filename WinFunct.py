@@ -1298,17 +1298,6 @@ class Application(tk.Tk):
         print("Executing 'AdGuard Home' install helper.")
 
         def create_agh_window():
-            def on_yes():
-                self.clipboard_clear()
-                self.clipboard_append(AdGuardClipBoard)
-                self.update()  # To ensure the clipboard is updated
-                print("Command copied to clipboard")
-                agh_window.destroy()
-
-            def on_no():
-                print("Command execution canceled.")
-                agh_window.destroy()
-
             agh_window = tk.Toplevel(self)
             agh_window.title("Copy to Clipboard?")
             agh_window.configure(bg=UI_COLOR)
@@ -1333,25 +1322,34 @@ class Application(tk.Tk):
                             bg=UI_COLOR)
             link.pack(pady=5)
 
-            # Callback function for clicking the link label
             def open_link(event):
                 webbrowser.open(ADGUARD_LINK)
 
-            # Bind the callback function to the link label
             link.bind("<Button-1>", open_link)
 
-            # Change color on hover to provide visual feedback
             def on_enter(event):
-                link.config(fg="white")  # Change text color on hover
+                link.config(fg="white")
 
             def on_leave(event):
-                link.config(fg=VERSION_LABEL_TEXT)  # Restore original text color
+                link.config(fg=VERSION_LABEL_TEXT)
 
             link.bind("<Enter>", on_enter)
             link.bind("<Leave>", on_leave)
 
             button_frame = tk.Frame(agh_window, bg=UI_COLOR)
             button_frame.pack(pady=10)
+
+            def on_yes():
+                AdGuardClipBoard = "curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v"
+                agh_window.clipboard_clear()
+                agh_window.clipboard_append(AdGuardClipBoard)
+                agh_window.update()  # To ensure the clipboard is updated
+                print("Command copied to clipboard")
+                agh_window.destroy()
+
+            def on_no():
+                print("Command execution canceled.")
+                agh_window.destroy()
 
             yes_button = tk.Button(button_frame, text="Yes", command=on_yes, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
@@ -1363,11 +1361,7 @@ class Application(tk.Tk):
                                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
             no_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-            agh_window.transient(self)
-            agh_window.grab_set()
-            agh_window.wait_window()
-
-        # Run the window creation in a separate thread
+        # Create the AGH window in a separate thread
         threading.Thread(target=create_agh_window, daemon=True).start()
 
     # ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
