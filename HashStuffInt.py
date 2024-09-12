@@ -85,7 +85,7 @@ class HashStuff:
         options_frame = tk.Frame(self.root, bg=self.UI_COLOR)
         options_frame.grid(row=6, column=0, columnspan=2, **layout_options)
         self.algo_combo = tk.OptionMenu(options_frame, self.hash_algo, *hash_options)
-        self.algo_combo.config(width=17, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR, highlightthickness=0)
+        self.algo_combo.config(width=18, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR, highlightthickness=0)
         self.algo_combo["menu"].config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.algo_combo.pack(side=tk.LEFT, padx=5)
         tk.Button(options_frame, text="Stop Calculation", command=self.stop_calculation, **button_style).pack(side=tk.LEFT, padx=5)
