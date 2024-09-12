@@ -370,7 +370,7 @@ class Application(tk.Tk):
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
     # ----------------------------------THEME SELECTOR FOR MAIN APP----------------------------------
-    
+
     def load_last_selected_theme(self):
         global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
         try:
@@ -1479,6 +1479,7 @@ class Application(tk.Tk):
 
     # ----------------------------------CHECKSUM HELPER END-------------------------------------------------
     # ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
+
     def get_installed_software(self):
         software_list = []
         logging.basicConfig(level=logging.INFO)
@@ -2402,7 +2403,9 @@ class Application(tk.Tk):
         window.destroy()  # Close the window
 
     # -----------------------------------------------LINK SUMMARY END--------------------------------------------------
+
     # --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION BELOW HERE-----------------VVVVVVVVVVVVVVVVVVVV---------------
+
     # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
 
     def create_widgets(self):
@@ -2592,7 +2595,7 @@ class Application(tk.Tk):
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-        # NEW DROPDOWM WITH NUMBER [2] ######################
+        # PUT NEW DROPDOWM WITH NUMBER [2] HERE ######################
 
         # God-mode
         self.selected_function3 = tk.StringVar()
@@ -2837,9 +2840,7 @@ class Application(tk.Tk):
         self.function_dropdown8.grid(row=0, column=5, padx=10, pady=5, sticky="we")
         self.selected_function8.trace('w', self.on_function_select8)
 
-
 # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
-
 
 app = Application()
 app.mainloop()
