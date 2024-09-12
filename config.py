@@ -33,7 +33,6 @@ VERSION_LABEL_TEXT = "#5f5f5f"  # Label text color
 
 # UI STYLE section
 BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
-
 # noinspection SpellCheckingInspection
 BORDER_WIDTH = "1"  # thiccness in pixel
 
@@ -99,6 +98,7 @@ links = {
 }
 
 # Script for Website online status checker
+# noinspection SpellCheckingInspection
 batch_script = r"""
 @echo off
 setlocal enabledelayedexpansion
