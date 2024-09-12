@@ -1440,30 +1440,42 @@ class Application(tk.Tk):
                 # Extract the checksum from the output
                 checksum = result.stdout.split('\n')[1].strip()
 
-                # Update the algorithm label
-                algo_label.config(text=f"Selected algorithm: {algo}")
-
-                # Display only the checksum in the text widget
-                result_text.config(state=tk.NORMAL)
-                result_text.delete('1.0', tk.END)
-                result_text.insert(tk.END, checksum)
-                result_text.config(state=tk.DISABLED)
+                # Update the UI in the main thread
+                algo_window.after(0, lambda: update_ui(algo, checksum))
             except subprocess.CalledProcessError as e:
-                messagebox.showerror("Error", f"An error occurred while computing the checksum:\n{e.stderr}")
+                algo_window.after(0, lambda: messagebox.showerror("Error", f"An error occurred while computing the checksum:\n{e.stderr}"))
             except Exception as e:
-                messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}")
+                algo_window.after(0, lambda: messagebox.showerror("Error", f"An unexpected error occurred:\n{str(e)}"))
+
+        def update_ui(algo, checksum):
+            # Update the algorithm label
+            algo_label.config(text=f"Selected algorithm: {algo}")
+
+            # Display only the checksum in the text widget
+            result_text.config(state=tk.NORMAL)
+            result_text.delete('1.0', tk.END)
+            result_text.insert(tk.END, checksum)
+            result_text.config(state=tk.DISABLED)
+
+        def on_compute():
+            # Disable the button while computing
+            button.config(state=tk.DISABLED)
+            # Start the checksum computation in a separate thread
+            threading.Thread(target=run_checksum, daemon=True).start()
+            # Re-enable the button after a short delay
+            algo_window.after(100, lambda: button.config(state=tk.NORMAL))
 
         # Create and pack a button
-        button = tk.Button(algo_window, text="Compute Checksum", command=run_checksum,
+        button = tk.Button(algo_window, text="Compute Checksum", command=on_compute,
                            bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                            activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
                            borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         button.pack(pady=10)
 
-        # Make the window modal
-        algo_window.transient(self)
-        algo_window.grab_set()
-        self.wait_window(algo_window)
+        # Don't make the window modal
+        # algo_window.transient(self)
+        # algo_window.grab_set()
+        # self.wait_window(algo_window)
 
     # ----------------------------------CHECKSUM HELPER END-------------------------------------------------
     # ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
