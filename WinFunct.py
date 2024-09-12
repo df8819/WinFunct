@@ -96,9 +96,9 @@ class GitUpdater:
     def execute_update():
         try:
             if GitUpdater.is_frozen():
-                print(f'Running as ".exe". Skipping update check. *{VERSION_SHORT}*')
+                print(f'Running as ".exe". Skipping update check. >>>>> {VERSION_SHORT}')
             elif not GitUpdater.is_git_repository():
-                print(f'Not running in a Git repository. Skipping update check. *{VERSION_SHORT}*')
+                print(f'Not running in a Git repository. Skipping update check. >>>>> {VERSION_SHORT}')
             else:
                 if GitUpdater.prompt_update():
                     print('Executing git pull...')
@@ -148,7 +148,7 @@ class GitUpdater:
                     except subprocess.CalledProcessError as e:
                         print(f"Error during git pull: {e}")
                 else:
-                    print(f'No update needed. *{VERSION_SHORT}*')
+                    print(f'>>>>> {VERSION_SHORT}')
         except Exception as e:
             print(f"An error occurred during the update process: {e}")
             print("Continuing with the current version.")
@@ -157,9 +157,9 @@ class GitUpdater:
 # Execute the update check before any class instantiation
 GitUpdater.execute_update()
 
-
 # ---------------------------------- UPDATER END ----------------------------------
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -243,7 +243,6 @@ def load_theme_from_file():
         return None
     except json.JSONDecodeError:
         return None
-
 
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
 
@@ -371,6 +370,7 @@ class Application(tk.Tk):
 
     # ----------------------------------DROPDOWN SECTION END---------------------------------------------
     # ----------------------------------THEME SELECTOR FOR MAIN APP----------------------------------
+    
     def load_last_selected_theme(self):
         global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
         try:
