@@ -71,7 +71,7 @@ class HashStuff:
         tk.Label(self.root, text="Possible Password:", **label_style).grid(row=4, column=0, **layout_options)
         self.possible_entry = tk.Entry(self.root, textvariable=self.possible_password, width=50, **entry_style)
         self.possible_entry.grid(row=4, column=1, **layout_options)
-        self.possible_entry.config(state='readonly')  # Use 'readonly' to allow copying
+        # self.possible_entry.config(state='readonly')  # Use 'readonly' to allow copying
 
         # Buttons and Options Menu
         button_frame = tk.Frame(self.root, bg=self.UI_COLOR)
@@ -191,21 +191,21 @@ class HashStuff:
                     self.possible_entry.config(state='normal')
                     self.possible_entry.delete(0, tk.END)
                     self.possible_entry.insert(tk.END, "Calculation stopped by user.")
-                    self.possible_entry.config(state='readonly')
+                    self.possible_entry.config(state='readonly', readonlybackground=self.BUTTON_BG_COLOR)
                     return
 
                 if hasher.hexdigest() == target_hash:
                     self.possible_entry.config(state='normal')
                     self.possible_entry.delete(0, tk.END)
                     self.possible_entry.insert(tk.END, test_string)
-                    self.possible_entry.config(state='readonly')
+                    self.possible_entry.config(state='readonly', readonlybackground=self.BUTTON_BG_COLOR)
                     return
 
         if not found:
             self.possible_entry.config(state='normal')
             self.possible_entry.delete(0, tk.END)
             self.possible_entry.insert(tk.END, "Not found")
-            self.possible_entry.config(state='readonly')
+            self.possible_entry.config(state='readonly', readonlybackground=self.BUTTON_BG_COLOR)
 
     def stop_calculation(self):
         print("""
