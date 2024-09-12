@@ -79,18 +79,20 @@ class HashStuff:
         # First line of buttons
         tk.Button(button_frame, text="Hash", command=self.hash_text_func, **button_style).pack(side=tk.LEFT, padx=5)
         tk.Button(button_frame, text="Transfer Hash", command=self.transfer_hash, **button_style).pack(side=tk.LEFT, padx=5)
-        tk.Button(button_frame, text="Calculate Password", command=self.character_options, **button_style).pack(side=tk.LEFT, padx=5)
+        tk.Button(button_frame, text="Crack Password", command=self.character_options, **button_style).pack(side=tk.LEFT, padx=5)
 
         # Second line with option menu and additional buttons
         options_frame = tk.Frame(self.root, bg=self.UI_COLOR)
         options_frame.grid(row=6, column=0, columnspan=2, **layout_options)
         self.algo_combo = tk.OptionMenu(options_frame, self.hash_algo, *hash_options)
-        self.algo_combo.config(width=20, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR, highlightthickness=0)
+        self.algo_combo.config(width=17, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR, highlightthickness=0)
         self.algo_combo["menu"].config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.algo_combo.pack(side=tk.LEFT, padx=5)
         tk.Button(options_frame, text="Stop Calculation", command=self.stop_calculation, **button_style).pack(side=tk.LEFT, padx=5)
         tk.Button(options_frame, text="Exit", command=self.exit_app, **button_style).pack(side=tk.LEFT, padx=5)
 
+        # Center the button and options frames
+        self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_columnconfigure(1, weight=1)
         for i in range(7):
             self.root.grid_rowconfigure(i, weight=1)
@@ -205,6 +207,13 @@ class HashStuff:
             self.possible_entry.config(state='disabled')
 
     def stop_calculation(self):
+        print("""
+    ╔══════════════════════════╗
+    ║                          ║
+    ║   Calculation Stopped!   ║
+    ║   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   ║
+    ╚══════════════════════════╝        
+""")
         self.stop_event.set()
 
     def exit_app(self):
