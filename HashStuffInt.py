@@ -28,8 +28,8 @@ class HashStuff:
 
         self.root.title("Hash Generator")
         self.root.configure(bg=self.UI_COLOR)
-        window_width = 1000
-        window_height = 430
+        window_width = 520
+        window_height = 320
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         center_x = int((screen_width - window_width) / 2)
@@ -44,14 +44,14 @@ class HashStuff:
 
         # Password to Hash
         tk.Label(self.root, text="Enter Password to Hash:", **label_style).grid(row=1, column=0, **layout_options)
-        self.password_entry = tk.Entry(self.root, textvariable=self.entry_text, width=60, **entry_style)
+        self.password_entry = tk.Entry(self.root, textvariable=self.entry_text, width=50, **entry_style)
         self.password_entry.grid(row=1, column=1, **layout_options)
 
         # Hashed Output
         tk.Label(self.root, text="Hashed Output:", **label_style).grid(row=2, column=0, **layout_options)
         hashed_frame = tk.Frame(self.root, bg=self.UI_COLOR)
         hashed_frame.grid(row=2, column=1, **layout_options)
-        self.hashed_text = tk.Text(hashed_frame, height=3, width=50, wrap=tk.WORD, **text_style)
+        self.hashed_text = tk.Text(hashed_frame, height=2, width=50, wrap=tk.WORD, **text_style)
         self.hashed_text.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
         hashed_scrollbar = tk.Scrollbar(hashed_frame, command=self.hashed_text.yview)
         hashed_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -61,7 +61,7 @@ class HashStuff:
         tk.Label(self.root, text="Enter Hash for Password:", **label_style).grid(row=3, column=0, **layout_options)
         hash_frame = tk.Frame(self.root, bg=self.UI_COLOR)
         hash_frame.grid(row=3, column=1, **layout_options)
-        self.hash_text = tk.Text(hash_frame, height=3, width=50, wrap=tk.WORD, **text_style)
+        self.hash_text = tk.Text(hash_frame, height=2, width=50, wrap=tk.WORD, **text_style)
         self.hash_text.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
         hash_scrollbar = tk.Scrollbar(hash_frame, command=self.hash_text.yview)
         hash_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -69,29 +69,30 @@ class HashStuff:
 
         # Possible Password
         tk.Label(self.root, text="Possible Password:", **label_style).grid(row=4, column=0, **layout_options)
-        possible_frame = tk.Frame(self.root, bg=self.UI_COLOR)
-        possible_frame.grid(row=4, column=1, **layout_options)
-        self.possible_text = tk.Text(possible_frame, height=3, width=50, wrap=tk.WORD, **text_style)
-        self.possible_text.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-        possible_scrollbar = tk.Scrollbar(possible_frame, command=self.possible_text.yview)
-        possible_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.possible_text.config(yscrollcommand=possible_scrollbar.set, state='disabled')
+        self.possible_entry = tk.Entry(self.root, textvariable=self.possible_password, width=50, **entry_style)
+        self.possible_entry.grid(row=4, column=1, **layout_options)
 
-        # Buttons
+        # Buttons and Options Menu
         button_frame = tk.Frame(self.root, bg=self.UI_COLOR)
         button_frame.grid(row=5, column=0, columnspan=2, **layout_options)
+
+        # First line of buttons
         tk.Button(button_frame, text="Hash", command=self.hash_text_func, **button_style).pack(side=tk.LEFT, padx=5)
         tk.Button(button_frame, text="Transfer Hash", command=self.transfer_hash, **button_style).pack(side=tk.LEFT, padx=5)
         tk.Button(button_frame, text="Calculate Password", command=self.character_options, **button_style).pack(side=tk.LEFT, padx=5)
-        tk.Button(button_frame, text="Stop Calculation", command=self.stop_calculation, **button_style).pack(side=tk.LEFT, padx=5)
-        self.algo_combo = tk.OptionMenu(button_frame, self.hash_algo, *hash_options)
+
+        # Second line with option menu and additional buttons
+        options_frame = tk.Frame(self.root, bg=self.UI_COLOR)
+        options_frame.grid(row=6, column=0, columnspan=2, **layout_options)
+        self.algo_combo = tk.OptionMenu(options_frame, self.hash_algo, *hash_options)
         self.algo_combo.config(width=20, bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR, activebackground=self.UI_COLOR, activeforeground=self.BUTTON_TEXT_COLOR, highlightthickness=0)
         self.algo_combo["menu"].config(bg=self.BUTTON_BG_COLOR, fg=self.BUTTON_TEXT_COLOR)
         self.algo_combo.pack(side=tk.LEFT, padx=5)
-        tk.Button(button_frame, text="Exit", command=self.exit_app, **button_style).pack(side=tk.RIGHT, padx=5)
+        tk.Button(options_frame, text="Stop Calculation", command=self.stop_calculation, **button_style).pack(side=tk.LEFT, padx=5)
+        tk.Button(options_frame, text="Exit", command=self.exit_app, **button_style).pack(side=tk.LEFT, padx=5)
 
         self.root.grid_columnconfigure(1, weight=1)
-        for i in range(5):
+        for i in range(7):
             self.root.grid_rowconfigure(i, weight=1)
 
     def hash_text_func(self):
@@ -184,24 +185,24 @@ class HashStuff:
                 hasher.update(test_string.encode())
 
                 if self.stop_event.is_set():
-                    self.possible_text.config(state='normal')
-                    self.possible_text.delete("1.0", tk.END)
-                    self.possible_text.insert(tk.END, "Calculation stopped by user.")
-                    self.possible_text.config(state='disabled')
+                    self.possible_entry.config(state='normal')
+                    self.possible_entry.delete(0, tk.END)
+                    self.possible_entry.insert(tk.END, "Calculation stopped by user.")
+                    self.possible_entry.config(state='disabled')
                     return
 
                 if hasher.hexdigest() == target_hash:
-                    self.possible_text.config(state='normal')
-                    self.possible_text.delete("1.0", tk.END)
-                    self.possible_text.insert(tk.END, test_string)
-                    self.possible_text.config(state='disabled')
+                    self.possible_entry.config(state='normal')
+                    self.possible_entry.delete(0, tk.END)
+                    self.possible_entry.insert(tk.END, test_string)
+                    self.possible_entry.config(state='disabled')
                     return
 
         if not found:
-            self.possible_text.config(state='normal')
-            self.possible_text.delete("1.0", tk.END)
-            self.possible_text.insert(tk.END, "Not found")
-            self.possible_text.config(state='disabled')
+            self.possible_entry.config(state='normal')
+            self.possible_entry.delete(0, tk.END)
+            self.possible_entry.insert(tk.END, "Not found")
+            self.possible_entry.config(state='disabled')
 
     def stop_calculation(self):
         self.stop_event.set()
