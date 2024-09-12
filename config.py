@@ -38,7 +38,8 @@ BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
 BORDER_WIDTH = "1"  # thiccness in pixel
 
 # GitHub repo link
-LINK = "https://github.com/df8819/WinFunct"
+WINFUNCT_LINK = "https://github.com/df8819/WinFunct"
+ADGUARD_LINK = "https://github.com/AdguardTeam/AdGuardHome"
 
 # The curl-command to copy to the clipboard
 AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v'

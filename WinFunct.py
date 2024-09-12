@@ -31,7 +31,7 @@ from config import (
     LOGO, VERSION_NUMBER, VERSION, VERSION_SHORT,
     UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT,
     BUTTON_STYLE, BORDER_WIDTH,
-    LINK, AdGuardClipBoard,
+    WINFUNCT_LINK, AdGuardClipBoard, ADGUARD_LINK,
     links, batch_script,
     windows_management_options, security_and_networking_options,
     system_tools_options, remote_and_virtualization_options,
@@ -1295,43 +1295,80 @@ class Application(tk.Tk):
     # ----------------------------------ADGUARD HOME INSTALL HELPER-------------------------------------------------
 
     def agh_curl(self):
-        print("""Executing 'AdGuard Home' install helper.""")
+        print("Executing 'AdGuard Home' install helper.")
 
-        def on_link_click(event):
-            webbrowser.open("https://github.com/AdguardTeam/AdGuardHome")
+        def create_agh_window():
+            def on_yes():
+                self.clipboard_clear()
+                self.clipboard_append(AdGuardClipBoard)
+                self.update()  # To ensure the clipboard is updated
+                print("Command copied to clipboard")
+                agh_window.destroy()
 
-        def on_yes():
-            AdGuardClipBoard = "curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v"
-            subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(input=AdGuardClipBoard.encode())
-            print("Command copied to clipboard")
-            root.destroy()
+            def on_no():
+                print("Command execution canceled.")
+                agh_window.destroy()
 
-        def on_no():
-            print("Command execution canceled.")
-            root.destroy()
+            agh_window = tk.Toplevel(self)
+            agh_window.title("Copy to Clipboard?")
+            agh_window.configure(bg=UI_COLOR)
 
-        root = tk.Tk()
-        root.title("Copy to Clipboard?")
-        root.geometry("380x230")
-        root.eval('tk::PlaceWindow . center')  # Center the window on the screen
+            # Set window size and position
+            window_width, window_height = 380, 245
+            screen_width = agh_window.winfo_screenwidth()
+            screen_height = agh_window.winfo_screenheight()
+            x = (screen_width // 2) - (window_width // 2)
+            y = (screen_height // 2) - (window_height // 2)
+            agh_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-        message = tk.Label(root, text=f"This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\n to your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?", wraplength=280)
-        message.pack(pady=10)
+            message = tk.Label(agh_window, text="This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\nto your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?",
+                               wraplength=280, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+            message.pack(pady=10)
 
-        link = tk.Label(root, text="AdGuard Home GitHub Repository", fg="blue", cursor="hand2")
-        link.pack()
-        link.bind("<Button-1>", on_link_click)
+            link = tk.Label(agh_window,
+                            text="AdGuard Home GitHub Repository",
+                            anchor="w",
+                            cursor="hand2",
+                            fg=VERSION_LABEL_TEXT,
+                            bg=UI_COLOR)
+            link.pack(pady=5)
 
-        button_frame = tk.Frame(root)
-        button_frame.pack(pady=10)
+            # Callback function for clicking the link label
+            def open_link(event):
+                webbrowser.open(ADGUARD_LINK)
 
-        yes_button = tk.Button(button_frame, text="Yes", command=on_yes)
-        yes_button.pack(side=tk.LEFT, padx=5, pady=5)
+            # Bind the callback function to the link label
+            link.bind("<Button-1>", open_link)
 
-        no_button = tk.Button(button_frame, text="No", command=on_no)
-        no_button.pack(side=tk.LEFT, padx=5, pady=5)
+            # Change color on hover to provide visual feedback
+            def on_enter(event):
+                link.config(fg="white")  # Change text color on hover
 
-        root.mainloop()
+            def on_leave(event):
+                link.config(fg=VERSION_LABEL_TEXT)  # Restore original text color
+
+            link.bind("<Enter>", on_enter)
+            link.bind("<Leave>", on_leave)
+
+            button_frame = tk.Frame(agh_window, bg=UI_COLOR)
+            button_frame.pack(pady=10)
+
+            yes_button = tk.Button(button_frame, text="Yes", command=on_yes, width=20,
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+            yes_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+            no_button = tk.Button(button_frame, text="No", command=on_no, width=20,
+                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                  activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+            no_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+            agh_window.transient(self)
+            agh_window.grab_set()
+            agh_window.wait_window()
+
+        # Run the window creation in a separate thread
+        threading.Thread(target=create_agh_window, daemon=True).start()
 
     # ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
     # ----------------------------------CHECKSUM HELPER-------------------------------------------------
@@ -2464,7 +2501,7 @@ class Application(tk.Tk):
 
         # Callback function for clicking the version label
         def open_link(event):
-            webbrowser.open(LINK)
+            webbrowser.open(WINFUNCT_LINK)
 
         # Bind the callback function to the version label
         self.version_label.bind("<Button-1>", open_link)
@@ -2483,11 +2520,11 @@ class Application(tk.Tk):
         # ----------------------------MAIN BUTTONS----------------------------
 
         # Script tab Buttons and Positions
-        agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard curl-copy", command=self.agh_curl, width=20,
+        agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard Install Helper", command=self.agh_curl, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         agh_curl_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
 
-        autostart_btn = tk.Button(self.functions_frame, text="Autostart locations", command=self.open_autostart_locations, width=20,
+        autostart_btn = tk.Button(self.functions_frame, text="Autostart Locations", command=self.open_autostart_locations, width=20,
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         autostart_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
 
@@ -2499,7 +2536,7 @@ class Application(tk.Tk):
                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         clone_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
-        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff local user(s)", command=self.logoff_users, width=20,
+        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff Local User(s)", command=self.logoff_users, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         logoff_usr_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
@@ -2507,7 +2544,7 @@ class Application(tk.Tk):
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         open_links_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
-        checksum_btn = tk.Button(self.functions_frame, text="Verify file checksum", command=self.get_file_checksum, width=20,
+        checksum_btn = tk.Button(self.functions_frame, text="Verify File Checksum", command=self.get_file_checksum, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         checksum_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
@@ -2730,11 +2767,11 @@ class Application(tk.Tk):
         # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
 
         # Left-aligned buttons
-        shutdown_btn = tk.Button(self.bottom_frame, text="Shutdown", command=self.confirm_shutdown, width=20,
+        shutdown_btn = tk.Button(self.bottom_frame, text="Instant Shutdown", command=self.confirm_shutdown, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
-        reboot_btn = tk.Button(self.bottom_frame, text="Reboot", command=self.confirm_reboot, width=20,
+        reboot_btn = tk.Button(self.bottom_frame, text="Foreced Reboot", command=self.confirm_reboot, width=20,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
