@@ -1382,7 +1382,7 @@ class Application(tk.Tk):
         # Create a new window for algorithm selection
         algo_window = tk.Toplevel(self)
         algo_window.title("Compute File Checksum")
-        algo_window.geometry("400x250")
+        algo_window.geometry("400x210")
         algo_window.configure(bg=UI_COLOR)
 
         # Center the window
@@ -1396,7 +1396,7 @@ class Application(tk.Tk):
         # Create and pack a label
         label = tk.Label(algo_window, text="Choose a checksum algorithm:",
                          bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
-        label.pack(pady=10)
+        label.pack(pady=5)
 
         # Create a variable to hold the selected algorithm
         selected_algo = tk.StringVar()
@@ -1406,10 +1406,10 @@ class Application(tk.Tk):
         algo_menu = tk.OptionMenu(algo_window, selected_algo, *algorithms)
         algo_menu.config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                          activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
-                         highlightthickness=0)
+                         highlightthickness=0, width=18)
         algo_menu["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         selected_algo.set("SHA256")  # Default value
-        algo_menu.pack(pady=10)
+        algo_menu.pack(pady=5)
 
         # Create a label to display the selected algorithm
         algo_label = tk.Label(algo_window, text="", bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
@@ -1417,7 +1417,7 @@ class Application(tk.Tk):
 
         # Create a Text widget with Scrollbar to display the result
         result_frame = tk.Frame(algo_window, bg=UI_COLOR)
-        result_frame.pack(pady=10, padx=10, expand=True, fill=tk.BOTH)
+        result_frame.pack(pady=5, padx=10, expand=True, fill=tk.BOTH)
 
         result_text = tk.Text(result_frame, height=3, width=50, wrap=tk.WORD,
                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
@@ -1467,7 +1467,7 @@ class Application(tk.Tk):
 
         # Create and pack a button
         button = tk.Button(algo_window, text="Compute Checksum", command=on_compute,
-                           bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                           bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, width=20,
                            activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
                            borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         button.pack(pady=10)
