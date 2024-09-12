@@ -45,6 +45,7 @@ from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
 
+# ---------------------------------- UPDATER ----------------------------------
 # noinspection PyUnresolvedReferences,PyProtectedMember
 class GitUpdater:
     @staticmethod
@@ -157,6 +158,8 @@ class GitUpdater:
 GitUpdater.execute_update()
 
 
+# ---------------------------------- UPDATER END ----------------------------------
+# ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -242,7 +245,9 @@ def load_theme_from_file():
         return None
 
 
-# App Window
+# ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
+
+# Main App Window
 # noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
