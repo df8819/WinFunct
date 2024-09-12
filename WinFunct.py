@@ -2578,7 +2578,7 @@ class Application(tk.Tk):
             "[2] Compare Sys Info"
         )
         self.function_dropdown1.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,
@@ -2606,7 +2606,7 @@ class Application(tk.Tk):
             "[2] Super God mode"
         )
         self.function_dropdown3.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,
@@ -2632,7 +2632,7 @@ class Application(tk.Tk):
             "[2] PowerShell"
         )
         self.function_dropdown4.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,
@@ -2660,7 +2660,7 @@ class Application(tk.Tk):
             "[4] Apps with internet connection"
         )
         self.function_dropdown5.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,
@@ -2687,7 +2687,7 @@ class Application(tk.Tk):
             "[3] Install/Upd. FFMPEG"
         )
         self.function_dropdown6.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,
@@ -2713,7 +2713,7 @@ class Application(tk.Tk):
             "[2] Show Disk Info"
         )
         self.function_dropdown7.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,
@@ -2823,7 +2823,7 @@ class Application(tk.Tk):
             "[2] Reset UI"
         )
         self.function_dropdown8.config(
-            width=17,
+            width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
             activebackground=UI_COLOR,

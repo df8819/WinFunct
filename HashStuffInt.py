@@ -71,6 +71,7 @@ class HashStuff:
         tk.Label(self.root, text="Possible Password:", **label_style).grid(row=4, column=0, **layout_options)
         self.possible_entry = tk.Entry(self.root, textvariable=self.possible_password, width=50, **entry_style)
         self.possible_entry.grid(row=4, column=1, **layout_options)
+        self.possible_entry.config(state='readonly')  # Use 'readonly' to allow copying
 
         # Buttons and Options Menu
         button_frame = tk.Frame(self.root, bg=self.UI_COLOR)
@@ -169,7 +170,7 @@ class HashStuff:
 
         if chars:
             self.stop_event.clear()
-            self.calculation_thread = threading.Thread(target=lambda: self.brute_force_search(chars), daemon=True)
+            self.calculation_thread = threading.Thread(target=self.brute_force_search, args=(chars,), daemon=True)
             self.calculation_thread.start()
         else:
             messagebox.showwarning("Warning", "Please select at least one character type for the password.")
@@ -190,21 +191,21 @@ class HashStuff:
                     self.possible_entry.config(state='normal')
                     self.possible_entry.delete(0, tk.END)
                     self.possible_entry.insert(tk.END, "Calculation stopped by user.")
-                    self.possible_entry.config(state='disabled')
+                    self.possible_entry.config(state='readonly')
                     return
 
                 if hasher.hexdigest() == target_hash:
                     self.possible_entry.config(state='normal')
                     self.possible_entry.delete(0, tk.END)
                     self.possible_entry.insert(tk.END, test_string)
-                    self.possible_entry.config(state='disabled')
+                    self.possible_entry.config(state='readonly')
                     return
 
         if not found:
             self.possible_entry.config(state='normal')
             self.possible_entry.delete(0, tk.END)
             self.possible_entry.insert(tk.END, "Not found")
-            self.possible_entry.config(state='disabled')
+            self.possible_entry.config(state='readonly')
 
     def stop_calculation(self):
         print("""
