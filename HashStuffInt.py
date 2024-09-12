@@ -28,7 +28,7 @@ class HashStuff:
 
         self.root.title("Hash Generator")
         self.root.configure(bg=self.UI_COLOR)
-        window_width = 520
+        window_width = 540
         window_height = 320
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
