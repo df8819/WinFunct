@@ -2782,7 +2782,7 @@ class Application(tk.Tk):
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
-        reboot_btn = tk.Button(self.bottom_frame, text="Foreced Reboot", command=self.confirm_reboot, width=20,
+        reboot_btn = tk.Button(self.bottom_frame, text="Forced Reboot", command=self.confirm_reboot, width=20,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
