@@ -28,8 +28,8 @@ class HashStuff:
 
         self.root.title("Hash Generator")
         self.root.configure(bg=self.UI_COLOR)
-        window_width = 660
-        window_height = 320
+        window_width = 590
+        window_height = 400
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         center_x = int((screen_width - window_width) / 2)
@@ -48,25 +48,15 @@ class HashStuff:
         self.password_entry.grid(row=1, column=1, **layout_options)
 
         # Hashed Output
-        tk.Label(self.root, text="Hashed Password:", **label_style).grid(row=2, column=0, **layout_options)
-        hashed_frame = tk.Frame(self.root, bg=self.UI_COLOR)
-        hashed_frame.grid(row=2, column=1, **layout_options)
-        self.hashed_text = tk.Text(hashed_frame, height=2, width=50, wrap=tk.WORD, **text_style)
-        self.hashed_text.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-        hashed_scrollbar = tk.Scrollbar(hashed_frame, command=self.hashed_text.yview)
-        hashed_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.hashed_text.config(yscrollcommand=hashed_scrollbar.set, state='disabled')
+        tk.Label(self.root, text="Hashed Output:", **label_style).grid(row=2, column=0, **layout_options)
+        self.hashed_text = tk.Text(self.root, height=2, width=50, wrap=tk.WORD, **text_style)
+        self.hashed_text.grid(row=2, column=1, **layout_options)
+        self.hashed_text.config(state='disabled')
 
         # Hash for Password
-        tk.Label(self.root, text="Hash to crack:", **label_style).grid(row=3, column=0, **layout_options)
-        hash_frame = tk.Frame(self.root, bg=self.UI_COLOR)
-        hash_frame.grid(row=3, column=1, **layout_options)
-        self.hash_text = tk.Text(hash_frame, height=2, width=50, wrap=tk.WORD, **text_style)
-        self.hash_text.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
-        hash_scrollbar = tk.Scrollbar(hash_frame, command=self.hash_text.yview)
-        hash_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.hash_text.config(yscrollcommand=hash_scrollbar.set)
-
+        tk.Label(self.root, text="Enter Hash for Password:", **label_style).grid(row=3, column=0, **layout_options)
+        self.hash_text = tk.Text(self.root, height=2, width=50, wrap=tk.WORD, **text_style)
+        self.hash_text.grid(row=3, column=1, **layout_options)
 
         # Possible Password
         tk.Label(self.root, text="Possible Password:", **label_style).grid(row=4, column=0, **layout_options)
@@ -99,8 +89,12 @@ class HashStuff:
             self.root.grid_rowconfigure(i, weight=1)
 
     def hash_text_func(self):
-        input_string = self.entry_text.get()
         selected_algo = self.hash_algo.get()
+        if selected_algo == 'Select Algorithm':
+            messagebox.showwarning("Warning", "Please select a hash algorithm.", parent=self.root)
+            return
+
+        input_string = self.entry_text.get()
         hasher = getattr(hashlib, selected_algo)()
         hasher.update(input_string.encode('utf-8'))
         self.hashed_text.config(state='normal')
@@ -123,8 +117,8 @@ class HashStuff:
         options_window.configure(bg=self.UI_COLOR)
         options_window.attributes('-topmost', True)
 
-        window_width = 400
-        window_height = 200
+        window_width = 350
+        window_height = 160
         screen_width = options_window.winfo_screenwidth()
         screen_height = options_window.winfo_screenheight()
         center_x = int((screen_width - window_width) / 2)
@@ -147,14 +141,23 @@ class HashStuff:
             "width": 18
         }
 
-        tk.Checkbutton(options_window, text="Letters (A/a)", variable=tk.BooleanVar(value=False),
-                       command=lambda: self.toggle_chars('Letters'), **checkbutton_style).grid(row=0, column=0, sticky="w", padx=20, pady=10)
-        tk.Checkbutton(options_window, text="Digits (0-9)", variable=tk.BooleanVar(value=False),
-                       command=lambda: self.toggle_chars('Digits'), **checkbutton_style).grid(row=1, column=0, sticky="w", padx=20, pady=10)
-        tk.Checkbutton(options_window, text="Special (#*!..)", variable=tk.BooleanVar(value=False),
-                       command=lambda: self.toggle_chars('Special'), **checkbutton_style).grid(row=2, column=0, sticky="w", padx=20, pady=10)
+        options_frame = tk.Frame(options_window, bg=self.UI_COLOR)
+        options_frame.pack(expand=True)
 
-        tk.Button(options_window, text="OK", command=lambda: [options_window.destroy(), self.start_brute_force_search()], **button_style).grid(row=3, column=0, sticky="ew", padx=20, pady=20)
+        tk.Checkbutton(options_frame, text="Letters (A/a)", variable=tk.BooleanVar(value=False),
+                       command=lambda: self.toggle_chars('Letters'), **checkbutton_style).grid(row=0, column=0, pady=5)
+        tk.Checkbutton(options_frame, text="Digits (0-9)", variable=tk.BooleanVar(value=False),
+                       command=lambda: self.toggle_chars('Digits'), **checkbutton_style).grid(row=1, column=0, pady=5)
+        tk.Checkbutton(options_frame, text="Special (#*!..)", variable=tk.BooleanVar(value=False),
+                       command=lambda: self.toggle_chars('Special'), **checkbutton_style).grid(row=2, column=0, pady=5)
+
+        tk.Button(options_frame, text="OK", command=lambda: [options_window.destroy(), self.start_brute_force_search()], **button_style).grid(row=3, column=0, pady=10)
+
+        options_frame.grid_rowconfigure(0, weight=1)
+        options_frame.grid_rowconfigure(1, weight=1)
+        options_frame.grid_rowconfigure(2, weight=1)
+        options_frame.grid_rowconfigure(3, weight=1)
+        options_frame.grid_columnconfigure(0, weight=1)
 
     def toggle_chars(self, char_type):
         self.chars_to_use[char_type] = not self.chars_to_use[char_type]
