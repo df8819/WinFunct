@@ -72,7 +72,6 @@ class HashStuff:
         tk.Label(self.root, text="Possible Password:", **label_style).grid(row=4, column=0, **layout_options)
         self.possible_entry = tk.Entry(self.root, textvariable=self.possible_password, width=50, **entry_style)
         self.possible_entry.grid(row=4, column=1, **layout_options)
-        # self.possible_entry.config(state='readonly')  # Use 'readonly' to allow copying
 
         # Buttons and Options Menu
         button_frame = tk.Frame(self.root, bg=self.UI_COLOR)
