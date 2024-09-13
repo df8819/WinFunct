@@ -1,14 +1,11 @@
-# IntelliJ IDEA files
-/.idea
+# ASCII files
+ASCII.txt
 
 # Build files
 /build/
 
 # Distribution files
 /dist/
-
-# Pycache files
-__pycache__/
 
 # Executable and script files
 *.exe
@@ -17,9 +14,12 @@ Run-PAUSE.bat
 Run-sc.lnk
 Run.lnk
 WinFunct.lnk
+check_website.bat
 install-pyenv-win.ps1
 temp_install_script.bat
-check_website.bat
+
+# IntelliJ IDEA files
+/.idea
 
 # Log files
 *.log
@@ -28,9 +28,13 @@ netstat_exe_output.txt
 
 # Miscellaneous files
 *.zip
-apikey.json
-ASCII.txt
+SimpleNNInt.py
+Super God Mode.lnk
 SystemCompare.html
+Windows-Super-God-Mode
+WinFunct_Corrected.py
+WinFunct_NEW.py
+apikey.json
 eff_wordlist.txt
 functionverify.py
 functions_OLD.py
@@ -38,10 +42,8 @@ ideas.txt
 last_selected_theme.json
 pastebin.txt
 random.py
-SimpleNNInt.py
 utils.py
 winfunct.spec
-WinFunct_Corrected.py
-WinFunct_NEW.py
-Windows-Super-God-Mode
-Super God Mode.lnk
+
+# Pycache files
+__pycache__/
