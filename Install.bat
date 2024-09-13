@@ -40,11 +40,13 @@ if %errorlevel% NEQ 0 (
 
 :: Create a shortcut with PowerShell and custom icon
 echo $WshShell = New-Object -ComObject WScript.Shell > CreateShortcut.ps1
-echo $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\WinFunct.lnk") >> CreateShortcut.ps1
-echo $Shortcut.TargetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" >> CreateShortcut.ps1
+echo $DesktopPath = [System.Environment]::GetFolderPath('Desktop') >> CreateShortcut.ps1
+echo $ShortcutPath = Join-Path -Path $DesktopPath -ChildPath 'WinFunct.lnk' >> CreateShortcut.ps1
+echo $Shortcut = $WshShell.CreateShortcut($ShortcutPath) >> CreateShortcut.ps1
+echo $Shortcut.TargetPath = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' >> CreateShortcut.ps1
 echo $Shortcut.Arguments = "-ExecutionPolicy Bypass -NoProfile -Command ""& '%~dp0Run.bat'""" >> CreateShortcut.ps1
-echo $Shortcut.WorkingDirectory = "%~dp0" >> CreateShortcut.ps1
-echo $Shortcut.IconLocation = "%~dp0WinFunct.ico" >> CreateShortcut.ps1
+echo $Shortcut.WorkingDirectory = '%~dp0' >> CreateShortcut.ps1
+echo $Shortcut.IconLocation = '%~dp0WinFunct.ico' >> CreateShortcut.ps1
 echo $Shortcut.Save() >> CreateShortcut.ps1
 powershell.exe -ExecutionPolicy Bypass -File CreateShortcut.ps1
 del CreateShortcut.ps1
