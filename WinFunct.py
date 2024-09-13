@@ -160,6 +160,7 @@ GitUpdater.execute_update()
 # ---------------------------------- UPDATER END ----------------------------------
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
 
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -245,6 +246,7 @@ def load_theme_from_file():
         return None
 
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
+
 
 # Main App Window
 # noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable
@@ -2841,6 +2843,7 @@ class Application(tk.Tk):
         self.selected_function8.trace('w', self.on_function_select8)
 
 # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
+
 
 app = Application()
 app.mainloop()
