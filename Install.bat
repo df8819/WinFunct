@@ -38,6 +38,17 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
+:: Create a shortcut with PowerShell and custom icon
+echo $WshShell = New-Object -ComObject WScript.Shell > CreateShortcut.ps1
+echo $Shortcut = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\WinFunct.lnk") >> CreateShortcut.ps1
+echo $Shortcut.TargetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" >> CreateShortcut.ps1
+echo $Shortcut.Arguments = "-ExecutionPolicy Bypass -NoProfile -Command ""& '%~dp0Run.bat'""" >> CreateShortcut.ps1
+echo $Shortcut.WorkingDirectory = "%~dp0" >> CreateShortcut.ps1
+echo $Shortcut.IconLocation = "%~dp0WinFunct.ico" >> CreateShortcut.ps1
+echo $Shortcut.Save() >> CreateShortcut.ps1
+powershell.exe -ExecutionPolicy Bypass -File CreateShortcut.ps1
+del CreateShortcut.ps1
+
 :: Success message
 echo.
 echo.
@@ -52,7 +63,7 @@ echo *    Thank you for using WinFunct :)          *
 echo *                                             *
 echo ***********************************************
 echo.
-echo Press any button to start WinFunct via run.bat...
+echo Desktop Shortcut created.
+echo Press any button to exit the WinFunct installer...
 pause > nul 2>&1
-run.bat
 exit /B 0
