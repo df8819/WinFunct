@@ -1,6 +1,3 @@
-# ASCII files
-ASCII.txt
-
 # Build files
 /build/
 
@@ -9,14 +6,6 @@ ASCII.txt
 
 # Executable and script files
 *.exe
-Pyinstall_UPX.bat
-Run-PAUSE.bat
-Run-sc.lnk
-Run.lnk
-WinFunct.lnk
-check_website.bat
-install-pyenv-win.ps1
-temp_install_script.bat
 
 # IntelliJ IDEA files
 /.idea
@@ -28,20 +17,11 @@ netstat_exe_output.txt
 
 # Miscellaneous files
 *.zip
-SimpleNNInt.py
 Super God Mode.lnk
-SystemCompare.html
 Windows-Super-God-Mode
-WinFunct_Corrected.py
-WinFunct_NEW.py
 apikey.json
 eff_wordlist.txt
-functionverify.py
-functions_OLD.py
-ideas.txt
 last_selected_theme.json
-pastebin.txt
-random.py
 utils.py
 winfunct.spec
 
