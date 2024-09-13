@@ -29,7 +29,7 @@ if "!version!"=="" (
 )
 
 :option_prompt
-REM Prompt for pyinstaller process option with default [1]
+REM Prompt for pyinstaller process option with default [2]
 set "option=2"
 echo.
 echo ================================================================================
@@ -40,9 +40,8 @@ echo [2] Runs pyinstaller without exclusions and only with the "--onefile" argum
 echo.
 set /p "option=Type [1] or [2] and hit Enter: "
 echo.
-
-REM Default to 1 if the input is empty
-if "%option%"=="" set "option=1"
+REM Default to 2 if the input is empty
+if "%option%"=="" set "option=2"
 
 REM Get start time
 for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
@@ -54,12 +53,11 @@ if "%option%"=="1" (
     REM Create the spec file with the necessary exclusions using a Python script
     echo Creating the spec file with exclusions...
     python create_spec_file.py
-    
     echo Compiling WinFunct.py into a single executable using PyInstaller with the spec file...
     pyinstaller WinFunct.spec
 ) else if "%option%"=="2" (
     echo Compiling WinFunct.py into a single executable using PyInstaller without spec file...
-    pyinstaller --onefile WinFunct.py
+    pyinstaller --onefile --icon=WinFunct.ico WinFunct.py
 ) else (
     echo Invalid entry! Please select [1] or [2].
     goto option_prompt
@@ -85,6 +83,7 @@ if exist "WinFunct_%version%.exe" (
     echo Warning: WinFunct_%version%.exe already exists. Overwriting...
     del /F "WinFunct_%version%.exe"
 )
+
 move /Y "dist\WinFunct.exe" "WinFunct_%version%.exe"
 if %errorlevel% NEQ 0 (
     echo Error: Failed to move and rename the executable to the root folder.
@@ -94,12 +93,9 @@ if %errorlevel% NEQ 0 (
 
 REM Clean up
 echo Cleaning up temporary files and folders...
-
 timeout /t 1 > nul
-
 if exist dist rmdir /S /Q dist
 if exist build rmdir /S /Q build
-
 :retry
 if exist __pycache__ (
     echo Attempting to delete __pycache__ again...
@@ -107,7 +103,6 @@ if exist __pycache__ (
     timeout /t 1 > nul
     goto retry
 )
-
 if exist WinFunct.spec del /F WinFunct.spec
 
 echo.
@@ -118,13 +113,12 @@ echo.
 echo WinFunct_%version%.exe created and moved to root directory.
 echo The following has been cleaned up:
 echo.
-echo 	dist/
-echo 	build/
-echo 	__pycache__/
-echo 	WinFunct.spec
+echo dist/
+echo build/
+echo __pycache__/
+echo WinFunct.spec
 echo ===========================================================
 echo.
-echo Press any button to exit...
-pause > nul 2>&1
-
-endlocal
+echo Press any key to exit...
+pause > nul
+exit /B 0

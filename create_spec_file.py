@@ -44,7 +44,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='WinFunct.ico'  # Added icon specification
+    icon='WinFunct.ico'
 )
 """
 
