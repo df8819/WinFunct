@@ -537,27 +537,57 @@ class Application(tk.Tk):
             subprocess.Popen(['xdg-open', app_root])
 
     def open_ps_as_admin(self):
-        print("""Open PowerShell window as admin.""")
+        print("Open PowerShell window as admin.")
 
-        def run_command():
+        def check_pwsh_installed():
+            try:
+                result = subprocess.run(["where", "pwsh"], capture_output=True, text=True)
+                return result.returncode == 0
+            except Exception:
+                return False
+
+        def install_pwsh():
+            try:
+                subprocess.run(["winget", "install", "--id", "Microsoft.Powershell", "--source", "winget"], check=True)
+                return True
+            except subprocess.CalledProcessError:
+                return False
+
+        def run_command(use_pwsh):
             try:
                 if getattr(sys, 'frozen', False):
-                    # Running as a PyInstaller executable
                     exe_dir = os.path.dirname(sys.executable)
                     ps_command = f'Set-Location "{exe_dir}"'
                 else:
-                    # Running as a script
                     script_dir = os.path.dirname(os.path.abspath(__file__))
                     ps_command = f'Set-Location "{script_dir}"'
 
                 encoded_command = base64.b64encode(ps_command.encode('utf-16le')).decode('ascii')
-                subprocess.run(f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
+
+                if use_pwsh:
+                    subprocess.run(f'pwsh -Command "Start-Process pwsh -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
+                else:
+                    subprocess.run(f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
 
-        # Run the command in a separate thread to avoid freezing the UI
-        thread = threading.Thread(target=run_command)
-        thread.start()
+        if check_pwsh_installed():
+            thread = threading.Thread(target=run_command, args=(True,))
+            thread.start()
+        else:
+            user_choice = messagebox.askyesno("PowerShell 7 Not Found", "PowerShell 7 is not installed. Do you want to install it via winget?")
+            if user_choice:
+                if install_pwsh():
+                    messagebox.showinfo("Installation Successful", "PowerShell 7 has been installed successfully.")
+                    thread = threading.Thread(target=run_command, args=(True,))
+                    thread.start()
+                else:
+                    messagebox.showerror("Installation Failed", "Failed to install PowerShell 7. Opening PowerShell 5.1 instead.")
+                    thread = threading.Thread(target=run_command, args=(False,))
+                    thread.start()
+            else:
+                thread = threading.Thread(target=run_command, args=(False,))
+                thread.start()
 
     def open_cmd_as_admin(self):
         print("""Open cmd window as admin.""")
