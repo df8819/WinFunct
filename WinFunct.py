@@ -649,20 +649,24 @@ class Application(tk.Tk):
         retry_delay = 1
         max_delay = 2
 
+        ip_info = ""
+
+        # Fetch local IP information
+        try:
+            ip_info += "============= Local ============\n"
+            adapters = psutil.net_if_addrs()
+            for adapter, addresses in adapters.items():
+                for addr in addresses:
+                    if addr.family == 2:  # IPv4
+                        ip_address = addr.address
+                        ip_info += f"{adapter}:\n{ip_address}\n\n"
+        except Exception as e:
+            ip_info += f"Error fetching local IP information: {str(e)}\n\n"
+
+        # Fetch and display internet IP information with retries
         for attempt in range(max_retries):
             try:
-                ip_info = "========== Local ==========\n"
-
-                # Fetch adapter names and IP addresses
-                adapters = psutil.net_if_addrs()
-                for adapter, addresses in adapters.items():
-                    for addr in addresses:
-                        if addr.family == 2:  # IPv4
-                            ip_address = addr.address
-                            ip_info += f"{adapter}:\n{ip_address}\n\n"
-
-                ip_info += "\n========== Internet ==========\n"
-
+                ip_info += "\n============= Internet =============\n"
                 response = requests.get("https://ipapi.co/json/")
                 data = response.json()
 
@@ -673,13 +677,13 @@ class Application(tk.Tk):
                 ip_info += f"City:          {data['city']}\n"
                 ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
 
-                ip_info += "\n========== Topology ==========\n"
+                ip_info += "\n============ Topology =============\n"
 
                 ip_info += f"Latitude:      {data['latitude']}\n"
                 ip_info += f"Longitude:     {data['longitude']}\n"
                 ip_info += f"Timezone:      {data['timezone']}\n\n"
 
-                ip_info += "\n========== Additional Info ==========\n"
+                ip_info += "\n============= Additional Info =============\n"
 
                 ip_info += f"Country Code:  {data['country']}\n"
                 ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
@@ -692,10 +696,10 @@ class Application(tk.Tk):
                     time.sleep(retry_delay)
                     retry_delay = min(retry_delay * 2, max_delay)  # Limit the maximum delay to 2 seconds
                 else:
-                    ip_info = f"Error fetching IP information: {str(e)}"
+                    ip_info += f"\nError fetching internet IP information: {str(e)}\n"
                     break
             except Exception as e:
-                ip_info = f"Error fetching IP information: {str(e)}"
+                ip_info += f"\nError fetching internet IP information: {str(e)}\n"
                 break
 
         ip_info_text.insert(tk.END, ip_info)
