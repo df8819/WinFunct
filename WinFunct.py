@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import re
+import shlex
 import socket
 import subprocess
 import sys
@@ -479,6 +480,7 @@ class Application(tk.Tk):
         self.update_idletasks()
 
         # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
+    # ----------------------------------OPEN BUILT IN APPS----------------------------------
 
     def open_chat(self):
         print("""Open JChat app.""")
@@ -517,8 +519,55 @@ class Application(tk.Tk):
         else:
             subprocess.Popen(['python', '-c', 'from DonutInt import Donut; Donut().run()'])
 
+    # ----------------------------------OPEN BUILT IN APPS END----------------------------------
+
     def show_logo(self):
         show_logo()
+
+    def install_git_python(self, callback=None):
+        def check_and_install(package_id, package_name, on_complete):
+            # Check if the package is installed
+            check_command = shlex.split(f'winget list --id {package_id}')
+            result = subprocess.run(check_command, capture_output=True, text=True)
+
+            if package_id not in result.stdout:
+                try:
+                    # Install the latest version of the package
+                    install_command = shlex.split(f'winget install --id {package_id} --source winget --version latest')
+                    subprocess.run(['start', 'cmd', '/c'] + install_command + ['&&', 'exit'], check=True)
+                    message = f'Latest version of {package_name} has been installed successfully.'
+                except subprocess.CalledProcessError as e:
+                    message = f'Error installing {package_name}: {str(e)}\nCommand output: {e.output}'
+            else:
+                try:
+                    # Upgrade to the latest version if already installed
+                    upgrade_command = shlex.split(f'winget upgrade --id {package_id} --source winget')
+                    upgrade_result = subprocess.run(upgrade_command, capture_output=True, text=True)
+                    if "No applicable update found." in upgrade_result.stdout:
+                        message = f'{package_name} is already up to date.'
+                    else:
+                        message = f'{package_name} has been upgraded or was already up to date.'
+                except subprocess.CalledProcessError as e:
+                    message = f'Error upgrading {package_name}: {str(e)}\nCommand output: {e.output}'
+
+            print(message)
+            on_complete(message)
+
+        def on_package_complete(message):
+            nonlocal completed_count
+            completed_count += 1
+            if completed_count == 2 and callback:
+                callback("All installations/upgrades completed.")
+
+        completed_count = 0
+
+        # Create threads for checking and installing/upgrading Git and Python
+        git_thread = threading.Thread(target=check_and_install, args=("Git.Git", "Git for Windows", on_package_complete))
+        python_thread = threading.Thread(target=check_and_install, args=("Python.Python.3", "Python 3", on_package_complete))
+
+        # Start the threads
+        git_thread.start()
+        python_thread.start()
 
     def open_app_root_folder(self):
         print("""Open root folder location.""")
@@ -2601,6 +2650,10 @@ class Application(tk.Tk):
         wifi_btn = tk.Button(self.functions_frame, text="Wi-Fi Profile Info", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         wifi_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
+
+        git_python_btn = tk.Button(self.functions_frame, text="Install Git & Python 3", command=self.install_git_python, width=20,
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        git_python_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
