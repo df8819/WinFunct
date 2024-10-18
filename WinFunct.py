@@ -7,7 +7,6 @@ import json
 import logging
 import os
 import re
-import shlex
 import socket
 import subprocess
 import sys
@@ -527,28 +526,28 @@ class Application(tk.Tk):
     def install_git_python(self, callback=None):
         def check_and_install(package_id, package_name, on_complete):
             # Check if the package is installed
-            check_command = shlex.split(f'winget list --id {package_id}')
-            result = subprocess.run(check_command, capture_output=True, text=True)
+            check_command = f'winget list --id {package_id}'
+            result = subprocess.run(check_command, capture_output=True, text=True, shell=True)
 
             if package_id not in result.stdout:
                 try:
                     # Install the latest version of the package
-                    install_command = shlex.split(f'winget install --id {package_id} --source winget --version latest')
-                    subprocess.run(['start', 'cmd', '/c'] + install_command + ['&&', 'exit'], check=True)
+                    install_command = f'start cmd /c "winget install --id {package_id} --source winget --version latest && pause"'
+                    subprocess.run(install_command, shell=True, check=True)
                     message = f'Latest version of {package_name} has been installed successfully.'
                 except subprocess.CalledProcessError as e:
-                    message = f'Error installing {package_name}: {str(e)}\nCommand output: {e.output}'
+                    message = f'Error installing {package_name}: {str(e)}\nCommand output: {e.stderr}'
             else:
                 try:
                     # Upgrade to the latest version if already installed
-                    upgrade_command = shlex.split(f'winget upgrade --id {package_id} --source winget')
-                    upgrade_result = subprocess.run(upgrade_command, capture_output=True, text=True)
+                    upgrade_command = f'winget upgrade --id {package_id} --source winget'
+                    upgrade_result = subprocess.run(upgrade_command, capture_output=True, text=True, shell=True)
                     if "No applicable update found." in upgrade_result.stdout:
                         message = f'{package_name} is already up to date.'
                     else:
                         message = f'{package_name} has been upgraded or was already up to date.'
                 except subprocess.CalledProcessError as e:
-                    message = f'Error upgrading {package_name}: {str(e)}\nCommand output: {e.output}'
+                    message = f'Error upgrading {package_name}: {str(e)}\nCommand output: {e.stderr}'
 
             print(message)
             on_complete(message)
