@@ -602,7 +602,7 @@ class Application(tk.Tk):
             try:
                 result = subprocess.run(["where", "pwsh"], capture_output=True, text=True)
                 return result.returncode == 0
-            except Exception:
+            except FileNotFoundError:
                 return False
 
         def install_pwsh():
@@ -2273,7 +2273,7 @@ class Application(tk.Tk):
             window.update()
 
     def check_dependencies(self):
-        print(f"\nChecking dependencies:\n")
+        print(f"\nChecking dependencies:")
         dependencies = {
             "Git": "Git.Git",
             "Python": "Python.Python.3"
