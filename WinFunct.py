@@ -307,6 +307,17 @@ class Application(tk.Tk):
             self.function_dropdown1.after(0, actions[selected1])
             self.function_dropdown1.after(0, lambda: self.selected_function1.set("*System Info*"))
 
+    def on_function_select2(self, *args):
+        selected2 = self.selected_function2.get()
+        actions = {
+            "[1] Update WinFunct": lambda: self.update_winfunct(),
+            "[2] Clone/Download from GitHub": lambda: self.clone_repo_with_prompt(),
+            "[3] Install/Update Git & Python 3": lambda: self.install_git_python()
+        }
+        if selected2 in actions:
+            self.function_dropdown2.after(0, actions[selected2])
+            self.function_dropdown2.after(0, lambda: self.selected_function2.set("*WinFunct Options*"))
+
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
         actions = {
@@ -2735,29 +2746,21 @@ class Application(tk.Tk):
                                         bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         renew_ip_config_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
 
-        clone_btn = tk.Button(self.functions_frame, text="Get from GitHub", command=self.clone_repo_with_prompt, width=20,
-                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        clone_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
-
         logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff Local User(s)", command=self.logoff_users, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        logoff_usr_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
+        logoff_usr_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
 
         open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        open_links_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
+        open_links_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
 
         checksum_btn = tk.Button(self.functions_frame, text="Verify File Checksum", command=self.get_file_checksum, width=20,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        checksum_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
+        checksum_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
 
         wifi_btn = tk.Button(self.functions_frame, text="Wi-Fi Profile Info", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        wifi_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
-
-        git_python_btn = tk.Button(self.functions_frame, text="Install Git & Python 3", command=self.install_git_python, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        git_python_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
+        wifi_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
@@ -2788,7 +2791,7 @@ class Application(tk.Tk):
         self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
         self.selected_function1.trace('w', self.on_function_select1)
 
-        # PUT NEW DROPDOWM WITH NUMBER [2] HERE ######################
+        # DROPDOWM WITH NUMBER [2] IS IN BOTTOM BORDER SECTION
 
         # God-mode
         self.selected_function3 = tk.StringVar()
@@ -2923,6 +2926,8 @@ class Application(tk.Tk):
         self.function_dropdown7.grid(row=2, column=3, padx=10, pady=5, sticky="we")
         self.selected_function7.trace('w', self.on_function_select7)
 
+        # DROPDOWM WITH NUMBER [8] IS IN BOTTOM BORDER SECTION
+
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
         # ---------------------------------- TABS/FRAME FOR OPTION BUTTONS --------------------------------------------
 
@@ -3003,18 +3008,14 @@ class Application(tk.Tk):
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
-        update_btn = tk.Button(self.bottom_frame, text="Update WinFunct", command=self.update_winfunct, width=20,
-                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        update_btn.grid(row=0, column=4, padx=5, pady=5, sticky="we")
-
         # UI utility
         self.selected_function8 = tk.StringVar()
-        self.selected_function8.set("GUI Options")
+        self.selected_function8.set("*GUI Options*")
 
         self.function_dropdown8 = tk.OptionMenu(
             self.bottom_frame,
             self.selected_function8,
-            "GUI Options",
+            "*GUI Options*",
             "[1] Theme Selector",
             "[2] Reset UI"
         )
@@ -3032,6 +3033,33 @@ class Application(tk.Tk):
         )
         self.function_dropdown8.grid(row=0, column=5, padx=10, pady=5, sticky="we")
         self.selected_function8.trace('w', self.on_function_select8)
+
+        # WinFunct Operations
+        self.selected_function2 = tk.StringVar()
+        self.selected_function2.set("*WinFunct Options*")
+
+        self.function_dropdown2 = tk.OptionMenu(
+            self.bottom_frame,
+            self.selected_function2,
+            "*WinFunct Options*",
+            "[1] Update WinFunct",
+            "[2] Clone/Download from GitHub",
+            "[3] Install/Update Git & Python 3"
+        )
+        self.function_dropdown2.config(
+            width=18,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown2["menu"].config(
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR
+        )
+        self.function_dropdown2.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function2.trace('w', self.on_function_select2)
 
 # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
 
