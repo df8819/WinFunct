@@ -680,16 +680,25 @@ class Application(tk.Tk):
         thread.start()
 
     def open_autostart_locations(self):
-        print("""Open Windows Auto-Start folders.""")
+        print("Open Windows (Auto)-Start locations.")
+
         # Folder locations
-        user_startup_path = os.path.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
-        all_users_startup_path = 'C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp'
+        locations = [
+            (os.path.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'),
+             "User Startup Folder"),
+            ('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp', "All Users Startup Folder"),
+            (os.path.expanduser('~\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs'),
+             "User Start Menu Programs"),
+            ('C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs', "All Users Start Menu Programs")
+        ]
 
         # Open folder locations
-        if os.path.exists(user_startup_path):
-            os.startfile(user_startup_path)
-        if os.path.exists(all_users_startup_path):
-            os.startfile(all_users_startup_path)
+        for path, description in locations:
+            if os.path.exists(path):
+                print(f"Opening {description}: {path}")
+                os.startfile(path)
+            else:
+                print(f"{description} not found: {path}")
 
     def show_ip_info(self):
         print("Showing IP information")
