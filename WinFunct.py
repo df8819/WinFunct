@@ -563,16 +563,11 @@ class Application(tk.Tk):
         python_thread.start()
 
     def open_app_root_folder(self):
-        print("""Open root folder location.""")
-        # Determine the directory of the executable or the script itself
-        if getattr(sys, 'frozen', False):
-            app_root = os.path.dirname(sys.executable)
-        else:
-            app_root = os.path.dirname(os.path.abspath(__file__))
+        print("Open root folder location.")
+        app_root = os.path.dirname(sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__))
 
-        # Open the directory using the platform-specific command
         if sys.platform == 'win32':
-            subprocess.Popen(f'explorer "{app_root}"')
+            os.startfile(app_root)
         elif sys.platform == 'darwin':
             subprocess.Popen(['open', app_root])
         else:  # Linux and other Unix-like systems
