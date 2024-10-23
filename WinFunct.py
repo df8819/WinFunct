@@ -1,10 +1,10 @@
 # Standard Library Imports
 import base64
 import csv
-from collections import defaultdict
 import ctypes
 import hashlib
 import json
+import locale
 import logging
 import os
 import re
@@ -2514,27 +2514,50 @@ class Application(tk.Tk):
     # -----------------------------------------------LOGOFF USER(S)--------------------------------------------------
 
     def logoff_users(self):
-        print("""Running 'quser' command to get list of logged-in users.""")
-        try:
-            result = subprocess.run(['quser'], capture_output=True, text=True, encoding='cp850', errors='replace', shell=True)
-            output = result.stdout
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to run 'quser': {e}")
-            return
-
-        if output is None:
-            messagebox.showerror("Error", "No output from 'quser'.")
-            return
-
-        lines = output.strip().split('\n')
+        print("Getting list of logged-in users.")
         users = []
 
-        for line in lines[1:]:
-            match = re.match(r'^\s*(.*?)\s+(\d+)\s+\w+', line)
-            if match:
-                username = match.group(1).strip()
-                session_id = match.group(2)
-                users.append((username, session_id))
+        def get_users_quser():
+            try:
+                result = subprocess.run(['quser'], capture_output=True, text=True, encoding='utf-8', errors='replace',
+                                        shell=True)
+                if result.returncode != 0:
+                    raise subprocess.CalledProcessError(result.returncode, 'quser')
+                output = result.stdout
+                lines = output.strip().split('\n')
+                for line in lines[1:]:
+                    match = re.match(r'^\s*(.*?)\s+(\d+)\s+\w+', line)
+                    if match:
+                        username = match.group(1).strip()
+                        session_id = match.group(2)
+                        users.append((username, session_id))
+            except subprocess.CalledProcessError:
+                return False
+            except Exception as e:
+                print(f"Error in get_users_quser: {e}")
+                return False
+            return True
+
+        def get_users_powershell():
+            try:
+                cmd = "Get-CimInstance -ClassName Win32_LoggedOnUser | Select-Object -Property Antecedent | ForEach-Object { $_.Antecedent.ToString().Split('\"')[1] } | Get-Unique"
+                result = subprocess.run(['powershell', '-Command', cmd], capture_output=True, text=True,
+                                        encoding='utf-8', errors='replace')
+                if result.returncode != 0:
+                    raise subprocess.CalledProcessError(result.returncode, 'powershell')
+                output = result.stdout
+                usernames = output.strip().split('\n')
+                for username in usernames:
+                    users.append((username.strip(), 'N/A'))
+            except Exception as e:
+                print(f"Error in get_users_powershell: {e}")
+                return False
+            return True
+
+        if not get_users_quser():
+            if not get_users_powershell():
+                messagebox.showerror("Error", "Failed to retrieve logged-in users.")
+                return
 
         if not users:
             messagebox.showinfo("Info", "No users found.")
@@ -2575,13 +2598,18 @@ class Application(tk.Tk):
                 messagebox.showinfo("Info", "No users selected.")
                 return
 
-            confirmation = messagebox.askyesno("Confirm", f"Are you sure you want to log off {len(selected_users)} user(s)?")
+            confirmation = messagebox.askyesno("Confirm",
+                                               f"Are you sure you want to log off {len(selected_users)} user(s)?")
             if not confirmation:
                 return
 
             for username, session_id in selected_users:
                 try:
-                    subprocess.run(['logoff', session_id], shell=True, check=True)
+                    if session_id != 'N/A':
+                        subprocess.run(['logoff', session_id], shell=True, check=True)
+                    else:
+                        # If session ID is not available, try to log off by username
+                        subprocess.run(['logoff', username], shell=True, check=True)
                     print(f"Logged off: {username} (Session ID: {session_id})")
                 except subprocess.CalledProcessError as e:
                     messagebox.showerror("Error", f"Failed to log off {username}: {e}")
