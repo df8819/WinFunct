@@ -1,6 +1,7 @@
 # Standard Library Imports
 import base64
 import csv
+from collections import defaultdict
 import ctypes
 import hashlib
 import json
@@ -1966,48 +1967,113 @@ class Application(tk.Tk):
 
     # ----------------------------------SYSTEM INFO COMPARE END-------------------------------------------------
 
-    # Detect Apps with an active internet connection
     def netstat_output(self):
         print("Executing Network Shell command to extract apps with active internet connection.")
-        try:
-            # Execute the netstat command and capture the output
-            result = subprocess.check_output('netstat -b -n', shell=True).decode()
 
-            # Process the command output
-            lines = result.split('\n')
-            processed_lines = [re.findall(r'\[(.*?)]', line) for line in lines]
-            processed_lines = [item for sublist in processed_lines for item in sublist]
-            unique_lines = list(set(processed_lines))
+        def get_netstat_data():
+            try:
+                result = subprocess.check_output('netstat -b -n -o', shell=True).decode('utf-8', errors='ignore')
+                lines = result.split('\n')
+                connections = []
+                current_app = ""
+                for line in lines:
+                    if line.strip().startswith('TCP') or line.strip().startswith('UDP'):
+                        parts = line.split()
+                        if len(parts) >= 5:
+                            state = parts[3] if len(parts) > 3 else "N/A"
+                            if state == 'TIME_WAIT':
+                                continue
+                            protocol, local_address, foreign_address, pid = parts[0], parts[1], parts[2], parts[-1]
+                            connections.append((protocol, local_address, foreign_address, state, pid, current_app))
+                    elif '[' in line and ']' in line:
+                        current_app = re.findall(r'\[(.*?)]', line)[0]
+                return connections
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
+            except Exception as e:
+                messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+            return []
 
-            # Create a new window to display the apps with active internet connection
+        def update_ui(connections):
             netstat_window = tk.Toplevel(self)
             netstat_window.title("Apps with Active Internet Connection")
             netstat_window.configure(bg=BUTTON_BG_COLOR)
 
-            # Set window size and position
-            window_width, window_height = 420, 580
+            window_width, window_height = 1000, 600
             screen_width = netstat_window.winfo_screenwidth()
             screen_height = netstat_window.winfo_screenheight()
             x = (screen_width // 2) - (window_width // 2)
             y = (screen_height // 2) - (window_height // 2)
             netstat_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-            # Create a text widget to display the apps
-            app_text = scrolledtext.ScrolledText(netstat_window, wrap=tk.WORD, width=40, height=10,
-                                                 bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
-                                                 insertbackground=BUTTON_TEXT_COLOR)
-            app_text.pack(expand=True, fill='both', padx=10, pady=10)
+            # Create a notebook (tabbed interface)
+            style = ttk.Style()
+            style.theme_create("CustomTheme", parent="alt", settings={
+                "TNotebook": {"configure": {"background": UI_COLOR}},
+                "TNotebook.Tab": {"configure": {"background": BUTTON_BG_COLOR, "foreground": BUTTON_TEXT_COLOR},
+                                  "map": {"background": [("selected", UI_COLOR)]}},
+                "Treeview": {"configure": {"background": UI_COLOR, "foreground": BUTTON_TEXT_COLOR,
+                                           "fieldbackground": UI_COLOR}},
+                "Treeview.Heading": {"configure": {"background": BUTTON_BG_COLOR, "foreground": BUTTON_TEXT_COLOR}},
+                "TScrollbar": {"configure": {"background": BUTTON_BG_COLOR, "troughcolor": UI_COLOR}}
+            })
+            style.theme_use("CustomTheme")
 
-            # Insert the apps into the text widget
-            for line in unique_lines:
-                app_text.insert(tk.END, line + '\n')
+            notebook = ttk.Notebook(netstat_window)
+            notebook.pack(expand=True, fill='both', padx=10, pady=10)
 
-            app_text.config(state='disabled')  # Make the text widget read-only
+            # Group connections by application
+            grouped_connections = defaultdict(list)
+            for conn in connections:
+                grouped_connections[conn[5]].append(conn)
 
-        except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"An error occurred while executing the netstat command: {e}")
-        except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+            # Create tabs for different views
+            create_tab(notebook, "All Connections", connections)
+            create_tab(notebook, "Grouped by App", grouped_connections)
+
+        def create_tab(notebook, title, data):
+            tab = ttk.Frame(notebook)
+            notebook.add(tab, text=title)
+
+            tree = ttk.Treeview(tab,
+                                columns=("Protocol", "Local Address", "Foreign Address", "State", "PID", "App Name"),
+                                show="headings")
+            tree.heading("Protocol", text="Protocol")
+            tree.heading("Local Address", text="Local Address")
+            tree.heading("Foreign Address", text="Foreign Address")
+            tree.heading("State", text="State")
+            tree.heading("PID", text="PID")
+            tree.heading("App Name", text="App Name")
+
+            for col in tree["columns"]:
+                tree.column(col, width=100, anchor="center")
+
+            tree.column("Local Address", width=150)
+            tree.column("Foreign Address", width=150)
+            tree.column("App Name", width=200)
+
+            if isinstance(data, list):
+                for conn in data:
+                    tree.insert("", "end", values=conn)
+            elif isinstance(data, dict):
+                for app, conns in data.items():
+                    app_node = tree.insert("", "end", text=app, open=True)
+                    for conn in conns:
+                        tree.insert(app_node, "end", values=conn)
+
+            tree.pack(side="left", expand=True, fill="both")
+
+            # Add vertical scrollbar
+            scrollbar = ttk.Scrollbar(tab, orient="vertical", command=tree.yview)
+            scrollbar.pack(side="right", fill="y")
+            tree.configure(yscrollcommand=scrollbar.set)
+
+        # Run the netstat command in a separate thread
+        def run_netstat():
+            connections = get_netstat_data()
+            self.after(0, update_ui, connections)
+
+        threading.Thread(target=run_netstat, daemon=True).start()
 
     # -----------------------------------------------CLONE REPO--------------------------------------------------
 
