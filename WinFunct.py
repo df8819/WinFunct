@@ -576,18 +576,40 @@ class Application(tk.Tk):
     def open_ps_as_admin(self):
         print("Open PowerShell window as admin.")
 
+        def check_internet_connection():
+            try:
+                requests.get("https://www.google.com", timeout=5)
+                return True
+            except (requests.ConnectionError, requests.Timeout):
+                return False
+
         def check_pwsh_installed():
             try:
-                result = subprocess.run(["where", "pwsh"], capture_output=True, text=True)
+                result = subprocess.run(["where", "pwsh"], capture_output=True, text=True, timeout=10)
                 return result.returncode == 0
+            except subprocess.TimeoutExpired:
+                messagebox.showerror("Error", "Timeout while checking for PowerShell 7.")
+                return False
             except FileNotFoundError:
                 return False
 
         def install_pwsh():
+            if not check_internet_connection():
+                messagebox.showerror("Error", "No internet connection. Cannot install PowerShell 7.")
+                return False
+
             try:
-                subprocess.run(["winget", "install", "--id", "Microsoft.Powershell", "--source", "winget"], check=True)
+                subprocess.run(["winget", "install", "--id", "Microsoft.Powershell", "--source", "winget"], check=True,
+                               timeout=300)
                 return True
-            except subprocess.CalledProcessError:
+            except subprocess.TimeoutExpired:
+                messagebox.showerror("Error", "PowerShell 7 installation timed out.")
+                return False
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Error", f"Failed to install PowerShell 7: {e}")
+                return False
+            except FileNotFoundError:
+                messagebox.showerror("Error", "Winget not found. Cannot install PowerShell 7.")
                 return False
 
         def run_command(use_pwsh):
@@ -602,29 +624,38 @@ class Application(tk.Tk):
                 encoded_command = base64.b64encode(ps_command.encode('utf-16le')).decode('ascii')
 
                 if use_pwsh:
-                    subprocess.run(f'pwsh -Command "Start-Process pwsh -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
+                    subprocess.run(
+                        f'pwsh -Command "Start-Process pwsh -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"',
+                        shell=True, timeout=30)
                 else:
-                    subprocess.run(f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"', shell=True)
+                    subprocess.run(
+                        f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"',
+                        shell=True, timeout=30)
+            except subprocess.TimeoutExpired:
+                messagebox.showerror("Error", "Timeout while opening PowerShell window.")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
 
-        if check_pwsh_installed():
-            thread = threading.Thread(target=run_command, args=(True,))
+        def threaded_run(use_pwsh):
+            thread = threading.Thread(target=run_command, args=(use_pwsh,))
             thread.start()
+
+        if check_pwsh_installed():
+            threaded_run(True)
         else:
-            user_choice = messagebox.askyesno("PowerShell 7 Not Found", "PowerShell 7 is not installed. Do you want to install it via winget?")
+            user_choice = messagebox.askyesno("PowerShell 7 Not Found",
+                                              "PowerShell 7 is not installed. Do you want to install it via winget?")
             if user_choice:
                 if install_pwsh():
                     messagebox.showinfo("Installation Successful", "PowerShell 7 has been installed successfully.")
-                    thread = threading.Thread(target=run_command, args=(True,))
-                    thread.start()
+                    threaded_run(True)
                 else:
-                    messagebox.showerror("Installation Failed", "Failed to install PowerShell 7. Opening PowerShell 5.1 instead.")
-                    thread = threading.Thread(target=run_command, args=(False,))
-                    thread.start()
+                    messagebox.showwarning("Installation Failed",
+                                           "Failed to install PowerShell 7. Opening PowerShell 5.1 instead.")
+                    threaded_run(False)
             else:
-                thread = threading.Thread(target=run_command, args=(False,))
-                thread.start()
+                messagebox.showinfo("Using PowerShell 5.1", "Opening PowerShell 5.1 instead.")
+                threaded_run(False)
 
     def open_cmd_as_admin(self):
         print("""Open cmd window as admin.""")
