@@ -160,13 +160,11 @@ GitUpdater.execute_update()
 # ---------------------------------- UPDATER END ----------------------------------
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
 
-
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
     except WindowsError:
         return False
-
 
 def check_admin_cmd():
     try:
@@ -175,27 +173,22 @@ def check_admin_cmd():
     except subprocess.CalledProcessError:
         return False
 
-
 def log_message(message):
     with open("admin_log.txt", "a") as log_file:
         log_file.write(message + "\n")
 
-
 def run_as_admin():
     if sys.platform == "win32":
         cmd = [sys.executable] + sys.argv
-        cmd_line = ' '.join('"' + item.replace('"', '\\"') + '"' for item in cmd)
+        cmd_line = ' '.join(f'"{item.replace('"', '\\"')}"' for item in cmd)
         try:
             log_message("Initial checks completed. Running as intended...")
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
         except Exception as e:
             log_message(f"Error re-running the script with admin rights: {e}")
 
-
 def is_running_in_ide():
-    # This function checks for common IDE-specific variables
     return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
-
 
 def print_log():
     log_path = "admin_log.txt"
@@ -204,48 +197,38 @@ def print_log():
             print(log_file.read())
         os.remove(log_path)
 
-
 if __name__ == "__main__":
-    # Bypass admin check if running in an IDE
     if not is_running_in_ide():
-        if is_admin() or check_admin_cmd():
-            print("Running with admin rights...")
-            # Print log messages in the elevated terminal
-            print_log()
-        else:
+        if not (is_admin() or check_admin_cmd()):
             print("Not running with administrative privileges...")
             run_as_admin()
-            # The script will exit here if not running as admin
             sys.exit()
+        else:
+            print("Running with admin rights...")
+            print_log()
     else:
-        # Print log messages if running in an IDE
         print_log()
-
 
 def show_logo():
     print(LOGO)
 
-
 show_logo()
-print(f"Awaiting user input (⌐■_■)")
-
+print("Awaiting user input (⌐■_■)")
 
 # Command functions
 def execute_command(cmd):
     print(f"Executing: {cmd}")
     subprocess.Popen(cmd, shell=True)
 
-
 def load_theme_from_file():
     try:
         with open('last_selected_theme.json', 'r') as file:
             return json.load(file)
-    except FileNotFoundError:
-        return None
-    except json.JSONDecodeError:
+    except (FileNotFoundError, json.JSONDecodeError):
         return None
 
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
+
 
 
 # Main App Window
