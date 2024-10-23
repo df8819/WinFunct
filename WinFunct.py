@@ -1994,6 +1994,16 @@ class Application(tk.Tk):
                 messagebox.showerror("Error", f"An unexpected error occurred: {e}")
             return []
 
+        def check_online():
+            selected_items = tree.selection()
+            if not selected_items:
+                messagebox.showwarning("Selection Required", "Please select at least one entry.")
+                return
+            for item in selected_items:
+                appname = tree.item(item)['values'][-1]  # Get the app name (last column)
+                google_query = f"https://www.google.com/search?q=Is+{appname}+safe"
+                webbrowser.open(google_query)
+
         def update_ui(connections):
             netstat_window = tk.Toplevel(self)
             netstat_window.title("Apps with Active Internet Connection")
@@ -2006,7 +2016,6 @@ class Application(tk.Tk):
             y = (screen_height // 2) - (window_height // 2)
             netstat_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-            # Create a custom style
             style = ttk.Style()
             style.theme_create("CustomTheme", parent="alt", settings={
                 "Treeview": {"configure": {"background": UI_COLOR, "foreground": BUTTON_TEXT_COLOR,
@@ -2016,10 +2025,15 @@ class Application(tk.Tk):
             })
             style.theme_use("CustomTheme")
 
+            # Create a frame to hold the Treeview and scrollbar
+            frame = tk.Frame(netstat_window, bg=BUTTON_BG_COLOR)
+            frame.pack(expand=True, fill='both', padx=10, pady=10)
+
             # Create Treeview
-            tree = ttk.Treeview(netstat_window,
+            global tree
+            tree = ttk.Treeview(frame,
                                 columns=("Protocol", "Local Address", "Foreign Address", "State", "PID", "App Name"),
-                                show="headings")
+                                show="headings", selectmode="extended")
             tree.heading("Protocol", text="Protocol")
             tree.heading("Local Address", text="Local Address")
             tree.heading("Foreign Address", text="Foreign Address")
@@ -2040,9 +2054,14 @@ class Application(tk.Tk):
             tree.pack(side="left", expand=True, fill="both")
 
             # Add vertical scrollbar
-            scrollbar = ttk.Scrollbar(netstat_window, orient="vertical", command=tree.yview)
+            scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
             scrollbar.pack(side="right", fill="y")
             tree.configure(yscrollcommand=scrollbar.set)
+
+            # Add Check Online button at the bottom
+            check_button = tk.Button(netstat_window, text="Check Online", command=check_online,
+                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+            check_button.pack(side='bottom', pady=10)
 
         # Run the netstat command in a separate thread
         def run_netstat():
