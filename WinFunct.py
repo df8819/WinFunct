@@ -2016,15 +2016,6 @@ class Application(tk.Tk):
             y = (screen_height // 2) - (window_height // 2)
             netstat_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-            style = ttk.Style()
-            style.theme_create("CustomTheme", parent="alt", settings={
-                "Treeview": {"configure": {"background": UI_COLOR, "foreground": BUTTON_TEXT_COLOR,
-                                           "fieldbackground": UI_COLOR}},
-                "Treeview.Heading": {"configure": {"background": BUTTON_BG_COLOR, "foreground": BUTTON_TEXT_COLOR}},
-                "TScrollbar": {"configure": {"background": BUTTON_BG_COLOR, "troughcolor": UI_COLOR}}
-            })
-            style.theme_use("CustomTheme")
-
             # Create a frame to hold the Treeview and scrollbar
             frame = tk.Frame(netstat_window, bg=BUTTON_BG_COLOR)
             frame.pack(expand=True, fill='both', padx=10, pady=10)
@@ -2047,6 +2038,17 @@ class Application(tk.Tk):
             tree.column("Local Address", width=150)
             tree.column("Foreign Address", width=150)
             tree.column("App Name", width=200)
+
+            # Configure Treeview colors
+            style = ttk.Style(netstat_window)
+            style.theme_use('default')
+            style.configure("Treeview",
+                            background=UI_COLOR,
+                            foreground=BUTTON_TEXT_COLOR,
+                            fieldbackground=UI_COLOR)
+            style.map('Treeview',
+                      background=[('selected', BUTTON_BG_COLOR)],
+                      foreground=[('selected', BUTTON_TEXT_COLOR)])
 
             for conn in connections:
                 tree.insert("", "end", values=conn)
