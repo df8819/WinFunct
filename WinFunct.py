@@ -4,7 +4,6 @@ import csv
 import ctypes
 import hashlib
 import json
-import locale
 import logging
 import os
 import re
