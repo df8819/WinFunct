@@ -1999,19 +1999,16 @@ class Application(tk.Tk):
             netstat_window.title("Apps with Active Internet Connection")
             netstat_window.configure(bg=BUTTON_BG_COLOR)
 
-            window_width, window_height = 1000, 600
+            window_width, window_height = 1550, 720
             screen_width = netstat_window.winfo_screenwidth()
             screen_height = netstat_window.winfo_screenheight()
             x = (screen_width // 2) - (window_width // 2)
             y = (screen_height // 2) - (window_height // 2)
             netstat_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-            # Create a notebook (tabbed interface)
+            # Create a custom style
             style = ttk.Style()
             style.theme_create("CustomTheme", parent="alt", settings={
-                "TNotebook": {"configure": {"background": UI_COLOR}},
-                "TNotebook.Tab": {"configure": {"background": BUTTON_BG_COLOR, "foreground": BUTTON_TEXT_COLOR},
-                                  "map": {"background": [("selected", UI_COLOR)]}},
                 "Treeview": {"configure": {"background": UI_COLOR, "foreground": BUTTON_TEXT_COLOR,
                                            "fieldbackground": UI_COLOR}},
                 "Treeview.Heading": {"configure": {"background": BUTTON_BG_COLOR, "foreground": BUTTON_TEXT_COLOR}},
@@ -2019,23 +2016,8 @@ class Application(tk.Tk):
             })
             style.theme_use("CustomTheme")
 
-            notebook = ttk.Notebook(netstat_window)
-            notebook.pack(expand=True, fill='both', padx=10, pady=10)
-
-            # Group connections by application
-            grouped_connections = defaultdict(list)
-            for conn in connections:
-                grouped_connections[conn[5]].append(conn)
-
-            # Create tabs for different views
-            create_tab(notebook, "All Connections", connections)
-            create_tab(notebook, "Grouped by App", grouped_connections)
-
-        def create_tab(notebook, title, data):
-            tab = ttk.Frame(notebook)
-            notebook.add(tab, text=title)
-
-            tree = ttk.Treeview(tab,
+            # Create Treeview
+            tree = ttk.Treeview(netstat_window,
                                 columns=("Protocol", "Local Address", "Foreign Address", "State", "PID", "App Name"),
                                 show="headings")
             tree.heading("Protocol", text="Protocol")
@@ -2052,19 +2034,13 @@ class Application(tk.Tk):
             tree.column("Foreign Address", width=150)
             tree.column("App Name", width=200)
 
-            if isinstance(data, list):
-                for conn in data:
-                    tree.insert("", "end", values=conn)
-            elif isinstance(data, dict):
-                for app, conns in data.items():
-                    app_node = tree.insert("", "end", text=app, open=True)
-                    for conn in conns:
-                        tree.insert(app_node, "end", values=conn)
+            for conn in connections:
+                tree.insert("", "end", values=conn)
 
             tree.pack(side="left", expand=True, fill="both")
 
             # Add vertical scrollbar
-            scrollbar = ttk.Scrollbar(tab, orient="vertical", command=tree.yview)
+            scrollbar = ttk.Scrollbar(netstat_window, orient="vertical", command=tree.yview)
             scrollbar.pack(side="right", fill="y")
             tree.configure(yscrollcommand=scrollbar.set)
 
