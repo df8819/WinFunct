@@ -821,9 +821,25 @@ class Application(tk.Tk):
 
         def check_disk_health():
             try:
-                # Run SMART diagnostics
-                smart_info = subprocess.check_output('wmic diskdrive get status', shell=True, text=True)
-                update_disk_info(f"Disk Health Status:\n{smart_info}")
+                # Get detailed disk health information
+                health_info = subprocess.check_output('wmic diskdrive get model,status,mediatype,size', shell=True, text=True)
+
+                disk_health = """
+    ========================
+    *** Disk Health Check ***
+    ========================
+
+"""
+                # Format the output to be more readable
+                lines = health_info.strip().split('\n')
+                if len(lines) > 1:  # Check if we have data beyond the header
+                    # Get headers and create a formatted string
+                    headers = [h.strip() for h in lines[0].split('  ') if h.strip()]
+                    disk_health += '\n'.join(
+                        [f"{line.strip()}" for line in lines if line.strip() and not line.isspace()]
+                    )
+
+                update_disk_info(disk_health)
             except Exception as e:
                 update_disk_info(f"Error checking disk health: {str(e)}")
 
