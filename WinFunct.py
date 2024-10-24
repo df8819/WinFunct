@@ -816,6 +816,17 @@ class Application(tk.Tk):
                                                    insertbackground=BUTTON_TEXT_COLOR)
         disk_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
+        def bytes_to_gb(bytes):
+            return round(bytes / (1024 ** 3), 2)
+
+        def check_disk_health():
+            try:
+                # Run SMART diagnostics
+                smart_info = subprocess.check_output('wmic diskdrive get status', shell=True, text=True)
+                update_disk_info(f"Disk Health Status:\n{smart_info}")
+            except Exception as e:
+                update_disk_info(f"Error checking disk health: {str(e)}")
+
         def fetch_disk_info():
             try:
                 # Get list of disks
@@ -823,7 +834,8 @@ class Application(tk.Tk):
                 disks_output = subprocess.check_output(disks_cmd, shell=True, text=True)
 
                 # Filter out the DISKPART> prompts and empty lines
-                cleaned_lines = [line.strip() for line in disks_output.split('\n') if line.strip() and not line.strip().startswith('DISKPART>')]
+                cleaned_lines = [line.strip() for line in disks_output.split('\n')
+                                 if line.strip() and not line.strip().startswith('DISKPART>')]
 
                 # Process the cleaned lines
                 processed_lines = []
@@ -840,19 +852,20 @@ class Application(tk.Tk):
 """
                 disk_info += cleaned_output + "\n\n"
 
-                # Additional helpful information
+                # Add system storage metrics
                 disk_info += """
-    ==============================
-    *** Additional Information ***
-    ==============================
+    ========================
+    *** Storage Metrics ***
+    ========================
 
 """
-                disk_info += "1. Disk Status:       Online/Offline\n"
-                disk_info += "2. Partition Types:   Primary, Extended, Logical\n"
-                disk_info += "3. File Systems:      NTFS, FAT32, exFAT\n"
-                disk_info += "4. Disk Signature:    GPT or MBR\n"
-                disk_info += "5. Free Space:        Check for unallocated space\n\n"
-                disk_info += "Use 'chkdsk' for NTFS volumes to check disk health\n"
+                for partition in psutil.disk_partitions():
+                    usage = psutil.disk_usage(partition.mountpoint)
+                    disk_info += f"Drive {partition.mountpoint}:\n"
+                    disk_info += f"  • Total: {bytes_to_gb(usage.total)} GB\n"
+                    disk_info += f"  • Used: {bytes_to_gb(usage.used)} GB\n"
+                    disk_info += f"  • Free: {bytes_to_gb(usage.free)} GB\n"
+                    disk_info += f"  • Usage: {usage.percent}%\n\n"
 
                 disk_window.after(0, lambda: update_disk_info(disk_info))
             except Exception as e:
@@ -864,6 +877,20 @@ class Application(tk.Tk):
             disk_info_text.delete('1.0', tk.END)
             disk_info_text.insert(tk.END, info)
             disk_info_text.config(state='disabled')
+
+        # Add buttons
+        button_frame = tk.Frame(disk_window, bg=BUTTON_BG_COLOR)
+        button_frame.pack(pady=5)
+
+        refresh_btn = tk.Button(button_frame, text="Refresh",
+                                command=lambda: threading.Thread(target=fetch_disk_info, daemon=True).start(),
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        refresh_btn.pack(side=tk.LEFT, padx=5)
+
+        health_btn = tk.Button(button_frame, text="Check Disk Health",
+                               command=lambda: threading.Thread(target=check_disk_health, daemon=True).start(),
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        health_btn.pack(side=tk.LEFT, padx=5)
 
         # Start fetching disk info in a separate thread
         threading.Thread(target=fetch_disk_info, daemon=True).start()
