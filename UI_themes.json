@@ -41,12 +41,12 @@
 "VERSION_LABEL_TEXT": "#B86B3A"
 },
 {
-"name": "Ferrari Accident",
-"UI_COLOR": "#3d0404",
-"BUTTON_BG_COLOR": "#a32020",
-"BUTTON_TEXT_COLOR": "#fdf7f7",
-"BOTTOM_BORDER_COLOR": "#da6b6b",
-"VERSION_LABEL_TEXT": "#ce3939"
+"name": "Dark Mint",
+"UI_COLOR": "#0e1b1a",
+"BUTTON_BG_COLOR": "#2f575b",
+"BUTTON_TEXT_COLOR": "#F5F5F0",
+"BOTTOM_BORDER_COLOR": "#289199",
+"VERSION_LABEL_TEXT": "#82b9bf"
 },
 {
 "name": "Fresh Mint",
