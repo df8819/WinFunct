@@ -803,7 +803,7 @@ class Application(tk.Tk):
         disk_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
-        window_width, window_height = 520, 600
+        window_width, window_height = 760, 640
         screen_width = disk_window.winfo_screenwidth()
         screen_height = disk_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -818,30 +818,6 @@ class Application(tk.Tk):
 
         def bytes_to_gb(bytes):
             return round(bytes / (1024 ** 3), 2)
-
-        def check_disk_health():
-            try:
-                # Get detailed disk health information
-                health_info = subprocess.check_output('wmic diskdrive get model,status,mediatype,size', shell=True, text=True)
-
-                disk_health = """
-    ========================
-    *** Disk Health Check ***
-    ========================
-
-"""
-                # Format the output to be more readable
-                lines = health_info.strip().split('\n')
-                if len(lines) > 1:  # Check if we have data beyond the header
-                    # Get headers and create a formatted string
-                    headers = [h.strip() for h in lines[0].split('  ') if h.strip()]
-                    disk_health += '\n'.join(
-                        [f"{line.strip()}" for line in lines if line.strip() and not line.isspace()]
-                    )
-
-                update_disk_info(disk_health)
-            except Exception as e:
-                update_disk_info(f"Error checking disk health: {str(e)}")
 
         def fetch_disk_info():
             try:
@@ -867,6 +843,16 @@ class Application(tk.Tk):
 
 """
                 disk_info += cleaned_output + "\n\n"
+
+                # Add disk health information
+                disk_info += """
+    ========================
+    *** Disk Health Info ***
+    ========================
+
+"""
+                health_info = subprocess.check_output('wmic diskdrive get model,status,mediatype,size', shell=True, text=True)
+                disk_info += health_info + "\n"
 
                 # Add system storage metrics
                 disk_info += """
@@ -894,19 +880,14 @@ class Application(tk.Tk):
             disk_info_text.insert(tk.END, info)
             disk_info_text.config(state='disabled')
 
-        # Add buttons
+        # Add refresh button
         button_frame = tk.Frame(disk_window, bg=BUTTON_BG_COLOR)
         button_frame.pack(pady=5)
 
         refresh_btn = tk.Button(button_frame, text="Refresh",
                                 command=lambda: threading.Thread(target=fetch_disk_info, daemon=True).start(),
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        refresh_btn.pack(side=tk.LEFT, padx=5)
-
-        health_btn = tk.Button(button_frame, text="Check Disk Health",
-                               command=lambda: threading.Thread(target=check_disk_health, daemon=True).start(),
-                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        health_btn.pack(side=tk.LEFT, padx=5)
+        refresh_btn.pack(padx=5)
 
         # Start fetching disk info in a separate thread
         threading.Thread(target=fetch_disk_info, daemon=True).start()
