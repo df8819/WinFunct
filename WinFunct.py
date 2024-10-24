@@ -160,11 +160,13 @@ GitUpdater.execute_update()
 # ---------------------------------- UPDATER END ----------------------------------
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
 
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
     except WindowsError:
         return False
+
 
 def check_admin_cmd():
     try:
@@ -173,9 +175,11 @@ def check_admin_cmd():
     except subprocess.CalledProcessError:
         return False
 
+
 def log_message(message):
     with open("admin_log.txt", "a") as log_file:
         log_file.write(message + "\n")
+
 
 def run_as_admin():
     if sys.platform == "win32":
@@ -187,8 +191,10 @@ def run_as_admin():
         except Exception as e:
             log_message(f"Error re-running the script with admin rights: {e}")
 
+
 def is_running_in_ide():
     return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
+
 
 def print_log():
     log_path = "admin_log.txt"
@@ -196,6 +202,7 @@ def print_log():
         with open(log_path, "r") as log_file:
             print(log_file.read())
         os.remove(log_path)
+
 
 if __name__ == "__main__":
     if not is_running_in_ide():
@@ -209,16 +216,20 @@ if __name__ == "__main__":
     else:
         print_log()
 
+
 def show_logo():
     print(LOGO)
 
+
 show_logo()
 print("Awaiting user input (⌐■_■)")
+
 
 # Command functions
 def execute_command(cmd):
     print(f"Executing: {cmd}")
     subprocess.Popen(cmd, shell=True)
+
 
 def load_theme_from_file():
     try:
@@ -228,7 +239,6 @@ def load_theme_from_file():
         return None
 
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
-
 
 
 # Main App Window
