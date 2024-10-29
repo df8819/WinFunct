@@ -898,9 +898,17 @@ class Application(tk.Tk):
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles.""")
         try:
-            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profiles"],
-                                                 stderr=subprocess.STDOUT).decode("utf-8", "ignore")
-            networks = re.findall(r"All User Profile\s*:\s*(.+)", cmd_output)
+            # Add timeout to prevent hanging
+            cmd_output = subprocess.check_output(
+                ["netsh", "wlan", "show", "profiles"],
+                stderr=subprocess.STDOUT,
+                timeout=10
+            ).decode("utf-8", "ignore")
+            # More flexible regex pattern for different Windows languages
+            networks = re.findall(r"(?:Profile|Profil|Perfil)\s*:\s*(.+?)(?:\r|\n|$)", cmd_output)
+        except subprocess.TimeoutExpired:
+            messagebox.showerror("Error", "Command timed out. Network service might be unresponsive.")
+            return
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error", f"Failed to execute netsh command: {e.output.decode('utf-8', 'ignore')}")
             return
@@ -1033,9 +1041,18 @@ class Application(tk.Tk):
     def show_wifi_password(self, network):
         network = network.strip()
         try:
-            cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network, "key=clear"],
-                                                 stderr=subprocess.STDOUT).decode("utf-8", "ignore")
-            password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
+            # Add quotes around network name to handle spaces and special characters
+            cmd_output = subprocess.check_output(
+                ["netsh", "wlan", "show", "profile", f'name="{network}"', "key=clear"],
+                stderr=subprocess.STDOUT,
+                timeout=10
+            ).decode("utf-8", "ignore")
+            # More flexible regex for different Windows languages
+            password = re.search(r"(?:Key Content|Contenu de la clé|Contenido de la clave)\s*:\s*(.+?)(?:\r|\n|$)",
+                                 cmd_output)
+        except subprocess.TimeoutExpired:
+            messagebox.showerror("Error", "Command timed out while retrieving password.")
+            return
         except subprocess.CalledProcessError as e:
             messagebox.showerror("Error",
                                  f"Failed to execute netsh command for network '{network}': {e.output.decode('utf-8', 'ignore')}")
