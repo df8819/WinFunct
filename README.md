@@ -40,7 +40,7 @@ This app combines a lot of useful functions or scripts for managing Windows:
 ## Known Issues / Comments
 
 - _Thank you for using my App. Feedback is always welcome_ ✌
-- _This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave from time to time_ 😇
+- _This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave or crash from time to time_
 
 ## Screenshots
 
