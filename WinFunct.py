@@ -2563,24 +2563,46 @@ class Application(tk.Tk):
     # -----------------------------------------------GODMODE END--------------------------------------------------
     # -----------------------------------------------LOGOFF USER(S)--------------------------------------------------
 
+    def logoff_user(self, username, session_id):
+        print(f"Attempting to log off user: {username}")
+        try:
+            if session_id != 'N/A':
+                subprocess.run(['logoff', session_id], check=True)
+            else:
+                # More robust username handling
+                cmd = f'query session "{username}" | findstr "{username}"'
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                if result.returncode == 0:
+                    session_line = result.stdout.strip()
+                    if match := re.search(r'\s(\d+)\s', session_line):
+                        session_id = match.group(1)
+                        subprocess.run(['logoff', session_id], check=True)
+                else:
+                    raise subprocess.CalledProcessError(1, f'No session found for {username}')
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Error logging off {username}: {e}")
+            return False
+
     def logoff_users(self):
         print("Getting list of logged-in users.")
-        users = []
+        self.users = []  # Make users a class instance variable
 
         def get_users_quser():
             try:
-                result = subprocess.run(['quser'], capture_output=True, text=True, encoding='utf-8', errors='replace',
-                                        shell=True)
+                result = subprocess.run(['quser'], capture_output=True, text=True,
+                                        encoding='utf-8', errors='replace')
                 if result.returncode != 0:
                     raise subprocess.CalledProcessError(result.returncode, 'quser')
                 output = result.stdout
                 lines = output.strip().split('\n')
-                for line in lines[1:]:
-                    match = re.match(r'^\s*(.*?)\s+(\d+)\s+\w+', line)
+                for line in lines[1:]:  # Skip header line
+                    match = re.match(r'>\s*(\S.*?)\s+(\d+)\s+', line) or \
+                            re.match(r'\s*(\S.*?)\s+(\d+)\s+', line)
                     if match:
                         username = match.group(1).strip()
                         session_id = match.group(2)
-                        users.append((username, session_id))
+                        self.users.append((username, session_id))  # Use self.users
             except subprocess.CalledProcessError:
                 return False
             except Exception as e:
@@ -2590,15 +2612,25 @@ class Application(tk.Tk):
 
         def get_users_powershell():
             try:
-                cmd = "Get-CimInstance -ClassName Win32_LoggedOnUser | Select-Object -Property Antecedent | ForEach-Object { $_.Antecedent.ToString().Split('\"')[1] } | Get-Unique"
-                result = subprocess.run(['powershell', '-Command', cmd], capture_output=True, text=True,
+                cmd = """
+                Get-CimInstance -ClassName Win32_LoggedOnUser | 
+                Select-Object -Property Antecedent | 
+                ForEach-Object { 
+                    $user = $_.Antecedent.ToString()
+                    if ($user -match 'Domain="(.*?)",Name="(.*?)"') {
+                        $matches[2]
+                    }
+                } | Sort-Object -Unique
+                """
+                result = subprocess.run(['powershell', '-NoProfile', '-Command', cmd],
+                                        capture_output=True, text=True,
                                         encoding='utf-8', errors='replace')
                 if result.returncode != 0:
                     raise subprocess.CalledProcessError(result.returncode, 'powershell')
                 output = result.stdout
-                usernames = output.strip().split('\n')
+                usernames = [u for u in output.strip().split('\n') if u.strip()]
                 for username in usernames:
-                    users.append((username.strip(), 'N/A'))
+                    self.users.append((username.strip(), 'N/A'))  # Use self.users
             except Exception as e:
                 print(f"Error in get_users_powershell: {e}")
                 return False
@@ -2609,17 +2641,18 @@ class Application(tk.Tk):
                 messagebox.showerror("Error", "Failed to retrieve logged-in users.")
                 return
 
-        if not users:
+        if not self.users:  # Use self.users
             messagebox.showinfo("Info", "No users found.")
             return
 
-        window = tk.Tk()
+        window = tk.Toplevel(self)  # Changed from Tk() to Toplevel(self)
         window.title("Select Users to Log Off")
         window.configure(bg=UI_COLOR)
 
         window_width = 400
         window_height = 300
         window.geometry(f"{window_width}x{window_height}")
+        window.resizable(False, False)
 
         screen_width = window.winfo_screenwidth()
         screen_height = window.winfo_screenheight()
@@ -2637,12 +2670,12 @@ class Application(tk.Tk):
         listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        for username, session_id in users:
+        for username, session_id in self.users:  # Use self.users
             listbox.insert(tk.END, f"{username} (Session ID: {session_id})")
 
         def on_submit():
             selected_indices = listbox.curselection()
-            selected_users = [users[i] for i in selected_indices]
+            selected_users = [self.users[i] for i in selected_indices]  # Use self.users
 
             if not selected_users:
                 messagebox.showinfo("Info", "No users selected.")
@@ -2653,18 +2686,16 @@ class Application(tk.Tk):
             if not confirmation:
                 return
 
+            success_count = 0
             for username, session_id in selected_users:
-                try:
-                    if session_id != 'N/A':
-                        subprocess.run(['logoff', session_id], shell=True, check=True)
-                    else:
-                        # If session ID is not available, try to log off by username
-                        subprocess.run(['logoff', username], shell=True, check=True)
+                if self.logoff_user(username, session_id):  # Added self.
+                    success_count += 1
                     print(f"Logged off: {username} (Session ID: {session_id})")
-                except subprocess.CalledProcessError as e:
-                    messagebox.showerror("Error", f"Failed to log off {username}: {e}")
+                else:
+                    messagebox.showerror("Error", f"Failed to log off {username}")
 
-            messagebox.showinfo("Success", f"Successfully logged off {len(selected_users)} user(s).")
+            messagebox.showinfo("Success",
+                                f"Successfully logged off {success_count} out of {len(selected_users)} user(s).")
             window.destroy()
 
         button_frame = tk.Frame(window, bg=UI_COLOR)
