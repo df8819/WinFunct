@@ -28,6 +28,19 @@ if "!version!"=="" (
     goto version_prompt
 )
 
+REM Prompt to rename the default name
+set "newname=WinFunct"
+set /p "rename_choice=Would you like to rename the default 'WinFunct' name? (y/n): "
+if /i "!rename_choice!"=="y" (
+    :rename_prompt
+    set "newname="
+    set /p "newname=Enter a new name for the app: "
+    if "!newname!"=="" (
+        echo Name cannot be empty.
+        goto rename_prompt
+    )
+)
+
 :option_prompt
 REM Prompt for pyinstaller process option with default [2]
 set "option=2"
@@ -77,14 +90,14 @@ for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
 REM Calculate elapsed time
 set /a elapsed_time=end_time-start_time
 
-REM Move the generated executable to the root folder and rename it with the version number
+REM Move the generated executable to the root folder and rename it with the defined name and version
 echo Moving the generated executable to the root folder...
-if exist "WinFunct_%version%.exe" (
-    echo Warning: WinFunct_%version%.exe already exists. Overwriting...
-    del /F "WinFunct_%version%.exe"
+if exist "!newname!_%version%.exe" (
+    echo Warning: !newname!_%version%.exe already exists. Overwriting...
+    del /F "!newname!_%version%.exe"
 )
 
-move /Y "dist\WinFunct.exe" "WinFunct_%version%.exe"
+move /Y "dist\WinFunct.exe" "!newname!_%version%.exe"
 if %errorlevel% NEQ 0 (
     echo Error: Failed to move and rename the executable to the root folder.
     pause
@@ -96,6 +109,7 @@ echo Cleaning up temporary files and folders...
 timeout /t 1 > nul
 if exist dist rmdir /S /Q dist
 if exist build rmdir /S /Q build
+
 :retry
 if exist __pycache__ (
     echo Attempting to delete __pycache__ again...
@@ -110,7 +124,7 @@ echo.
 echo ===========================================================
 echo Compilation complete. Process took %elapsed_time% seconds.
 echo.
-echo WinFunct_%version%.exe created and moved to root directory.
+echo !newname!_%version%.exe created and moved to root directory.
 echo The following has been cleaned up:
 echo.
 echo dist/
