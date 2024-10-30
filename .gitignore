@@ -14,6 +14,7 @@
 *.log
 admin_log.txt
 netstat_exe_output.txt
+powershell_log.txt
 
 # Miscellaneous files
 *.zip
