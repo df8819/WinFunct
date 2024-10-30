@@ -1372,6 +1372,7 @@ class Application(tk.Tk):
         thread = threading.Thread(target=run_command)
         thread.start()
 
+    # ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
     # ------------------------------------------FFMPEG INSTALLER SCRIPT-----------------------------------------------
 
     def install_ffmpeg(self):
