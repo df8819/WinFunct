@@ -1350,11 +1350,28 @@ class Application(tk.Tk):
     # ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER END-------------------------------------------------
     # ----------------------------------(INTERACTIVE) SHELL COMMANDS-------------------------------------------------
 
+    def get_powershell_command(self):
+        # Define potential paths for PowerShell executables
+        powershell_paths = [
+            r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+            r"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe",
+            r"C:\Windows\System32\powershell.exe",  # In case of newer versions
+        ]
+
+        # Check each path and return the first one that exists
+        for path in powershell_paths:
+            if os.path.exists(path):
+                return path
+
+        # Fallback to PowerShell Core if available
+        return "pwsh.exe"
+
     def activate_win(self):
         print("Activating Microsoft Products")
 
         def run_command():
-            command = ['powershell.exe', '-Command', 'irm https://get.activated.win | iex']
+            powershell = self.get_powershell_command()
+            command = [powershell, '-Command', 'irm https://get.activated.win | iex']
             subprocess.run(command, shell=True)
 
         # Run the command in a separate thread to avoid freezing the UI
@@ -1365,7 +1382,8 @@ class Application(tk.Tk):
         print("Opening Windows Utility Improved")
 
         def run_command():
-            command = ['powershell.exe', '-Command', 'irm christitus.com/win | iex']
+            powershell = self.get_powershell_command()
+            command = [powershell, '-Command', 'irm christitus.com/win | iex']
             subprocess.run(command, shell=True)
 
         # Run the command in a separate thread to avoid freezing the UI
