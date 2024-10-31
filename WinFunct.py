@@ -184,7 +184,7 @@ def log_message(message):
 def run_as_admin():
     if sys.platform == "win32":
         cmd = [sys.executable] + sys.argv
-        cmd_line = ' '.join(f'"{item.replace('"', '\\"')}"' for item in cmd)
+        cmd_line = ' '.join(f"\"{item.replace('\"', '\\\"')}\"" for item in cmd)
         try:
             log_message("Initial checks completed. Running as intended...")
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
