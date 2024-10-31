@@ -2,7 +2,7 @@
 requests
 
 # Windows Management Instrumentation (WMI) module for Python
-WMI
+wmi
 
 # OpenAI API library for Python
 openai
