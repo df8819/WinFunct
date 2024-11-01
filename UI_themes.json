@@ -1,12 +1,12 @@
 {
 "themes": [
 {
-"name": "Bronze Desert",
-"UI_COLOR": "#f1f1dc",
-"BUTTON_BG_COLOR": "#e0e0b4",
-"BUTTON_TEXT_COLOR": "#272710",
-"BOTTOM_BORDER_COLOR": "#886637",
-"VERSION_LABEL_TEXT": "#79792f"
+"name": "Pale Blues",
+"UI_COLOR": "#121b23",
+"BUTTON_BG_COLOR": "#385572",
+"BUTTON_TEXT_COLOR": "#F5F5F0",
+"BOTTOM_BORDER_COLOR": "#6d95bc",
+"VERSION_LABEL_TEXT": "#476a8d"
 },
 {
 "name": "Classic Gray",
