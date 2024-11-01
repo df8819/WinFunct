@@ -1451,6 +1451,40 @@ class Application(tk.Tk):
 
             return stderr == ""
 
+    def icon_cache(self):
+        # Ask for user confirmation before proceeding
+        if messagebox.askyesno(
+                "Clear Icon Cache",
+                "This will kill the explorer.exe task, delete the icon cache in %localappdata%\\Microsoft\\Windows\\Explorer and restart explorer.exe. Proceed?"
+        ):
+            # Batch script content to clear icon cache and delete itself
+            script_content = """
+    @echo off
+    cls
+    echo Clearing the icon cache...
+    
+    rem Stop explorer.exe
+    taskkill /f /im explorer.exe
+    
+    rem Delete icon cache
+    del /a /q "%localappdata%\\Microsoft\\Windows\\Explorer\\iconcache*.*"
+    
+    rem Restart explorer.exe
+    start explorer.exe
+    echo Icon cache cleared.
+    echo explorer.exe restarted.
+    
+    rem Use START to launch a new process to delete this script
+    start /b cmd /c del "%~f0"
+    """
+
+            # Create the .bat file with the script content
+            with open('clear_icon_cache.bat', 'w') as script_file:
+                script_file.write(script_content)
+
+            # Execute the .bat file
+            subprocess.run(['clear_icon_cache.bat'], shell=True)
+
     # ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
     # ----------------------------------FLUSH DNS-------------------------------------------------
 
@@ -2970,6 +3004,10 @@ class Application(tk.Tk):
         wifi_btn = tk.Button(self.functions_frame, text="Wi-Fi Profile Info", command=self.show_wifi_networks, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         wifi_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
+
+        clear_icon_btn = tk.Button(self.functions_frame, text="Clear Icon Cache", command=self.icon_cache, width=20,
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        clear_icon_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
