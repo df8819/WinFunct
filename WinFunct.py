@@ -829,7 +829,7 @@ class Application(tk.Tk):
                     shutil.copy2(source_file, export_path)
                     messagebox.showinfo("Export Successful",
                                         f"Quick Access destinations exported to:\n{export_path}")
-                    qa_window.destroy()
+                    qa_window.after(250, qa_window.destroy)
                 except Exception as e:
                     messagebox.showerror("Export Error", str(e))
 
@@ -861,7 +861,7 @@ class Application(tk.Tk):
                                         "Quick Access destinations imported successfully.")
                     subprocess.run(['taskkill', '/f', '/im', 'explorer.exe'], shell=True)
                     subprocess.run(['start', 'explorer.exe'], shell=True)
-                    qa_window.destroy()
+                    qa_window.after(250, qa_window.destroy)
                 except Exception as e:
                     messagebox.showerror("Import Error", str(e))
 
