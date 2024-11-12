@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import socket
 import subprocess
 import sys
@@ -792,6 +793,124 @@ class Application(tk.Tk):
         ip_info_text.insert(tk.END, ip_info)
         ip_info_text.config(state='disabled')
 
+    # ----------------------------------QUICK ACCESS MANAGER-------------------------------------------------
+    def quick_access_manager(self):
+        # Create the Quick Access Manager window
+        qa_window = tk.Toplevel(self)
+        qa_window.title("Quick Access Manager")
+        qa_window.geometry("400x120")
+        qa_window.configure(bg=UI_COLOR)
+
+        # Center the window
+        def center_window(window):
+            window.update_idletasks()
+            width = window.winfo_width()
+            height = window.winfo_height()
+            x = (window.winfo_screenwidth() // 2) - (width // 2)
+            y = (window.winfo_screenheight() // 2) - (height // 2)
+            window.geometry(f'{width}x{height}+{x}+{y}')
+
+        # Function to handle export
+        def export_quick_access():
+            # Updated source file path (matches your provided path)
+            source_file = os.path.join(os.path.expanduser("~"),
+                                       "AppData", "Roaming",
+                                       "Microsoft", "Windows",
+                                       "Recent", "AutomaticDestinations",
+                                       "f01b4d95cf55d32a.automaticDestinations-ms")
+
+            # Open file dialog to choose export destination
+            export_path = filedialog.asksaveasfilename(
+                initialfile="f01b4d95cf55d32a.automaticDestinations-ms",
+                defaultextension=".ms",
+                filetypes=[("Windows Explorer Destination Files", "*.ms")],
+                title="Export Quick Access Destinations"
+            )
+
+            if export_path:
+                try:
+                    shutil.copy2(source_file, export_path)
+                    messagebox.showinfo("Export Successful",
+                                        f"Quick Access destinations exported to:\n{export_path}")
+                except Exception as e:
+                    messagebox.showerror("Export Error", str(e))
+
+        # Function to handle import
+        def import_quick_access():
+            # Open file dialog to choose import file
+            import_path = filedialog.askopenfilename(
+                filetypes=[("Windows Explorer Destination Files", "*.ms")],
+                title="Import Quick Access Destinations"
+            )
+
+            if import_path:
+                destination_folder = os.path.join(os.path.expanduser("~"),
+                                                  "AppData", "Roaming",
+                                                  "Microsoft", "Windows",
+                                                  "Recent", "AutomaticDestinations")
+                destination_file = os.path.join(destination_folder,
+                                                "f01b4d95cf55d32a.automaticDestinations-ms")
+
+                # Check if file exists and prompt for overwrite
+                if os.path.exists(destination_file):
+                    overwrite = messagebox.askyesno(
+                        "File Exists",
+                        "An existing Quick Access file was found. Do you want to overwrite it?"
+                    )
+                    if not overwrite:
+                        return
+
+                try:
+                    shutil.copy2(import_path, destination_file)
+                    messagebox.showinfo("Import Successful",
+                                        "Quick Access destinations imported successfully.")
+                    # Optional: Restart Explorer to apply changes
+                    subprocess.run(['taskkill', '/f', '/im', 'explorer.exe'], shell=True)
+                    subprocess.run(['start', 'explorer.exe'], shell=True)
+                except Exception as e:
+                    messagebox.showerror("Import Error", str(e))
+
+        # Label for the window
+        qa_label = tk.Label(qa_window, text="Export or Import your Quick Access Shortcuts with ease.",
+                            bg=UI_COLOR,
+                            fg=BUTTON_TEXT_COLOR)
+        qa_label.pack(pady=20)
+
+        # Frame to hold buttons side by side
+        button_frame = tk.Frame(qa_window, bg=UI_COLOR)
+        button_frame.pack(pady=10)
+
+        # Export button
+        export_button = tk.Button(button_frame,
+                                  text="Export Quick Access",
+                                  command=export_quick_access,
+                                  bg=BUTTON_BG_COLOR,
+                                  fg=BUTTON_TEXT_COLOR,
+                                  activebackground=UI_COLOR,
+                                  activeforeground=BUTTON_TEXT_COLOR,
+                                  borderwidth=BORDER_WIDTH,
+                                  relief=BUTTON_STYLE)
+        export_button.pack(side=tk.LEFT, padx=10)
+
+        # Import button
+        import_button = tk.Button(button_frame,
+                                  text="Import Quick Access",
+                                  command=import_quick_access,
+                                  bg=BUTTON_BG_COLOR,
+                                  fg=BUTTON_TEXT_COLOR,
+                                  activebackground=UI_COLOR,
+                                  activeforeground=BUTTON_TEXT_COLOR,
+                                  borderwidth=BORDER_WIDTH,
+                                  relief=BUTTON_STYLE)
+        import_button.pack(side=tk.LEFT, padx=10)
+
+        # Center the window after creating all widgets
+        center_window(qa_window)
+
+        # Make the window modal
+        qa_window.grab_set()
+
+    # ----------------------------------QUICK ACCESS MANAGER END-------------------------------------------------
     # ----------------------------------DISK INFO-------------------------------------------------
 
     def show_disk_info(self):
@@ -3009,6 +3128,10 @@ class Application(tk.Tk):
         clear_icon_btn = tk.Button(self.functions_frame, text="Clear Icon Cache", command=self.icon_cache, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         clear_icon_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
+
+        quick_access_btn = tk.Button(self.functions_frame, text="Quick Access Manager", command=self.quick_access_manager, width=20,
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
+        quick_access_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
