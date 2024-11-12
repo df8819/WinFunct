@@ -1467,7 +1467,8 @@ class Application(tk.Tk):
     taskkill /f /im explorer.exe
     
     rem Delete icon cache
-    del /a /q "%localappdata%\\Microsoft\\Windows\\Explorer\\iconcache*.*"
+    del /a /q /f "%localappdata%\\IconCache.db"
+    del /a /q /f "%localappdata%\\Microsoft\\Windows\\Explorer\\iconcache*.*"
     
     rem Restart explorer.exe
     start explorer.exe
