@@ -795,7 +795,6 @@ class Application(tk.Tk):
 
     # ----------------------------------QUICK ACCESS MANAGER-------------------------------------------------
     def quick_access_manager(self):
-        # Create the Quick Access Manager window
         qa_window = tk.Toplevel(self)
         qa_window.title("Quick Access Manager")
         qa_window.geometry("400x120")
@@ -812,14 +811,12 @@ class Application(tk.Tk):
 
         # Function to handle export
         def export_quick_access():
-            # Updated source file path (matches your provided path)
             source_file = os.path.join(os.path.expanduser("~"),
                                        "AppData", "Roaming",
                                        "Microsoft", "Windows",
                                        "Recent", "AutomaticDestinations",
                                        "f01b4d95cf55d32a.automaticDestinations-ms")
 
-            # Open file dialog to choose export destination
             export_path = filedialog.asksaveasfilename(
                 initialfile="f01b4d95cf55d32a.automaticDestinations-ms",
                 defaultextension=".ms",
@@ -832,12 +829,11 @@ class Application(tk.Tk):
                     shutil.copy2(source_file, export_path)
                     messagebox.showinfo("Export Successful",
                                         f"Quick Access destinations exported to:\n{export_path}")
+                    qa_window.destroy()
                 except Exception as e:
                     messagebox.showerror("Export Error", str(e))
 
-        # Function to handle import
         def import_quick_access():
-            # Open file dialog to choose import file
             import_path = filedialog.askopenfilename(
                 filetypes=[("Windows Explorer Destination Files", "*.ms")],
                 title="Import Quick Access Destinations"
@@ -851,7 +847,6 @@ class Application(tk.Tk):
                 destination_file = os.path.join(destination_folder,
                                                 "f01b4d95cf55d32a.automaticDestinations-ms")
 
-                # Check if file exists and prompt for overwrite
                 if os.path.exists(destination_file):
                     overwrite = messagebox.askyesno(
                         "File Exists",
@@ -864,9 +859,9 @@ class Application(tk.Tk):
                     shutil.copy2(import_path, destination_file)
                     messagebox.showinfo("Import Successful",
                                         "Quick Access destinations imported successfully.")
-                    # Optional: Restart Explorer to apply changes
                     subprocess.run(['taskkill', '/f', '/im', 'explorer.exe'], shell=True)
                     subprocess.run(['start', 'explorer.exe'], shell=True)
+                    qa_window.destroy()
                 except Exception as e:
                     messagebox.showerror("Import Error", str(e))
 
@@ -876,7 +871,6 @@ class Application(tk.Tk):
                             fg=BUTTON_TEXT_COLOR)
         qa_label.pack(pady=20)
 
-        # Frame to hold buttons side by side
         button_frame = tk.Frame(qa_window, bg=UI_COLOR)
         button_frame.pack(pady=10)
 
@@ -904,10 +898,8 @@ class Application(tk.Tk):
                                   relief=BUTTON_STYLE)
         import_button.pack(side=tk.LEFT, padx=10)
 
-        # Center the window after creating all widgets
         center_window(qa_window)
 
-        # Make the window modal
         qa_window.grab_set()
 
     # ----------------------------------QUICK ACCESS MANAGER END-------------------------------------------------
