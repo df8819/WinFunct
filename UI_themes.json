@@ -13,7 +13,7 @@
 "UI_COLOR": "#e4e4e4",
 "BUTTON_BG_COLOR": "#d4d4d4",
 "BUTTON_TEXT_COLOR": "#000000",
-"BOTTOM_BORDER_COLOR": "#5b5b5b",
+"BOTTOM_BORDER_COLOR": "#0077C8",
 "VERSION_LABEL_TEXT": "#5f5f5f"
 },
 {
@@ -57,12 +57,12 @@
 "VERSION_LABEL_TEXT": "#44a86c"
 },
 {
-"name": "Modern Brightness",
-"UI_COLOR": "#eaeeee",
-"BUTTON_BG_COLOR": "#d0d9d9",
-"BUTTON_TEXT_COLOR": "#151a1a",
-"BOTTOM_BORDER_COLOR": "#455656",
-"VERSION_LABEL_TEXT": "#536666"
+"name": "PyCharm Inspired",
+"UI_COLOR": "#1E1F22",
+"BUTTON_BG_COLOR": "#444447",
+"BUTTON_TEXT_COLOR": "#FFFFFF",
+"BOTTOM_BORDER_COLOR": "#BA7047",
+"VERSION_LABEL_TEXT": "#4CA1ED"
 },
 {
 "name": "Muted Greens",
@@ -97,12 +97,12 @@
 "VERSION_LABEL_TEXT": "#bf6000"
 },
 {
-"name": "Rose Invasion",
-"UI_COLOR": "#f7ede2",
-"BUTTON_BG_COLOR": "#f5cac3",
-"BUTTON_TEXT_COLOR": "#27101b",
-"BOTTOM_BORDER_COLOR": "#9f426f",
-"VERSION_LABEL_TEXT": "#783253"
+"name": "iOS 18 Ripoff",
+"UI_COLOR": "#736F6B",
+"BUTTON_BG_COLOR": "#8D8985",
+"BUTTON_TEXT_COLOR": "#FFFFFF",
+"BOTTOM_BORDER_COLOR": "#77B1E2",
+"VERSION_LABEL_TEXT": "#EFF1FE"
 }
 ]
 }
