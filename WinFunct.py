@@ -809,7 +809,6 @@ class Application(tk.Tk):
             y = (window.winfo_screenheight() // 2) - (height // 2)
             window.geometry(f'{width}x{height}+{x}+{y}')
 
-        # Function to handle export
         def export_quick_access():
             source_file = os.path.join(os.path.expanduser("~"),
                                        "AppData", "Roaming",
@@ -819,13 +818,18 @@ class Application(tk.Tk):
 
             export_path = filedialog.asksaveasfilename(
                 initialfile="f01b4d95cf55d32a.automaticDestinations-ms",
-                defaultextension=".ms",
-                filetypes=[("Windows Explorer Destination Files", "*.ms")],
+                defaultextension="",  # Remove .ms default extension
+                filetypes=[("Automatic Destinations Files", "*.automaticDestinations-ms")],
                 title="Export Quick Access Destinations"
             )
 
             if export_path:
                 try:
+                    # Ensure the filename is exactly as we want
+                    if not export_path.endswith(".automaticDestinations-ms"):
+                        # If user somehow changed the extension, force the correct one
+                        export_path = os.path.splitext(export_path)[0] + ".automaticDestinations-ms"
+
                     shutil.copy2(source_file, export_path)
                     messagebox.showinfo("Export Successful",
                                         f"Quick Access destinations exported to:\n{export_path}")
