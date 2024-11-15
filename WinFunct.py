@@ -839,7 +839,10 @@ class Application(tk.Tk):
 
         def import_quick_access():
             import_path = filedialog.askopenfilename(
-                filetypes=[("Windows Explorer Destination Files", "*.ms")],
+                filetypes=[
+                    ("Automatic Destinations Files", "*.automaticDestinations-ms"),
+                    ("All Files", "*.*")
+                ],
                 title="Import Quick Access Destinations"
             )
 
@@ -850,6 +853,13 @@ class Application(tk.Tk):
                                                   "Recent", "AutomaticDestinations")
                 destination_file = os.path.join(destination_folder,
                                                 "f01b4d95cf55d32a.automaticDestinations-ms")
+
+                # Validate file extension
+                if not import_path.lower().endswith('.automaticDestinations-ms'):
+                    messagebox.showerror("Import Error",
+                                         "Please select a valid Automatic Destinations file\n"
+                                         "(*.automaticDestinations-ms)")
+                    return
 
                 if os.path.exists(destination_file):
                     overwrite = messagebox.askyesno(
