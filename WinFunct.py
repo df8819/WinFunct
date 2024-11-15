@@ -854,11 +854,12 @@ class Application(tk.Tk):
                 destination_file = os.path.join(destination_folder,
                                                 "f01b4d95cf55d32a.automaticDestinations-ms")
 
-                # Validate file extension
-                if not import_path.lower().endswith('.automaticDestinations-ms'):
+                # Corrected file extension validation
+                correct_extension = '.automaticDestinations-ms'
+                if not import_path.lower().endswith(correct_extension.lower()):
                     messagebox.showerror("Import Error",
-                                         "Please select a valid Automatic Destinations file\n"
-                                         "(*.automaticDestinations-ms)")
+                                         f"Please select a valid Automatic Destinations file\n"
+                                         f"(*.{correct_extension})")
                     return
 
                 if os.path.exists(destination_file):
