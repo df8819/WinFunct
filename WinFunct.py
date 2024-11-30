@@ -33,7 +33,7 @@ from config import (
     UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT,
     BUTTON_STYLE, BORDER_WIDTH,
     WINFUNCT_LINK, AdGuardClipBoard, ADGUARD_LINK,
-    links, batch_script,
+    links, batch_script, chkdsk_help_content,
     windows_management_options, security_and_networking_options,
     system_tools_options, remote_and_virtualization_options,
     troubleshooting_and_optimization_options, netsh_commands
@@ -929,7 +929,7 @@ class Application(tk.Tk):
         disk_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
-        window_width, window_height = 760, 640
+        window_width, window_height = 760, 940
         screen_width = disk_window.winfo_screenwidth()
         screen_height = disk_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -977,7 +977,8 @@ class Application(tk.Tk):
     ========================
 
 """
-                health_info = subprocess.check_output('wmic diskdrive get model,status,mediatype,size', shell=True, text=True)
+                health_info = subprocess.check_output('wmic diskdrive get model,status,mediatype,size', shell=True,
+                                                      text=True)
                 disk_info += health_info + "\n"
 
                 # Add system storage metrics
@@ -995,9 +996,11 @@ class Application(tk.Tk):
                     disk_info += f"  • Free: {bytes_to_gb(usage.free)} GB\n"
                     disk_info += f"  • Usage: {usage.percent}%\n\n"
 
+                # Schedule update on the main thread
                 disk_window.after(0, lambda: update_disk_info(disk_info))
             except Exception as e:
                 error_message = f"Error fetching disk information: {str(e)}"
+                # Schedule update on the main thread
                 disk_window.after(0, lambda: update_disk_info(error_message))
 
         def update_disk_info(info):
@@ -1006,17 +1009,73 @@ class Application(tk.Tk):
             disk_info_text.insert(tk.END, info)
             disk_info_text.config(state='disabled')
 
+        def run_sfc_scannow():
+            if messagebox.askyesno("Confirmation", "Are you sure you want to run 'sfc /scannow'?"):
+                subprocess.Popen('start cmd /k sfc /scannow', shell=True)
+
+        def run_chkdsk(drive_letter, options):
+            if messagebox.askyesno("Confirmation", f"Are you sure you want to run 'chkdsk {drive_letter} {options}'?"):
+                subprocess.Popen(f'start cmd /k chkdsk {drive_letter} {options}', shell=True)
+
+        def show_chkdsk_help():
+            help_window = tk.Toplevel(disk_window)
+            help_window.title("CHKDSK Parameters")
+            help_window.configure(bg=BUTTON_BG_COLOR)
+
+            # Set window size and position
+            window_width, window_height = 780, 680
+            screen_width = help_window.winfo_screenwidth()
+            screen_height = help_window.winfo_screenheight()
+            x = (screen_width // 2) - (window_width // 2)
+            y = (screen_height // 2) - (window_height // 2)
+            help_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+            help_text = scrolledtext.ScrolledText(help_window, wrap=tk.WORD, width=80, height=25,
+                                                  bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                  insertbackground=BUTTON_TEXT_COLOR)
+            help_text.pack(expand=True, fill='both', padx=10, pady=10)
+            help_text.insert(tk.END, chkdsk_help_content)  # Ensure this variable is imported correctly
+            help_text.config(state='disabled')
+
         # Add refresh button
         button_frame = tk.Frame(disk_window, bg=BUTTON_BG_COLOR)
         button_frame.pack(pady=5)
 
         refresh_btn = tk.Button(button_frame, text="Refresh",
-                                command=lambda: threading.Thread(target=fetch_disk_info, daemon=True).start(),
+                                command=lambda: threading.Thread(target=fetch_disk_info).start(),
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         refresh_btn.pack(padx=5)
 
-        # Start fetching disk info in a separate thread
-        threading.Thread(target=fetch_disk_info, daemon=True).start()
+        # Add SFC Scan button
+        sfc_btn = tk.Button(button_frame, text="Run SFC Scan",
+                            command=lambda: threading.Thread(target=run_sfc_scannow).start(),
+                            bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        sfc_btn.pack(padx=5)
+
+        # Add CHKDSK button and entry fields for drive letter and options
+        chkdsk_drive_entry = tk.Entry(button_frame)
+        chkdsk_drive_entry.insert(0, "C:")
+        chkdsk_drive_entry.pack(padx=5)
+
+        chkdsk_options_entry = tk.Entry(button_frame)
+        chkdsk_options_entry.insert(0, "/f /r /x")
+        chkdsk_options_entry.pack(padx=5)
+
+        chkdsk_btn = tk.Button(button_frame, text="Run CHKDSK",
+                               command=lambda: threading.Thread(
+                                   target=lambda: run_chkdsk(chkdsk_drive_entry.get(),
+                                                             chkdsk_options_entry.get())).start(),
+                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        chkdsk_btn.pack(padx=5)
+
+        # Add CHKDSK Help button
+        help_btn = tk.Button(button_frame, text="CHKDSK Help",
+                             command=lambda: threading.Thread(target=show_chkdsk_help).start(),
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        help_btn.pack(padx=5)
+
+        # Automatically fetch and display the initial disk info when the window opens.
+        threading.Thread(target=fetch_disk_info).start()
 
     # ----------------------------------DISK INFO END-------------------------------------------------
     # ----------------------------------WIFI PASSWORD EXTRACTION-------------------------------------------------
