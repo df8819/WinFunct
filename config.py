@@ -262,67 +262,67 @@ netsh_commands = [
 
 # Helper window for the show_disk_info method
 chkdsk_help_content = """
-Parameter          Description
------------------  ---------------------------------------------------------------
-<volume>           Specifies the drive letter (followed by a colon), mount point,
-                   or volume name.
-
-[ [<path>]<filename> ] Use with FAT and FAT32 only. Specifies the location and
-                   name of a file or set of files that you want chkdsk to check
-                   for fragmentation. You can use the ? and * wildcard characters
-                   to specify multiple files.
-
-/f                 Fixes errors on the disk. The disk must be locked. If chkdsk
-                   cannot lock the drive, a message appears that asks you if you
-                   want to check the drive the next time you restart the computer.
-
-/v                 Displays the name of each file in every directory as the disk
-                   is checked.
-
-/r                 Locates bad sectors and recovers readable information. The disk
-                   must be locked. /r includes the functionality of /f, with the
-                   additional analysis of physical disk errors.
-
-/x                 Forces the volume to dismount first, if necessary. All open
-                   handles to the drive are invalidated. /x also includes the
-                   functionality of /f.
-
-/i                 Use with NTFS only. Performs a less vigorous check of index
-                   entries, which reduces the amount of time required to run chkdsk.
-
-/c                 Use with NTFS only. Does not check cycles within the folder
-                   structure, which reduces the amount of time required to run chkdsk.
-
-/l[:<size>]        Use with NTFS only. Changes the log file size to the size you
-                   type. If you omit the size parameter, /l displays the current size.
-
-/b                 Use with NTFS only. Clears the list of bad clusters on the volume
-                   and rescans all allocated and free clusters for errors.
-/b includes        the functionality of /r. Use this parameter after imaging a volume
-                   to a new hard disk drive.
-
-/scan              Use with NTFS only. Runs an online scan on the volume.
-
-/forceofflinefix   Use with NTFS only (must be used with /scan). Bypass all online
-                   repair; all defects found are queued for offline repair (for example,
-                   chkdsk /spotfix).
-
-/perf              Use with NTFS only (must be used with /scan). Uses more system
-                   resources to complete a scan as fast as possible. This may have a
-                   negative performance impact on other tasks running on the system.
-
-/spotfix           Use with NTFS only. Runs spot fixing on the volume.
-
-/sdcleanup         Use with NTFS only. Garbage collect unneeded security descriptor data
-                   (implies /f).
-
-/offlinescanandfix Runs an offline scan and fix on the volume.
-
-/freeorphanedchains Use with FAT/FAT32/exFAT only. Frees any orphaned cluster chains instead
-                   of recovering their contents.
-
-/markclean         Use with FAT/FAT32/exFAT only. Marks the volume clean if no corruption was
-                   detected, even if /f was not specified.
-
-/?                 Displays help at the command prompt.
+Parameter                      Description
+==========================================================================================================
+<volume>                       Specifies the drive letter (followed by a colon), mount point,
+                               or volume name.
+----------------------------------------------------------------------------------------------------------
+[ [<path>]<filename> ]         Use with FAT and FAT32 only. Specifies the location and
+                               name of a file or set of files that you want chkdsk to check
+                               for fragmentation. You can use the ? and * wildcard characters
+                               to specify multiple files.
+----------------------------------------------------------------------------------------------------------
+/f                             Fixes errors on the disk. The disk must be locked. If chkdsk
+                               cannot lock the drive, a message appears that asks you if you
+                               want to check the drive the next time you restart the computer.
+----------------------------------------------------------------------------------------------------------
+/v                             Displays the name of each file in every directory as the disk
+                               is checked.
+----------------------------------------------------------------------------------------------------------
+/r                             Locates bad sectors and recovers readable information. The disk
+                               must be locked. /r includes the functionality of /f, with the
+                               additional analysis of physical disk errors.
+----------------------------------------------------------------------------------------------------------
+/x                             Forces the volume to dismount first, if necessary. All open
+                               handles to the drive are invalidated. /x also includes the
+                               functionality of /f.
+----------------------------------------------------------------------------------------------------------
+/i                             Use with NTFS only. Performs a less vigorous check of index
+                               entries, which reduces the amount of time required to run chkdsk.
+----------------------------------------------------------------------------------------------------------
+/c                             Use with NTFS only. Does not check cycles within the folder
+                               structure, which reduces the amount of time required to run chkdsk.
+----------------------------------------------------------------------------------------------------------
+/l[:<size>]                    Use with NTFS only. Changes the log file size to the size you
+                               type. If you omit the size parameter, /l displays the current size.
+----------------------------------------------------------------------------------------------------------
+/b                             Use with NTFS only. Clears the list of bad clusters on the volume
+                               and rescans all allocated and free clusters for errors.
+                               /b includes the functionality of /r.
+                               Use this parameter after imaging a volume to a new hard disk drive.
+----------------------------------------------------------------------------------------------------------
+/scan                          Use with NTFS only. Runs an online scan on the volume.
+----------------------------------------------------------------------------------------------------------
+/forceofflinefix               Use with NTFS only (must be used with /scan). Bypass all online
+                               repair; all defects found are queued for offline repair (for example,
+                               chkdsk /spotfix).
+----------------------------------------------------------------------------------------------------------
+/perf                          Use with NTFS only (must be used with /scan). Uses more system
+                               resources to complete a scan as fast as possible. This may have a
+                               negative performance impact on other tasks running on the system.
+----------------------------------------------------------------------------------------------------------
+/spotfix                       Use with NTFS only. Runs spot fixing on the volume.
+----------------------------------------------------------------------------------------------------------
+/sdcleanup                     Use with NTFS only. Garbage collect unneeded security descriptor data
+                               (implies /f).
+----------------------------------------------------------------------------------------------------------
+/offlinescanandfix             Runs an offline scan and fix on the volume.
+----------------------------------------------------------------------------------------------------------
+/freeorphanedchains            Use with FAT/FAT32/exFAT only. Frees any orphaned cluster chains instead
+                               of recovering their contents.
+----------------------------------------------------------------------------------------------------------
+/markclean                     Use with FAT/FAT32/exFAT only. Marks the volume clean if no corruption was
+                               detected, even if /f was not specified.
+----------------------------------------------------------------------------------------------------------
+/?                             Displays help at the command prompt.
 """

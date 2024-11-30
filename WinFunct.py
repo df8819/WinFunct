@@ -1023,7 +1023,7 @@ class Application(tk.Tk):
             help_window.configure(bg=BUTTON_BG_COLOR)
 
             # Set window size and position
-            window_width, window_height = 780, 680
+            window_width, window_height = 925, 760
             screen_width = help_window.winfo_screenwidth()
             screen_height = help_window.winfo_screenheight()
             x = (screen_width // 2) - (window_width // 2)
