@@ -942,8 +942,8 @@ class Application(tk.Tk):
                                                    insertbackground=BUTTON_TEXT_COLOR)
         disk_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
-        def bytes_to_gb(bytes):
-            return round(bytes / (1024 ** 3), 2)
+        def bytes_to_gb(byte_value):
+            return round(byte_value / (1024 ** 3), 2)
 
         def fetch_disk_info():
             try:
@@ -1042,41 +1042,41 @@ class Application(tk.Tk):
         button_frame.pack(pady=5)
 
         # Create grid layout for buttons and entry fields
-        refresh_btn = tk.Button(button_frame, text="Refresh", width=15,
+        refresh_btn = tk.Button(button_frame, text="Refresh all Disks", width=20,
                                 command=lambda: threading.Thread(target=fetch_disk_info).start(),
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        refresh_btn.grid(row=0, column=0, padx=(5, 75), pady=5)
+        refresh_btn.grid(row=1, column=0, padx=(5, 75), pady=5)
 
-        chkdsk_btn = tk.Button(button_frame, text="Run CHKDSK", width=15,
+        chkdsk_btn = tk.Button(button_frame, text="Execute CheckDisk", width=20,
                                command=lambda: threading.Thread(
                                    target=lambda: run_chkdsk(chkdsk_drive_entry.get(),
                                                              chkdsk_options_entry.get())).start(),
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        chkdsk_btn.grid(row=1, column=1, padx=5, pady=5)
+        chkdsk_btn.grid(row=0, column=1, padx=5, pady=5)
 
         drive_label = tk.Label(button_frame, text="Drive Letter:", width=10,
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         drive_label.grid(row=0, column=2, padx=5, pady=5)
 
-        chkdsk_drive_entry = tk.Entry(button_frame, width=15)
+        chkdsk_drive_entry = tk.Entry(button_frame, width=20)
         chkdsk_drive_entry.insert(0, "C:")
         chkdsk_drive_entry.grid(row=0, column=3, padx=5, pady=5)
 
-        sfc_btn = tk.Button(button_frame, text="Run SFC Scan", width=15,
+        sfc_btn = tk.Button(button_frame, text="System File Checker", width=20,
                             command=lambda: threading.Thread(target=run_sfc_scannow).start(),
                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        sfc_btn.grid(row=1, column=0, padx=(5, 75), pady=5)
+        sfc_btn.grid(row=0, column=0, padx=(5, 75), pady=5)
 
-        help_btn = tk.Button(button_frame, text="CHKDSK Help", width=15,
+        help_btn = tk.Button(button_frame, text="Argument Helper", width=20,
                              command=lambda: threading.Thread(target=show_chkdsk_help).start(),
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        help_btn.grid(row=0, column=1, padx=5, pady=5)
+        help_btn.grid(row=1, column=1, padx=5, pady=5)
 
         arguments_label = tk.Label(button_frame, text="Arguments:", width=10,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         arguments_label.grid(row=1, column=2, padx=5, pady=5)
 
-        chkdsk_options_entry = tk.Entry(button_frame, width=15)
+        chkdsk_options_entry = tk.Entry(button_frame, width=20)
         chkdsk_options_entry.insert(0, "/f /r /x")
         chkdsk_options_entry.grid(row=1, column=3, padx=5, pady=5)
 
