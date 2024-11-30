@@ -265,7 +265,7 @@ chkdsk_help_content = """
 Parameter                      Description
 ==========================================================================================================
 <volume>                       Specifies the drive letter (followed by a colon), mount point,
-                               or volume name.
+                               or volume name. Example: "C:"
 ----------------------------------------------------------------------------------------------------------
 [ [<path>]<filename> ]         Use with FAT and FAT32 only. Specifies the location and
                                name of a file or set of files that you want chkdsk to check
