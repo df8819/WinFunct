@@ -929,7 +929,7 @@ class Application(tk.Tk):
         disk_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
-        window_width, window_height = 760, 940
+        window_width, window_height = 760, 840
         screen_width = disk_window.winfo_screenwidth()
         screen_height = disk_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -1037,42 +1037,47 @@ class Application(tk.Tk):
             help_text.insert(tk.END, chkdsk_help_content)  # Ensure this variable is imported correctly
             help_text.config(state='disabled')
 
-        # Add refresh button
+        # Create a frame for the buttons
         button_frame = tk.Frame(disk_window, bg=BUTTON_BG_COLOR)
         button_frame.pack(pady=5)
 
-        refresh_btn = tk.Button(button_frame, text="Refresh",
+        # Create frame for refresh and SFC Scan buttons
+        refresh_sfc_frame = tk.Frame(button_frame, bg=BUTTON_BG_COLOR)
+        refresh_sfc_frame.pack(side=tk.TOP, fill=tk.X, pady=5)
+
+        refresh_btn = tk.Button(refresh_sfc_frame, text="Refresh", width=15,
                                 command=lambda: threading.Thread(target=fetch_disk_info).start(),
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        refresh_btn.pack(padx=5)
+        refresh_btn.pack(side=tk.LEFT, padx=50)
 
-        # Add SFC Scan button
-        sfc_btn = tk.Button(button_frame, text="Run SFC Scan",
+        sfc_btn = tk.Button(refresh_sfc_frame, text="Run SFC Scan", width=15,
                             command=lambda: threading.Thread(target=run_sfc_scannow).start(),
                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        sfc_btn.pack(padx=5)
+        sfc_btn.pack(side=tk.LEFT, padx=5)
 
-        # Add CHKDSK button and entry fields for drive letter and options
-        chkdsk_drive_entry = tk.Entry(button_frame)
-        chkdsk_drive_entry.insert(0, "C:")
-        chkdsk_drive_entry.pack(padx=5)
+        # Create frame for CHKDSK options and buttons
+        chkdsk_frame = tk.Frame(button_frame, bg=BUTTON_BG_COLOR)
+        chkdsk_frame.pack(side=tk.TOP, fill=tk.X, pady=5)
 
-        chkdsk_options_entry = tk.Entry(button_frame)
-        chkdsk_options_entry.insert(0, "/f /r /x")
-        chkdsk_options_entry.pack(padx=5)
+        help_btn = tk.Button(chkdsk_frame, text="CHKDSK Help", width=15,
+                             command=lambda: threading.Thread(target=show_chkdsk_help).start(),
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        help_btn.pack(side=tk.LEFT, padx=50)
 
-        chkdsk_btn = tk.Button(button_frame, text="Run CHKDSK",
+        chkdsk_btn = tk.Button(chkdsk_frame, text="Run CHKDSK", width=15,
                                command=lambda: threading.Thread(
                                    target=lambda: run_chkdsk(chkdsk_drive_entry.get(),
                                                              chkdsk_options_entry.get())).start(),
                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        chkdsk_btn.pack(padx=5)
+        chkdsk_btn.pack(side=tk.LEFT, padx=5)
 
-        # Add CHKDSK Help button
-        help_btn = tk.Button(button_frame, text="CHKDSK Help",
-                             command=lambda: threading.Thread(target=show_chkdsk_help).start(),
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        help_btn.pack(padx=5)
+        chkdsk_drive_entry = tk.Entry(chkdsk_frame, width=15)
+        chkdsk_drive_entry.insert(0, "C:")
+        chkdsk_drive_entry.pack(side=tk.LEFT, padx=5)
+
+        chkdsk_options_entry = tk.Entry(chkdsk_frame, width=15)
+        chkdsk_options_entry.insert(0, "/f /r /x")
+        chkdsk_options_entry.pack(side=tk.LEFT, padx=5)
 
         # Automatically fetch and display the initial disk info when the window opens.
         threading.Thread(target=fetch_disk_info).start()
