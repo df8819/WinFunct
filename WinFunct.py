@@ -33,7 +33,7 @@ from config import (
     UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT,
     BUTTON_STYLE, BORDER_WIDTH,
     WINFUNCT_LINK, AdGuardClipBoard, ADGUARD_LINK,
-    links, batch_script, chkdsk_help_content,
+    links, batch_script, chkdsk_help_content, ping_help_content,
     windows_management_options, security_and_networking_options,
     system_tools_options, remote_and_virtualization_options,
     troubleshooting_and_optimization_options, netsh_commands
@@ -338,7 +338,8 @@ class Application(tk.Tk):
             "[1] PC online status": lambda: self.check_internet(),
             "[2] Website online status": lambda: self.run_website_checker(),
             "[3] Current IP info": lambda: self.show_ip_info(),
-            "[4] Apps with internet connection": lambda: self.netstat_output()
+            "[4] Apps with internet connection": lambda: self.netstat_output(),
+            "[5] Execute <ping> command": lambda: self.show_ping_info()
         }
         if selected5 in actions:
             self.function_dropdown5.after(0, actions[selected5])
@@ -1084,6 +1085,88 @@ class Application(tk.Tk):
         threading.Thread(target=fetch_disk_info).start()
 
     # ----------------------------------DISK INFO END-------------------------------------------------
+    # ----------------------------------PING COMMAND END-------------------------------------------------
+
+    def show_ping_info(self):
+        print("Showing Ping Information")
+
+        # Create a new window
+        ping_window = tk.Toplevel(self)
+        ping_window.title("Ping Information")
+        ping_window.configure(bg=BUTTON_BG_COLOR)
+
+        # Set window size and position
+        window_width, window_height = 760, 300
+        screen_width = ping_window.winfo_screenwidth()
+        screen_height = ping_window.winfo_screenheight()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        ping_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+        # Create a text widget to display ping information
+        ping_info_text = scrolledtext.ScrolledText(ping_window, wrap=tk.WORD, width=60, height=10,
+                                                   bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                   insertbackground=BUTTON_TEXT_COLOR)
+        ping_info_text.pack(expand=True, fill='both', padx=10, pady=10)
+
+        def run_ping_command(target, options):
+            if messagebox.askyesno("Confirmation", f"Are you sure you want to run 'ping {target} {options}'?"):
+                subprocess.Popen(f'start cmd /k ping {target} {options}', shell=True)
+
+        def show_ping_help():
+            help_window = tk.Toplevel(ping_window)
+            help_window.title("Ping Parameters")
+            help_window.configure(bg=BUTTON_BG_COLOR)
+
+            # Set window size and position
+            window_width, window_height = 925, 760
+            screen_width = help_window.winfo_screenwidth()
+            screen_height = help_window.winfo_screenheight()
+            x = (screen_width // 2) - (window_width // 2)
+            y = (screen_height // 2) - (window_height // 2)
+            help_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+
+            help_text = scrolledtext.ScrolledText(help_window, wrap=tk.WORD, width=80, height=25,
+                                                  bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
+                                                  insertbackground=BUTTON_TEXT_COLOR)
+            help_text.pack(expand=True, fill='both', padx=10, pady=10)
+            help_text.insert(tk.END, ping_help_content)  # Ensure this variable is imported correctly
+            help_text.config(state='disabled')
+
+        # Create a frame for the buttons and entry fields
+        button_frame = tk.Frame(ping_window, bg=BUTTON_BG_COLOR)
+        button_frame.pack(pady=5)
+
+        # Create grid layout for buttons and entry fields
+        ping_btn = tk.Button(button_frame, text="Run Ping", width=15,
+                             command=lambda: threading.Thread(
+                                 target=lambda: run_ping_command(ping_target_entry.get(),
+                                                                 ping_options_entry.get())).start(),
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        ping_btn.grid(row=0, column=0, padx=(5, 75), pady=5)
+
+        help_btn = tk.Button(button_frame, text="Ping Help", width=15,
+                             command=lambda: threading.Thread(target=show_ping_help).start(),
+                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        help_btn.grid(row=1, column=0, padx=(5, 75), pady=5)
+
+        target_label = tk.Label(button_frame, text="Target:", width=10,
+                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        target_label.grid(row=0, column=1, padx=5, pady=5)
+
+        ping_target_entry = tk.Entry(button_frame, width=20)
+        ping_target_entry.insert(0, "192.168.1.1")
+        ping_target_entry.grid(row=0, column=2, padx=5, pady=5)
+
+        options_label = tk.Label(button_frame, text="Options:", width=10,
+                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        options_label.grid(row=1, column=1, padx=5, pady=5)
+
+        ping_options_entry = tk.Entry(button_frame, width=20)
+        ping_options_entry.insert(0, "-n 4")
+        ping_options_entry.grid(row=1, column=2, padx=5, pady=5)
+
+    # ----------------------------------PING COMMAND END-------------------------------------------------
     # ----------------------------------WIFI PASSWORD EXTRACTION-------------------------------------------------
 
     def show_wifi_networks(self):
@@ -3299,7 +3382,8 @@ class Application(tk.Tk):
             "[1] PC online status",
             "[2] Website online status",
             "[3] Current IP info",
-            "[4] Apps with internet connection"
+            "[4] Apps with internet connection",
+            "[5] Execute <ping> command"
         )
         self.function_dropdown5.config(
             width=18,

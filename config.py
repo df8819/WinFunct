@@ -18,7 +18,7 @@ LOGO = f"""
 """
 
 # WinFunct version number
-VERSION_NUMBER = "1.683"
+VERSION_NUMBER = "1.684"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
@@ -323,6 +323,48 @@ Parameter                      Description
 ----------------------------------------------------------------------------------------------------------
 /markclean                     Use with FAT/FAT32/exFAT only. Marks the volume clean if no corruption was
                                detected, even if /f was not specified.
+----------------------------------------------------------------------------------------------------------
+/?                             Displays help at the command prompt.
+"""
+
+ping_help_content = """
+Parameter                      Description
+==========================================================================================================
+<target>                       Specifies the destination, which can be an IP address or a hostname.
+                               Example: "example.com" or "192.168.1.1"
+----------------------------------------------------------------------------------------------------------
+-n <count>                     Specifies the number of echo requests to send. The default is 4.
+                               Example: "-n 10"
+----------------------------------------------------------------------------------------------------------
+-l <size>                      Sends packets of a specified size. The default is 32 bytes.
+                               Example: "-l 64"
+----------------------------------------------------------------------------------------------------------
+-f                             Sets the Don't Fragment flag in the packet (IPv4-only).
+                               Prevents packets from being fragmented by routers.
+----------------------------------------------------------------------------------------------------------
+-i <TTL>                       Sets the Time To Live field in the packet header, indicating the maximum
+                               number of hops the packet can traverse.
+                               Example: "-i 128"
+----------------------------------------------------------------------------------------------------------
+-v <TOS>                       Specifies the Type of Service (IPv4-only). This parameter is deprecated
+                               and has no effect on modern networks.
+----------------------------------------------------------------------------------------------------------
+-r <count>                     Records route for count hops (IPv4-only). The count must be between 1 and 9.
+                               Example: "-r 5"
+----------------------------------------------------------------------------------------------------------
+-s <count>                     Timestamp for count hops (IPv4-only).
+                               Example: "-s 4"
+----------------------------------------------------------------------------------------------------------
+-w <timeout>                   Waits for each reply within a specified timeout in milliseconds.
+                               Example: "-w 1000" for a 1-second timeout.
+----------------------------------------------------------------------------------------------------------
+-t                             Pings the specified host until stopped. Use Ctrl+C to stop.
+----------------------------------------------------------------------------------------------------------
+-a                             Resolves addresses to hostnames.
+----------------------------------------------------------------------------------------------------------
+-4                             Forces ping to use IPv4.
+----------------------------------------------------------------------------------------------------------
+-6                             Forces ping to use IPv6.
 ----------------------------------------------------------------------------------------------------------
 /?                             Displays help at the command prompt.
 """
