@@ -1088,11 +1088,11 @@ class Application(tk.Tk):
     # ----------------------------------PING COMMAND END-------------------------------------------------
 
     def show_ping_info(self):
-        print("Showing Ping Information")
+        print("Showing Ping Command Window")
 
         # Create a new window
         ping_window = tk.Toplevel(self)
-        ping_window.title("Ping Information")
+        ping_window.title("Ping Command")
         ping_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
