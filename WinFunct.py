@@ -1096,21 +1096,15 @@ class Application(tk.Tk):
         ping_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
-        window_width, window_height = 760, 300
+        window_width, window_height = 475, 100
         screen_width = ping_window.winfo_screenwidth()
         screen_height = ping_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
         y = (screen_height // 2) - (window_height // 2)
         ping_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-        # Create a text widget to display ping information
-        ping_info_text = scrolledtext.ScrolledText(ping_window, wrap=tk.WORD, width=60, height=10,
-                                                   bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
-                                                   insertbackground=BUTTON_TEXT_COLOR)
-        ping_info_text.pack(expand=True, fill='both', padx=10, pady=10)
-
         def run_ping_command(target, options):
-            if messagebox.askyesno("Confirmation", f"Are you sure you want to run 'ping {target} {options}'?"):
+            # if messagebox.askyesno("Confirmation", f"Are you sure you want to run 'ping {target} {options}'?"):
                 subprocess.Popen(f'start cmd /k ping {target} {options}', shell=True)
 
         def show_ping_help():
@@ -1119,7 +1113,7 @@ class Application(tk.Tk):
             help_window.configure(bg=BUTTON_BG_COLOR)
 
             # Set window size and position
-            window_width, window_height = 925, 760
+            window_width, window_height = 925, 690
             screen_width = help_window.winfo_screenwidth()
             screen_height = help_window.winfo_screenheight()
             x = (screen_width // 2) - (window_width // 2)
@@ -1138,14 +1132,14 @@ class Application(tk.Tk):
         button_frame.pack(pady=5)
 
         # Create grid layout for buttons and entry fields
-        ping_btn = tk.Button(button_frame, text="Run Ping", width=15,
+        ping_btn = tk.Button(button_frame, text="Execute Ping", width=15,
                              command=lambda: threading.Thread(
                                  target=lambda: run_ping_command(ping_target_entry.get(),
                                                                  ping_options_entry.get())).start(),
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        ping_btn.grid(row=0, column=0, padx=(5, 75), pady=5)
+        ping_btn.grid(row=0, column=0, padx=(5, 75), pady=(15, 5))
 
-        help_btn = tk.Button(button_frame, text="Ping Help", width=15,
+        help_btn = tk.Button(button_frame, text="Argument Helper", width=15,
                              command=lambda: threading.Thread(target=show_ping_help).start(),
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         help_btn.grid(row=1, column=0, padx=(5, 75), pady=5)
@@ -1158,7 +1152,7 @@ class Application(tk.Tk):
         ping_target_entry.insert(0, "192.168.1.1")
         ping_target_entry.grid(row=0, column=2, padx=5, pady=5)
 
-        options_label = tk.Label(button_frame, text="Options:", width=10,
+        options_label = tk.Label(button_frame, text="Arguments:", width=10,
                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         options_label.grid(row=1, column=1, padx=5, pady=5)
 
