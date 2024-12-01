@@ -930,7 +930,7 @@ class Application(tk.Tk):
         disk_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
-        window_width, window_height = 760, 840
+        window_width, window_height = 840, 840
         screen_width = disk_window.winfo_screenwidth()
         screen_height = disk_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -964,9 +964,9 @@ class Application(tk.Tk):
                 cleaned_output = '\n'.join(processed_lines)
 
                 disk_info = """
-    ========================
-    *** Disk Information ***
-    ========================
+    ============================
+    *** DISKPART Information ***
+    ============================
 
 """
                 disk_info += cleaned_output + "\n\n"
@@ -989,20 +989,45 @@ class Application(tk.Tk):
     ========================
 
 """
+                readable_disks = []
                 for partition in psutil.disk_partitions():
-                    usage = psutil.disk_usage(partition.mountpoint)
-                    disk_info += f"Drive {partition.mountpoint}:\n"
-                    disk_info += f"  • Total: {bytes_to_gb(usage.total)} GB\n"
-                    disk_info += f"  • Used: {bytes_to_gb(usage.used)} GB\n"
-                    disk_info += f"  • Free: {bytes_to_gb(usage.free)} GB\n"
-                    disk_info += f"  • Usage: {usage.percent}%\n\n"
+                    try:
+                        usage = psutil.disk_usage(partition.mountpoint)
+                        readable_disks.append(
+                            f"Drive {partition.mountpoint:<8} | Total: {bytes_to_gb(usage.total):>8} GB | "
+                            f"Used: {bytes_to_gb(usage.used):>8} GB | Free: {bytes_to_gb(usage.free):>8} GB | "
+                            f"Usage: {usage.percent:>5}%"
+                        )
+                    except Exception:
+                        continue  # Ignore unreadable disks
+
+                if readable_disks:
+                    disk_info += '\n'.join(readable_disks) + '\n\n'
+                else:
+                    disk_info += "No readable disks found.\n"
 
                 # Schedule update on the main thread
                 disk_window.after(0, lambda: update_disk_info(disk_info))
             except Exception as e:
                 error_message = f"Error fetching disk information: {str(e)}"
+
+                # Collect still readable disks
+                readable_disks_info = "\nReadable Disks:"
+                for partition in psutil.disk_partitions():
+                    try:
+                        usage = psutil.disk_usage(partition.mountpoint)
+                        readable_disks_info += (
+                            f"\nDrive {partition.mountpoint:<8} | Total: {bytes_to_gb(usage.total):>8} GB | "
+                            f"Used: {bytes_to_gb(usage.used):>8} GB | Free: {bytes_to_gb(usage.free):>8} GB | "
+                            f"Usage: {usage.percent:>5}%"
+                        )
+                    except:
+                        continue  # Ignore unreadable disks
+
+                full_error_message = f"{error_message}\n{readable_disks_info}\n"
+
                 # Schedule update on the main thread
-                disk_window.after(0, lambda: update_disk_info(error_message))
+                disk_window.after(0, lambda: update_disk_info(full_error_message))
 
         def update_disk_info(info):
             disk_info_text.config(state='normal')
@@ -1085,7 +1110,7 @@ class Application(tk.Tk):
         threading.Thread(target=fetch_disk_info).start()
 
     # ----------------------------------DISK INFO END-------------------------------------------------
-    # ----------------------------------PING COMMAND END-------------------------------------------------
+    # ----------------------------------PING COMMAND-------------------------------------------------
 
     def show_ping_info(self):
         print("Showing Ping Command Window")

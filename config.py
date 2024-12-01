@@ -18,7 +18,7 @@ LOGO = f"""
 """
 
 # WinFunct version number
-VERSION_NUMBER = "1.684"
+VERSION_NUMBER = "1.685"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
