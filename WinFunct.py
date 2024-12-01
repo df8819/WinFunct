@@ -1157,7 +1157,7 @@ class Application(tk.Tk):
         options_label.grid(row=1, column=1, padx=5, pady=5)
 
         ping_options_entry = tk.Entry(button_frame, width=20)
-        ping_options_entry.insert(0, "-n 4")
+        ping_options_entry.insert(0, "-n 4 -l 32")
         ping_options_entry.grid(row=1, column=2, padx=5, pady=5)
 
     # ----------------------------------PING COMMAND END-------------------------------------------------
