@@ -38,7 +38,7 @@ class HashStuff:
         self.entry_text = tk.StringVar()
         self.hash_output = tk.StringVar()
         self.possible_password = tk.StringVar()
-        self.hash_algo = tk.StringVar(value='Select Algorithm')
+        self.hash_algo = tk.StringVar(value='sha256')
         self.password_hash = tk.StringVar()
 
         # Password to Hash
