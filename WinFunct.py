@@ -1229,7 +1229,8 @@ class Application(tk.Tk):
                 return
 
             networks = re.findall(
-                r"(?:Profile|Profil|Perfil|プロファイル|配置文件)\s*[:\：]\s*(.+?)(?:\r|\n|$)",
+                r"(?:Profile|Profil|Perfil|プロファイル|配置文件)\s*[:：]\s*([^\r\n]+)"
+,
                 cmd_output
             )
 
@@ -1274,6 +1275,42 @@ class Application(tk.Tk):
             for network in networks:
                 network_listbox.insert(tk.END, network.strip())
 
+            def extract_single_password():
+                selected_index = network_listbox.curselection()
+                if not selected_index:
+                    messagebox.showwarning("No Selection", "Please select a network.")
+                    return
+
+                selected_network = network_listbox.get(selected_index).strip()
+
+                try:
+                    cmd_output = subprocess.check_output(
+                        ["netsh", "wlan", "show", "profile", selected_network, "key=clear"],
+                        stderr=subprocess.STDOUT
+                    )
+                    cmd_output = self.decode_output(cmd_output)
+                    password_match = re.search(r"Key Content\s*:\s*([^\r\n]+)", cmd_output)
+
+                    if password_match:
+                        password_text = password_match.group(1).rstrip("\r")
+                        self.clipboard_clear()  # Clear clipboard
+                        self.clipboard_append(password_text)  # Copy password to clipboard
+                        messagebox.showinfo("Success", f"Password for '{selected_network}' copied to clipboard.")
+                    else:
+                        messagebox.showinfo("No Password", f"No password found for '{selected_network}'.")
+
+                except subprocess.CalledProcessError as e:
+                    messagebox.showerror("Error",
+                                         f"Failed to execute command for {selected_network}: {e.output.decode('utf-8', 'ignore')}")
+
+            # Add the <Single> button to the window
+            single_button = tk.Button(
+                network_window, text="<Single>", command=extract_single_password,
+                width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE
+            )
+            single_button.pack(side="left", padx=(5, 5), pady=10)
+
             def cancel_button_click():
                 network_window.destroy()
 
@@ -1291,7 +1328,8 @@ class Application(tk.Tk):
                             ["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
                             stderr=subprocess.STDOUT)
                         cmd_output = self.decode_output(cmd_output)
-                        password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
+                        password = re.search(r"Key Content\s*:\s*([^\r\n]+)"
+, cmd_output)
                         if password:
                             password_text = password.group(1).rstrip("\r")
                             ssid_passwords[network_profile] = password_text
@@ -1310,7 +1348,7 @@ class Application(tk.Tk):
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            extract_all_button = tk.Button(network_window, text="<ALL>", command=extract_all_passwords,
+            extract_all_button = tk.Button(network_window, text="<All>", command=extract_all_passwords,
                                            width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                            relief=BUTTON_STYLE)
             extract_all_button.pack(side="left", padx=(5, 5), pady=10)
@@ -1322,7 +1360,8 @@ class Application(tk.Tk):
                     try:
                         cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"], stderr=subprocess.STDOUT)
                         cmd_output = self.decode_output(cmd_output)
-                        password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
+                        password = re.search(r"Key Content\s*:\s*([^\r\n]+)"
+, cmd_output)
                         if password:
                             password_text = password.group(1).rstrip("\r")
                             ssid_passwords[network_profile] = password_text
@@ -1347,7 +1386,7 @@ class Application(tk.Tk):
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            fast_extract_button = tk.Button(network_window, text="<AUTO>", command=fast_extract_passwords,
+            fast_extract_button = tk.Button(network_window, text="<Auto>", command=fast_extract_passwords,
                                             width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                             relief=BUTTON_STYLE)
             fast_extract_button.pack(side="left", padx=(5, 5), pady=10)
