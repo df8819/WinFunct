@@ -12,3 +12,9 @@ pyperclip
 
 # Cross-platform library for retrieving information about running processes and system utilization
 psutil
+
+# PyWin32 library for Windows COM support
+pywin32
+
+# Winshell library for creating shortcuts and other shell tasks
+winshell

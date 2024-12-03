@@ -25,6 +25,8 @@ import winreg
 # Third-Party Imports
 import requests
 import wmi
+from win32com.client import Dispatch
+import winshell
 
 # noinspection PyUnresolvedReferences
 # Local Imports
@@ -691,6 +693,37 @@ class Application(tk.Tk):
         # Run the command in a separate thread to avoid freezing the UI
         thread = threading.Thread(target=run_command)
         thread.start()
+
+    def create_ctt_shortcut(self):
+        # Define the path for the shortcut
+        desktop = winshell.desktop()
+        shortcut_path = os.path.join(desktop, "CTT-WinUtil.lnk")
+
+        # Define the PowerShell command to be executed
+        powershell_command = (
+            "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command iwr -useb https://christitus.com/win | iex' -Verb RunAs"
+        )
+
+        # Create a shell object
+        shell = Dispatch('WScript.Shell')
+
+        # Create a shortcut object
+        shortcut = shell.CreateShortCut(shortcut_path)
+
+        # Set the target path to PowerShell
+        shortcut.TargetPath = "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+
+        # Set the arguments for the PowerShell command
+        shortcut.Arguments = f'-NoProfile -ExecutionPolicy Bypass -Command "{powershell_command}"'
+
+        # Set the working directory (optional)
+        shortcut.WorkingDirectory = desktop
+
+        # Set the icon location (optional)
+        shortcut.IconLocation = "%SystemRoot%\\system32\\shell32.dll, 5"
+
+        # Save the shortcut
+        shortcut.save()
 
     def open_autostart_locations(self):
         print("Open Windows (Auto)-Start locations.")
@@ -3282,6 +3315,12 @@ class Application(tk.Tk):
         quick_access_btn = tk.Button(self.functions_frame, text="Quick Access Manager", command=self.quick_access_manager, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         quick_access_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
+
+        create_ctt_btn = tk.Button(self.functions_frame, text="Create CTT Shortcut",
+                                     command=self.create_ctt_shortcut, width=20,
+                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                     relief=BUTTON_STYLE)
+        create_ctt_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
