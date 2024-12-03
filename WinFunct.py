@@ -923,14 +923,13 @@ class Application(tk.Tk):
 
     def show_disk_info(self):
         print("Showing Disk Information")
-
         # Create a new window
         disk_window = tk.Toplevel(self)
         disk_window.title("Disk Information")
         disk_window.configure(bg=BUTTON_BG_COLOR)
 
         # Set window size and position
-        window_width, window_height = 840, 840
+        window_width, window_height = 615, 685
         screen_width = disk_window.winfo_screenwidth()
         screen_height = disk_window.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -938,9 +937,8 @@ class Application(tk.Tk):
         disk_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
         # Create a text widget to display disk information
-        disk_info_text = scrolledtext.ScrolledText(disk_window, wrap=tk.WORD, width=60, height=20,
-                                                   bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
-                                                   insertbackground=BUTTON_TEXT_COLOR)
+        disk_info_text = scrolledtext.ScrolledText(disk_window, wrap=tk.WORD, width=60, height=20, bg=UI_COLOR,
+                                                   fg=BUTTON_TEXT_COLOR, insertbackground=BUTTON_TEXT_COLOR)
         disk_info_text.pack(expand=True, fill='both', padx=10, pady=10)
 
         def bytes_to_gb(byte_value):
@@ -948,55 +946,36 @@ class Application(tk.Tk):
 
         def fetch_disk_info():
             try:
-                # Get list of disks
-                disks_cmd = 'echo list disk | diskpart'
+                disks_cmd = 'powershell "Get-Disk | Format-Table -AutoSize Number, FriendlyName, @{Name=\\"Size, Gb\\"; Expression={[int]($_.Size/1GB)}}"'
                 disks_output = subprocess.check_output(disks_cmd, shell=True, text=True)
 
-                # Filter out the DISKPART> prompts and empty lines
-                cleaned_lines = [line.strip() for line in disks_output.split('\n')
-                                 if line.strip() and not line.strip().startswith('DISKPART>')]
-
-                # Process the cleaned lines
-                processed_lines = []
-                for line in cleaned_lines:
-                    processed_lines.append(line)
-
-                cleaned_output = '\n'.join(processed_lines)
+                cleaned_lines = [line.strip() for line in disks_output.split('\n') if line.strip()]
+                cleaned_output = '\n'.join(cleaned_lines)
 
                 disk_info = """
-    ============================
-    *** DISKPART Information ***
-    ============================
+        ╔══════════════════════════════════════════════════════╗
+        ║                   Disk Information                   ║
+        ╚══════════════════════════════════════════════════════╝
 
 """
                 disk_info += cleaned_output + "\n\n"
 
-                # Add disk health information
-                disk_info += """
-    ========================
-    *** Disk Health Info ***
-    ========================
-
-"""
-                health_info = subprocess.check_output('wmic diskdrive get model,status,mediatype,size', shell=True,
-                                                      text=True)
-                disk_info += health_info + "\n"
-
                 # Add system storage metrics
                 disk_info += """
-    ========================
-    *** Storage Metrics ***
-    ========================
-
+        ╔══════════════════════════════════════════════════════╗
+        ║                   Storage Metrics                    ║
+        ╚══════════════════════════════════════════════════════╝
 """
                 readable_disks = []
                 for partition in psutil.disk_partitions():
                     try:
                         usage = psutil.disk_usage(partition.mountpoint)
                         readable_disks.append(
-                            f"Drive {partition.mountpoint:<8} | Total: {bytes_to_gb(usage.total):>8} GB | "
-                            f"Used: {bytes_to_gb(usage.used):>8} GB | Free: {bytes_to_gb(usage.free):>8} GB | "
-                            f"Usage: {usage.percent:>5}%"
+                            f"\nDrive {partition.mountpoint:<8}"
+                            f"\nTotal: {bytes_to_gb(usage.total):>8} GB"
+                            f"\nUsed: {bytes_to_gb(usage.used):>8} GB"
+                            f"\nFree: {bytes_to_gb(usage.free):>8} GB"
+                            f"\nUsage: {usage.percent:>5}%"
                         )
                     except Exception:
                         continue  # Ignore unreadable disks
@@ -1017,9 +996,11 @@ class Application(tk.Tk):
                     try:
                         usage = psutil.disk_usage(partition.mountpoint)
                         readable_disks_info += (
-                            f"\nDrive {partition.mountpoint:<8} | Total: {bytes_to_gb(usage.total):>8} GB | "
-                            f"Used: {bytes_to_gb(usage.used):>8} GB | Free: {bytes_to_gb(usage.free):>8} GB | "
-                            f"Usage: {usage.percent:>5}%"
+                            f"\nDrive {partition.mountpoint:<8}"
+                            f"\nTotal: {bytes_to_gb(usage.total):>8} GB"
+                            f"\nUsed: {bytes_to_gb(usage.used):>8} GB"
+                            f"\nFree: {bytes_to_gb(usage.free):>8} GB"
+                            f"\nUsage: {usage.percent:>5}%"
                         )
                     except:
                         continue  # Ignore unreadable disks
@@ -1071,7 +1052,7 @@ class Application(tk.Tk):
         refresh_btn = tk.Button(button_frame, text="Refresh all Disks", width=20,
                                 command=lambda: threading.Thread(target=fetch_disk_info).start(),
                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        refresh_btn.grid(row=1, column=0, padx=(5, 75), pady=5)
+        refresh_btn.grid(row=1, column=0, padx=(5, 50), pady=5)
 
         chkdsk_btn = tk.Button(button_frame, text="Execute CheckDisk", width=20,
                                command=lambda: threading.Thread(
@@ -1091,7 +1072,7 @@ class Application(tk.Tk):
         sfc_btn = tk.Button(button_frame, text="System File Checker", width=20,
                             command=lambda: threading.Thread(target=run_sfc_scannow).start(),
                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        sfc_btn.grid(row=0, column=0, padx=(5, 75), pady=5)
+        sfc_btn.grid(row=0, column=0, padx=(5, 50), pady=5)
 
         help_btn = tk.Button(button_frame, text="Argument Helper", width=20,
                              command=lambda: threading.Thread(target=show_chkdsk_help).start(),
