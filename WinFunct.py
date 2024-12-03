@@ -1188,17 +1188,51 @@ class Application(tk.Tk):
     # ----------------------------------PING COMMAND END-------------------------------------------------
     # ----------------------------------WIFI PASSWORD EXTRACTION-------------------------------------------------
 
+    def decode_output(self, output_bytes):
+        encodings = ['utf-8', 'cp1252', 'iso-8859-1', 'cp850']
+        for encoding in encodings:
+            try:
+                return output_bytes.decode(encoding)
+            except UnicodeDecodeError:
+                continue
+        return output_bytes.decode('utf-8', errors='ignore')
+
+    def get_wifi_profiles(self):
+        commands = [
+            ["netsh", "wlan", "show", "profile"],
+            ["netsh", "wlan", "show", "profiles"],
+            ["netsh", "wlan", "show", "interfaces"],
+            ["netsh", "wlan", "show", "networks", "mode=bssid"]
+        ]
+
+        for cmd in commands:
+            try:
+                output = subprocess.check_output(
+                    cmd,
+                    stderr=subprocess.STDOUT,
+                    timeout=10,
+                    shell=True
+                )
+                output_text = self.decode_output(output)
+                if "Profile" in output_text:
+                    return output_text
+            except:
+                continue
+        return None
+
     def show_wifi_networks(self):
         print("""Extracting Wifi profiles.""")
         try:
-            # Add timeout to prevent hanging
-            cmd_output = subprocess.check_output(
-                ["netsh", "wlan", "show", "profiles"],
-                stderr=subprocess.STDOUT,
-                timeout=10
-            ).decode("utf-8", "ignore")
-            # More flexible regex pattern for different Windows languages
-            networks = re.findall(r"(?:Profile|Profil|Perfil)\s*:\s*(.+?)(?:\r|\n|$)", cmd_output)
+            cmd_output = self.get_wifi_profiles()
+            if not cmd_output:
+                messagebox.showerror("Error", "Could not retrieve WiFi profiles")
+                return
+
+            networks = re.findall(
+                r"(?:Profile|Profil|Perfil|プロファイル|配置文件)\s*[:\：]\s*(.+?)(?:\r|\n|$)",
+                cmd_output
+            )
+
         except subprocess.TimeoutExpired:
             messagebox.showerror("Error", "Command timed out. Network service might be unresponsive.")
             return
@@ -1240,18 +1274,6 @@ class Application(tk.Tk):
             for network in networks:
                 network_listbox.insert(tk.END, network.strip())
 
-            def ok_button_click():
-                selected_index = network_listbox.curselection()
-                if selected_index:
-                    selected_network = network_listbox.get(selected_index[0])
-                    self.show_wifi_password(selected_network)
-                network_window.destroy()
-
-            ok_button = tk.Button(network_window, text="Select", command=ok_button_click, width=10,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                  relief=BUTTON_STYLE)
-            ok_button.pack(side="left", padx=(5, 5), pady=10)
-
             def cancel_button_click():
                 network_window.destroy()
 
@@ -1265,8 +1287,10 @@ class Application(tk.Tk):
                 for network in networks:
                     network_profile = network.strip()
                     try:
-                        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
-                                                             stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+                        cmd_output = subprocess.check_output(
+                            ["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
+                            stderr=subprocess.STDOUT)
+                        cmd_output = self.decode_output(cmd_output)
                         password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
                         if password:
                             password_text = password.group(1).rstrip("\r")
@@ -1296,8 +1320,8 @@ class Application(tk.Tk):
                 for network in networks:
                     network_profile = network.strip()
                     try:
-                        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
-                                                             stderr=subprocess.STDOUT).decode("utf-8", "ignore")
+                        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"], stderr=subprocess.STDOUT)
+                        cmd_output = self.decode_output(cmd_output)
                         password = re.search(r"Key Content\s*:\s*(.+)", cmd_output)
                         if password:
                             password_text = password.group(1).rstrip("\r")
@@ -1330,75 +1354,6 @@ class Application(tk.Tk):
 
         else:
             tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
-
-    def show_wifi_password(self, network):
-        network = network.strip()
-        try:
-            # Add quotes around network name to handle spaces and special characters
-            cmd_output = subprocess.check_output(
-                ["netsh", "wlan", "show", "profile", f'name="{network}"', "key=clear"],
-                stderr=subprocess.STDOUT,
-                timeout=10
-            ).decode("utf-8", "ignore")
-            # More flexible regex for different Windows languages
-            password = re.search(r"(?:Key Content|Contenu de la clé|Contenido de la clave)\s*:\s*(.+?)(?:\r|\n|$)",
-                                 cmd_output)
-        except subprocess.TimeoutExpired:
-            messagebox.showerror("Error", "Command timed out while retrieving password.")
-            return
-        except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error",
-                                 f"Failed to execute netsh command for network '{network}': {e.output.decode('utf-8', 'ignore')}")
-            return
-
-        if password:
-            password_window = tk.Toplevel(self)
-            password_window.title(f"Information for {network}")
-            password_window.configure(bg=UI_COLOR)
-
-            window_width = 320
-            window_height = 120
-            screen_width = password_window.winfo_screenwidth()
-            screen_height = password_window.winfo_screenheight()
-
-            x = (screen_width - window_width) // 2
-            y = (screen_height - window_height) // 2
-
-            password_window.geometry(f"{window_width}x{window_height}+{x}+{y}")
-            password_window.resizable(False, False)
-
-            password_frame = tk.Frame(password_window, bg=UI_COLOR)
-            password_frame.pack(padx=20, pady=20)
-
-            password_label = tk.Label(password_frame, text="Password:", bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
-            password_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
-
-            password_text = tk.Entry(password_frame, width=30, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-            password_text.insert(0, password.group(1))
-            password_text.grid(row=0, column=1, padx=5, pady=5)
-
-            def copy_password():
-                self.clipboard_clear()
-                self.clipboard_append(password_text.get())
-                self.update()
-
-            button_frame = tk.Frame(password_frame, bg=UI_COLOR)
-            button_frame.grid(row=1, column=0, columnspan=2, pady=(10, 0))
-
-            copy_button = tk.Button(button_frame, text="Copy", command=copy_password, width=10,
-                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                    relief=BUTTON_STYLE)
-            copy_button.pack(side="left", padx=10)
-
-            def cancel_button_click():
-                password_window.destroy()
-
-            cancel_button = tk.Button(button_frame, text="Cancel", command=cancel_button_click, width=10,
-                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                      relief=BUTTON_STYLE)
-            cancel_button.pack(side="left", padx=10)
-        else:
-            messagebox.showinfo(f"Wi-Fi Password for {network}", "No password found.")
 
     # ----------------------------------WIFI PASSWORDS END-------------------------------------------------
     # ----------------------------------DISK SPEEDTEST-------------------------------------------------
