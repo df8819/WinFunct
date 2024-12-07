@@ -725,6 +725,32 @@ class Application(tk.Tk):
         # Save the shortcut
         shortcut.save()
 
+    def restore_health(self):
+        print("Restoring System Health")
+        thread = threading.Thread(target=self._restore_health_thread)
+        thread.start()
+
+    def _restore_health_thread(self):
+        try:
+            # Run first command
+            subprocess.run(["dism", "/online", "/cleanup-image", "/startcomponentcleanup"], check=True)
+
+            # Run second command
+            subprocess.run(["dism", "/online", "/cleanup-image", "/restorehealth"], check=True)
+
+            # Prompt user for third command
+            self._prompt_sfc_scan()
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+    def _prompt_sfc_scan(self):
+        if messagebox.askyesno("SFC Scan",
+                               "Do you want to run 'sfc /scannow'?\n\nSFC is the System File Checker that repairs missing or corrupted files."):
+            try:
+                subprocess.run(["sfc", "/scannow"], check=True)
+            except subprocess.CalledProcessError as e:
+                messagebox.showerror("Error", f"An error occurred during SFC scan: {str(e)}")
+
     def open_autostart_locations(self):
         print("Open Windows (Auto)-Start locations.")
 
@@ -3321,6 +3347,12 @@ class Application(tk.Tk):
                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                      relief=BUTTON_STYLE)
         create_ctt_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
+
+        restore_health_btn = tk.Button(self.functions_frame, text="Restore System Health",
+                                   command=self.restore_health, width=20,
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                   relief=BUTTON_STYLE)
+        restore_health_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
