@@ -751,6 +751,45 @@ class Application(tk.Tk):
             except subprocess.CalledProcessError as e:
                 messagebox.showerror("Error", f"An error occurred during SFC scan: {str(e)}")
 
+    def create_backup_window(self):
+        backup_window = tk.Toplevel()
+        backup_window.title("System Backup Options")
+        backup_window.configure(bg=UI_COLOR)
+        backup_window.geometry("400x100")
+
+        # Configure grid columns to be equal width
+        backup_window.grid_columnconfigure(0, weight=1)
+        backup_window.grid_columnconfigure(1, weight=1)
+
+        # Create and configure label
+        label = tk.Label(backup_window, text="Create one of the following:",
+                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+        label.grid(row=0, column=0, columnspan=2, pady=10, padx=10, sticky="nsew")
+
+        # Create buttons
+        restore_point_btn = tk.Button(backup_window, text="Restore Point",
+                                      command=lambda: os.startfile(os.path.join(os.environ['WINDIR'],
+                                                                                'system32',
+                                                                                'SystemPropertiesProtection.exe')),
+                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                      width=20)
+        restore_point_btn.grid(row=1, column=0, padx=5, pady=10)
+
+        system_image_btn = tk.Button(backup_window, text="System Image",
+                                     command=lambda: subprocess.run(
+                                         ["control.exe", "/name", "Microsoft.BackupAndRestore"]),
+                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                     width=20)
+        system_image_btn.grid(row=1, column=1, padx=5, pady=10)
+
+        # Center the window
+        backup_window.update_idletasks()
+        width = backup_window.winfo_width()
+        height = backup_window.winfo_height()
+        x = (backup_window.winfo_screenwidth() // 2) - (width // 2)
+        y = (backup_window.winfo_screenheight() // 2) - (height // 2)
+        backup_window.geometry(f'+{x}+{y}')
+
     def open_autostart_locations(self):
         print("Open Windows (Auto)-Start locations.")
 
@@ -3353,6 +3392,12 @@ class Application(tk.Tk):
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
                                    relief=BUTTON_STYLE)
         restore_health_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
+
+        create_backup_window_btn = tk.Button(self.functions_frame, text="Backup and Restore",
+                                       command=self.create_backup_window, width=20,
+                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
+                                       relief=BUTTON_STYLE)
+        create_backup_window_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
 
         # ----------------------------MAIN BUTTONS END----------------------------
         # ----------------------------------DROPDOWN SECTION-------------------------------------------------
