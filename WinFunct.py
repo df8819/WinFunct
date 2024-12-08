@@ -106,8 +106,11 @@ class GitUpdater:
                 if GitUpdater.prompt_update():
                     print('Executing git pull...')
                     try:
-                        subprocess.run(['git', 'pull'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                        subprocess.run(['git', 'pull'], check=True)
+                        subprocess.run(['python', '-m', 'pip', 'install', '-r', 'requirements.txt'], check=True)
                         print('Repository updated. Restarting application...')
+                    except subprocess.CalledProcessError as e:
+                        print(f'Update failed: {str(e)}')
 
                         # Create a new window for the timer
                         root = tk.Tk()
