@@ -1894,31 +1894,30 @@ class Application(tk.Tk):
             agh_window = tk.Toplevel(self)
             agh_window.title("Copy to Clipboard?")
             agh_window.configure(bg=UI_COLOR)
+            agh_window.grid_columnconfigure(0, weight=1)
 
             # Set window size and position
-            window_width, window_height = 380, 245
+            window_width, window_height = 380, 300
             screen_width = agh_window.winfo_screenwidth()
             screen_height = agh_window.winfo_screenheight()
             x = (screen_width // 2) - (window_width // 2)
             y = (screen_height // 2) - (window_height // 2)
             agh_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-            message = tk.Label(agh_window, text="This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\nto your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?",
+            message = tk.Label(agh_window,
+                               text="This will copy the curl-command:\n\ncurl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v\n\nto your clipboard to assist in setting up AdGuard Home on a device like a Raspberry. Proceed?",
                                wraplength=280, bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
-            message.pack(pady=10)
+            message.grid(row=0, column=0, pady=10, padx=10)
 
             link = tk.Label(agh_window,
                             text="AdGuard Home GitHub Repository",
-                            anchor="w",
                             cursor="hand2",
                             fg=VERSION_LABEL_TEXT,
                             bg=UI_COLOR)
-            link.pack(pady=5)
+            link.grid(row=1, column=0, pady=5)
 
             def open_link(event):
                 webbrowser.open(ADGUARD_LINK)
-
-            link.bind("<Button-1>", open_link)
 
             def on_enter(event):
                 link.config(fg="white")
@@ -1926,17 +1925,19 @@ class Application(tk.Tk):
             def on_leave(event):
                 link.config(fg=VERSION_LABEL_TEXT)
 
+            link.bind("<Button-1>", open_link)
             link.bind("<Enter>", on_enter)
             link.bind("<Leave>", on_leave)
 
             button_frame = tk.Frame(agh_window, bg=UI_COLOR)
-            button_frame.pack(pady=10)
+            button_frame.grid(row=2, column=0, pady=10)
+            button_frame.grid_columnconfigure((0, 1), weight=1)
 
             def on_yes():
                 AdGuardClipBoard = "curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v"
                 agh_window.clipboard_clear()
                 agh_window.clipboard_append(AdGuardClipBoard)
-                agh_window.update()  # To ensure the clipboard is updated
+                agh_window.update()
                 print("Command copied to clipboard")
                 agh_window.destroy()
 
@@ -1944,15 +1945,30 @@ class Application(tk.Tk):
                 print("Command execution canceled.")
                 agh_window.destroy()
 
+            def copy_dns_resolvers():
+                dns_resolvers = """https://dns.quad9.net/dns-query
+https://dns.google/dns-query
+https://dns.cloudflare.com/dns-query"""
+                agh_window.clipboard_clear()
+                agh_window.clipboard_append(dns_resolvers)
+                agh_window.update()
+                print("DNS resolvers copied to clipboard")
+
             yes_button = tk.Button(button_frame, text="Yes", command=on_yes, width=20,
                                    bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                    activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-            yes_button.pack(side=tk.LEFT, padx=5, pady=5)
+            yes_button.grid(row=0, column=0, padx=5, pady=5)
 
             no_button = tk.Button(button_frame, text="No", command=on_no, width=20,
                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-            no_button.pack(side=tk.LEFT, padx=5, pady=5)
+            no_button.grid(row=0, column=1, padx=5, pady=5)
+
+            dns_button = tk.Button(agh_window, text="Copy DNS Resolvers", command=copy_dns_resolvers,
+                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                   activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR,
+                                   width=20)
+            dns_button.grid(row=3, column=0, pady=10)
 
         # Create the AGH window in a separate thread
         threading.Thread(target=create_agh_window, daemon=True).start()
