@@ -48,122 +48,6 @@ from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
 
-# ---------------------------------- UPDATER ----------------------------------
-# noinspection PyUnresolvedReferences,PyProtectedMember
-class GitUpdater:
-    @staticmethod
-    def is_frozen():
-        return getattr(sys, 'frozen', False)
-
-    @staticmethod
-    def is_git_repository():
-        try:
-            subprocess.run(['git', 'rev-parse', '--is-inside-work-tree'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            return True
-        except subprocess.CalledProcessError:
-            return False
-
-    @staticmethod
-    def check_update_status():
-        if GitUpdater.is_frozen() or not GitUpdater.is_git_repository():
-            return False  # Ignore update check for frozen executable or non-Git repository
-        try:
-            # Run git fetch to get updates from the remote
-            subprocess.run(['git', 'fetch'], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            # Run git diff to check if there are updates
-            result = subprocess.run(['git', 'status', '-uno'], capture_output=True, text=True, check=True)
-            return "Your branch is behind" in result.stdout
-        except subprocess.CalledProcessError as e:
-            print(f"Error checking update status: {e}")
-            return False
-
-    @staticmethod
-    def prompt_update():
-        if GitUpdater.check_update_status():
-            user_choice = input(f"""
-    ╔═══════════════════════════════════════════════════════╗
-    ║                                                       ║
-    ║   WinFunct update available. Do you want to update?   ║
-    ║   Type [y/n] and press Enter to proceed...            ║
-    ║         ‾ ‾                                           ║
-    ║   Please restart after updating WinFunct.             ║
-    ║          ‾‾‾‾‾‾‾                                      ║
-    ╚═══════════════════════════════════════════════════════╝
-
-    """).strip().lower()
-            if user_choice == 'y':
-                return True  # User wants to update
-        return False
-
-    @staticmethod
-    def execute_update():
-        try:
-            if GitUpdater.is_frozen():
-                print(f'Running as ".exe". Skipping update check. >>>>> {VERSION_SHORT}')
-            elif not GitUpdater.is_git_repository():
-                print(f'Not running in a Git repository. Skipping update check. >>>>> {VERSION_SHORT}')
-            else:
-                if GitUpdater.prompt_update():
-                    print('Executing git pull...')
-                    try:
-                        subprocess.run(['git', 'pull'], check=True)
-                        subprocess.run(['python', '-m', 'pip', 'install', '-r', 'requirements.txt'], check=True)
-                        print('Repository updated. Restarting application...')
-                    except subprocess.CalledProcessError as e:
-                        print(f'Update failed: {str(e)}')
-
-                        # Create a new window for the timer
-                        root = tk.Tk()
-                        root.title("Update Complete")
-                        root.configure(bg=UI_COLOR)
-
-                        # Set window size and position
-                        window_width, window_height = 400, 120
-                        screen_width = root.winfo_screenwidth()
-                        screen_height = root.winfo_screenheight()
-                        x = (screen_width // 2) - (window_width // 2)
-                        y = (screen_height // 2) - (window_height // 2)
-                        root.geometry(f'{window_width}x{window_height}+{x}+{y}')
-
-                        label = tk.Label(root, text="Repository updated. The application will restart in 30 seconds.",
-                                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
-                        label.pack(pady=10)
-
-                        def update_timer(seconds):
-                            if seconds > 0:
-                                label.config(text=f"Repository updated. The application will restart in {seconds} seconds.")
-                                root.after(1000, update_timer, seconds - 1)
-                            else:
-                                root.destroy()
-                                os._exit(0)  # This will immediately terminate the script
-
-                        def manual_close():
-                            root.destroy()
-                            os._exit(0)  # This will immediately terminate the script
-
-                        close_button = tk.Button(root, text="Close Now", command=manual_close,
-                                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
-                                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
-                        close_button.pack(pady=10)
-
-                        # Start the timer
-                        update_timer(30)
-
-                        root.mainloop()
-
-                    except subprocess.CalledProcessError as e:
-                        print(f"Error during git pull: {e}")
-                else:
-                    print(f'>>>>> {VERSION_SHORT}')
-        except Exception as e:
-            print(f"An error occurred during the update process: {e}")
-            print("Continuing with the current version.")
-
-
-# Execute the update check before any class instantiation
-GitUpdater.execute_update()
-
-# ---------------------------------- UPDATER END ----------------------------------
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
 
 
@@ -307,16 +191,14 @@ class Application(tk.Tk):
             self.function_dropdown1.after(0, actions[selected1])
             self.function_dropdown1.after(0, lambda: self.selected_function1.set("*System Info*"))
 
-    def on_function_select2(self, *args):
-        selected2 = self.selected_function2.get()
-        actions = {
-            "[1] Update WinFunct": lambda: self.update_winfunct(),
-            "[2] Clone/Download from GitHub": lambda: self.clone_repo_with_prompt(),
-            "[3] Install/Update Git & Python 3": lambda: self.install_git_python()
-        }
-        if selected2 in actions:
-            self.function_dropdown2.after(0, actions[selected2])
-            self.function_dropdown2.after(0, lambda: self.selected_function2.set("*WinFunct Options*"))
+    # def on_function_select2(self, *args):
+    #     selected2 = self.selected_function2.get()
+    #     actions = {
+    #         "[1] NEW OPTION": lambda: self.xxxxxxx(),
+    #     }
+    #     if selected2 in actions:
+    #         self.function_dropdown2.after(0, actions[selected2])
+    #         self.function_dropdown2.after(0, lambda: self.selected_function2.set("*WHATEV*"))
 
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
@@ -534,51 +416,6 @@ class Application(tk.Tk):
 
     def show_logo(self):
         show_logo()
-
-    def install_git_python(self, callback=None):
-        def check_and_install(package_id, package_name, on_complete):
-            # Check if the package is installed
-            check_command = f'winget list --id {package_id}'
-            result = subprocess.run(check_command, capture_output=True, text=True, shell=True)
-
-            if package_id not in result.stdout:
-                try:
-                    # Install the latest version of the package
-                    install_command = f'start cmd /c "winget install --id {package_id} --source winget --version latest && pause"'
-                    subprocess.run(install_command, shell=True, check=True)
-                    message = f'Latest version of {package_name} has been installed successfully.'
-                except subprocess.CalledProcessError as e:
-                    message = f'Error installing {package_name}: {str(e)}\nCommand output: {e.stderr}'
-            else:
-                try:
-                    # Upgrade to the latest version if already installed
-                    upgrade_command = f'winget upgrade --id {package_id} --source winget'
-                    upgrade_result = subprocess.run(upgrade_command, capture_output=True, text=True, shell=True)
-                    if "No applicable update found." in upgrade_result.stdout:
-                        message = f'{package_name} is already up to date.'
-                    else:
-                        message = f'{package_name} has been upgraded or was already up to date.'
-                except subprocess.CalledProcessError as e:
-                    message = f'Error upgrading {package_name}: {str(e)}\nCommand output: {e.stderr}'
-
-            print(message)
-            on_complete(message)
-
-        def on_package_complete(message):
-            nonlocal completed_count
-            completed_count += 1
-            if completed_count == 2 and callback:
-                callback("All installations/upgrades completed.")
-
-        completed_count = 0
-
-        # Create threads for checking and installing/upgrading Git and Python
-        git_thread = threading.Thread(target=check_and_install, args=("Git.Git", "Git for Windows", on_package_complete))
-        python_thread = threading.Thread(target=check_and_install, args=("Python.Python.3", "Python 3", on_package_complete))
-
-        # Start the threads
-        git_thread.start()
-        python_thread.start()
 
     def open_app_root_folder(self):
         print("Open root folder location.")
@@ -2562,374 +2399,6 @@ https://dns.cloudflare.com/dns-query"""
 
         threading.Thread(target=run_netstat, daemon=True).start()
 
-    # -----------------------------------------------CLONE REPO--------------------------------------------------
-
-    def update_winfunct(self):
-        # Determine if we're running as a script or frozen executable
-        if getattr(sys, 'frozen', False):
-            # We're running in a PyInstaller bundle
-            print(f"""
-    ╔═════════════════════════════════ERROR═════════════════════════════════════╗
-    ║ You are NOT running WinFunct from a python file!                          ║
-    ║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                          ║
-    ║ Please download the latest Release from GitHub                            ║
-    ║                                                                           ║
-    ║                               ---OR---                                    ║
-    ║                                                                           ║
-    ║ Clone this repository from GitHub via 'Get from GitHub' button            ║
-    ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
-    ╚═══════════════════════════════════════════════════════════════════════════╝
-    """)
-            if messagebox.askyesno("Open GitHub Releases",
-                                   "Open the WinFunct GitHub 'Releases' section in the default browser?"):
-                webbrowser.open("https://github.com/df8819/WinFunct/releases")
-            return False, "Cannot update when running from .exe"
-
-        # We're running in a normal Python environment
-        repo_path = os.getcwd()
-        requirements_path = os.path.join(repo_path, 'requirements.txt')
-
-        # Get the hash of requirements.txt before the pull
-        before_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
-
-        try:
-            # Create and show progress window
-            progress_window = self.create_progress_window("Updating WinFunct...")
-
-            # Execute 'git pull' with progress updates
-            process = subprocess.Popen(["git", "pull"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-            output = []
-            while True:
-                line = process.stdout.readline()
-                if not line and process.poll() is not None:
-                    break
-                if line:
-                    output.append(line.strip())
-                    self.update_progress(progress_window, f"Pulling updates: {line.strip()}")
-
-            progress_window.destroy()
-
-            result = process.communicate()
-            if process.returncode != 0:
-                raise subprocess.CalledProcessError(process.returncode, "git pull", result[1])
-
-            full_output = "\n".join(output)
-            print(full_output)
-
-            # Check if updates were actually applied
-            if "Already up to date." not in full_output:
-                print(f"Update detected. Notifying user...")
-                self.notify_user_of_update(full_output)
-
-                # Check if requirements.txt has changed by comparing hashes
-                after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
-                if before_pull_hash != after_pull_hash:
-                    print(f"requirements.txt has changed. Installing new requirements...")
-                    self.install_requirements(requirements_path)
-            else:
-                print(f"No updates available.")
-
-            return True, full_output
-        except subprocess.CalledProcessError as e:
-            print(f"Error during git pull: {e.stderr}")
-            messagebox.showerror("Update Error", f"Failed to update WinFunct: {e.stderr}")
-            return False, e.stderr
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            messagebox.showerror("Update Error", f"An unexpected error occurred: {str(e)}")
-            return False, str(e)
-
-    def git_pull(self):
-        if not self.ensure_git_python():
-            return False, "Git and/or Python installation in progress or cancelled."
-
-        # Determine if we're running as a script or frozen executable
-        if getattr(sys, 'frozen', False):
-            # We're running in a PyInstaller bundle
-            base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))  # Use default if _MEIPASS not present
-            repo_path = os.path.dirname(sys.executable)
-
-            print(f"""
-    ╔═════════════════════════════════ERROR═════════════════════════════════════╗
-    ║ You are NOT running WinFunct from a python file!                          ║
-    ║ ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾                          ║
-    ║ Please download the latest Release from GitHub                            ║
-    ║                                                                           ║
-    ║                               ---OR---                                    ║
-    ║                                                                           ║
-    ║ Clone this repository from GitHub via 'Get from GitHub' button            ║
-    ║ and execute 'Run' to start the app to make use of the 'Update' function.  ║
-    ╚═══════════════════════════════════════════════════════════════════════════╝
-""")
-
-            if messagebox.askyesno("Open GitHub Releases",
-                                   "Open the WinFunct GitHub 'Releases' section in the default browser?\n\n(Read the terminal message for more information)"):
-                webbrowser.open("https://github.com/df8819/WinFunct/releases")
-            else:
-                print("Command aborted.")
-
-            return False, "Cannot update when running from .exe"
-        else:
-            # We're running in a normal Python environment
-            base_path = os.path.dirname(os.path.abspath(__file__))
-            repo_path = os.getcwd()
-
-        requirements_path = os.path.join(repo_path, 'requirements.txt')
-
-        # Get the hash of requirements.txt before the pull
-        before_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
-
-        try:
-            # Change to the repo directory before git operations
-            os.chdir(repo_path)
-
-            # Create and show progress window
-            progress_window = self.create_progress_window("Updating...")
-
-            # Execute 'git pull' with progress updates
-            process = subprocess.Popen(["git", "pull"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-            output = []
-            while True:
-                line = process.stdout.readline()
-                if not line and process.poll() is not None:
-                    break
-                if line:
-                    output.append(line.strip())
-                    self.update_progress(progress_window, f"Pulling updates: {line.strip()}")
-
-            progress_window.destroy()
-
-            result = process.communicate()
-            if process.returncode != 0:
-                raise subprocess.CalledProcessError(process.returncode, "git pull", result[1])
-
-            full_output = "\n".join(output)
-            print(full_output)
-
-            # Check if updates were actually applied
-            if "Already up to date." not in full_output:
-                print(f"Update detected. Notifying user...")
-                self.notify_user_of_update(full_output)
-
-                # Check if requirements.txt has changed by comparing hashes
-                after_pull_hash = self.file_hash(requirements_path) if os.path.exists(requirements_path) else None
-                if before_pull_hash != after_pull_hash:
-                    print(f"requirements.txt has changed. Installing new requirements...")
-                    self.install_requirements(requirements_path)
-            else:
-                print(f"No updates available.")
-
-            return True, full_output
-        except subprocess.CalledProcessError as e:
-            print(f"Error during git pull: {e.stderr}")
-            return False, e.stderr
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            return False, str(e)
-        finally:
-            # Change back to the original directory
-            os.chdir(base_path)
-
-    def ensure_git_python(self):
-        def check_and_install_dependencies():
-            if not self.check_dependencies():
-                if messagebox.askyesno("Install Dependencies", "Git and/or Python are not installed. Would you like to install them now?"):
-                    self.install_git_python(callback=self.on_install_complete)
-                else:
-                    messagebox.showinfo("Installation Cancelled", "Dependency installation cancelled.")
-            else:
-                messagebox.showinfo("Dependencies Installed", "All required dependencies are already installed.")
-
-        # Run the dependency check and installation in a separate thread
-        threading.Thread(target=check_and_install_dependencies).start()
-
-    def on_install_complete(self, message):
-        messagebox.showinfo("Installation Complete", message)
-        # I might want to refresh my UI or perform other actions here. Or not. Let's see lol.
-
-    def file_hash(self, filepath):
-        """Calculates the MD5 hash of a file."""
-        hash_md5 = hashlib.md5()
-        with open(filepath, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                hash_md5.update(chunk)
-        return hash_md5.hexdigest()
-
-    def install_requirements(self, requirements_path):
-        """Installs the packages from requirements.txt using pip."""
-        try:
-            progress_window = self.create_progress_window("Installing Requirements")
-
-            process = subprocess.Popen(["pip", "install", "-r", requirements_path], stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE, text=True)
-
-            while True:
-                line = process.stdout.readline()
-                if not line and process.poll() is not None:
-                    break
-                if line:
-                    self.update_progress(progress_window, f"Installing: {line.strip()}")
-
-            progress_window.destroy()
-
-            if process.returncode != 0:
-                raise subprocess.CalledProcessError(process.returncode, "pip install", process.stderr.read())
-
-            print(f"Requirements installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"Error installing requirements: {e.stderr}")
-
-    def notify_user_of_update(self, update_info):
-        """Notifies the user of the update with detailed information."""
-        root = tk.Tk()
-        root.withdraw()  # Hide the root window
-        messagebox.showinfo("Update Applied",
-                            f"Updates have been applied. Please restart the application to use the latest version.\n\nUpdate details:\n{update_info}")
-        root.destroy()
-
-    def create_progress_window(self, title):
-        """Creates a progress window with a label and indeterminate progress bar."""
-        window = tk.Toplevel(self)
-        window.title(title)
-        window.geometry("300x100")
-        window.configure(bg=UI_COLOR)
-
-        # Make the window appear on top of other windows
-        window.attributes('-topmost', True)
-
-        # Withdraw the window to hide it before setting its position
-        window.withdraw()
-
-        # Calculate the center position
-        screen_width = window.winfo_screenwidth()
-        screen_height = window.winfo_screenheight()
-        window_width = 300
-        window_height = 100
-        x_coordinate = int((screen_width / 2) - (window_width / 2))
-        y_coordinate = int((screen_height / 2) - (window_height / 2))
-
-        # Set the position of the window
-        window.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
-
-        progress_label = tk.Label(window, text="Starting...",
-                                  bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
-        progress_label.pack(pady=10)
-
-        # Create a style for the progress bar
-        style = ttk.Style(window)
-        style.theme_use('default')
-        style.configure("Custom.Horizontal.TProgressbar",
-                        troughcolor=UI_COLOR,
-                        background=BUTTON_BG_COLOR,
-                        darkcolor=BUTTON_BG_COLOR,
-                        lightcolor=BUTTON_BG_COLOR)
-
-        progress_bar = ttk.Progressbar(window, mode="indeterminate", length=200,
-                                       style="Custom.Horizontal.TProgressbar")
-        progress_bar.pack(pady=10)
-        progress_bar.start()
-
-        # Make the window visible again
-        window.deiconify()
-
-        window.update()
-        return window
-
-    def update_progress(self, window, message):
-        """Updates the progress window with a new message."""
-        if window.winfo_exists():
-            window.children['!label'].config(text=message)
-            window.update()
-
-    def check_dependencies(self):
-        print(f"\nChecking dependencies:")
-        dependencies = {
-            "Git": "Git.Git",
-            "Python": "Python.Python.3"
-        }
-        missing_deps = []
-
-        def check_dependency(dep, package_id):
-            check_command = f'winget list --id {package_id}'
-            result = subprocess.run(check_command, capture_output=True, text=True, shell=True)
-            if package_id not in result.stdout:
-                print(f"{dep} is not installed.")
-                missing_deps.append(dep)
-            else:
-                print(f"{dep} is installed.")
-
-        # Create and start threads for checking each dependency
-        threads = []
-        for dep, package_id in dependencies.items():
-            thread = threading.Thread(target=check_dependency, args=(dep, package_id))
-            thread.start()
-            threads.append(thread)
-
-        # Wait for all threads to complete
-        for thread in threads:
-            thread.join()
-
-        if missing_deps:
-            print(f"Missing dependencies: {missing_deps}")
-            self.notify_missing_dependencies(missing_deps)
-            return False
-        else:
-            print("All dependencies are installed.")
-        return True
-
-    def notify_missing_dependencies(self, missing_deps):
-        message = "The following dependencies are missing:\n"
-        for dep in missing_deps:
-            message += f"- {dep}\n"
-        message += "Would you like to install them now?"
-
-        if messagebox.askyesno("Missing Dependencies", message):
-            self.install_git_python(callback=self.on_install_complete)
-
-    def run(self):
-        """Check dependencies before proceeding."""
-        if not self.check_dependencies():
-            messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
-            return
-
-    def select_clone_directory(self):
-        """Prompt user to select directory where the repo should be cloned."""
-        root = tk.Tk()
-        root.withdraw()  # Keep the root window from appearing
-        directory = filedialog.askdirectory()  # Show dialog and return the path
-        root.destroy()
-        return directory if directory else None  # Return None if no directory selected
-
-    def clone_repository(self, repo_url, clone_path):
-        print("""Cloning repository.""")
-        """Clone the repository into the selected path."""
-        repo_name = repo_url.split('/')[-1][:-4]  # Extract repo name
-        final_clone_path = os.path.join(clone_path, repo_name)
-
-        try:
-            subprocess.run(["git", "clone", repo_url, final_clone_path], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            messagebox.showinfo("Repository Cloned", f"Repository cloned successfully into {final_clone_path}")
-        except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to clone repository: {e.stderr.strip()}")  # Improved: Strip extra whitespace
-
-    def clone_repo_with_prompt(self):
-        def clone_repo_thread():
-            if not self.check_dependencies():
-                messagebox.showerror("Missing Dependencies", "Git and/or Python are not installed.")
-                return
-
-            clone_path = self.select_clone_directory()
-            if clone_path is None:
-                return
-
-            self.clone_repository("https://github.com/df8819/WinFunct.git", clone_path)
-
-        # Run the cloning process in a separate thread
-        threading.Thread(target=clone_repo_thread).start()
-
-    # -----------------------------------------------CLONE REPO END--------------------------------------------------
     # -----------------------------------------------GODMODE--------------------------------------------------
 
     def open_godmode(self):
@@ -3661,7 +3130,7 @@ https://dns.cloudflare.com/dns-query"""
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
 
-        exit_btn = tk.Button(self.bottom_frame, text="Exit", command=self.quit, width=20,
+        exit_btn = tk.Button(self.bottom_frame, text="Exit Application", command=self.quit, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
 
@@ -3691,32 +3160,30 @@ https://dns.cloudflare.com/dns-query"""
         self.function_dropdown8.grid(row=0, column=5, padx=10, pady=5, sticky="we")
         self.selected_function8.trace('w', self.on_function_select8)
 
-        # WinFunct Operations
-        self.selected_function2 = tk.StringVar()
-        self.selected_function2.set("*WinFunct Options*")
-
-        self.function_dropdown2 = tk.OptionMenu(
-            self.bottom_frame,
-            self.selected_function2,
-            "*WinFunct Options*",
-            "[1] Update WinFunct",
-            "[2] Clone/Download from GitHub",
-            "[3] Install/Update Git & Python 3"
-        )
-        self.function_dropdown2.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown2["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown2.grid(row=0, column=4, padx=10, pady=5, sticky="we")
-        self.selected_function2.trace('w', self.on_function_select2)
+        # FREE FOR NEW BUTTON / FUNCTION
+        # self.selected_function2 = tk.StringVar()
+        # self.selected_function2.set("*WHATEV*")
+        #
+        # self.function_dropdown2 = tk.OptionMenu(
+        #     self.bottom_frame,
+        #     self.selected_function2,
+        #     "*WHATEV*",
+        #     "[1] NEW OPTION",
+        # )
+        # self.function_dropdown2.config(
+        #     width=18,
+        #     bg=BUTTON_BG_COLOR,
+        #     fg=BUTTON_TEXT_COLOR,
+        #     activebackground=UI_COLOR,
+        #     activeforeground=BUTTON_TEXT_COLOR,
+        #     highlightthickness=0
+        # )
+        # self.function_dropdown2["menu"].config(
+        #     bg=BUTTON_BG_COLOR,
+        #     fg=BUTTON_TEXT_COLOR
+        # )
+        # self.function_dropdown2.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        # self.selected_function2.trace('w', self.on_function_select2)
 
 # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
 
