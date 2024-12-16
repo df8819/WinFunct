@@ -3,7 +3,6 @@ setlocal enabledelayedexpansion
 
 :: BatchGotAdmin
 title WinFunct Terminal
-REM color 0A (green)
 
 :-------------------------------------
 :: Check for permissions
@@ -37,6 +36,32 @@ if %errorlevel% NEQ 0 (
     pause
     exit /B 1
 )
+
+:: Check if git is installed
+where git >nul 2>nul
+if %errorlevel% NEQ 0 (
+    echo Git is not installed or not in the system PATH.
+    python WinFunct.py
+    exit /B 1
+)
+
+:: Attempt git pull with timeout
+echo Checking for updates...
+git pull > "%TEMP%\git_pull_output.txt" 2>&1
+if %errorlevel% NEQ 0 (
+    echo Update check failed.
+    echo Continuing with application launch...
+) else (
+    findstr /C:"Already up to date." "%TEMP%\git_pull_output.txt" >nul
+    if %errorlevel% NEQ 0 (
+        echo Updates pulled. Installing new requirements...
+        pip install -r requirements.txt
+    ) else (
+        echo No updates available.
+    )
+)
+
+del "%TEMP%\git_pull_output.txt"
 
 :: Check if the Python script exists
 if not exist "WinFunct.py" (
