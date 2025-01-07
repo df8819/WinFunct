@@ -2774,21 +2774,42 @@ https://dns.cloudflare.com/dns-query"""
 
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
+            # Create main container with padding
+            container = tk.Frame(frame, bg=UI_COLOR, padx=15, pady=15)
+            container.pack(expand=True, fill="both")
+
+            # Configure grid weights
+            for i in range(5):  # Changed to 5 columns
+                container.grid_columnconfigure(i, weight=1, uniform="column")
+
+            # Calculate rows needed
+            num_rows = (len(options_list) + 4) // 5  # Ceiling division for 5 columns
+            for i in range(num_rows):
+                container.grid_rowconfigure(i, weight=1, uniform="row")
+
             for i, option in enumerate(options_list):
-                btn = tk.Button(frame, text=option[0],
+                btn_frame = tk.Frame(container, bg=UI_COLOR)
+                btn_frame.grid(row=i // 5,
+                               column=i % 5,
+                               padx=7,
+                               pady=7,
+                               sticky="we")
+
+                btn = tk.Button(btn_frame,
+                                text=option[0],
                                 command=lambda cmd=option[1]: execute_command(cmd),
-                                width=20, # button width
+                                width=20,
                                 bg=BUTTON_BG_COLOR,
                                 fg=BUTTON_TEXT_COLOR,
                                 activebackground=UI_COLOR,
                                 activeforeground=BUTTON_TEXT_COLOR,
                                 borderwidth=BORDER_WIDTH,
                                 relief=BUTTON_STYLE)
-                btn.grid(row=i // 5,  # rows
-                         column=i % 5,  # columns
-                         padx=7,  # horizontal space
-                         pady=7,  # vertical space
-                         sticky="we") # centered
+                btn.pack(fill="both", expand=True)
+
+                # Optional: Add hover effect (can be removed if not wanted)
+                btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+                btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
 
         # Create buttons in their distinct categories
         create_option_buttons(system_management_frame, system_management_options)
