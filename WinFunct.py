@@ -2773,6 +2773,29 @@ https://dns.cloudflare.com/dns-query"""
         # Packing the notebook into the options_frame
         options_notebook.pack(fill='both', expand=True, padx=15, pady=15)
 
+        # Function to create styled buttons
+        def create_styled_button(parent, text, command, row, column):
+            btn_frame = tk.Frame(parent, bg=UI_COLOR)
+            btn_frame.grid(row=row, column=column, padx=5, pady=5)
+
+            btn = tk.Button(btn_frame,
+                            text=text,
+                            command=command,
+                            width=20,
+                            bg=BUTTON_BG_COLOR,
+                            fg=BUTTON_TEXT_COLOR,
+                            borderwidth=BORDER_WIDTH,
+                            relief=BUTTON_STYLE,
+                            activebackground=UI_COLOR,
+                            activeforeground=BUTTON_TEXT_COLOR)
+            btn.pack(fill="both", expand=True)
+
+            # Add hover effect
+            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
+
+            return btn
+
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             # Create main container with padding
@@ -2850,124 +2873,56 @@ https://dns.cloudflare.com/dns-query"""
         self.version_label.bind("<Leave>", on_leave)
 
         # ----------------------------VERSION LABEL END----------------------------
-        # ----------------------------MAIN BUTTONS----------------------------
+        # ----------------------------MAIN BUTTONS AND DROPDOWNS----------------------------
 
-        # Script tab Buttons and Positions
-        agh_curl_btn = tk.Button(self.functions_frame, text="AdGuard Install Helper", command=self.agh_curl, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        agh_curl_btn.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        # Configure grid weights for the functions_frame
+        for i in range(5):  # 5 columns
+            self.functions_frame.grid_columnconfigure(i, weight=1)
 
-        autostart_btn = tk.Button(self.functions_frame, text="Autostart Locations", command=self.open_autostart_locations, width=20,
-                                  bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        autostart_btn.grid(row=0, column=1, padx=10, pady=5, sticky="we")
+            # Create lists of button configurations for the main tab
+        main_tab_options = [
+            ("AdGuard Install Helper", self.agh_curl),
+            ("Autostart Locations", self.open_autostart_locations),
+            ("Flush/Renew DNS", self.renew_ip_config),
+            ("Logoff Local User(s)", self.logoff_users),
+            ("Open Link Summary", self.open_links_window),
+            ("Verify File Checksum", self.get_file_checksum),
+            ("Wi-Fi Profile Info", self.show_wifi_networks),
+            ("Clear Icon Cache", self.icon_cache),
+            ("Quick Access Manager", self.quick_access_manager),
+            ("Create CTT Shortcut", self.create_ctt_shortcut),
+            ("Restore System Health", self.restore_health),
+            ("Backup and Restore", self.create_backup_window)
+        ]
 
-        renew_ip_config_btn = tk.Button(self.functions_frame, text="Flush/Renew DNS", command=self.renew_ip_config,
-                                        bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        renew_ip_config_btn.grid(row=0, column=2, padx=10, pady=5, sticky="we")
+        # Create buttons (using only first 3 columns)
+        for i, option in enumerate(main_tab_options):
+            btn_frame = tk.Frame(self.functions_frame, bg=UI_COLOR)
+            btn_frame.grid(row=i // 3,
+                           column=i % 3,  # Using only columns 0-2
+                           padx=7,
+                           pady=7,
+                           sticky="nsew")
 
-        logoff_usr_btn = tk.Button(self.functions_frame, text="Logoff Local User(s)", command=self.logoff_users, width=20,
-                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        logoff_usr_btn.grid(row=1, column=0, padx=10, pady=5, sticky="we")
+            btn = tk.Button(btn_frame,
+                            text=option[0],
+                            command=option[1],
+                            bg=BUTTON_BG_COLOR,
+                            fg=BUTTON_TEXT_COLOR,
+                            activebackground=UI_COLOR,
+                            activeforeground=BUTTON_TEXT_COLOR,
+                            borderwidth=BORDER_WIDTH,
+                            relief=BUTTON_STYLE)
+            btn.pack(fill="both", expand=True, padx=5, pady=5)
 
-        open_links_btn = tk.Button(self.functions_frame, text="Open Link Summary", command=self.open_links_window, width=20,
-                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        open_links_btn.grid(row=1, column=1, padx=10, pady=5, sticky="we")
+            # Add hover effect
+            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
 
-        checksum_btn = tk.Button(self.functions_frame, text="Verify File Checksum", command=self.get_file_checksum, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        checksum_btn.grid(row=1, column=2, padx=10, pady=5, sticky="we")
-
-        wifi_btn = tk.Button(self.functions_frame, text="Wi-Fi Profile Info", command=self.show_wifi_networks, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        wifi_btn.grid(row=2, column=0, padx=10, pady=5, sticky="we")
-
-        clear_icon_btn = tk.Button(self.functions_frame, text="Clear Icon Cache", command=self.icon_cache, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        clear_icon_btn.grid(row=2, column=1, padx=10, pady=5, sticky="we")
-
-        quick_access_btn = tk.Button(self.functions_frame, text="Quick Access Manager", command=self.quick_access_manager, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        quick_access_btn.grid(row=2, column=2, padx=10, pady=5, sticky="we")
-
-        create_ctt_btn = tk.Button(self.functions_frame, text="Create CTT Shortcut",
-                                     command=self.create_ctt_shortcut, width=20,
-                                     bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                     relief=BUTTON_STYLE)
-        create_ctt_btn.grid(row=3, column=0, padx=10, pady=5, sticky="we")
-
-        restore_health_btn = tk.Button(self.functions_frame, text="Restore System Health",
-                                   command=self.restore_health, width=20,
-                                   bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                   relief=BUTTON_STYLE)
-        restore_health_btn.grid(row=3, column=1, padx=10, pady=5, sticky="we")
-
-        create_backup_window_btn = tk.Button(self.functions_frame, text="Backup and Restore",
-                                       command=self.create_backup_window, width=20,
-                                       bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                       relief=BUTTON_STYLE)
-        create_backup_window_btn.grid(row=3, column=2, padx=10, pady=5, sticky="we")
-
-        # ----------------------------MAIN BUTTONS END----------------------------
-        # ----------------------------------DROPDOWN SECTION-------------------------------------------------
-
-        # System Info Compare
-        self.selected_function1 = tk.StringVar()
-        self.selected_function1.set("*System Info*")
-
-        self.function_dropdown1 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function1,
-            "*System Info*",
-            "[1] Extract Sys Info",
-            "[2] Compare Sys Info"
-        )
-        self.function_dropdown1.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown1["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
-        self.selected_function1.trace('w', self.on_function_select1)
-
-        # DROPDOWM WITH NUMBER [2] IS IN BOTTOM BORDER SECTION
-
-        # God-mode
-        self.selected_function3 = tk.StringVar()
-        self.selected_function3.set("*God Mode*")
-
-        self.function_dropdown3 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function3,
-            "*God Mode*",
-            "[1] Simple God mode",
-            "[2] Super God mode"
-        )
-        self.function_dropdown3.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown3["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown3.grid(row=2, column=4, padx=10, pady=5, sticky="we")
-        self.selected_function3.trace('w', self.on_function_select3)
-
-        # Admin Shells
+            # Create dropdowns
+        # Admin Shells Dropdown
         self.selected_function4 = tk.StringVar()
         self.selected_function4.set("*Admin Shells*")
-
         self.function_dropdown4 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function4,
@@ -2983,17 +2938,58 @@ https://dns.cloudflare.com/dns-query"""
             activeforeground=BUTTON_TEXT_COLOR,
             highlightthickness=0
         )
-        self.function_dropdown4["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown4.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        self.function_dropdown4["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        self.function_dropdown4.grid(row=0, column=3, padx=10, pady=5, sticky="we")
         self.selected_function4.trace('w', self.on_function_select4)
 
-        # Check Online Status
+        # Interactive Shells Dropdown
+        self.selected_function6 = tk.StringVar()
+        self.selected_function6.set("*Interactive Shells*")
+        self.function_dropdown6 = tk.OptionMenu(
+            self.functions_frame,
+            self.selected_function6,
+            "*Interactive Shells*",
+            "[1] CTT Winutils",
+            "[2] Activate Win/Office",
+            "[3] Install/Upd. FFMPEG"
+        )
+        self.function_dropdown6.config(
+            width=18,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown6["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        self.function_dropdown6.grid(row=0, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function6.trace('w', self.on_function_select6)
+
+        # System Info Compare Dropdown
+        self.selected_function1 = tk.StringVar()
+        self.selected_function1.set("*System Info*")
+        self.function_dropdown1 = tk.OptionMenu(
+            self.functions_frame,
+            self.selected_function1,
+            "*System Info*",
+            "[1] Extract Sys Info",
+            "[2] Compare Sys Info"
+        )
+        self.function_dropdown1.config(
+            width=18,
+            bg=BUTTON_BG_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            activebackground=UI_COLOR,
+            activeforeground=BUTTON_TEXT_COLOR,
+            highlightthickness=0
+        )
+        self.function_dropdown1["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function1.trace('w', self.on_function_select1)
+
+        # IP & Online Status Dropdown
         self.selected_function5 = tk.StringVar()
         self.selected_function5.set("*IP & Online Status*")
-
         self.function_dropdown5 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function5,
@@ -3012,26 +3008,21 @@ https://dns.cloudflare.com/dns-query"""
             activeforeground=BUTTON_TEXT_COLOR,
             highlightthickness=0
         )
-        self.function_dropdown5["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
+        self.function_dropdown5["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         self.function_dropdown5.grid(row=1, column=3, padx=10, pady=5, sticky="we")
         self.selected_function5.trace('w', self.on_function_select5)
 
-        # Interactive Shells
-        self.selected_function6 = tk.StringVar()
-        self.selected_function6.set("*Interactive Shells*")
-
-        self.function_dropdown6 = tk.OptionMenu(
+        # God Mode Dropdown
+        self.selected_function3 = tk.StringVar()
+        self.selected_function3.set("*God Mode*")
+        self.function_dropdown3 = tk.OptionMenu(
             self.functions_frame,
-            self.selected_function6,
-            "*Interactive Shells*",
-            "[1] CTT Winutils",
-            "[2] Activate Win/Office",
-            "[3] Install/Upd. FFMPEG"
+            self.selected_function3,
+            "*God Mode*",
+            "[1] Simple God mode",
+            "[2] Super God mode"
         )
-        self.function_dropdown6.config(
+        self.function_dropdown3.config(
             width=18,
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR,
@@ -3039,17 +3030,13 @@ https://dns.cloudflare.com/dns-query"""
             activeforeground=BUTTON_TEXT_COLOR,
             highlightthickness=0
         )
-        self.function_dropdown6["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown6.grid(row=0, column=3, padx=10, pady=5, sticky="we")
-        self.selected_function6.trace('w', self.on_function_select6)
+        self.function_dropdown3["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+        self.function_dropdown3.grid(row=2, column=4, padx=10, pady=5, sticky="we")
+        self.selected_function3.trace('w', self.on_function_select3)
 
-        # Disk utility
+        # Disk Operations Dropdown
         self.selected_function7 = tk.StringVar()
         self.selected_function7.set("*Disk Operations*")
-
         self.function_dropdown7 = tk.OptionMenu(
             self.functions_frame,
             self.selected_function7,
@@ -3065,16 +3052,11 @@ https://dns.cloudflare.com/dns-query"""
             activeforeground=BUTTON_TEXT_COLOR,
             highlightthickness=0
         )
-        self.function_dropdown7["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
+        self.function_dropdown7["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
         self.function_dropdown7.grid(row=2, column=3, padx=10, pady=5, sticky="we")
         self.selected_function7.trace('w', self.on_function_select7)
 
-        # DROPDOWM WITH NUMBER [8] IS IN BOTTOM BORDER SECTION
-
-        # ----------------------------------DROPDOWN SECTION END---------------------------------------------
+        # ----------------------------MAIN BUTTONS AND DROPDOWNS END----------------------------
         # ---------------------------------- TABS/FRAME FOR FUN BUTTONS --------------------------------------------
 
         # Fun Notebook within the fun tab
@@ -3169,31 +3151,7 @@ https://dns.cloudflare.com/dns-query"""
         # Configure weight for middle spacer
         self.bottom_frame.grid_columnconfigure(1, weight=1)
 
-        # Function to create styled buttons
-        def create_styled_button(parent, text, command, row, column):
-            btn_frame = tk.Frame(parent, bg=UI_COLOR)
-            btn_frame.grid(row=row, column=column, padx=5, pady=5)
-
-            btn = tk.Button(btn_frame,
-                            text=text,
-                            command=command,
-                            width=20,
-                            bg=BUTTON_BG_COLOR,
-                            fg=BUTTON_TEXT_COLOR,
-                            borderwidth=BORDER_WIDTH,
-                            relief=BUTTON_STYLE,
-                            activebackground=UI_COLOR,
-                            activeforeground=BUTTON_TEXT_COLOR)
-            btn.pack(fill="both", expand=True)
-
-            # Add hover effect
-            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-            return btn
-
-            # Left-aligned buttons
-
+        # Left-aligned buttons
         shutdown_btn = create_styled_button(left_container, "Instant Shutdown", self.confirm_shutdown, 0, 0)
         reboot_btn = create_styled_button(left_container, "Forced Reboot", self.confirm_reboot, 1, 0)
         uefi_btn = create_styled_button(left_container, "Reboot to BIOS/UEFI", self.confirm_uefi, 1, 1)
