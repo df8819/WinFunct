@@ -3077,11 +3077,11 @@ https://dns.cloudflare.com/dns-query"""
         # DROPDOWM WITH NUMBER [8] IS IN BOTTOM BORDER SECTION
 
         # ----------------------------------DROPDOWN SECTION END---------------------------------------------
-        # ---------------------------------- TABS/FRAME FOR OPTION BUTTONS --------------------------------------------
+        # ---------------------------------- TABS/FRAME FOR FUN BUTTONS --------------------------------------------
 
         # Fun Notebook within the fun tab
         fun_notebook = ttk.Notebook(self.fun_frame)
-        fun_notebook.pack(fill='both', expand=True, padx=25, pady=10)
+        fun_notebook.pack(fill='both', expand=True, padx=15, pady=15)
 
         # New Category Frames inside the Fun tab
         apps_frame = tk.Frame(fun_notebook, bg=UI_COLOR)
@@ -3091,17 +3091,49 @@ https://dns.cloudflare.com/dns-query"""
         fun_notebook.add(apps_frame, text='Tools')
         fun_notebook.add(fun_stuff_frame, text='Fun Stuff')
 
-        # Packing the notebook into the fun_frame
-        fun_notebook.pack(fill='both', expand=True, padx=25, pady=10)
-
         # Function to create buttons within a frame from a list of option tuples
         def create_fun_buttons(frame, buttons_list):
-            for i, button in enumerate(buttons_list):
-                btn = tk.Button(frame, text=button[0], command=button[1], width=20,
-                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-                btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
+            # Create main container with padding
+            container = tk.Frame(frame, bg=UI_COLOR, padx=15, pady=15)
+            container.pack(expand=True, fill="both")
 
-        # Define buttons for Apps frame
+            # Configure grid weights for columns
+            for i in range(5):
+                container.grid_columnconfigure(i, weight=1, uniform="column")
+
+                # Calculate rows needed and configure row weights
+            num_rows = (len(buttons_list) + 4) // 5
+            for i in range(num_rows):
+                container.grid_rowconfigure(i, weight=1, uniform="row")
+
+            for i, button in enumerate(buttons_list):
+                # Create frame for each button
+                btn_frame = tk.Frame(container, bg=UI_COLOR)
+                btn_frame.grid(row=i // 5,
+                               column=i % 5,
+                               padx=7,
+                               pady=7,
+                               sticky="we")
+
+                btn = tk.Button(btn_frame,
+                                text=button[0],
+                                command=button[1],
+                                width=20,
+                                bg=BUTTON_BG_COLOR,
+                                fg=BUTTON_TEXT_COLOR,
+                                borderwidth=BORDER_WIDTH,
+                                relief=BUTTON_STYLE,
+                                activebackground=UI_COLOR,
+                                activeforeground=BUTTON_TEXT_COLOR)
+
+                btn.pack(fill="both", expand=True)
+
+                # Add hover effect
+                btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+                btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
+
+                # Define buttons for Apps frame
+
         apps_buttons = [
             ("Password Generator", self.open_pw_gen),
             ("Color Picker", self.open_color_picker),
@@ -3119,56 +3151,76 @@ https://dns.cloudflare.com/dns-query"""
         create_fun_buttons(apps_frame, apps_buttons)
         create_fun_buttons(fun_stuff_frame, fun_stuff_buttons)
 
-        # Bottom frame
+        # ---------------------------------- TABS/FRAME FOR FUN BUTTONS END --------------------------------------------
+        # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
+
+        # Create main bottom container
         self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
-        # ---------------------------------- TABS/FRAME FOR OPTION BUTTONS END --------------------------------------------
-        # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
+        # Create three sections: left, middle (spacer), and right
+        left_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+        left_container.grid(row=0, column=0, sticky="w", padx=10)
 
-        # Left-aligned buttons
-        shutdown_btn = tk.Button(self.bottom_frame, text="Instant Shutdown", command=self.confirm_shutdown, width=20,
-                                 bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        shutdown_btn.grid(row=0, column=0, padx=5, pady=5, sticky="we")
+        middle_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+        middle_container.grid(row=0, column=1, sticky="ew")
 
-        reboot_btn = tk.Button(self.bottom_frame, text="Forced Reboot", command=self.confirm_reboot, width=20,
-                               bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        reboot_btn.grid(row=1, column=0, padx=5, pady=5, sticky="we")
+        right_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+        right_container.grid(row=0, column=2, sticky="e", padx=10)
 
-        uefi_btn = tk.Button(self.bottom_frame, text="Reboot to BIOS/UEFI", command=self.confirm_uefi, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        uefi_btn.grid(row=1, column=1, padx=5, pady=5, sticky="we")
+        # Configure weight for middle spacer
+        self.bottom_frame.grid_columnconfigure(1, weight=1)
 
-        sleep_btn = tk.Button(self.bottom_frame, text="Enter Hibernation", command=self.confirm_sleep, width=20,
-                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        sleep_btn.grid(row=0, column=1, padx=5, pady=5, sticky="we")
+        # Function to create styled buttons
+        def create_styled_button(parent, text, command, row, column):
+            btn_frame = tk.Frame(parent, bg=UI_COLOR)
+            btn_frame.grid(row=row, column=column, padx=5, pady=5)
 
-        # Spacer label to fill the space between left and right groups
-        spacer = tk.Label(self.bottom_frame, background=f'{UI_COLOR}')
-        spacer.grid(row=0, column=2, rowspan=2, sticky="we")
-        self.bottom_frame.columnconfigure(2, weight=1)
+            btn = tk.Button(btn_frame,
+                            text=text,
+                            command=command,
+                            width=20,
+                            bg=BUTTON_BG_COLOR,
+                            fg=BUTTON_TEXT_COLOR,
+                            borderwidth=BORDER_WIDTH,
+                            relief=BUTTON_STYLE,
+                            activebackground=UI_COLOR,
+                            activeforeground=BUTTON_TEXT_COLOR)
+            btn.pack(fill="both", expand=True)
 
+            # Add hover effect
+            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
+
+            return btn
+
+            # Left-aligned buttons
+
+        shutdown_btn = create_styled_button(left_container, "Instant Shutdown", self.confirm_shutdown, 0, 0)
+        reboot_btn = create_styled_button(left_container, "Forced Reboot", self.confirm_reboot, 1, 0)
+        uefi_btn = create_styled_button(left_container, "Reboot to BIOS/UEFI", self.confirm_uefi, 1, 1)
+        sleep_btn = create_styled_button(left_container, "Enter Hibernation", self.confirm_sleep, 0, 1)
 
         # Right-aligned buttons
-        root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
+        root_btn = create_styled_button(right_container, "Open Root Folder", self.open_app_root_folder, 1, 0)
+        exit_btn = create_styled_button(right_container, "Exit Application", self.quit, 1, 1)
 
-        exit_btn = tk.Button(self.bottom_frame, text="Exit Application", command=self.quit, width=20,
-                             bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-        exit_btn.grid(row=1, column=5, padx=5, pady=5, sticky="we")
+        # UI utility dropdown
+        dropdown_frame = tk.Frame(right_container, bg=UI_COLOR)
+        dropdown_frame.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
-        # UI utility
         self.selected_function8 = tk.StringVar()
         self.selected_function8.set("*GUI Options*")
 
         self.function_dropdown8 = tk.OptionMenu(
-            self.bottom_frame,
+            dropdown_frame,
             self.selected_function8,
             "*GUI Options*",
             "[1] Theme Selector",
             "[2] Reset UI"
         )
+
+        # Style the dropdown
         self.function_dropdown8.config(
             width=18,
             bg=BUTTON_BG_COLOR,
@@ -3181,7 +3233,7 @@ https://dns.cloudflare.com/dns-query"""
             bg=BUTTON_BG_COLOR,
             fg=BUTTON_TEXT_COLOR
         )
-        self.function_dropdown8.grid(row=0, column=5, padx=10, pady=5, sticky="we")
+        self.function_dropdown8.pack(fill="both", expand=True)
         self.selected_function8.trace('w', self.on_function_select8)
 
         # FREE FOR NEW BUTTON / FUNCTION
