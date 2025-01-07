@@ -140,7 +140,7 @@ class Application(tk.Tk):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "845x450"
+        self.resolution_main = "865x450"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -2713,40 +2713,34 @@ https://dns.cloudflare.com/dns-query"""
     # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
 
     def create_widgets(self):
+        # Set up basic styles
         style = ttk.Style()
         style.theme_use('default')
 
-        # Configure tab padding and general styles
-        style.configure('TNotebook.Tab', padding=[10, 7], background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
+        # Configure tab styles
+        style.configure('TNotebook.Tab', padding=[10, 7],
+                        background=BUTTON_BG_COLOR,
+                        foreground=BUTTON_TEXT_COLOR)
         style.configure('TNotebook', background=UI_COLOR)
         style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
 
-        # Background color for the main frames - updated for new categories
-        style.configure('Functions.TFrame', background=f'{UI_COLOR}')
-        style.configure('Options.TFrame', background=f'{UI_COLOR}')
-        style.configure('Fun.TFrame', background=f'{UI_COLOR}')
-        style.configure('SystemManagement.TFrame', background=f'{UI_COLOR}')
-        style.configure('NetworkSecurity.TFrame', background=f'{UI_COLOR}')
-        style.configure('Troubleshooting.TFrame', background=f'{UI_COLOR}')
-        style.configure('AdvancedTools.TFrame', background=f'{UI_COLOR}')
-        style.configure('Bottom.TFrame', background=f'{UI_COLOR}')
+        # Configure frame styles for different categories
+        for category in ['Functions', 'Options', 'Fun', 'SystemManagement',
+                         'NetworkSecurity', 'Troubleshooting', 'AdvancedTools', 'Bottom']:
+            style.configure(f'{category}.TFrame', background=UI_COLOR)
 
-        # Button style configuration
-        style.configure(
-            'Custom.TButton',
-            background=BUTTON_BG_COLOR,
-            foreground=BUTTON_TEXT_COLOR,
-            borderwidth=BORDER_WIDTH,
-            relief=BUTTON_STYLE
-        )
+        # Configure button style
+        style.configure('Custom.TButton',
+                        background=BUTTON_BG_COLOR,
+                        foreground=BUTTON_TEXT_COLOR,
+                        borderwidth=BORDER_WIDTH,
+                        relief=BUTTON_STYLE)
 
-        style.map(
-            'Custom.TButton',
-            background=[('active', BUTTON_BG_COLOR)],
-            foreground=[('active', BUTTON_TEXT_COLOR)]
-        )
+        style.map('Custom.TButton',
+                  background=[('active', BUTTON_BG_COLOR)],
+                  foreground=[('active', BUTTON_TEXT_COLOR)])
 
-        # Main tabs
+        # Create main tab structure
         self.tabs = ttk.Notebook(self.main_frame)
         self.tabs.pack(fill="both", expand=True)
 
@@ -2755,11 +2749,12 @@ https://dns.cloudflare.com/dns-query"""
         self.options_frame = tk.Frame(self.tabs, bg=UI_COLOR)
         self.fun_frame = tk.Frame(self.tabs, bg=UI_COLOR)
 
+        # Add frames to tabs
         self.tabs.add(self.functions_frame, text="Scripts")
         self.tabs.add(self.options_frame, text="Options")
         self.tabs.add(self.fun_frame, text="Misc")
 
-        # Options Notebook within the options tab
+        # Create options notebook
         options_notebook = ttk.Notebook(self.options_frame)
         options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
 
@@ -2826,34 +2821,31 @@ https://dns.cloudflare.com/dns-query"""
         # ------------------------------MAIN WINDOW/TABS/STYLES END-------------------------------
         # ------------------------------VERSION LABEL-------------------------------
 
-        # Create a bottom frame for the version label
-        bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
-        bottom_frame.pack(side="bottom", fill="x")
+        # Create version label container
+        version_container = tk.Frame(self.main_frame, bg=UI_COLOR)
+        version_container.pack(side="bottom", fill="x")  # Removed padx and pady
 
         self.version_label = tk.Label(
-            bottom_frame,  # Place the label in the bottom frame
+            version_container,
             text=VERSION,
             anchor="se",
             cursor="hand2",
             fg=VERSION_LABEL_TEXT,
             bg=UI_COLOR,
         )
-        self.version_label.pack(side="right", padx=5, pady=2)
+        self.version_label.pack(side="right")
 
-        # Callback function for clicking the version label
+        # Version label bindings
         def open_link(event):
             webbrowser.open(WINFUNCT_LINK)
 
-        # Bind the callback function to the version label
-        self.version_label.bind("<Button-1>", open_link)
-
-        # Optional: Change color on hover to provide visual feedback
         def on_enter(event):
-            self.version_label.config(fg="white")  # Change text color on hover
+            self.version_label.config(fg="white")
 
         def on_leave(event):
-            self.version_label.config(fg=VERSION_LABEL_TEXT)  # Restore original text color
+            self.version_label.config(fg=VERSION_LABEL_TEXT)
 
+        self.version_label.bind("<Button-1>", open_link)
         self.version_label.bind("<Enter>", on_enter)
         self.version_label.bind("<Leave>", on_leave)
 
