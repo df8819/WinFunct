@@ -3148,6 +3148,8 @@ https://dns.cloudflare.com/dns-query"""
         spacer.grid(row=0, column=2, rowspan=2, sticky="we")
         self.bottom_frame.columnconfigure(2, weight=1)
 
+
+        # Right-aligned buttons
         root_btn = tk.Button(self.bottom_frame, text="Open Root Folder", command=self.open_app_root_folder, width=20,
                              bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         root_btn.grid(row=1, column=4, padx=5, pady=5, sticky="we")
