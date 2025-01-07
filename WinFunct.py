@@ -139,15 +139,21 @@ class Application(tk.Tk):
 
         self.load_last_selected_theme()
 
+        # Initial window setup
         self.resolution_main = "845x450"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
-
-        # Create the main_frame with tk.Frame
-        self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
-        self.main_frame.pack(fill="both", expand=True)
         self.resizable(True, True)
+
+        # Create main container
+        self.main_frame = tk.Frame(self, bg=BOTTOM_BORDER_COLOR)
+        self.main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Configure main frame grid weights
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_rowconfigure(0, weight=1)
+
         self.create_widgets()
 
         # Load the last selected theme after the main UI is initialized & Center window
