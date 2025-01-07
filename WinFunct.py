@@ -36,9 +36,8 @@ from config import (
     BUTTON_STYLE, BORDER_WIDTH,
     WINFUNCT_LINK, AdGuardClipBoard, ADGUARD_LINK,
     links, batch_script, chkdsk_help_content, ping_help_content,
-    windows_management_options, security_and_networking_options,
-    system_tools_options, remote_and_virtualization_options,
-    troubleshooting_and_optimization_options, netsh_commands
+    system_management_options, network_security_options,
+    troubleshooting_options, advanced_tools_options
 )
 from HashStuffInt import HashStuff
 from JChatInt import JChat
@@ -2716,19 +2715,17 @@ https://dns.cloudflare.com/dns-query"""
         style.configure('TNotebook', background=UI_COLOR)
         style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
 
-        # Background color for the main frames
+        # Background color for the main frames - updated for new categories
         style.configure('Functions.TFrame', background=f'{UI_COLOR}')
         style.configure('Options.TFrame', background=f'{UI_COLOR}')
         style.configure('Fun.TFrame', background=f'{UI_COLOR}')
-        style.configure('Advanced.TFrame', background=f'{UI_COLOR}')
-        style.configure('SystemTools.TFrame', background=f'{UI_COLOR}')
-        style.configure('Utilities.TFrame', background=f'{UI_COLOR}')
-        style.configure('Tools.TFrame', background=f'{UI_COLOR}')
-        style.configure('Trouble.TFrame', background=f'{UI_COLOR}')
-        style.configure('Netsh.TFrame', background=f'{UI_COLOR}')
+        style.configure('SystemManagement.TFrame', background=f'{UI_COLOR}')
+        style.configure('NetworkSecurity.TFrame', background=f'{UI_COLOR}')
+        style.configure('Troubleshooting.TFrame', background=f'{UI_COLOR}')
+        style.configure('AdvancedTools.TFrame', background=f'{UI_COLOR}')
         style.configure('Bottom.TFrame', background=f'{UI_COLOR}')
 
-        # Define and configure a custom style for the buttons
+        # Button style configuration
         style.configure(
             'Custom.TButton',
             background=BUTTON_BG_COLOR,
@@ -2737,17 +2734,17 @@ https://dns.cloudflare.com/dns-query"""
             relief=BUTTON_STYLE
         )
 
-        # Map the style to handle button state changes
         style.map(
             'Custom.TButton',
-            background=[('active', BUTTON_BG_COLOR)],  # This will handle button hover state
+            background=[('active', BUTTON_BG_COLOR)],
             foreground=[('active', BUTTON_TEXT_COLOR)]
         )
 
+        # Main tabs
         self.tabs = ttk.Notebook(self.main_frame)
         self.tabs.pack(fill="both", expand=True)
 
-        # Create frames with background colors
+        # Create main frames
         self.functions_frame = tk.Frame(self.tabs, bg=UI_COLOR)
         self.options_frame = tk.Frame(self.tabs, bg=UI_COLOR)
         self.fun_frame = tk.Frame(self.tabs, bg=UI_COLOR)
@@ -2761,39 +2758,43 @@ https://dns.cloudflare.com/dns-query"""
         options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
 
         # New Category Frames inside the Options tab
-        advanced_windows_settings_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        system_tools_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        utilities_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        tools_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        trouble_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        netsh_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        system_management_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        network_security_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        troubleshooting_frame = tk.Frame(options_notebook, bg=UI_COLOR)
+        advanced_tools_frame = tk.Frame(options_notebook, bg=UI_COLOR)
 
-        # Adding new frames to the options notebook
-        options_notebook.add(advanced_windows_settings_frame, text='Management')
-        options_notebook.add(system_tools_frame, text='Security & Network')
-        options_notebook.add(utilities_frame, text='System Tools')
-        options_notebook.add(tools_frame, text='RDP & Environment')
-        options_notebook.add(trouble_frame, text='Trouble & Optimize')
-        options_notebook.add(netsh_frame, text='Shell Commands')
+        # Adding new frames to the options notebook with new categories
+        options_notebook.add(system_management_frame, text='System Management')
+        options_notebook.add(network_security_frame, text='Network & Security')
+        options_notebook.add(troubleshooting_frame, text='Troubleshooting')
+        options_notebook.add(advanced_tools_frame, text='Advanced Tools')
 
         # Packing the notebook into the options_frame
-        options_notebook.pack(fill='both', expand=True, padx=25, pady=10)
+        options_notebook.pack(fill='both', expand=True, padx=15, pady=15)
 
         # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             for i, option in enumerate(options_list):
-                btn = tk.Button(frame, text=option[0], command=lambda cmd=option[1]: execute_command(cmd), width=20,
-                                bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR,
-                                activeforeground=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
-                btn.grid(row=i // 5, column=i % 5, padx=5, pady=5, sticky="we")
+                btn = tk.Button(frame, text=option[0],
+                                command=lambda cmd=option[1]: execute_command(cmd),
+                                width=20, # button width
+                                bg=BUTTON_BG_COLOR,
+                                fg=BUTTON_TEXT_COLOR,
+                                activebackground=UI_COLOR,
+                                activeforeground=BUTTON_TEXT_COLOR,
+                                borderwidth=BORDER_WIDTH,
+                                relief=BUTTON_STYLE)
+                btn.grid(row=i // 5,  # rows
+                         column=i % 5,  # columns
+                         padx=7,  # horizontal space
+                         pady=7,  # vertical space
+                         sticky="we") # centered
 
         # Create buttons in their distinct categories
-        create_option_buttons(advanced_windows_settings_frame, windows_management_options)
-        create_option_buttons(system_tools_frame, security_and_networking_options)
-        create_option_buttons(utilities_frame, system_tools_options)
-        create_option_buttons(tools_frame, remote_and_virtualization_options)
-        create_option_buttons(trouble_frame, troubleshooting_and_optimization_options)
-        create_option_buttons(netsh_frame, netsh_commands)
+        create_option_buttons(system_management_frame, system_management_options)
+        create_option_buttons(network_security_frame, network_security_options)
+        create_option_buttons(troubleshooting_frame, troubleshooting_options)
+        create_option_buttons(advanced_tools_frame, advanced_tools_options)
 
         # ------------------------------MAIN WINDOW/TABS/STYLES END-------------------------------
         # ------------------------------VERSION LABEL-------------------------------

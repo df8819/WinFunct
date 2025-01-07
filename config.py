@@ -18,7 +18,7 @@ LOGO = f"""
 """
 
 # WinFunct version number
-VERSION_NUMBER = "1.691"
+VERSION_NUMBER = "1.692"
 
 # Use the version number in different strings
 VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
@@ -173,91 +173,90 @@ if defined status_!status_code! (
                         """
 
 # Option Buttons for Option Tab (UI element)
-# Windows Management and Configuration Tools
-windows_management_options = [
-    ("Registry Editor", "regedit"),
+# System Management Tools
+system_management_options = [
+    # Core System Management
     ("PC Manager", "compmgmt.msc"),
-    ("Event Viewer", "eventvwr.msc"),
-    ("Services Manager", "services.msc"),
-    ("Group Policy", "gpedit.msc"),
     ("Programs/Features", "appwiz.cpl"),
-    ("Windows Version", "winver"),
-    ("Advanced Settings", "SystemPropertiesAdvanced"),
-    ("User Accout Control", "useraccountcontrolsettings"),
     ("Disk Manager", "diskmgmt.msc"),
+    ("Services Manager", "services.msc"),
+    ("Task Manager", "taskmgr"),
+    ("Control Panel", "control"),
+
+    # System Information
+    ("System Info", "msinfo32"),
+    ("Windows Version", "winver"),
     ("Computer Name", "SystemPropertiesComputerName"),
-    ("ODBC Manager", "odbcad32"),
+
+    # User Management
+    ("User Account Control", "useraccountcontrolsettings"),
+    ("Group Policy", "gpedit.msc"),
     ("Shared Folders", "fsmgmt.msc"),
-    ("Mobility Center", "mblctr"),
 ]
 
-# Security and Networking Tools
-security_and_networking_options = [
+# Network & Security Tools
+network_security_options = [
+    # Security Tools
     ("Security Center", "start ms-settings:windowsdefender"),
     ("Security Policy", "secpol.msc"),
-    ("Firewall Advanced", "wf.msc"),
-    ("Network Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
-    ("Internet Options", "inetcpl.cpl"),
-    ("Credential Manager", "control /name Microsoft.CredentialManager"),
     ("Windows Firewall", "firewall.cpl"),
+    ("Firewall Advanced", "wf.msc"),
+    ("Credential Manager", "control /name Microsoft.CredentialManager"),
+
+    # Network Management
     ("Network Adapters", "ncpa.cpl"),
-    ("Remote Connections", "control /name Microsoft.RemoteAppAndDesktopConnections"),
+    ("Network Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
     ("VPN Settings", "start ms-settings:network-vpn"),
     ("Wi-Fi Settings", "start ms-settings:network-wifi"),
     ("Ethernet Settings", "start ms-settings:network-ethernet"),
-    ("Proxy Settings", "start ms-settings:network-proxy"),
-]
 
-# System Tools and Utilities
-system_tools_options = [
-    ("Edit Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
-    ("Task Manager", "taskmgr"),
-    ("Control Panel", "control"),
-    ("Device Manager", "devmgmt.msc"),
-    ("Performance Monitor", "perfmon"),
-    ("Resource Monitor", "resmon"),
-    ("Device Pairing", "devicepairingwizard"),
-    ("Windows Features", "optionalfeatures"),
-    ("System Info", "msinfo32"),
-]
-
-# Remote Management and Virtualization Tools
-remote_and_virtualization_options = [
+    # Remote Access
     ("Remote Desktop", "mstsc"),
     ("RDP Settings", "start ms-settings:remotedesktop"),
-    ("Hyper-V Manager", "C:\\Windows\\System32\\virtmgmt.msc"),
-    ("Environment Vars", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+    ("Remote Connections", "control /name Microsoft.RemoteAppAndDesktopConnections"),
 ]
 
-# Troubleshooting and Optimization Tools
-troubleshooting_and_optimization_options = [
+# Troubleshooting Tools
+troubleshooting_options = [
+    # System Diagnostics
+    ("Event Viewer", "eventvwr.msc"),
+    ("Performance Monitor", "perfmon"),
+    ("Resource Monitor", "resmon"),
     ("Reliability Monitor", "perfmon /rel"),
-    ("Disk Cleanup", "cleanmgr"),
-    ("System Restore", "rstrui"),
-    ("Optimize Drives", "dfrgui"),
-    ("Memory Diagnostics", "MdSched"),
     ("DirectX Diagnostics", "dxdiag"),
+
+    # System Recovery
+    ("System Restore", "rstrui"),
     ("System Config", "msconfig"),
     ("Windows Update", "start ms-settings:windowsupdate"),
+
+    # Optimization
+    ("Disk Cleanup", "cleanmgr"),
+    ("Optimize Drives", "dfrgui"),
+    ("Memory Diagnostics", "MdSched"),
+    ("Device Manager", "devmgmt.msc"),
 ]
 
-# Shell commands
-netsh_commands = [
+# Advanced Tools
+advanced_tools_options = [
+    # System Configuration
+    ("Registry Editor", "regedit"),
+    ("Advanced Settings", "SystemPropertiesAdvanced"),
+    ("Environment Variables", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+    ("Windows Features", "optionalfeatures"),
+
+    # Development & Special Tools
+    ("ODBC Manager", "odbcad32"),
+    ("Hyper-V Manager", "C:\\Windows\\System32\\virtmgmt.msc"),
+    ("Edit Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
+    ("Mobility Center", "mblctr"),
+
+    # Network Diagnostics Commands
     ("IP Configuration", "netsh interface ip show config"),
-    ("Interface List", "netsh interface show interface"),
-    ("IPv4 Interface", "netsh interface ipv4 show interface"),
-    ("IPv6 Interface", "netsh interface ipv6 show interface"),
-    ("IP Address Info", "netsh interface ip show addresses"),
     ("DNS Configuration", "netsh interface ip show dns"),
     ("Display DNS Cache", "ipconfig /displaydns"),
-    ("Firewall State", "netsh advfirewall show currentprofile state"),
-    ("Routing Table", "netsh interface ipv4 show route"),
-    ("Wi-Fi Profiles", "netsh wlan show profiles"),
-    ("Wi-Fi Settings", "netsh wlan show settings"),
-    ("Wi-Fi Networks", "netsh wlan show networks"),
     ("Network Stats", "netstat -s"),
     ("ARP Scan", "powershell.exe arp -a"),
-    ("Shutdown -i", "shutdown -i"),
 ]
 
 # Helper window for the show_disk_info method
