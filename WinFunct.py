@@ -2,7 +2,6 @@
 import base64
 import csv
 import ctypes
-import hashlib
 import json
 import logging
 import os
@@ -130,12 +129,569 @@ def load_theme_from_file():
 
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
 
+# ---------------------------------- GUI CLASSES ----------------------------------
+
+class StyleManager:
+    def __init__(self):
+        self.style = ttk.Style()
+
+    def configure_base_styles(self):
+        self.style.theme_use('default')
+        self.configure_tab_styles()
+        self.configure_frame_styles()
+        self.configure_button_styles()
+
+    def configure_tab_styles(self):
+        self.style.configure('Custom.TNotebook',
+                           background=UI_COLOR)
+        self.style.configure('Custom.TNotebook.Tab',
+                           padding=[10, 7],
+                           background=BUTTON_BG_COLOR,
+                           foreground=BUTTON_TEXT_COLOR)
+        self.style.map('Custom.TNotebook.Tab',
+                      background=[('selected', UI_COLOR)],
+                      foreground=[('selected', BUTTON_TEXT_COLOR)])
+
+    def configure_frame_styles(self):
+        self.style.configure('Custom.TFrame',
+                           background=UI_COLOR)
+
+    def configure_button_styles(self):
+        self.style.configure('Custom.TButton',
+                           padding=(10, 5),
+                           background=BUTTON_BG_COLOR,
+                           foreground=BUTTON_TEXT_COLOR,
+                           borderwidth=BORDER_WIDTH,
+                           relief=BUTTON_STYLE)
+        self.style.map('Custom.TButton',
+                      background=[('active', UI_COLOR)],
+                      foreground=[('active', BUTTON_TEXT_COLOR)])
+
+
+# noinspection PyMethodMayBeStatic
+class WidgetFactory:
+    def create_notebook(self, parent):
+        notebook = ttk.Notebook(parent, style='Custom.TNotebook')
+        notebook.pack(fill="both", expand=True)
+        return notebook
+
+    def create_frame(self, parent, bg=UI_COLOR):
+        frame = ttk.Frame(parent, style='Custom.TFrame')
+        return frame
+
+    def create_button(self, parent, text, command, row=None, column=None, **kwargs):
+        btn_frame = ttk.Frame(parent, style='Custom.TFrame')
+        if row is not None and column is not None:
+            btn_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+
+        # Ensure command is properly wrapped
+        if callable(command):
+            wrapped_command = command
+        else:
+            wrapped_command = lambda: None
+            print(f"Warning: Invalid command for button '{text}'")
+
+        btn = ttk.Button(btn_frame,
+                         text=text,
+                         command=wrapped_command,
+                         style='Custom.TButton',
+                         **kwargs)
+        btn.pack(fill="both", expand=True)
+        return btn
+
+    def create_fixed_height_frame(self, parent, height):
+        frame = ttk.Frame(parent, style='Custom.TFrame', height=height)
+        frame.pack(fill="x", padx=3, pady=3)
+        frame.pack_propagate(False)
+        return frame
+
+
+# noinspection PyMethodMayBeStatic
+class LayoutManager:
+    def create_grid_container(self, parent, columns=5):
+        container = tk.Frame(parent, bg=UI_COLOR, padx=15, pady=15)
+        container.pack(expand=True, fill="both")
+
+        # Configure grid weights
+        for i in range(columns):
+            container.grid_columnconfigure(i, weight=1, uniform="column")
+
+        return container
+
+    def setup_main_tabs(self, notebook, frames):
+        for frame, text in frames.items():
+            notebook.add(frames[frame], text=text)
+
+
+# noinspection PyUnresolvedReferences,PyMethodMayBeStatic,PyUnusedLocal
+class GUI:
+    def __init__(self):
+        self.main_frame = None
+        self.style_manager = StyleManager()
+        self.widget_factory = WidgetFactory()
+        self.layout_manager = LayoutManager()
+
+    def get_system_management_options(self):
+        from config import system_management_options
+        return system_management_options
+
+    def get_network_security_options(self):
+        from config import network_security_options
+        return network_security_options
+
+    def get_troubleshooting_options(self):
+        from config import troubleshooting_options
+        return troubleshooting_options
+
+    def get_advanced_tools_options(self):
+        from config import advanced_tools_options
+        return advanced_tools_options
+
+    def create_widgets(self):
+        # Initialize styles
+        self.style_manager.configure_base_styles()
+
+        # Create main structure
+        self.tabs = self.widget_factory.create_notebook(self.main_frame)
+
+        # Create main frames
+        self.frames = {
+            'functions': self.widget_factory.create_frame(self.tabs),
+            'options': self.widget_factory.create_frame(self.tabs),
+            'fun': self.widget_factory.create_frame(self.tabs)
+        }
+
+        # Add frames to tabs
+        self.tabs.add(self.frames['functions'], text="Scripts")
+        self.tabs.add(self.frames['options'], text="Options")
+        self.tabs.add(self.frames['fun'], text="Misc")
+
+        # Create content for each tab
+        self._create_options_tab()
+        self._create_functions_tab()
+        self._create_fun_tab()
+        self._create_bottom_frame()
+        self._create_version_label()
+
+    def initialize_gui(self):
+        """Initialize the GUI components"""
+        # Initialize styles
+        self.style_manager.configure_base_styles()
+
+        # Create main structure
+        self.tabs = self.widget_factory.create_notebook(self.main_frame)
+
+        # Create main frames
+        self.frames = {
+            'functions': self.widget_factory.create_frame(self.tabs),
+            'options': self.widget_factory.create_frame(self.tabs),
+            'fun': self.widget_factory.create_frame(self.tabs)
+        }
+
+        # Add frames to tabs
+        self.tabs.add(self.frames['functions'], text="Scripts")
+        self.tabs.add(self.frames['options'], text="Options")
+        self.tabs.add(self.frames['fun'], text="Misc")
+
+        # Create content for each tab
+        self._create_options_tab()
+        self._create_functions_tab()
+        self._create_fun_tab()
+        self._create_bottom_frame()
+        self._create_version_label()
+
+    def _create_options_tab(self):
+        options_notebook = self.widget_factory.create_notebook(self.frames['options'])
+        options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
+
+        categories = {
+            'System Management': self.get_system_management_options(),
+            'Network & Security': self.get_network_security_options(),
+            'Troubleshooting': self.get_troubleshooting_options(),
+            'Advanced Tools': self.get_advanced_tools_options()
+        }
+
+        for category, options in categories.items():
+            frame = self.widget_factory.create_frame(options_notebook)
+            options_notebook.add(frame, text=category)
+            self._create_option_buttons(frame, options)
+
+    def _create_option_buttons(self, frame, options_list):
+        container = self.layout_manager.create_grid_container(frame)
+
+        num_rows = (len(options_list) + 4) // 5
+        for i in range(num_rows):
+            container.grid_rowconfigure(i, weight=1, uniform="row")
+
+        for i, option in enumerate(options_list):
+            button_text, command = option
+            self.widget_factory.create_button(
+                container,
+                text=button_text,
+                command=lambda cmd=command: self.execute_command(cmd),
+                row=i // 5,
+                column=i % 5
+            )
+
+    def _create_functions_tab(self):
+        # Create main container
+        main_container = self.layout_manager.create_grid_container(self.frames['functions'])
+
+        # Button configurations
+        main_buttons = [
+            ("AdGuard Install Helper", self.agh_curl),
+            ("Autostart Locations", self.open_autostart_locations),
+            ("Flush/Renew DNS", self.renew_ip_config),
+            ("Logoff Local User(s)", self.logoff_users),
+            ("Open Link Summary", self.open_links_window),
+            ("Verify File Checksum", self.get_file_checksum),
+            ("Wi-Fi Profile Info", self.show_wifi_networks),
+            ("Clear Icon Cache", self.icon_cache),
+            ("Quick Access Manager", self.quick_access_manager),
+            ("Create CTT Shortcut", self.create_ctt_shortcut),
+            ("Restore System Health", self.restore_health),
+            ("Backup and Restore", self.create_backup_window)
+        ]
+
+        # Calculate rows needed for buttons (using first 3 columns)
+        num_rows = (len(main_buttons) + 2) // 3
+        for i in range(num_rows):
+            main_container.grid_rowconfigure(i, weight=1, uniform="row")
+
+        # Create buttons
+        for i, (text, command) in enumerate(main_buttons):
+            self.widget_factory.create_button(
+                main_container,
+                text=text,
+                command=command,
+                row=i // 3,
+                column=i % 3
+            )
+
+        # Dropdown configurations
+        dropdown_configs = [
+            {
+                'row': 0,
+                'column': 3,
+                'var_name': 'selected_function6',
+                'widget_name': 'function_dropdown6',
+                'default': '*Interactive Shells*',
+                'options': ['*Interactive Shells*', '[1] CTT Winutils', '[2] Activate Win/Office',
+                            '[3] Install/Upd. FFMPEG'],
+                'callback': 'on_function_select6'
+            },
+            {
+                'row': 1,
+                'column': 3,
+                'var_name': 'selected_function5',
+                'widget_name': 'function_dropdown5',
+                'default': '*IP & Online Status*',
+                'options': ['*IP & Online Status*', '[1] PC online status', '[2] Website online status',
+                            '[3] Current IP info', '[4] Apps with internet connection', '[5] Execute <ping> command'],
+                'callback': 'on_function_select5'
+            },
+            {
+                'row': 2,
+                'column': 3,
+                'var_name': 'selected_function7',
+                'widget_name': 'function_dropdown7',
+                'default': '*Disk Operations*',
+                'options': ['*Disk Operations*', '[1] Disk Speedtest', '[2] Show Disk Info'],
+                'callback': 'on_function_select7'
+            },
+            {
+                'row': 0,
+                'column': 4,
+                'var_name': 'selected_function4',
+                'widget_name': 'function_dropdown4',
+                'default': '*Admin Shells*',
+                'options': ['*Admin Shells*', '[1] cmd', '[2] PowerShell'],
+                'callback': 'on_function_select4'
+            },
+            {
+                'row': 1,
+                'column': 4,
+                'var_name': 'selected_function1',
+                'widget_name': 'function_dropdown1',
+                'default': '*System Info*',
+                'options': ['*System Info*', '[1] Extract Sys Info', '[2] Compare Sys Info'],
+                'callback': 'on_function_select1'
+            },
+            {
+                'row': 2,
+                'column': 4,
+                'var_name': 'selected_function3',
+                'widget_name': 'function_dropdown3',
+                'default': '*God Mode*',
+                'options': ['*God Mode*', '[1] Simple God mode', '[2] Super God mode'],
+                'callback': 'on_function_select3'
+            }
+        ]
+
+        # Create dropdowns
+        self._create_dropdowns(main_container, dropdown_configs)
+
+    def _create_fun_tab(self):
+        # Create notebook within the fun tab
+        fun_notebook = self.widget_factory.create_notebook(self.frames['fun'])
+        fun_notebook.pack(fill='both', expand=True, padx=15, pady=15)
+
+        # Create category frames
+        fun_frames = {
+            'apps': self.widget_factory.create_frame(fun_notebook),
+            'fun_stuff': self.widget_factory.create_frame(fun_notebook)
+        }
+
+        # Add frames to notebook
+        fun_notebook.add(fun_frames['apps'], text='Tools')
+        fun_notebook.add(fun_frames['fun_stuff'], text='Fun Stuff')
+
+        # Define buttons for each category
+        apps_buttons = [
+            ("Password Generator", self.open_pw_gen),
+            ("Color Picker", self.open_color_picker),
+        ]
+
+        fun_stuff_buttons = [
+            ("JChat GUI", self.open_chat),
+            ("Hash Generator", self.open_hash_stuff),
+            ("Funny ASCII Donut", self.open_donut),
+            ("WinFunct Logo", self.show_logo)
+        ]
+
+        # Create buttons in their respective categories
+        self._create_fun_buttons(fun_frames['apps'], apps_buttons)
+        self._create_fun_buttons(fun_frames['fun_stuff'], fun_stuff_buttons)
+
+    def _create_bottom_frame(self):
+        # Create main bottom container with fixed height
+        self.bottom_frame = self.widget_factory.create_fixed_height_frame(self.main_frame, height=70)
+
+        # Create a content frame inside bottom_frame that will handle the grid layout
+        content_frame = self.widget_factory.create_frame(self.bottom_frame)
+        content_frame.pack(fill="both", expand=True)
+
+        # Configure grid weights for the content frame
+        content_frame.grid_rowconfigure(0, weight=1)
+        content_frame.grid_columnconfigure(1, weight=1)  # Middle spacer
+        for i in [0, 2]:  # Left and right containers
+            content_frame.grid_columnconfigure(i, weight=0)
+
+        # Create three sections: left, middle (spacer), and right
+        left_container = self.widget_factory.create_frame(content_frame)
+        left_container.grid(row=0, column=0, sticky="nsew", padx=10)
+
+        middle_container = self.widget_factory.create_frame(content_frame)
+        middle_container.grid(row=0, column=1, sticky="nsew")
+
+        right_container = self.widget_factory.create_frame(content_frame)
+        right_container.grid(row=0, column=2, sticky="nsew", padx=10)
+
+        # Set minimum widths for left and right containers
+        left_container.grid_propagate(False)
+        left_container.configure(width=300)  # Adjust this value as needed
+        right_container.grid_propagate(False)
+        right_container.configure(width=300)  # Adjust this value as needed
+
+        # Configure grid weights for left container
+        for i in range(2):  # 2 columns
+            left_container.grid_columnconfigure(i, weight=1, uniform="left_col")
+        for i in range(2):  # 2 rows
+            left_container.grid_rowconfigure(i, weight=1, uniform="left_row")
+
+        # Configure grid weights for right container
+        for i in range(2):  # 2 columns
+            right_container.grid_columnconfigure(i, weight=1, uniform="right_col")
+        for i in range(2):  # 2 rows
+            right_container.grid_rowconfigure(i, weight=1, uniform="right_row")
+
+        # Create left-aligned buttons
+        left_buttons = [
+            ("Instant Shutdown", self.confirm_shutdown, 0, 0),
+            ("Forced Reboot", self.confirm_reboot, 1, 0),
+            ("Reboot to BIOS/UEFI", self.confirm_uefi, 1, 1),
+            ("Enter Hibernation", self.confirm_sleep, 0, 1)
+        ]
+
+        for text, command, row, col in left_buttons:
+            self.widget_factory.create_button(
+                left_container,
+                text=text,
+                command=command,
+                row=row,
+                column=col
+            )
+
+        # Create right-aligned buttons and dropdown
+        right_elements = [
+            {
+                'type': 'dropdown',
+                'row': 0,
+                'column': 1,
+                'var_name': 'selected_function8',
+                'widget_name': 'function_dropdown8',
+                'default': '*GUI Options*',
+                'options': ['*GUI Options*', '[1] Theme Selector', '[2] Reset UI'],
+                'callback': 'on_function_select8'
+            },
+            {
+                'type': 'button',
+                'row': 1,
+                'column': 0,
+                'text': 'Open Root Folder',
+                'command': self.open_app_root_folder
+            },
+            {
+                'type': 'button',
+                'row': 1,
+                'column': 1,
+                'text': 'Exit Application',
+                'command': self.quit
+            }
+        ]
+
+        for element in right_elements:
+            if element['type'] == 'button':
+                self.widget_factory.create_button(
+                    right_container,
+                    text=element['text'],
+                    command=element['command'],
+                    row=element['row'],
+                    column=element['column']
+                )
+            elif element['type'] == 'dropdown':
+                self._create_dropdowns(right_container, [element])
+
+    def _create_version_label(self):
+        """Creates and configures the version label with clickable link"""
+        # Create version label container
+        version_container = self.widget_factory.create_frame(self.main_frame)
+        version_container.pack(side="bottom", fill="x")
+
+        # Create the version label
+        self.version_label = tk.Label(
+            version_container,
+            text=VERSION,
+            anchor="se",
+            cursor="hand2",
+            fg=VERSION_LABEL_TEXT,
+            bg=UI_COLOR,
+        )
+        self.version_label.pack(side="right")
+
+        # Add interactivity to the version label
+        self._configure_version_label_bindings()
+
+    def _create_dropdowns(self, container, configs):
+        """Helper method to create dropdowns with consistent styling"""
+        for config in configs:
+            var = tk.StringVar()
+            setattr(self, config['var_name'], var)
+            var.set(config['default'])
+
+            dropdown_frame = tk.Frame(container, bg=UI_COLOR)
+            dropdown_frame.grid(
+                row=config['row'],
+                column=config['column'],
+                padx=7,
+                pady=7,
+                sticky="nsew"
+            )
+
+            dropdown = tk.OptionMenu(dropdown_frame, var, *config['options'])
+            dropdown.config(
+                width=18,
+                bg=BUTTON_BG_COLOR,
+                fg=BUTTON_TEXT_COLOR,
+                activebackground=UI_COLOR,
+                activeforeground=BUTTON_TEXT_COLOR,
+                highlightthickness=0
+            )
+            dropdown["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+            dropdown.pack(fill="both", expand=True)
+
+            # Store the dropdown widget reference
+            setattr(self, config['widget_name'], dropdown)
+
+            # Add trace
+            var.trace('w', getattr(self, config['callback']))
+
+    def _create_fun_buttons(self, frame, buttons_list):
+        """Helper method to create buttons in the fun tab sections"""
+        # Create main container with layout manager
+        container = self.layout_manager.create_grid_container(frame)
+
+        # Calculate and configure rows
+        num_rows = (len(buttons_list) + 4) // 5  # 5 columns
+        for i in range(num_rows):
+            container.grid_rowconfigure(i, weight=1, uniform="row")
+
+        # Create buttons
+        for i, (text, command) in enumerate(buttons_list):
+            self.widget_factory.create_button(
+                container,
+                text=text,
+                command=command,
+                row=i // 5,
+                column=i % 5
+            )
+
+    def _configure_version_label_bindings(self):
+        """Configures the mouse event bindings for the version label"""
+
+        def open_link(event):
+            webbrowser.open(WINFUNCT_LINK)
+
+        def on_enter(event):
+            self.version_label.config(fg="white")
+
+        def on_leave(event):
+            self.version_label.config(fg=VERSION_LABEL_TEXT)
+
+        # Bind mouse events
+        self.version_label.bind("<Button-1>", open_link)
+        self.version_label.bind("<Enter>", on_enter)
+        self.version_label.bind("<Leave>", on_leave)
+
+    def execute_command(self, cmd):
+        """Execute the command associated with an option button"""
+        try:
+            if hasattr(self, cmd):
+                # If it's a class method, execute it
+                method = getattr(self, cmd)
+                method()
+            else:
+                # If it's a system command, run it with elevated privileges if needed
+                try:
+                    subprocess.Popen(cmd, shell=True)
+                except WindowsError as we:
+                    # Handle "Access Denied" error
+                    if we.winerror == 5:
+                        # Try running with elevated privileges
+                        ctypes.windll.shell32.ShellExecuteW(
+                            None, "runas", cmd, None, None, 1
+                        )
+                    else:
+                        raise
+        except Exception as e:
+            error_msg = f"Error executing command '{cmd}': {str(e)}"
+            print(error_msg)
+            messagebox.showerror("Error", error_msg)
+
+# ---------------------------------- GUI CLASSES END ----------------------------------
+
 
 # Main App Window
 # noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable
-class Application(tk.Tk):
+class Application(tk.Tk, GUI):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        GUI.__init__(self)
+
+        # Initialize managers
+        self.style_manager = StyleManager()
+        self.widget_factory = WidgetFactory()
+        self.layout_manager = LayoutManager()
 
         # Initialize dropdown widget references
         self.function_dropdown1 = None
@@ -170,7 +726,7 @@ class Application(tk.Tk):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "840x365"
+        self.resolution_main = "840x385"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -184,7 +740,8 @@ class Application(tk.Tk):
         self.main_frame.grid_columnconfigure(0, weight=1)
         self.main_frame.grid_rowconfigure(0, weight=1)
 
-        self.create_widgets()
+        # Initialize GUI components using the GUI class method
+        super().create_widgets()
 
         # Load the last selected theme after the main UI is initialized & Center window
         self.after(100, self.load_last_selected_theme)
@@ -203,6 +760,18 @@ class Application(tk.Tk):
         self.clipboard_clear()
         self.clipboard_append(text)
         self.update()  # To make sure the clipboard is updated
+
+    def system_management_options(self):
+        return system_management_options
+
+    def network_security_options(self):
+        return network_security_options
+
+    def troubleshooting_options(self):
+        return troubleshooting_options
+
+    def advanced_tools_options(self):
+        return advanced_tools_options
 
     # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
@@ -2732,526 +3301,9 @@ https://dns.cloudflare.com/dns-query"""
 
     # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
 
-    def create_widgets(self):
-        # Set up basic styles
-        style = ttk.Style()
-        style.theme_use('default')
 
-        # Configure tab styles
-        style.configure('TNotebook.Tab', padding=[10, 7],
-                        background=BUTTON_BG_COLOR,
-                        foreground=BUTTON_TEXT_COLOR)
-        style.configure('TNotebook', background=UI_COLOR)
-        style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
 
-        # Configure frame styles for different categories
-        for category in ['Functions', 'Options', 'Fun', 'SystemManagement',
-                         'NetworkSecurity', 'Troubleshooting', 'AdvancedTools', 'Bottom']:
-            style.configure(f'{category}.TFrame', background=UI_COLOR)
 
-        # Configure button style
-        style.configure('Custom.TButton',
-                        background=BUTTON_BG_COLOR,
-                        foreground=BUTTON_TEXT_COLOR,
-                        borderwidth=BORDER_WIDTH,
-                        relief=BUTTON_STYLE)
-
-        style.map('Custom.TButton',
-                  background=[('active', BUTTON_BG_COLOR)],
-                  foreground=[('active', BUTTON_TEXT_COLOR)])
-
-        # Create main tab structure
-        self.tabs = ttk.Notebook(self.main_frame)
-        self.tabs.pack(fill="both", expand=True)
-
-        # Create main frames
-        self.functions_frame = tk.Frame(self.tabs, bg=UI_COLOR)
-        self.options_frame = tk.Frame(self.tabs, bg=UI_COLOR)
-        self.fun_frame = tk.Frame(self.tabs, bg=UI_COLOR)
-
-        # Add frames to tabs
-        self.tabs.add(self.functions_frame, text="Scripts")
-        self.tabs.add(self.options_frame, text="Options")
-        self.tabs.add(self.fun_frame, text="Misc")
-
-        # Create options notebook
-        options_notebook = ttk.Notebook(self.options_frame)
-        options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
-
-        # New Category Frames inside the Options tab
-        system_management_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        network_security_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        troubleshooting_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-        advanced_tools_frame = tk.Frame(options_notebook, bg=UI_COLOR)
-
-        # Adding new frames to the options notebook with new categories
-        options_notebook.add(system_management_frame, text='System Management')
-        options_notebook.add(network_security_frame, text='Network & Security')
-        options_notebook.add(troubleshooting_frame, text='Troubleshooting')
-        options_notebook.add(advanced_tools_frame, text='Advanced Tools')
-
-        # Packing the notebook into the options_frame
-        options_notebook.pack(fill='both', expand=True, padx=15, pady=15)
-
-        # Function to create styled buttons
-        def create_styled_button(parent, text, command, row, column):
-            btn_frame = tk.Frame(parent, bg=UI_COLOR)
-            btn_frame.grid(row=row, column=column, padx=5, pady=5)
-
-            btn = tk.Button(btn_frame,
-                            text=text,
-                            command=command,
-                            width=20,
-                            bg=BUTTON_BG_COLOR,
-                            fg=BUTTON_TEXT_COLOR,
-                            borderwidth=BORDER_WIDTH,
-                            relief=BUTTON_STYLE,
-                            activebackground=UI_COLOR,
-                            activeforeground=BUTTON_TEXT_COLOR)
-            btn.pack(fill="both", expand=True)
-
-            # Add hover effect
-            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-            return btn
-
-        # Function to create buttons within a frame from a list of option tuples
-        def create_option_buttons(frame, options_list):
-            # Create main container with padding
-            container = tk.Frame(frame, bg=UI_COLOR, padx=15, pady=15)
-            container.pack(expand=True, fill="both")
-
-            # Configure grid weights
-            for i in range(5):  # 5 columns
-                container.grid_columnconfigure(i, weight=1, uniform="column")
-
-                # Calculate rows needed
-            num_rows = (len(options_list) + 4) // 5  # Ceiling division for 5 columns
-            for i in range(num_rows):
-                container.grid_rowconfigure(i, weight=1, uniform="row")
-
-            for i, option in enumerate(options_list):
-                btn_frame = tk.Frame(container, bg=UI_COLOR)
-                btn_frame.grid(row=i // 5,
-                               column=i % 5,
-                               padx=7,
-                               pady=7,
-                               sticky="nsew")  # Changed to nsew for full scaling
-
-                btn = tk.Button(btn_frame,
-                                text=option[0],
-                                command=lambda cmd=option[1]: execute_command(cmd),
-                                bg=BUTTON_BG_COLOR,
-                                fg=BUTTON_TEXT_COLOR,
-                                activebackground=UI_COLOR,
-                                activeforeground=BUTTON_TEXT_COLOR,
-                                borderwidth=BORDER_WIDTH,
-                                relief=BUTTON_STYLE)
-                btn.pack(fill="both", expand=True)  # Ensure button fills frame
-
-                # Add hover effect
-                btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-                btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-        # Create buttons in their distinct categories
-        create_option_buttons(system_management_frame, system_management_options)
-        create_option_buttons(network_security_frame, network_security_options)
-        create_option_buttons(troubleshooting_frame, troubleshooting_options)
-        create_option_buttons(advanced_tools_frame, advanced_tools_options)
-
-        # ------------------------------MAIN WINDOW/TABS/STYLES END-------------------------------
-        # ------------------------------VERSION LABEL-------------------------------
-
-        # Create version label container
-        version_container = tk.Frame(self.main_frame, bg=UI_COLOR)
-        version_container.pack(side="bottom", fill="x")  # Removed padx and pady
-
-        self.version_label = tk.Label(
-            version_container,
-            text=VERSION,
-            anchor="se",
-            cursor="hand2",
-            fg=VERSION_LABEL_TEXT,
-            bg=UI_COLOR,
-        )
-        self.version_label.pack(side="right")
-
-        # Version label bindings
-        def open_link(event):
-            webbrowser.open(WINFUNCT_LINK)
-
-        def on_enter(event):
-            self.version_label.config(fg="white")
-
-        def on_leave(event):
-            self.version_label.config(fg=VERSION_LABEL_TEXT)
-
-        self.version_label.bind("<Button-1>", open_link)
-        self.version_label.bind("<Enter>", on_enter)
-        self.version_label.bind("<Leave>", on_leave)
-
-        # ----------------------------VERSION LABEL END----------------------------
-        # ----------------------------MAIN BUTTONS AND DROPDOWNS----------------------------
-        # Create main container with padding
-        main_container = tk.Frame(self.functions_frame, bg=UI_COLOR, padx=15, pady=15)
-        main_container.pack(expand=True, fill="both")
-
-        # Configure grid weights
-        for i in range(5):  # 5 columns
-            main_container.grid_columnconfigure(i, weight=1, uniform="column")
-
-            # Button configurations
-        main_buttons = [
-            ("AdGuard Install Helper", self.agh_curl),
-            ("Autostart Locations", self.open_autostart_locations),
-            ("Flush/Renew DNS", self.renew_ip_config),
-            ("Logoff Local User(s)", self.logoff_users),
-            ("Open Link Summary", self.open_links_window),
-            ("Verify File Checksum", self.get_file_checksum),
-            ("Wi-Fi Profile Info", self.show_wifi_networks),
-            ("Clear Icon Cache", self.icon_cache),
-            ("Quick Access Manager", self.quick_access_manager),
-            ("Create CTT Shortcut", self.create_ctt_shortcut),
-            ("Restore System Health", self.restore_health),
-            ("Backup and Restore", self.create_backup_window)
-        ]
-
-        # Calculate rows needed for buttons (using first 3 columns)
-        num_rows = (len(main_buttons) + 2) // 3  # Ceiling division for 3 columns
-        for i in range(num_rows):
-            main_container.grid_rowconfigure(i, weight=1, uniform="row")
-
-            # Create buttons
-        for i, (text, command) in enumerate(main_buttons):
-            btn_frame = tk.Frame(main_container, bg=UI_COLOR)
-            btn_frame.grid(row=i // 3,
-                           column=i % 3,
-                           padx=7,
-                           pady=7,
-                           sticky="nsew")
-
-            btn = tk.Button(btn_frame,
-                            text=text,
-                            command=command,
-                            bg=BUTTON_BG_COLOR,
-                            fg=BUTTON_TEXT_COLOR,
-                            activebackground=UI_COLOR,
-                            activeforeground=BUTTON_TEXT_COLOR,
-                            borderwidth=BORDER_WIDTH,
-                            relief=BUTTON_STYLE)
-            btn.pack(fill="both", expand=True)
-
-            # Add hover effect
-            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-            # Dropdown configurations
-        dropdown_configs = [
-            {
-                'row': 0,
-                'column': 3,
-                'var_name': 'selected_function6',
-                'widget_name': 'function_dropdown6',
-                'default': '*Interactive Shells*',
-                'options': ['*Interactive Shells*', '[1] CTT Winutils', '[2] Activate Win/Office',
-                            '[3] Install/Upd. FFMPEG'],
-                'callback': 'on_function_select6'
-            },
-            {
-                'row': 1,
-                'column': 3,
-                'var_name': 'selected_function5',
-                'widget_name': 'function_dropdown5',
-                'default': '*IP & Online Status*',
-                'options': ['*IP & Online Status*', '[1] PC online status', '[2] Website online status',
-                            '[3] Current IP info', '[4] Apps with internet connection', '[5] Execute <ping> command'],
-                'callback': 'on_function_select5'
-            },
-            {
-                'row': 2,
-                'column': 3,
-                'var_name': 'selected_function7',
-                'widget_name': 'function_dropdown7',
-                'default': '*Disk Operations*',
-                'options': ['*Disk Operations*', '[1] Disk Speedtest', '[2] Show Disk Info'],
-                'callback': 'on_function_select7'
-            },
-            {
-                'row': 0,
-                'column': 4,
-                'var_name': 'selected_function4',
-                'widget_name': 'function_dropdown4',
-                'default': '*Admin Shells*',
-                'options': ['*Admin Shells*', '[1] cmd', '[2] PowerShell'],
-                'callback': 'on_function_select4'
-            },
-            {
-                'row': 1,
-                'column': 4,
-                'var_name': 'selected_function1',
-                'widget_name': 'function_dropdown1',
-                'default': '*System Info*',
-                'options': ['*System Info*', '[1] Extract Sys Info', '[2] Compare Sys Info'],
-                'callback': 'on_function_select1'
-            },
-            {
-                'row': 2,
-                'column': 4,
-                'var_name': 'selected_function3',
-                'widget_name': 'function_dropdown3',
-                'default': '*God Mode*',
-                'options': ['*God Mode*', '[1] Simple God mode', '[2] Super God mode'],
-                'callback': 'on_function_select3'
-            }
-        ]
-
-        # Create dropdowns
-        for config in dropdown_configs:
-            var = tk.StringVar()
-            setattr(self, config['var_name'], var)
-            var.set(config['default'])
-
-            dropdown_frame = tk.Frame(main_container, bg=UI_COLOR)
-            dropdown_frame.grid(row=config['row'],
-                                column=config['column'],
-                                padx=7,
-                                pady=7,
-                                sticky="nsew")
-
-            dropdown = tk.OptionMenu(dropdown_frame, var, *config['options'])
-            dropdown.config(
-                width=18,
-                bg=BUTTON_BG_COLOR,
-                fg=BUTTON_TEXT_COLOR,
-                activebackground=UI_COLOR,
-                activeforeground=BUTTON_TEXT_COLOR,
-                highlightthickness=0
-            )
-            dropdown["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-            dropdown.pack(fill="both", expand=True)
-
-            # Store the dropdown widget reference
-            setattr(self, config['widget_name'], dropdown)
-
-            # Add trace
-            var.trace('w', getattr(self, config['callback']))
-
-            # ----------------------------MAIN BUTTONS AND DROPDOWNS END----------------------------
-        # ---------------------------------- TABS/FRAME FOR FUN BUTTONS --------------------------------------------
-
-        # Fun Notebook within the fun tab
-        fun_notebook = ttk.Notebook(self.fun_frame)
-        fun_notebook.pack(fill='both', expand=True, padx=15, pady=15)
-
-        # New Category Frames inside the Fun tab
-        apps_frame = tk.Frame(fun_notebook, bg=UI_COLOR)
-        fun_stuff_frame = tk.Frame(fun_notebook, bg=UI_COLOR)
-
-        # Adding new frames to the fun notebook
-        fun_notebook.add(apps_frame, text='Tools')
-        fun_notebook.add(fun_stuff_frame, text='Fun Stuff')
-
-        # Function to create buttons within a frame from a list of option tuples
-        def create_fun_buttons(frame, buttons_list):
-            # Create main container with padding
-            container = tk.Frame(frame, bg=UI_COLOR, padx=15, pady=15)
-            container.pack(expand=True, fill="both")
-
-            # Configure grid weights for columns
-            for i in range(5):  # 5 columns
-                container.grid_columnconfigure(i, weight=1, uniform="column")
-
-                # Calculate rows needed and configure row weights
-            num_rows = (len(buttons_list) + 4) // 5
-            for i in range(num_rows):
-                container.grid_rowconfigure(i, weight=1, uniform="row")
-
-            for i, button in enumerate(buttons_list):
-                btn_frame = tk.Frame(container, bg=UI_COLOR)
-                btn_frame.grid(row=i // 5,
-                               column=i % 5,
-                               padx=7,
-                               pady=7,
-                               sticky="nsew")  # Changed to nsew for full scaling
-
-                btn = tk.Button(btn_frame,
-                                text=button[0],
-                                command=button[1],
-                                bg=BUTTON_BG_COLOR,
-                                fg=BUTTON_TEXT_COLOR,
-                                activebackground=UI_COLOR,
-                                activeforeground=BUTTON_TEXT_COLOR,
-                                borderwidth=BORDER_WIDTH,
-                                relief=BUTTON_STYLE)
-                btn.pack(fill="both", expand=True)  # Ensure button fills frame
-
-                # Add hover effect
-                btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-                btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-        apps_buttons = [
-            ("Password Generator", self.open_pw_gen),
-            ("Color Picker", self.open_color_picker),
-        ]
-
-        fun_stuff_buttons = [
-            ("JChat GUI", self.open_chat),
-            ("Hash Generator", self.open_hash_stuff),
-            ("Funny ASCII Donut", self.open_donut),
-            ("WinFunct Logo", self.show_logo)
-        ]
-
-        # Create buttons in their distinct categories
-        create_fun_buttons(apps_frame, apps_buttons)
-        create_fun_buttons(fun_stuff_frame, fun_stuff_buttons)
-
-        # ---------------------------------- TABS/FRAME FOR FUN BUTTONS END --------------------------------------------
-        # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
-        # Create main bottom container with fixed height
-        self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR, height=70)  # Set fixed height
-        self.bottom_frame.pack(fill="x", padx=3, pady=3)
-        self.bottom_frame.pack_propagate(False)  # Prevent automatic height adjustment
-
-        # Create a content frame inside bottom_frame that will handle the grid layout
-        content_frame = tk.Frame(self.bottom_frame, bg=UI_COLOR)
-        content_frame.pack(fill="both", expand=True)
-
-        # Configure grid weights for the content frame
-        content_frame.grid_rowconfigure(0, weight=1)
-        content_frame.grid_columnconfigure(1, weight=1)  # Middle spacer
-        for i in [0, 2]:  # Left and right containers
-            content_frame.grid_columnconfigure(i, weight=0)
-
-            # Create three sections: left, middle (spacer), and right
-        left_container = tk.Frame(content_frame, bg=UI_COLOR)
-        left_container.grid(row=0, column=0, sticky="nsew", padx=10)
-
-        middle_container = tk.Frame(content_frame, bg=UI_COLOR)
-        middle_container.grid(row=0, column=1, sticky="nsew")
-
-        right_container = tk.Frame(content_frame, bg=UI_COLOR)
-        right_container.grid(row=0, column=2, sticky="nsew", padx=10)
-
-        # Set minimum widths for left and right containers
-        left_container.grid_propagate(False)
-        left_container.configure(width=300)  # Adjust this value as needed
-        right_container.grid_propagate(False)
-        right_container.configure(width=300)  # Adjust this value as needed
-
-        # Configure grid weights for left container
-        for i in range(2):  # 2 columns
-            left_container.grid_columnconfigure(i, weight=1, uniform="left_col")
-        for i in range(2):  # 2 rows
-            left_container.grid_rowconfigure(i, weight=1, uniform="left_row")
-
-        # Configure grid weights for right container
-        for i in range(2):  # 2 columns
-            right_container.grid_columnconfigure(i, weight=1, uniform="right_col")
-        for i in range(2):  # 2 rows
-            right_container.grid_rowconfigure(i, weight=1, uniform="right_row")
-
-        # Left-aligned buttons
-        left_buttons = [
-            ("Instant Shutdown", self.confirm_shutdown, 0, 0),
-            ("Forced Reboot", self.confirm_reboot, 1, 0),
-            ("Reboot to BIOS/UEFI", self.confirm_uefi, 1, 1),
-            ("Enter Hibernation", self.confirm_sleep, 0, 1)
-        ]
-
-        for text, command, row, col in left_buttons:
-            btn_frame = tk.Frame(left_container, bg=UI_COLOR)
-            btn_frame.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
-
-            btn = tk.Button(btn_frame,
-                            text=text,
-                            command=command,
-                            bg=BUTTON_BG_COLOR,
-                            fg=BUTTON_TEXT_COLOR,
-                            activebackground=UI_COLOR,
-                            activeforeground=BUTTON_TEXT_COLOR,
-                            borderwidth=BORDER_WIDTH,
-                            relief=BUTTON_STYLE)
-            btn.pack(fill="both", expand=True)
-
-            # Add hover effect
-            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-        # Right-aligned buttons and dropdown
-        right_elements = [
-            {
-                'type': 'dropdown',
-                'row': 0,
-                'column': 1,
-                'var_name': 'selected_function8',
-                'widget_name': 'function_dropdown8',
-                'default': '*GUI Options*',
-                'options': ['*GUI Options*', '[1] Theme Selector', '[2] Reset UI'],
-                'callback': 'on_function_select8'
-            },
-            {
-                'type': 'button',
-                'row': 1,
-                'column': 0,
-                'text': 'Open Root Folder',
-                'command': self.open_app_root_folder
-            },
-            {
-                'type': 'button',
-                'row': 1,
-                'column': 1,
-                'text': 'Exit Application',
-                'command': self.quit
-            }
-        ]
-
-        for element in right_elements:
-            element_frame = tk.Frame(right_container, bg=UI_COLOR)
-            element_frame.grid(row=element['row'],
-                               column=element['column'],
-                               padx=5, pady=5,
-                               sticky="nsew")
-
-            if element['type'] == 'button':
-                btn = tk.Button(element_frame,
-                                text=element['text'],
-                                command=element['command'],
-                                bg=BUTTON_BG_COLOR,
-                                fg=BUTTON_TEXT_COLOR,
-                                activebackground=UI_COLOR,
-                                activeforeground=BUTTON_TEXT_COLOR,
-                                borderwidth=BORDER_WIDTH,
-                                relief=BUTTON_STYLE)
-                btn.pack(fill="both", expand=True)
-
-                # Add hover effect
-                btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
-                btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-            elif element['type'] == 'dropdown':
-                var = tk.StringVar()
-                setattr(self, element['var_name'], var)
-                var.set(element['default'])
-
-                dropdown = tk.OptionMenu(element_frame, var, *element['options'])
-                dropdown.config(
-                    bg=BUTTON_BG_COLOR,
-                    fg=BUTTON_TEXT_COLOR,
-                    activebackground=UI_COLOR,
-                    activeforeground=BUTTON_TEXT_COLOR,
-                    highlightthickness=0
-                )
-                dropdown["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-                dropdown.pack(fill="both", expand=True)
-
-                # Store the dropdown widget reference
-                setattr(self, element['widget_name'], dropdown)
-
-                # Add trace
-                var.trace('w', getattr(self, element['callback']))
-
-        # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
 
 
 app = Application()
