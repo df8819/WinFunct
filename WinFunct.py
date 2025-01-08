@@ -766,7 +766,7 @@ class Application(tk.Tk, GUI):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "840x385"
+        self.resolution_main = "900x430"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
