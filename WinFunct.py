@@ -109,16 +109,13 @@ if __name__ == "__main__":
 def show_logo():
     print(LOGO)
 
-
 show_logo()
 print("Awaiting user input (⌐■_■)")
 
-
 # Command functions
-def execute_command(cmd):
+def execute_system_command(cmd):
     print(f"Executing: {cmd}")
     subprocess.Popen(cmd, shell=True)
-
 
 def load_theme_from_file():
     try:
