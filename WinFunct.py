@@ -763,8 +763,6 @@ class Application(tk.Tk, GUI):
         self.widget_factory = WidgetFactory()
         self.layout_manager = LayoutManager()
 
-
-
         self.load_last_selected_theme()
 
         # Initial window setup
