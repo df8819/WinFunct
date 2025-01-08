@@ -167,7 +167,6 @@ class StyleManager:
                       background=[('active', UI_COLOR)],
                       foreground=[('active', BUTTON_TEXT_COLOR)])
 
-
 # noinspection PyMethodMayBeStatic
 class WidgetFactory:
     def create_notebook(self, parent):
@@ -175,7 +174,7 @@ class WidgetFactory:
         notebook.pack(fill="both", expand=True)
         return notebook
 
-    def create_frame(self, parent, bg=UI_COLOR):
+    def create_frame(self, parent):
         frame = ttk.Frame(parent, style='Custom.TFrame')
         return frame
 
@@ -205,7 +204,6 @@ class WidgetFactory:
         frame.pack_propagate(False)
         return frame
 
-
 # noinspection PyMethodMayBeStatic
 class LayoutManager:
     def create_grid_container(self, parent, columns=5):
@@ -222,7 +220,6 @@ class LayoutManager:
         for frame, text in frames.items():
             notebook.add(frames[frame], text=text)
 
-
 # noinspection PyUnresolvedReferences,PyMethodMayBeStatic,PyUnusedLocal
 class GUI:
     def __init__(self):
@@ -230,6 +227,37 @@ class GUI:
         self.style_manager = StyleManager()
         self.widget_factory = WidgetFactory()
         self.layout_manager = LayoutManager()
+
+        # Initialize dropdown widget references
+        self.function_dropdown1 = None
+        self.function_dropdown2 = None
+        self.function_dropdown3 = None
+        self.function_dropdown4 = None
+        self.function_dropdown5 = None
+        self.function_dropdown6 = None
+        self.function_dropdown7 = None
+        self.function_dropdown8 = None
+
+        # Initialize StringVar references
+        self.selected_function1 = None
+        self.selected_function2 = None
+        self.selected_function3 = None
+        self.selected_function4 = None
+        self.selected_function5 = None
+        self.selected_function6 = None
+        self.selected_function7 = None
+        self.selected_function8 = None
+
+        # Initialize other UI elements
+        self.tabs = None
+        self.checkbox_vars = None
+        self.fun_frame = None
+        self.options_frame = None
+        self.create_user = None
+        self.ip_text = None
+        self.functions_frame = None
+        self.bottom_frame = None
+        self.frames = {}
 
     def get_system_management_options(self):
         from config import system_management_options
@@ -465,7 +493,7 @@ class GUI:
 
     def _create_bottom_frame(self):
         # Create main bottom container with fixed height
-        self.bottom_frame = self.widget_factory.create_fixed_height_frame(self.main_frame, height=70)
+        self.bottom_frame = self.widget_factory.create_fixed_height_frame(self.main_frame, height=80)
 
         # Create a content frame inside bottom_frame that will handle the grid layout
         content_frame = self.widget_factory.create_frame(self.bottom_frame)
@@ -693,35 +721,7 @@ class Application(tk.Tk, GUI):
         self.widget_factory = WidgetFactory()
         self.layout_manager = LayoutManager()
 
-        # Initialize dropdown widget references
-        self.function_dropdown1 = None
-        self.function_dropdown2 = None
-        self.function_dropdown3 = None
-        self.function_dropdown4 = None
-        self.function_dropdown5 = None
-        self.function_dropdown6 = None
-        self.function_dropdown7 = None
-        self.function_dropdown8 = None
 
-        # Initialize StringVar references
-        self.selected_function1 = None
-        self.selected_function2 = None
-        self.selected_function3 = None
-        self.selected_function4 = None
-        self.selected_function5 = None
-        self.selected_function6 = None
-        self.selected_function7 = None
-        self.selected_function8 = None
-
-        # Initialize other UI elements
-        self.tabs = None
-        self.checkbox_vars = None
-        self.fun_frame = None
-        self.options_frame = None
-        self.create_user = None
-        self.ip_text = None
-        self.functions_frame = None
-        self.bottom_frame = None
 
         self.load_last_selected_theme()
 
