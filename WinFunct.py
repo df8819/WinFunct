@@ -681,7 +681,6 @@ class GUI:
         self.version_label.bind("<Enter>", on_enter)
         self.version_label.bind("<Leave>", on_leave)
 
-
     # Getter methods
     def get_system_management_options(self):
         from config import system_management_options
@@ -1760,20 +1759,29 @@ class Application(tk.Tk, GUI):
     # ----------------------------------WIFI PASSWORD EXTRACTION-------------------------------------------------
 
     def decode_output(self, output_bytes):
-        encodings = ['utf-8', 'cp1252', 'iso-8859-1', 'cp850']
+        """
+        Attempt to decode command output using multiple encodings
+        """
+        encodings = [
+            'utf-8', 'cp1252', 'iso-8859-1', 'cp850', 'cp437',
+            'ascii', 'latin1'
+        ]
+
         for encoding in encodings:
             try:
                 return output_bytes.decode(encoding)
             except UnicodeDecodeError:
                 continue
+
         return output_bytes.decode('utf-8', errors='ignore')
 
     def get_wifi_profiles(self):
+        """
+        Retrieve all WiFi profiles from the system
+        """
         commands = [
-            ["netsh", "wlan", "show", "profile"],
             ["netsh", "wlan", "show", "profiles"],
-            ["netsh", "wlan", "show", "interfaces"],
-            ["netsh", "wlan", "show", "networks", "mode=bssid"]
+            ["netsh", "wlan", "show", "profile"]
         ]
 
         for cmd in commands:
@@ -1782,7 +1790,7 @@ class Application(tk.Tk, GUI):
                     cmd,
                     stderr=subprocess.STDOUT,
                     timeout=10,
-                    shell=True
+                    shell=True  # Keeping shell=True for compatibility
                 )
                 output_text = self.decode_output(output)
                 if "Profile" in output_text:
@@ -1792,16 +1800,16 @@ class Application(tk.Tk, GUI):
         return None
 
     def show_wifi_networks(self):
-        print("""Extracting Wifi profiles.""")
+        print("Extracting Wifi profiles...")
         try:
             cmd_output = self.get_wifi_profiles()
             if not cmd_output:
                 messagebox.showerror("Error", "Could not retrieve WiFi profiles")
                 return
 
+            # Enhanced pattern for profile detection
             networks = re.findall(
-                r"(?:Profile|Profil|Perfil|プロファイル|配置文件)\s*[:：]\s*([^\r\n]+)"
-,
+                r"(?:Profile|Profil|Perfil|プロファイル|配置文件)\s*[:：]\s*([^\r\n]+)",
                 cmd_output
             )
 
@@ -1809,7 +1817,7 @@ class Application(tk.Tk, GUI):
             messagebox.showerror("Error", "Command timed out. Network service might be unresponsive.")
             return
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to execute netsh command: {e.output.decode('utf-8', 'ignore')}")
+            messagebox.showerror("Error", f"Failed to execute netsh command: {self.decode_output(e.output)}")
             return
 
         if networks:
@@ -1836,8 +1844,13 @@ class Application(tk.Tk, GUI):
             list_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
             scrollbar = tk.Scrollbar(list_frame, orient="vertical")
-            network_listbox = tk.Listbox(list_frame, yscrollcommand=scrollbar.set, exportselection=False,
-                                         bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
+            network_listbox = tk.Listbox(
+                list_frame,
+                yscrollcommand=scrollbar.set,
+                exportselection=False,
+                bg=UI_COLOR,
+                fg=BUTTON_TEXT_COLOR
+            )
 
             scrollbar.config(command=network_listbox.yview)
             scrollbar.pack(side="right", fill="y")
@@ -1860,35 +1873,21 @@ class Application(tk.Tk, GUI):
                         stderr=subprocess.STDOUT
                     )
                     cmd_output = self.decode_output(cmd_output)
-                    password_match = re.search(r"Key Content\s*:\s*([^\r\n]+)", cmd_output)
+                    password_match = re.search(r"Key Content\s*[:：]\s*([^\r\n]+)", cmd_output)
 
                     if password_match:
-                        password_text = password_match.group(1).rstrip("\r")
-                        self.clipboard_clear()  # Clear clipboard
-                        self.clipboard_append(password_text)  # Copy password to clipboard
+                        password_text = password_match.group(1).strip()
+                        self.clipboard_clear()
+                        self.clipboard_append(password_text)
                         messagebox.showinfo("Success", f"Password for '{selected_network}' copied to clipboard.")
                     else:
                         messagebox.showinfo("No Password", f"No password found for '{selected_network}'.")
 
                 except subprocess.CalledProcessError as e:
-                    messagebox.showerror("Error",
-                                         f"Failed to execute command for {selected_network}: {e.output.decode('utf-8', 'ignore')}")
-
-            # Add the <Single> button to the window
-            single_button = tk.Button(
-                network_window, text="<Single>", command=extract_single_password,
-                width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
-                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE
-            )
-            single_button.pack(side="left", padx=(5, 5), pady=10)
+                    messagebox.showerror("Error", f"Failed to execute command for {selected_network}")
 
             def cancel_button_click():
                 network_window.destroy()
-
-            cancel_button = tk.Button(network_window, text="Cancel", command=cancel_button_click, width=10,
-                                      bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                      relief=BUTTON_STYLE)
-            cancel_button.pack(side="right", padx=(5, 5), pady=10)
 
             def extract_all_passwords():
                 ssid_passwords = {}
@@ -1897,73 +1896,94 @@ class Application(tk.Tk, GUI):
                     try:
                         cmd_output = subprocess.check_output(
                             ["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
-                            stderr=subprocess.STDOUT)
+                            stderr=subprocess.STDOUT
+                        )
                         cmd_output = self.decode_output(cmd_output)
-                        password = re.search(r"Key Content\s*:\s*([^\r\n]+)"
-, cmd_output)
+                        password = re.search(r"Key Content\s*[:：]\s*([^\r\n]+)", cmd_output)
                         if password:
-                            password_text = password.group(1).rstrip("\r")
+                            password_text = password.group(1).strip()
                             ssid_passwords[network_profile] = password_text
-                    except subprocess.CalledProcessError as e:
-                        messagebox.showerror("Error", f"Failed to execute command for {network}: {e.output.decode('utf-8', 'ignore')}")
-                        return
+                    except:
+                        continue
 
                 if ssid_passwords:
                     hostname = socket.gethostname()
                     default_filename = f"pwlist_{hostname}.json"
-                    file_path = filedialog.asksaveasfilename(defaultextension='.json', initialfile=default_filename,
-                                                             filetypes=[("JSON Files", '*.json'), ("All Files", '*.*')])
+                    file_path = filedialog.asksaveasfilename(
+                        defaultextension='.json',
+                        initialfile=default_filename,
+                        filetypes=[("JSON Files", '*.json'), ("All Files", '*.*')]
+                    )
                     if file_path:
-                        with open(file_path, 'w') as json_file:
-                            json.dump(ssid_passwords, json_file, indent=4)
+                        with open(file_path, 'w', encoding='utf-8') as json_file:
+                            json.dump(ssid_passwords, json_file, indent=4, ensure_ascii=False)
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
-
-            extract_all_button = tk.Button(network_window, text="<All>", command=extract_all_passwords,
-                                           width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                           relief=BUTTON_STYLE)
-            extract_all_button.pack(side="left", padx=(5, 5), pady=10)
 
             def fast_extract_passwords():
                 ssid_passwords = {}
                 for network in networks:
                     network_profile = network.strip()
                     try:
-                        cmd_output = subprocess.check_output(["netsh", "wlan", "show", "profile", network_profile, "key=clear"], stderr=subprocess.STDOUT)
+                        cmd_output = subprocess.check_output(
+                            ["netsh", "wlan", "show", "profile", network_profile, "key=clear"],
+                            stderr=subprocess.STDOUT
+                        )
                         cmd_output = self.decode_output(cmd_output)
-                        password = re.search(r"Key Content\s*:\s*([^\r\n]+)"
-, cmd_output)
+                        password = re.search(r"Key Content\s*[:：]\s*([^\r\n]+)", cmd_output)
                         if password:
-                            password_text = password.group(1).rstrip("\r")
+                            password_text = password.group(1).strip()
                             ssid_passwords[network_profile] = password_text
-                    except subprocess.CalledProcessError as e:
-                        messagebox.showerror("Error", f"Failed to execute command for {network}: {e.output.decode('utf-8', 'ignore')}")
-                        return
+                    except:
+                        continue
 
                 if ssid_passwords:
                     hostname = socket.gethostname()
                     if getattr(sys, 'frozen', False):
-                        # Running as a packaged executable
-                        executable_path = sys.executable
-                        executable_dir = os.path.dirname(executable_path)
-                        file_path = os.path.join(executable_dir, f"pwlist_{hostname}.json")
+                        executable_dir = os.path.dirname(sys.executable)
                     else:
-                        # Running as a script
-                        script_dir = os.path.dirname(os.path.abspath(__file__))
-                        file_path = os.path.join(script_dir, f"pwlist_{hostname}.json")
+                        executable_dir = os.path.dirname(os.path.abspath(__file__))
 
-                    with open(file_path, 'w') as json_file:
-                        json.dump(ssid_passwords, json_file, indent=4)
+                    file_path = os.path.join(executable_dir, f"pwlist_{hostname}.json")
+                    with open(file_path, 'w', encoding='utf-8') as json_file:
+                        json.dump(ssid_passwords, json_file, indent=4, ensure_ascii=False)
                 else:
                     messagebox.showinfo("No Passwords", "No passwords found to extract.")
 
-            fast_extract_button = tk.Button(network_window, text="<Auto>", command=fast_extract_passwords,
-                                            width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, borderwidth=BORDER_WIDTH,
-                                            relief=BUTTON_STYLE)
-            fast_extract_button.pack(side="left", padx=(5, 5), pady=10)
+            # Button layout
+            button_frame = tk.Frame(network_window, bg=UI_COLOR)
+            button_frame.pack(side="bottom", fill="x", padx=5, pady=10)
+
+            single_button = tk.Button(
+                button_frame, text="<Single>", command=extract_single_password,
+                width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE
+            )
+            single_button.pack(side="left", padx=5)
+
+            extract_all_button = tk.Button(
+                button_frame, text="<All>", command=extract_all_passwords,
+                width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE
+            )
+            extract_all_button.pack(side="left", padx=5)
+
+            fast_extract_button = tk.Button(
+                button_frame, text="<Auto>", command=fast_extract_passwords,
+                width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE
+            )
+            fast_extract_button.pack(side="left", padx=5)
+
+            cancel_button = tk.Button(
+                button_frame, text="Cancel", command=cancel_button_click,
+                width=10, bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE
+            )
+            cancel_button.pack(side="right", padx=5)
 
         else:
-            tk.messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
+            messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
 
     # ----------------------------------WIFI PASSWORDS END-------------------------------------------------
     # ----------------------------------DISK SPEEDTEST-------------------------------------------------
