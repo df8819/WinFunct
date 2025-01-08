@@ -137,6 +137,36 @@ class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
+        # Initialize dropdown widget references
+        self.function_dropdown1 = None
+        self.function_dropdown2 = None
+        self.function_dropdown3 = None
+        self.function_dropdown4 = None
+        self.function_dropdown5 = None
+        self.function_dropdown6 = None
+        self.function_dropdown7 = None
+        self.function_dropdown8 = None
+
+        # Initialize StringVar references
+        self.selected_function1 = None
+        self.selected_function2 = None
+        self.selected_function3 = None
+        self.selected_function4 = None
+        self.selected_function5 = None
+        self.selected_function6 = None
+        self.selected_function7 = None
+        self.selected_function8 = None
+
+        # Initialize other UI elements
+        self.tabs = None
+        self.checkbox_vars = None
+        self.fun_frame = None
+        self.options_frame = None
+        self.create_user = None
+        self.ip_text = None
+        self.functions_frame = None
+        self.bottom_frame = None
+
         self.load_last_selected_theme()
 
         # Initial window setup
@@ -159,16 +189,6 @@ class Application(tk.Tk):
         # Load the last selected theme after the main UI is initialized & Center window
         self.after(100, self.load_last_selected_theme)
         self.after(100, self.center_window)
-
-        # Declare variables that will be assigned values later in the program's execution
-        self.tabs = None
-        self.checkbox_vars = None
-        self.fun_frame = None
-        self.options_frame = None
-        self.create_user = None
-        self.ip_text = None
-        self.functions_frame = None
-        self.bottom_frame = None
 
     def center_window(self):
         # Using Tcl method to center
@@ -2797,16 +2817,17 @@ https://dns.cloudflare.com/dns-query"""
             return btn
 
         # Function to create buttons within a frame from a list of option tuples
+        # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             # Create main container with padding
             container = tk.Frame(frame, bg=UI_COLOR, padx=15, pady=15)
             container.pack(expand=True, fill="both")
 
             # Configure grid weights
-            for i in range(5):  # Changed to 5 columns
+            for i in range(5):  # 5 columns
                 container.grid_columnconfigure(i, weight=1, uniform="column")
 
-            # Calculate rows needed
+                # Calculate rows needed
             num_rows = (len(options_list) + 4) // 5  # Ceiling division for 5 columns
             for i in range(num_rows):
                 container.grid_rowconfigure(i, weight=1, uniform="row")
@@ -2817,21 +2838,20 @@ https://dns.cloudflare.com/dns-query"""
                                column=i % 5,
                                padx=7,
                                pady=7,
-                               sticky="we")
+                               sticky="nsew")  # Changed to nsew for full scaling
 
                 btn = tk.Button(btn_frame,
                                 text=option[0],
                                 command=lambda cmd=option[1]: execute_command(cmd),
-                                width=20,
                                 bg=BUTTON_BG_COLOR,
                                 fg=BUTTON_TEXT_COLOR,
                                 activebackground=UI_COLOR,
                                 activeforeground=BUTTON_TEXT_COLOR,
                                 borderwidth=BORDER_WIDTH,
                                 relief=BUTTON_STYLE)
-                btn.pack(fill="both", expand=True)
+                btn.pack(fill="both", expand=True)  # Ensure button fills frame
 
-                # Optional: Add hover effect (can be removed if not wanted)
+                # Add hover effect
                 btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
                 btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
 
@@ -2874,13 +2894,16 @@ https://dns.cloudflare.com/dns-query"""
 
         # ----------------------------VERSION LABEL END----------------------------
         # ----------------------------MAIN BUTTONS AND DROPDOWNS----------------------------
+        # Create main container with padding
+        main_container = tk.Frame(self.functions_frame, bg=UI_COLOR, padx=15, pady=15)
+        main_container.pack(expand=True, fill="both")
 
-        # Configure grid weights for the functions_frame
+        # Configure grid weights
         for i in range(5):  # 5 columns
-            self.functions_frame.grid_columnconfigure(i, weight=1)
+            main_container.grid_columnconfigure(i, weight=1, uniform="column")
 
-            # Create lists of button configurations for the main tab
-        main_tab_options = [
+            # Button configurations
+        main_buttons = [
             ("AdGuard Install Helper", self.agh_curl),
             ("Autostart Locations", self.open_autostart_locations),
             ("Flush/Renew DNS", self.renew_ip_config),
@@ -2895,168 +2918,127 @@ https://dns.cloudflare.com/dns-query"""
             ("Backup and Restore", self.create_backup_window)
         ]
 
-        # Create buttons (using only first 3 columns)
-        for i, option in enumerate(main_tab_options):
-            btn_frame = tk.Frame(self.functions_frame, bg=UI_COLOR)
+        # Calculate rows needed for buttons (using first 3 columns)
+        num_rows = (len(main_buttons) + 2) // 3  # Ceiling division for 3 columns
+        for i in range(num_rows):
+            main_container.grid_rowconfigure(i, weight=1, uniform="row")
+
+            # Create buttons
+        for i, (text, command) in enumerate(main_buttons):
+            btn_frame = tk.Frame(main_container, bg=UI_COLOR)
             btn_frame.grid(row=i // 3,
-                           column=i % 3,  # Using only columns 0-2
+                           column=i % 3,
                            padx=7,
                            pady=7,
                            sticky="nsew")
 
             btn = tk.Button(btn_frame,
-                            text=option[0],
-                            command=option[1],
+                            text=text,
+                            command=command,
                             bg=BUTTON_BG_COLOR,
                             fg=BUTTON_TEXT_COLOR,
                             activebackground=UI_COLOR,
                             activeforeground=BUTTON_TEXT_COLOR,
                             borderwidth=BORDER_WIDTH,
                             relief=BUTTON_STYLE)
-            btn.pack(fill="both", expand=True, padx=5, pady=5)
+            btn.pack(fill="both", expand=True)
 
             # Add hover effect
             btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
             btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
 
-            # Create dropdowns
-        # Admin Shells Dropdown
-        self.selected_function4 = tk.StringVar()
-        self.selected_function4.set("*Admin Shells*")
-        self.function_dropdown4 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function4,
-            "*Admin Shells*",
-            "[1] cmd",
-            "[2] PowerShell"
-        )
-        self.function_dropdown4.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown4["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        self.function_dropdown4.grid(row=0, column=3, padx=10, pady=5, sticky="we")
-        self.selected_function4.trace('w', self.on_function_select4)
+            # Dropdown configurations
+        dropdown_configs = [
+            {
+                'row': 0,
+                'column': 3,
+                'var_name': 'selected_function6',
+                'widget_name': 'function_dropdown6',
+                'default': '*Interactive Shells*',
+                'options': ['*Interactive Shells*', '[1] CTT Winutils', '[2] Activate Win/Office',
+                            '[3] Install/Upd. FFMPEG'],
+                'callback': 'on_function_select6'
+            },
+            {
+                'row': 1,
+                'column': 3,
+                'var_name': 'selected_function5',
+                'widget_name': 'function_dropdown5',
+                'default': '*IP & Online Status*',
+                'options': ['*IP & Online Status*', '[1] PC online status', '[2] Website online status',
+                            '[3] Current IP info', '[4] Apps with internet connection', '[5] Execute <ping> command'],
+                'callback': 'on_function_select5'
+            },
+            {
+                'row': 2,
+                'column': 3,
+                'var_name': 'selected_function7',
+                'widget_name': 'function_dropdown7',
+                'default': '*Disk Operations*',
+                'options': ['*Disk Operations*', '[1] Disk Speedtest', '[2] Show Disk Info'],
+                'callback': 'on_function_select7'
+            },
+            {
+                'row': 0,
+                'column': 4,
+                'var_name': 'selected_function4',
+                'widget_name': 'function_dropdown4',
+                'default': '*Admin Shells*',
+                'options': ['*Admin Shells*', '[1] cmd', '[2] PowerShell'],
+                'callback': 'on_function_select4'
+            },
+            {
+                'row': 1,
+                'column': 4,
+                'var_name': 'selected_function1',
+                'widget_name': 'function_dropdown1',
+                'default': '*System Info*',
+                'options': ['*System Info*', '[1] Extract Sys Info', '[2] Compare Sys Info'],
+                'callback': 'on_function_select1'
+            },
+            {
+                'row': 2,
+                'column': 4,
+                'var_name': 'selected_function3',
+                'widget_name': 'function_dropdown3',
+                'default': '*God Mode*',
+                'options': ['*God Mode*', '[1] Simple God mode', '[2] Super God mode'],
+                'callback': 'on_function_select3'
+            }
+        ]
 
-        # Interactive Shells Dropdown
-        self.selected_function6 = tk.StringVar()
-        self.selected_function6.set("*Interactive Shells*")
-        self.function_dropdown6 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function6,
-            "*Interactive Shells*",
-            "[1] CTT Winutils",
-            "[2] Activate Win/Office",
-            "[3] Install/Upd. FFMPEG"
-        )
-        self.function_dropdown6.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown6["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        self.function_dropdown6.grid(row=0, column=4, padx=10, pady=5, sticky="we")
-        self.selected_function6.trace('w', self.on_function_select6)
+        # Create dropdowns
+        for config in dropdown_configs:
+            var = tk.StringVar()
+            setattr(self, config['var_name'], var)
+            var.set(config['default'])
 
-        # System Info Compare Dropdown
-        self.selected_function1 = tk.StringVar()
-        self.selected_function1.set("*System Info*")
-        self.function_dropdown1 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function1,
-            "*System Info*",
-            "[1] Extract Sys Info",
-            "[2] Compare Sys Info"
-        )
-        self.function_dropdown1.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown1["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        self.function_dropdown1.grid(row=1, column=4, padx=10, pady=5, sticky="we")
-        self.selected_function1.trace('w', self.on_function_select1)
+            dropdown_frame = tk.Frame(main_container, bg=UI_COLOR)
+            dropdown_frame.grid(row=config['row'],
+                                column=config['column'],
+                                padx=7,
+                                pady=7,
+                                sticky="nsew")
 
-        # IP & Online Status Dropdown
-        self.selected_function5 = tk.StringVar()
-        self.selected_function5.set("*IP & Online Status*")
-        self.function_dropdown5 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function5,
-            "*IP & Online Status*",
-            "[1] PC online status",
-            "[2] Website online status",
-            "[3] Current IP info",
-            "[4] Apps with internet connection",
-            "[5] Execute <ping> command"
-        )
-        self.function_dropdown5.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown5["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        self.function_dropdown5.grid(row=1, column=3, padx=10, pady=5, sticky="we")
-        self.selected_function5.trace('w', self.on_function_select5)
+            dropdown = tk.OptionMenu(dropdown_frame, var, *config['options'])
+            dropdown.config(
+                width=18,
+                bg=BUTTON_BG_COLOR,
+                fg=BUTTON_TEXT_COLOR,
+                activebackground=UI_COLOR,
+                activeforeground=BUTTON_TEXT_COLOR,
+                highlightthickness=0
+            )
+            dropdown["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+            dropdown.pack(fill="both", expand=True)
 
-        # God Mode Dropdown
-        self.selected_function3 = tk.StringVar()
-        self.selected_function3.set("*God Mode*")
-        self.function_dropdown3 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function3,
-            "*God Mode*",
-            "[1] Simple God mode",
-            "[2] Super God mode"
-        )
-        self.function_dropdown3.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown3["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        self.function_dropdown3.grid(row=2, column=4, padx=10, pady=5, sticky="we")
-        self.selected_function3.trace('w', self.on_function_select3)
+            # Store the dropdown widget reference
+            setattr(self, config['widget_name'], dropdown)
 
-        # Disk Operations Dropdown
-        self.selected_function7 = tk.StringVar()
-        self.selected_function7.set("*Disk Operations*")
-        self.function_dropdown7 = tk.OptionMenu(
-            self.functions_frame,
-            self.selected_function7,
-            "*Disk Operations*",
-            "[1] Disk Speedtest",
-            "[2] Show Disk Info"
-        )
-        self.function_dropdown7.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown7["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
-        self.function_dropdown7.grid(row=2, column=3, padx=10, pady=5, sticky="we")
-        self.selected_function7.trace('w', self.on_function_select7)
+            # Add trace
+            var.trace('w', getattr(self, config['callback']))
 
-        # ----------------------------MAIN BUTTONS AND DROPDOWNS END----------------------------
+            # ----------------------------MAIN BUTTONS AND DROPDOWNS END----------------------------
         # ---------------------------------- TABS/FRAME FOR FUN BUTTONS --------------------------------------------
 
         # Fun Notebook within the fun tab
@@ -3078,7 +3060,7 @@ https://dns.cloudflare.com/dns-query"""
             container.pack(expand=True, fill="both")
 
             # Configure grid weights for columns
-            for i in range(5):
+            for i in range(5):  # 5 columns
                 container.grid_columnconfigure(i, weight=1, uniform="column")
 
                 # Calculate rows needed and configure row weights
@@ -3087,39 +3069,35 @@ https://dns.cloudflare.com/dns-query"""
                 container.grid_rowconfigure(i, weight=1, uniform="row")
 
             for i, button in enumerate(buttons_list):
-                # Create frame for each button
                 btn_frame = tk.Frame(container, bg=UI_COLOR)
                 btn_frame.grid(row=i // 5,
                                column=i % 5,
                                padx=7,
                                pady=7,
-                               sticky="we")
+                               sticky="nsew")  # Changed to nsew for full scaling
 
                 btn = tk.Button(btn_frame,
                                 text=button[0],
                                 command=button[1],
-                                width=20,
                                 bg=BUTTON_BG_COLOR,
                                 fg=BUTTON_TEXT_COLOR,
-                                borderwidth=BORDER_WIDTH,
-                                relief=BUTTON_STYLE,
                                 activebackground=UI_COLOR,
-                                activeforeground=BUTTON_TEXT_COLOR)
-
-                btn.pack(fill="both", expand=True)
+                                activeforeground=BUTTON_TEXT_COLOR,
+                                borderwidth=BORDER_WIDTH,
+                                relief=BUTTON_STYLE)
+                btn.pack(fill="both", expand=True)  # Ensure button fills frame
 
                 # Add hover effect
                 btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
                 btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
 
-                # Define buttons for Apps frame
+                # Button definitions remain the same
 
         apps_buttons = [
             ("Password Generator", self.open_pw_gen),
             ("Color Picker", self.open_color_picker),
         ]
 
-        # Define buttons for Fun Stuff frame
         fun_stuff_buttons = [
             ("JChat GUI", self.open_chat),
             ("Hash Generator", self.open_hash_stuff),
@@ -3133,91 +3111,138 @@ https://dns.cloudflare.com/dns-query"""
 
         # ---------------------------------- TABS/FRAME FOR FUN BUTTONS END --------------------------------------------
         # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
-
         # Create main bottom container
         self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
         self.bottom_frame.pack(fill="x", padx=5, pady=5)
 
+        # Configure grid weights for the bottom frame
+        self.bottom_frame.grid_columnconfigure(1, weight=1)  # Middle spacer
+        for i in [0, 2]:  # Left and right containers
+            self.bottom_frame.grid_columnconfigure(i, weight=0)
+
         # Create three sections: left, middle (spacer), and right
         left_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
-        left_container.grid(row=0, column=0, sticky="w", padx=10)
+        left_container.grid(row=0, column=0, sticky="nsew", padx=10)
 
         middle_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
-        middle_container.grid(row=0, column=1, sticky="ew")
+        middle_container.grid(row=0, column=1, sticky="nsew")
 
         right_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
-        right_container.grid(row=0, column=2, sticky="e", padx=10)
+        right_container.grid(row=0, column=2, sticky="nsew", padx=10)
 
-        # Configure weight for middle spacer
-        self.bottom_frame.grid_columnconfigure(1, weight=1)
+        # Configure grid weights for left container
+        for i in range(2):  # 2 columns
+            left_container.grid_columnconfigure(i, weight=1, uniform="left_col")
+        for i in range(2):  # 2 rows
+            left_container.grid_rowconfigure(i, weight=1, uniform="left_row")
+
+        # Configure grid weights for right container
+        for i in range(2):  # 2 columns
+            right_container.grid_columnconfigure(i, weight=1, uniform="right_col")
+        for i in range(2):  # 2 rows
+            right_container.grid_rowconfigure(i, weight=1, uniform="right_row")
 
         # Left-aligned buttons
-        shutdown_btn = create_styled_button(left_container, "Instant Shutdown", self.confirm_shutdown, 0, 0)
-        reboot_btn = create_styled_button(left_container, "Forced Reboot", self.confirm_reboot, 1, 0)
-        uefi_btn = create_styled_button(left_container, "Reboot to BIOS/UEFI", self.confirm_uefi, 1, 1)
-        sleep_btn = create_styled_button(left_container, "Enter Hibernation", self.confirm_sleep, 0, 1)
+        left_buttons = [
+            ("Instant Shutdown", self.confirm_shutdown, 0, 0),
+            ("Forced Reboot", self.confirm_reboot, 1, 0),
+            ("Reboot to BIOS/UEFI", self.confirm_uefi, 1, 1),
+            ("Enter Hibernation", self.confirm_sleep, 0, 1)
+        ]
 
-        # Right-aligned buttons
-        root_btn = create_styled_button(right_container, "Open Root Folder", self.open_app_root_folder, 1, 0)
-        exit_btn = create_styled_button(right_container, "Exit Application", self.quit, 1, 1)
+        for text, command, row, col in left_buttons:
+            btn_frame = tk.Frame(left_container, bg=UI_COLOR)
+            btn_frame.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
 
-        # UI utility dropdown
-        dropdown_frame = tk.Frame(right_container, bg=UI_COLOR)
-        dropdown_frame.grid(row=0, column=1, padx=5, pady=5, sticky="we")
+            btn = tk.Button(btn_frame,
+                            text=text,
+                            command=command,
+                            bg=BUTTON_BG_COLOR,
+                            fg=BUTTON_TEXT_COLOR,
+                            activebackground=UI_COLOR,
+                            activeforeground=BUTTON_TEXT_COLOR,
+                            borderwidth=BORDER_WIDTH,
+                            relief=BUTTON_STYLE)
+            btn.pack(fill="both", expand=True)
 
-        self.selected_function8 = tk.StringVar()
-        self.selected_function8.set("*GUI Options*")
+            # Add hover effect
+            btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+            btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
 
-        self.function_dropdown8 = tk.OptionMenu(
-            dropdown_frame,
-            self.selected_function8,
-            "*GUI Options*",
-            "[1] Theme Selector",
-            "[2] Reset UI"
-        )
+        # Right-aligned buttons and dropdown
+        right_elements = [
+            {
+                'type': 'dropdown',
+                'row': 0,
+                'column': 1,
+                'var_name': 'selected_function8',
+                'widget_name': 'function_dropdown8',
+                'default': '*GUI Options*',
+                'options': ['*GUI Options*', '[1] Theme Selector', '[2] Reset UI'],
+                'callback': 'on_function_select8'
+            },
+            {
+                'type': 'button',
+                'row': 1,
+                'column': 0,
+                'text': 'Open Root Folder',
+                'command': self.open_app_root_folder
+            },
+            {
+                'type': 'button',
+                'row': 1,
+                'column': 1,
+                'text': 'Exit Application',
+                'command': self.quit
+            }
+        ]
 
-        # Style the dropdown
-        self.function_dropdown8.config(
-            width=18,
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR,
-            activebackground=UI_COLOR,
-            activeforeground=BUTTON_TEXT_COLOR,
-            highlightthickness=0
-        )
-        self.function_dropdown8["menu"].config(
-            bg=BUTTON_BG_COLOR,
-            fg=BUTTON_TEXT_COLOR
-        )
-        self.function_dropdown8.pack(fill="both", expand=True)
-        self.selected_function8.trace('w', self.on_function_select8)
+        for element in right_elements:
+            element_frame = tk.Frame(right_container, bg=UI_COLOR)
+            element_frame.grid(row=element['row'],
+                               column=element['column'],
+                               padx=5, pady=5,
+                               sticky="nsew")
 
-        # FREE FOR NEW BUTTON / FUNCTION
-        # self.selected_function2 = tk.StringVar()
-        # self.selected_function2.set("*WHATEV*")
-        #
-        # self.function_dropdown2 = tk.OptionMenu(
-        #     self.bottom_frame,
-        #     self.selected_function2,
-        #     "*WHATEV*",
-        #     "[1] NEW OPTION",
-        # )
-        # self.function_dropdown2.config(
-        #     width=18,
-        #     bg=BUTTON_BG_COLOR,
-        #     fg=BUTTON_TEXT_COLOR,
-        #     activebackground=UI_COLOR,
-        #     activeforeground=BUTTON_TEXT_COLOR,
-        #     highlightthickness=0
-        # )
-        # self.function_dropdown2["menu"].config(
-        #     bg=BUTTON_BG_COLOR,
-        #     fg=BUTTON_TEXT_COLOR
-        # )
-        # self.function_dropdown2.grid(row=0, column=4, padx=10, pady=5, sticky="we")
-        # self.selected_function2.trace('w', self.on_function_select2)
+            if element['type'] == 'button':
+                btn = tk.Button(element_frame,
+                                text=element['text'],
+                                command=element['command'],
+                                bg=BUTTON_BG_COLOR,
+                                fg=BUTTON_TEXT_COLOR,
+                                activebackground=UI_COLOR,
+                                activeforeground=BUTTON_TEXT_COLOR,
+                                borderwidth=BORDER_WIDTH,
+                                relief=BUTTON_STYLE)
+                btn.pack(fill="both", expand=True)
 
-# ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
+                # Add hover effect
+                btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
+                btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
+
+            elif element['type'] == 'dropdown':
+                var = tk.StringVar()
+                setattr(self, element['var_name'], var)
+                var.set(element['default'])
+
+                dropdown = tk.OptionMenu(element_frame, var, *element['options'])
+                dropdown.config(
+                    bg=BUTTON_BG_COLOR,
+                    fg=BUTTON_TEXT_COLOR,
+                    activebackground=UI_COLOR,
+                    activeforeground=BUTTON_TEXT_COLOR,
+                    highlightthickness=0
+                )
+                dropdown["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+                dropdown.pack(fill="both", expand=True)
+
+                # Store the dropdown widget reference
+                setattr(self, element['widget_name'], dropdown)
+
+                # Add trace
+                var.trace('w', getattr(self, element['callback']))
+
+        # ---------------------------------- STATIC BOTTOM FRAME END --------------------------------------------
 
 
 app = Application()
