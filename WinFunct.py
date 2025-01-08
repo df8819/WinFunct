@@ -289,22 +289,6 @@ class GUI:
         self.bottom_frame = None
         self.frames = {}
 
-    def get_system_management_options(self):
-        from config import system_management_options
-        return system_management_options
-
-    def get_network_security_options(self):
-        from config import network_security_options
-        return network_security_options
-
-    def get_troubleshooting_options(self):
-        from config import troubleshooting_options
-        return troubleshooting_options
-
-    def get_advanced_tools_options(self):
-        from config import advanced_tools_options
-        return advanced_tools_options
-
     def create_widgets(self):
         # Initialize styles
         self.style_manager.configure_base_styles()
@@ -721,6 +705,24 @@ class GUI:
         self.version_label.bind("<Enter>", on_enter)
         self.version_label.bind("<Leave>", on_leave)
 
+    # Getter methods
+    def get_system_management_options(self):
+        from config import system_management_options
+        return system_management_options
+
+    def get_network_security_options(self):
+        from config import network_security_options
+        return network_security_options
+
+    def get_troubleshooting_options(self):
+        from config import troubleshooting_options
+        return troubleshooting_options
+
+    def get_advanced_tools_options(self):
+        from config import advanced_tools_options
+        return advanced_tools_options
+
+    # Command execute method for Option-Buttons
     def execute_command(self, cmd):
         """Execute the command associated with an option button"""
         try:
@@ -800,18 +802,6 @@ class Application(tk.Tk, GUI):
         self.clipboard_clear()
         self.clipboard_append(text)
         self.update()  # To make sure the clipboard is updated
-
-    def system_management_options(self):
-        return system_management_options
-
-    def network_security_options(self):
-        return network_security_options
-
-    def troubleshooting_options(self):
-        return troubleshooting_options
-
-    def advanced_tools_options(self):
-        return advanced_tools_options
 
     # ----------------------------------DROPDOWN SECTION-------------------------------------------------
 
