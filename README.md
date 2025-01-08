@@ -31,11 +31,11 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 **2.** Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the appeared **cmd** Window.
 
-**3.** Double click **"Install.bat"**. This will install all dependencies and update the cloned repository. Use the **"Update WinFunct"** button in the app to update at later stages.
+**3.** Double click **"Install.bat"**. This will install all dependencies and update the cloned repository.
 
 **4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command will not work, as the app demands elevated rights via temporary created script.)_
 
-**(5.)** You may need to add an exclusion for the folder you have cloned this repo in Windows under **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**
+**(4.1)** You may need to add an exclusion for the folder you have cloned this repo in Windows under **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**
 
 ## Known Issues / Comments
 

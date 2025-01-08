@@ -3366,7 +3366,7 @@ https://dns.cloudflare.com/dns-query"""
 
         window.update_idletasks()
         width = min(496, window.winfo_screenwidth() - 100)
-        height = min(770, window.winfo_screenheight() - 100)
+        height = min(790, window.winfo_screenheight() - 100)
         x = (window.winfo_screenwidth() - width) // 2
         y = (window.winfo_screenheight() - height) // 2
         window.geometry(f"{width}x{height}+{x}+{y}")

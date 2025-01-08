@@ -86,6 +86,7 @@ links = {
     "Productivity": {
         "PicPick": "https://picpick.app/en/download/",
         "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
+        "Notepad++ Dark Theme": "https://github.com/60ss/Npp-1-Dark",
         "Total Commander": "https://www.ghisler.com/ddownload.htm",
         "Posy Cursors": "http://www.michieldb.nl/other/cursors",
         "Bitwarden": "https://bitwarden.com/download/",
