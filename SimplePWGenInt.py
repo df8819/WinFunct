@@ -34,26 +34,49 @@ def check_and_download_wordlist(root):
     return wordlist_filepath
 
 
+# noinspection PyMethodMayBeStatic
 class SimplePWGen:
-    def __init__(self, parent, ui_color, button_bg_color, button_text_color):
+    def __init__(self, parent, ui_color, button_bg_color, button_text_color, style_manager=None):
         self.root = parent
         self.UI_COLOR = ui_color
         self.BUTTON_BG_COLOR = button_bg_color
         self.BUTTON_TEXT_COLOR = button_text_color
+        self.style_manager = style_manager
         self.init_ui()
         self.reset_ui()
 
     def init_ui(self):
-        self.tab_control = ttk.Notebook(self.root)
-        self.password_tab = tk.Frame(self.tab_control, bg=self.UI_COLOR)
-        self.number_tab = tk.Frame(self.tab_control, bg=self.UI_COLOR)
-        self.passphrase_tab = tk.Frame(self.tab_control, bg=self.UI_COLOR)
+        # Configure the notebook style
+        style = ttk.Style()
+        style.configure('Custom.TNotebook',
+                        background=self.UI_COLOR)
+        style.configure('Custom.TNotebook.Tab',
+                        padding=[10, 7],
+                        background=self.BUTTON_BG_COLOR,
+                        foreground=self.BUTTON_TEXT_COLOR)
+        style.map('Custom.TNotebook.Tab',
+                  background=[('selected', self.UI_COLOR)],
+                  foreground=[('selected', self.BUTTON_TEXT_COLOR)])
+
+        # Create and configure the notebook with the custom style
+        self.tab_control = ttk.Notebook(self.root, style='Custom.TNotebook')
+
+        # Create frames for tabs
+        self.password_tab = ttk.Frame(self.tab_control, style='Custom.TFrame')
+        self.number_tab = ttk.Frame(self.tab_control, style='Custom.TFrame')
+        self.passphrase_tab = ttk.Frame(self.tab_control, style='Custom.TFrame')
+
+        # Add frames to notebook
         self.tab_control.add(self.password_tab, text='Password Generator')
         self.tab_control.add(self.passphrase_tab, text='Passphrase Generator')
         self.tab_control.add(self.number_tab, text='Random Number Generator')
+
+        # Create UI elements for each tab
         self.create_password_generator_ui()
         self.create_number_generator_ui()
         self.create_passphrase_generator_ui()
+
+        # Pack the notebook
         self.tab_control.pack(expand=1, fill='both')
 
     def create_password_generator_ui(self):

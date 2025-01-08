@@ -1027,11 +1027,19 @@ class Application(tk.Tk, GUI):
             JChat(chat_window, UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR)
 
     def open_pw_gen(self):
-        print("""Open Password Generator app.""")
+        print("Open Password Generator app.")
         pw_window = tk.Toplevel(self)
         pw_window.title("Password Generator")
         pw_window.attributes('-topmost', True)
-        SimplePWGen(pw_window, UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR)
+
+        # Pass the style manager and theme colors to SimplePWGen
+        SimplePWGen(
+            pw_window,
+            ui_color=UI_COLOR,
+            button_bg_color=BUTTON_BG_COLOR,
+            button_text_color=BUTTON_TEXT_COLOR,
+            style_manager=self.style_manager  # Pass the style manager if available
+        )
 
     def open_hash_stuff(self):
         print("""Open Hash Generator app.""")
