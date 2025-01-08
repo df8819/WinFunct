@@ -170,7 +170,7 @@ class Application(tk.Tk):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "865x450"
+        self.resolution_main = "840x390"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
