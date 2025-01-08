@@ -137,6 +137,7 @@ class StyleManager:
         self.configure_tab_styles()
         self.configure_frame_styles()
         self.configure_button_styles()
+        self.configure_combobox_styles()
 
     def configure_tab_styles(self):
         self.style.configure('Custom.TNotebook',
@@ -164,6 +165,23 @@ class StyleManager:
                       background=[('active', UI_COLOR)],
                       foreground=[('active', BUTTON_TEXT_COLOR)])
 
+    def configure_combobox_styles(self):
+        """Configure the styling for dropdown menus (Combobox)"""
+        self.style.configure('Custom.TCombobox',
+                             background=BUTTON_BG_COLOR,
+                             foreground=BUTTON_TEXT_COLOR,
+                             fieldbackground=BUTTON_BG_COLOR,
+                             selectbackground=UI_COLOR,
+                             selectforeground=BUTTON_TEXT_COLOR,
+                             arrowcolor=BUTTON_TEXT_COLOR)
+
+        self.style.map('Custom.TCombobox',
+                       fieldbackground=[('readonly', BUTTON_BG_COLOR)],
+                       selectbackground=[('readonly', UI_COLOR)],
+                       selectforeground=[('readonly', BUTTON_TEXT_COLOR)],
+                       background=[('readonly', BUTTON_BG_COLOR)],
+                       foreground=[('readonly', BUTTON_TEXT_COLOR)])
+
 # noinspection PyMethodMayBeStatic
 class WidgetFactory:
     def create_notebook(self, parent):
@@ -176,6 +194,21 @@ class WidgetFactory:
         return frame
 
     def create_button(self, parent, text, command, row=None, column=None, **kwargs):
+        """
+        Create a button with proper frame wrapping and grid/pack layout
+
+        Args:
+            parent: Parent widget
+            text: Button text
+            command: Button command callback
+            row: Grid row position (optional)
+            column: Grid column position (optional)
+            **kwargs: Additional button configuration options
+        """
+        # Remove sticky from kwargs if present since it's not valid for Button
+        if 'sticky' in kwargs:
+            del kwargs['sticky']
+
         btn_frame = ttk.Frame(parent, style='Custom.TFrame')
         if row is not None and column is not None:
             btn_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
@@ -582,7 +615,8 @@ class GUI:
                     text=element['text'],
                     command=element['command'],
                     row=element['row'],
-                    column=element['column']
+                    column=element['column'],
+                    sticky="nsew"  # Ensure buttons scale properly
                 )
             elif element['type'] == 'dropdown':
                 self._create_dropdowns(right_container, [element])
@@ -607,39 +641,48 @@ class GUI:
         # Add interactivity to the version label
         self._configure_version_label_bindings()
 
-    def _create_dropdowns(self, container, configs):
-        """Helper method to create dropdowns with consistent styling"""
-        for config in configs:
-            var = tk.StringVar()
-            setattr(self, config['var_name'], var)
-            var.set(config['default'])
+    def _create_dropdowns(self, parent, dropdown_configs):
+        """
+        Create dropdown menus with proper initialization and event binding
 
-            dropdown_frame = tk.Frame(container, bg=UI_COLOR)
-            dropdown_frame.grid(
-                row=config['row'],
-                column=config['column'],
-                padx=7,
-                pady=7,
-                sticky="nsew"
-            )
+        Args:
+            parent: Parent widget
+            dropdown_configs: List of dropdown configuration dictionaries
+        """
+        for config in dropdown_configs:
+            var_name = config['var_name']
+            widget_name = config['widget_name']
+            options = config['options']
+            callback = config['callback']
+            row = config.get('row', 0)
+            column = config.get('column', 0)
 
-            dropdown = tk.OptionMenu(dropdown_frame, var, *config['options'])
-            dropdown.config(
-                width=18,
-                bg=BUTTON_BG_COLOR,
-                fg=BUTTON_TEXT_COLOR,
-                activebackground=UI_COLOR,
-                activeforeground=BUTTON_TEXT_COLOR,
-                highlightthickness=0
+            # Create frame for dropdown
+            dropdown_frame = ttk.Frame(parent, style='Custom.TFrame')
+            dropdown_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+
+            # Initialize StringVar
+            string_var = tk.StringVar(value=config['default'])
+            setattr(self, var_name, string_var)
+
+            # Create and configure dropdown with custom style
+            dropdown = ttk.Combobox(
+                dropdown_frame,
+                textvariable=string_var,
+                values=options,
+                state="readonly",
+                style='Custom.TCombobox'  # Add this line
             )
-            dropdown["menu"].config(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
             dropdown.pack(fill="both", expand=True)
 
-            # Store the dropdown widget reference
-            setattr(self, config['widget_name'], dropdown)
+            # Store dropdown widget reference
+            setattr(self, widget_name, dropdown)
 
-            # Add trace
-            var.trace('w', getattr(self, config['callback']))
+            # Bind callback - ensure method exists
+            if hasattr(self, callback):
+                dropdown.bind('<<ComboboxSelected>>', getattr(self, callback))
+            else:
+                print(f"Warning: Callback method {callback} not found")
 
     def _create_fun_buttons(self, frame, buttons_list):
         """Helper method to create buttons in the fun tab sections"""
