@@ -2817,7 +2817,6 @@ https://dns.cloudflare.com/dns-query"""
             return btn
 
         # Function to create buttons within a frame from a list of option tuples
-        # Function to create buttons within a frame from a list of option tuples
         def create_option_buttons(frame, options_list):
             # Create main container with padding
             container = tk.Frame(frame, bg=UI_COLOR, padx=15, pady=15)
@@ -3090,8 +3089,6 @@ https://dns.cloudflare.com/dns-query"""
                 # Add hover effect
                 btn.bind('<Enter>', lambda e, b=btn: b.configure(bg=UI_COLOR))
                 btn.bind('<Leave>', lambda e, b=btn: b.configure(bg=BUTTON_BG_COLOR))
-
-                # Button definitions remain the same
 
         apps_buttons = [
             ("Password Generator", self.open_pw_gen),
