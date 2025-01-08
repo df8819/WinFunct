@@ -170,7 +170,7 @@ class Application(tk.Tk):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "840x390"
+        self.resolution_main = "840x365"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -3111,24 +3111,36 @@ https://dns.cloudflare.com/dns-query"""
 
         # ---------------------------------- TABS/FRAME FOR FUN BUTTONS END --------------------------------------------
         # ---------------------------------- STATIC BOTTOM FRAME --------------------------------------------
-        # Create main bottom container
-        self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR)
-        self.bottom_frame.pack(fill="x", padx=5, pady=5)
+        # Create main bottom container with fixed height
+        self.bottom_frame = tk.Frame(self.main_frame, bg=UI_COLOR, height=70)  # Set fixed height
+        self.bottom_frame.pack(fill="x", padx=3, pady=3)
+        self.bottom_frame.pack_propagate(False)  # Prevent automatic height adjustment
 
-        # Configure grid weights for the bottom frame
-        self.bottom_frame.grid_columnconfigure(1, weight=1)  # Middle spacer
+        # Create a content frame inside bottom_frame that will handle the grid layout
+        content_frame = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+        content_frame.pack(fill="both", expand=True)
+
+        # Configure grid weights for the content frame
+        content_frame.grid_rowconfigure(0, weight=1)
+        content_frame.grid_columnconfigure(1, weight=1)  # Middle spacer
         for i in [0, 2]:  # Left and right containers
-            self.bottom_frame.grid_columnconfigure(i, weight=0)
+            content_frame.grid_columnconfigure(i, weight=0)
 
-        # Create three sections: left, middle (spacer), and right
-        left_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+            # Create three sections: left, middle (spacer), and right
+        left_container = tk.Frame(content_frame, bg=UI_COLOR)
         left_container.grid(row=0, column=0, sticky="nsew", padx=10)
 
-        middle_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+        middle_container = tk.Frame(content_frame, bg=UI_COLOR)
         middle_container.grid(row=0, column=1, sticky="nsew")
 
-        right_container = tk.Frame(self.bottom_frame, bg=UI_COLOR)
+        right_container = tk.Frame(content_frame, bg=UI_COLOR)
         right_container.grid(row=0, column=2, sticky="nsew", padx=10)
+
+        # Set minimum widths for left and right containers
+        left_container.grid_propagate(False)
+        left_container.configure(width=300)  # Adjust this value as needed
+        right_container.grid_propagate(False)
+        right_container.configure(width=300)  # Adjust this value as needed
 
         # Configure grid weights for left container
         for i in range(2):  # 2 columns
