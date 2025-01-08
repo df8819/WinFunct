@@ -44,8 +44,9 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 ## Screenshots
 
-![Image](GUI_Pics/2024-12-01-1733044534.png)
-![Image](GUI_Pics/2024-12-01-1733044578.png)
+![Image](GUI_Pics/2025-01-08-1736346243.png)
+![Image](GUI_Pics/2025-01-08-1736346251.png)
+
 ![Image](GUI_Pics/2024-12-01-1733044625.png)
 ![Image](GUI_Pics/2024-12-01-1733044650.png)
 ![Image](GUI_Pics/2024-12-01-1733044732.png)
