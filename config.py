@@ -51,6 +51,7 @@ links = {
         "GitHub Desktop": "https://desktop.github.com",
         "Visual Studio Code": "https://code.visualstudio.com/download",
         "PyCharm": "https://www.jetbrains.com/pycharm/download/?section=windows",
+        "NerdFonts": "https://www.nerdfonts.com/font-downloads",
     },
     "Network Tools": {
         "WireShark": "https://www.wireshark.org/download.html",

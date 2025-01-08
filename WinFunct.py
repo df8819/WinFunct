@@ -45,10 +45,7 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
-
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
-
-
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
@@ -123,11 +120,8 @@ def load_theme_from_file():
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         return None
-
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
-
 # ---------------------------------- GUI CLASSES ----------------------------------
-
 class StyleManager:
     def __init__(self):
         self.style = ttk.Style()
@@ -723,7 +717,6 @@ class GUI:
             error_msg = f"Error executing command '{cmd}': {str(e)}"
             print(error_msg)
             messagebox.showerror("Error", error_msg)
-
 # ---------------------------------- GUI CLASSES END ----------------------------------
 
 
@@ -1081,21 +1074,28 @@ class Application(tk.Tk, GUI):
     def open_ps_as_admin(self):
         print("Open PowerShell window as admin.")
 
+        # Constants
+        TIMEOUT_INTERNET = 5
+        TIMEOUT_PWSH_CHECK = 10
+        TIMEOUT_INSTALL = 300
+        TIMEOUT_PROCESS = 30
+
         def check_internet_connection():
             try:
-                requests.get("https://www.google.com", timeout=5)
+                requests.get("https://www.google.com", timeout=TIMEOUT_INTERNET)
                 return True
-            except (requests.ConnectionError, requests.Timeout):
+            except (requests.ConnectionError, requests.Timeout, requests.RequestException):
                 return False
 
         def check_pwsh_installed():
             try:
-                result = subprocess.run(["where", "pwsh"], capture_output=True, text=True, timeout=10)
-                return result.returncode == 0
-            except subprocess.TimeoutExpired:
-                messagebox.showerror("Error", "Timeout while checking for PowerShell 7.")
-                return False
-            except FileNotFoundError:
+                return subprocess.run(
+                    ["where", "pwsh"],
+                    capture_output=True,
+                    text=True,
+                    timeout=TIMEOUT_PWSH_CHECK
+                ).returncode == 0
+            except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.SubprocessError):
                 return False
 
         def install_pwsh():
@@ -1104,62 +1104,67 @@ class Application(tk.Tk, GUI):
                 return False
 
             try:
-                subprocess.run(["winget", "install", "--id", "Microsoft.Powershell", "--source", "winget"], check=True,
-                               timeout=300)
+                subprocess.run(
+                    ["winget", "install", "--id", "Microsoft.Powershell", "--source", "winget"],
+                    check=True,
+                    timeout=TIMEOUT_INSTALL
+                )
                 return True
-            except subprocess.TimeoutExpired:
-                messagebox.showerror("Error", "PowerShell 7 installation timed out.")
+            except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError) as e:
+                error_messages = {
+                    subprocess.TimeoutExpired: "PowerShell 7 installation timed out.",
+                    subprocess.CalledProcessError: f"Failed to install PowerShell 7: {e}",
+                    FileNotFoundError: "Winget not found. Cannot install PowerShell 7."
+                }
+                messagebox.showerror("Error", error_messages[type(e)])
                 return False
-            except subprocess.CalledProcessError as e:
-                messagebox.showerror("Error", f"Failed to install PowerShell 7: {e}")
-                return False
-            except FileNotFoundError:
-                messagebox.showerror("Error", "Winget not found. Cannot install PowerShell 7.")
-                return False
+
+        def get_location_command():
+            if getattr(sys, 'frozen', False):
+                directory = os.path.dirname(sys.executable)
+            else:
+                directory = os.path.dirname(os.path.abspath(__file__))
+            return f'Set-Location "{directory}"'
 
         def run_command(use_pwsh):
             try:
-                if getattr(sys, 'frozen', False):
-                    exe_dir = os.path.dirname(sys.executable)
-                    ps_command = f'Set-Location "{exe_dir}"'
-                else:
-                    script_dir = os.path.dirname(os.path.abspath(__file__))
-                    ps_command = f'Set-Location "{script_dir}"'
-
+                ps_command = get_location_command()
                 encoded_command = base64.b64encode(ps_command.encode('utf-16le')).decode('ascii')
+                shell_type = "pwsh" if use_pwsh else "powershell"
 
-                if use_pwsh:
-                    subprocess.run(
-                        f'pwsh -Command "Start-Process pwsh -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"',
-                        shell=True, timeout=30)
-                else:
-                    subprocess.run(
-                        f'powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"',
-                        shell=True, timeout=30)
-            except subprocess.TimeoutExpired:
-                messagebox.showerror("Error", "Timeout while opening PowerShell window.")
+                command = (
+                    f'{shell_type} -Command "Start-Process {shell_type} -Verb RunAs '
+                    f'-ArgumentList \'-NoExit -EncodedCommand {encoded_command}\'"'
+                )
+
+                subprocess.run(command, shell=True, timeout=TIMEOUT_PROCESS)
+
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to open PowerShell as admin: {e}")
+                error_message = ("Timeout while opening PowerShell window."
+                                 if isinstance(e, subprocess.TimeoutExpired)
+                                 else f"Failed to open PowerShell as admin: {e}")
+                messagebox.showerror("Error", error_message)
 
         def threaded_run(use_pwsh):
-            thread = threading.Thread(target=run_command, args=(use_pwsh,))
-            thread.start()
+            threading.Thread(target=run_command, args=(use_pwsh,), daemon=True).start()
 
+        # Main execution flow
         if check_pwsh_installed():
             threaded_run(True)
         else:
-            user_choice = messagebox.askyesno("PowerShell 7 Not Found",
-                                              "PowerShell 7 is not installed. Do you want to install it via winget?")
-            if user_choice:
-                if install_pwsh():
-                    messagebox.showinfo("Installation Successful", "PowerShell 7 has been installed successfully.")
-                    threaded_run(True)
-                else:
-                    messagebox.showwarning("Installation Failed",
-                                           "Failed to install PowerShell 7. Opening PowerShell 5.1 instead.")
-                    threaded_run(False)
+            user_choice = messagebox.askyesno(
+                "PowerShell 7 Not Found",
+                "PowerShell 7 is not installed. Do you want to install it via winget?"
+            )
+
+            if user_choice and install_pwsh():
+                messagebox.showinfo("Installation Successful",
+                                    "PowerShell 7 has been installed successfully.")
+                threaded_run(True)
             else:
-                messagebox.showinfo("Using PowerShell 5.1", "Opening PowerShell 5.1 instead.")
+                message = ("Failed to install PowerShell 7. " if user_choice
+                           else "Using PowerShell 5.1 instead.")
+                messagebox.showinfo("Using PowerShell 5.1", message)
                 threaded_run(False)
 
     def open_cmd_as_admin(self):
