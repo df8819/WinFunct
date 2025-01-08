@@ -3294,14 +3294,6 @@ https://dns.cloudflare.com/dns-query"""
 
     # -----------------------------------------------LINK SUMMARY END--------------------------------------------------
 
-    # --------------VVVVVVVVVVVVVVVVVV--------------MAIN GUI SECTION BELOW HERE-----------------VVVVVVVVVVVVVVVVVVVV---------------
-
-    # ------------------------------MAIN WINDOW/TABS/STYLES-------------------------------
-
-
-
-
-
 
 app = Application()
 app.mainloop()
