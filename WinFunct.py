@@ -315,36 +315,9 @@ class GUI:
         self._create_bottom_frame()
         self._create_version_label()
 
-    def initialize_gui(self):
-        """Initialize the GUI components"""
-        # Initialize styles
-        self.style_manager.configure_base_styles()
-
-        # Create main structure
-        self.tabs = self.widget_factory.create_notebook(self.main_frame)
-
-        # Create main frames
-        self.frames = {
-            'functions': self.widget_factory.create_frame(self.tabs),
-            'options': self.widget_factory.create_frame(self.tabs),
-            'fun': self.widget_factory.create_frame(self.tabs)
-        }
-
-        # Add frames to tabs
-        self.tabs.add(self.frames['functions'], text="Scripts")
-        self.tabs.add(self.frames['options'], text="Options")
-        self.tabs.add(self.frames['fun'], text="Misc")
-
-        # Create content for each tab
-        self._create_options_tab()
-        self._create_functions_tab()
-        self._create_fun_tab()
-        self._create_bottom_frame()
-        self._create_version_label()
-
     def _create_options_tab(self):
         options_notebook = self.widget_factory.create_notebook(self.frames['options'])
-        options_notebook.pack(fill='both', expand=True, padx=20, pady=20)
+        options_notebook.pack(fill='both', expand=True, padx=15, pady=15)
 
         categories = {
             'System Management': self.get_system_management_options(),
