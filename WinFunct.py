@@ -289,6 +289,7 @@ class GUI:
         self.bottom_frame = None
         self.frames = {}
 
+    # Create Widgets and Dropdowns
     def create_widgets(self):
         # Initialize styles
         self.style_manager.configure_base_styles()
@@ -315,39 +316,50 @@ class GUI:
         self._create_bottom_frame()
         self._create_version_label()
 
-    def _create_options_tab(self):
-        options_notebook = self.widget_factory.create_notebook(self.frames['options'])
-        options_notebook.pack(fill='both', expand=True, padx=15, pady=15)
+    def _create_dropdowns(self, parent, dropdown_configs):
+        """
+        Create dropdown menus with proper initialization and event binding
 
-        categories = {
-            'System Management': self.get_system_management_options(),
-            'Network & Security': self.get_network_security_options(),
-            'Troubleshooting': self.get_troubleshooting_options(),
-            'Advanced Tools': self.get_advanced_tools_options()
-        }
+        Args:
+            parent: Parent widget
+            dropdown_configs: List of dropdown configuration dictionaries
+        """
+        for config in dropdown_configs:
+            var_name = config['var_name']
+            widget_name = config['widget_name']
+            options = config['options']
+            callback = config['callback']
+            row = config.get('row', 0)
+            column = config.get('column', 0)
 
-        for category, options in categories.items():
-            frame = self.widget_factory.create_frame(options_notebook)
-            options_notebook.add(frame, text=category)
-            self._create_option_buttons(frame, options)
+            # Create frame for dropdown
+            dropdown_frame = ttk.Frame(parent, style='Custom.TFrame')
+            dropdown_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
 
-    def _create_option_buttons(self, frame, options_list):
-        container = self.layout_manager.create_grid_container(frame)
+            # Initialize StringVar
+            string_var = tk.StringVar(value=config['default'])
+            setattr(self, var_name, string_var)
 
-        num_rows = (len(options_list) + 4) // 5
-        for i in range(num_rows):
-            container.grid_rowconfigure(i, weight=1, uniform="row")
-
-        for i, option in enumerate(options_list):
-            button_text, command = option
-            self.widget_factory.create_button(
-                container,
-                text=button_text,
-                command=lambda cmd=command: self.execute_command(cmd),
-                row=i // 5,
-                column=i % 5
+            # Create and configure dropdown with custom style
+            dropdown = ttk.Combobox(
+                dropdown_frame,
+                textvariable=string_var,
+                values=options,
+                state="readonly",
+                style='Custom.TCombobox'  # Add this line
             )
+            dropdown.pack(fill="both", expand=True)
 
+            # Store dropdown widget reference
+            setattr(self, widget_name, dropdown)
+
+            # Bind callback - ensure method exists
+            if hasattr(self, callback):
+                dropdown.bind('<<ComboboxSelected>>', getattr(self, callback))
+            else:
+                print(f"Warning: Callback method {callback} not found")
+
+    # Create Tabs and Buttons
     def _create_functions_tab(self):
         # Create main container
         main_container = self.layout_manager.create_grid_container(self.frames['functions'])
@@ -446,6 +458,39 @@ class GUI:
         # Create dropdowns
         self._create_dropdowns(main_container, dropdown_configs)
 
+    def _create_options_tab(self):
+        options_notebook = self.widget_factory.create_notebook(self.frames['options'])
+        options_notebook.pack(fill='both', expand=True, padx=15, pady=15)
+
+        categories = {
+            'System Management': self.get_system_management_options(),
+            'Network & Security': self.get_network_security_options(),
+            'Troubleshooting': self.get_troubleshooting_options(),
+            'Advanced Tools': self.get_advanced_tools_options()
+        }
+
+        for category, options in categories.items():
+            frame = self.widget_factory.create_frame(options_notebook)
+            options_notebook.add(frame, text=category)
+            self._create_option_buttons(frame, options)
+
+    def _create_option_buttons(self, frame, options_list):
+        container = self.layout_manager.create_grid_container(frame)
+
+        num_rows = (len(options_list) + 4) // 5
+        for i in range(num_rows):
+            container.grid_rowconfigure(i, weight=1, uniform="row")
+
+        for i, option in enumerate(options_list):
+            button_text, command = option
+            self.widget_factory.create_button(
+                container,
+                text=button_text,
+                command=lambda cmd=command: self.execute_command(cmd),
+                row=i // 5,
+                column=i % 5
+            )
+
     def _create_fun_tab(self):
         # Create notebook within the fun tab
         fun_notebook = self.widget_factory.create_notebook(self.frames['fun'])
@@ -478,6 +523,27 @@ class GUI:
         self._create_fun_buttons(fun_frames['apps'], apps_buttons)
         self._create_fun_buttons(fun_frames['fun_stuff'], fun_stuff_buttons)
 
+    def _create_fun_buttons(self, frame, buttons_list):
+        """Helper method to create buttons in the fun tab sections"""
+        # Create main container with layout manager
+        container = self.layout_manager.create_grid_container(frame)
+
+        # Calculate and configure rows
+        num_rows = (len(buttons_list) + 4) // 5  # 5 columns
+        for i in range(num_rows):
+            container.grid_rowconfigure(i, weight=1, uniform="row")
+
+        # Create buttons
+        for i, (text, command) in enumerate(buttons_list):
+            self.widget_factory.create_button(
+                container,
+                text=text,
+                command=command,
+                row=i // 5,
+                column=i % 5
+            )
+
+    # Create Bottom Frame and Label
     def _create_bottom_frame(self):
         # Create main bottom container with fixed height
         self.bottom_frame = self.widget_factory.create_fixed_height_frame(self.main_frame, height=80)
@@ -598,69 +664,6 @@ class GUI:
         # Add interactivity to the version label
         self._configure_version_label_bindings()
 
-    def _create_dropdowns(self, parent, dropdown_configs):
-        """
-        Create dropdown menus with proper initialization and event binding
-
-        Args:
-            parent: Parent widget
-            dropdown_configs: List of dropdown configuration dictionaries
-        """
-        for config in dropdown_configs:
-            var_name = config['var_name']
-            widget_name = config['widget_name']
-            options = config['options']
-            callback = config['callback']
-            row = config.get('row', 0)
-            column = config.get('column', 0)
-
-            # Create frame for dropdown
-            dropdown_frame = ttk.Frame(parent, style='Custom.TFrame')
-            dropdown_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
-
-            # Initialize StringVar
-            string_var = tk.StringVar(value=config['default'])
-            setattr(self, var_name, string_var)
-
-            # Create and configure dropdown with custom style
-            dropdown = ttk.Combobox(
-                dropdown_frame,
-                textvariable=string_var,
-                values=options,
-                state="readonly",
-                style='Custom.TCombobox'  # Add this line
-            )
-            dropdown.pack(fill="both", expand=True)
-
-            # Store dropdown widget reference
-            setattr(self, widget_name, dropdown)
-
-            # Bind callback - ensure method exists
-            if hasattr(self, callback):
-                dropdown.bind('<<ComboboxSelected>>', getattr(self, callback))
-            else:
-                print(f"Warning: Callback method {callback} not found")
-
-    def _create_fun_buttons(self, frame, buttons_list):
-        """Helper method to create buttons in the fun tab sections"""
-        # Create main container with layout manager
-        container = self.layout_manager.create_grid_container(frame)
-
-        # Calculate and configure rows
-        num_rows = (len(buttons_list) + 4) // 5  # 5 columns
-        for i in range(num_rows):
-            container.grid_rowconfigure(i, weight=1, uniform="row")
-
-        # Create buttons
-        for i, (text, command) in enumerate(buttons_list):
-            self.widget_factory.create_button(
-                container,
-                text=text,
-                command=command,
-                row=i // 5,
-                column=i % 5
-            )
-
     def _configure_version_label_bindings(self):
         """Configures the mouse event bindings for the version label"""
 
@@ -677,6 +680,7 @@ class GUI:
         self.version_label.bind("<Button-1>", open_link)
         self.version_label.bind("<Enter>", on_enter)
         self.version_label.bind("<Leave>", on_leave)
+
 
     # Getter methods
     def get_system_management_options(self):
