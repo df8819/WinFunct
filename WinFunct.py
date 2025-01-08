@@ -959,20 +959,26 @@ class Application(tk.Tk, GUI):
         self.apply_theme()
 
     def apply_theme(self):
+        # First update basic tk widgets
         self.configure(bg=UI_COLOR)
         self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
-        # Apply theme to other widgets as needed
-        self.update_ui(self.current_theme)
 
+        # Reconfigure all ttk styles
+        self.style_manager = StyleManager()
+        self.style_manager.configure_base_styles()
+
+        # Update traditional tk widgets
         def update_widget_colors(widget):
             if isinstance(widget, tk.Button):
-                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
             elif isinstance(widget, tk.Label):
                 widget.configure(bg=UI_COLOR, fg=BUTTON_TEXT_COLOR)
             elif isinstance(widget, tk.Frame):
                 widget.configure(bg=UI_COLOR)
             elif isinstance(widget, tk.OptionMenu):
-                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR, activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
+                widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
+                                 activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
                 widget["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
 
             for child in widget.winfo_children():
@@ -980,19 +986,57 @@ class Application(tk.Tk, GUI):
 
         update_widget_colors(self)
 
-        # Update ttk styles
-        style = ttk.Style()
-        style.configure('TNotebook', background=UI_COLOR)
-        style.configure('TNotebook.Tab', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
-        style.map('TNotebook.Tab', background=[('selected', UI_COLOR)])
-        style.configure('TFrame', background=UI_COLOR)
-        style.configure('TButton', background=BUTTON_BG_COLOR, foreground=BUTTON_TEXT_COLOR)
-
-        # Update the version label
+        # Update version label
         if hasattr(self, 'version_label'):
             self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
 
+        # Force update of all widgets
         self.update_idletasks()
+
+        # Recreate all ttk widgets that need immediate update
+        self._recreate_ttk_widgets()
+
+    def _recreate_ttk_widgets(self):
+        """Recreate critical ttk widgets that need immediate theme update"""
+        # Store current tab selection
+        current_tab = self.tabs.select()
+
+        # Store the old bottom frame reference and remove it
+        old_bottom_frame = self.bottom_frame
+        if old_bottom_frame:
+            old_bottom_frame.pack_forget()
+
+        # Recreate notebook and its contents
+        old_tabs = self.tabs
+        self.tabs = self.widget_factory.create_notebook(self.main_frame)
+        self.tabs.pack(fill="both", expand=True)
+
+        # Recreate all frames and their contents
+        for frame_name, frame in self.frames.items():
+            new_frame = self.widget_factory.create_frame(self.tabs)
+            self.frames[frame_name] = new_frame
+            self.tabs.add(new_frame, text=old_tabs.tab(frame, "text"))
+
+        # Recreate content for each tab
+        self._create_options_tab()
+        self._create_functions_tab()
+        self._create_fun_tab()
+
+        # Remove old notebook
+        old_tabs.destroy()
+
+        # Recreate bottom frame with proper styling
+        self._create_bottom_frame()  # This will create a new bottom frame with correct border
+
+        # Try to restore previous tab selection
+        try:
+            self.tabs.select(current_tab)
+        except:
+            self.tabs.select(0)
+
+        # Clean up old bottom frame if it exists
+        if old_bottom_frame:
+            old_bottom_frame.destroy()
 
         # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
     # ----------------------------------OPEN BUILT IN APPS----------------------------------
