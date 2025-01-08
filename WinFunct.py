@@ -728,7 +728,7 @@ class GUI:
 
 
 # Main App Window
-# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable
+# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable,PyBroadException
 class Application(tk.Tk, GUI):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -1777,7 +1777,7 @@ class Application(tk.Tk, GUI):
 
     def get_wifi_profiles(self):
         """
-        Retrieve all WiFi profiles from the system
+        Retrieve all Wi-Fi profiles from the system
         """
         commands = [
             ["netsh", "wlan", "show", "profiles"],
