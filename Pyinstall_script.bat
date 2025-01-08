@@ -41,6 +41,9 @@ if /i "!rename_choice!"=="y" (
     )
 )
 
+REM Add zip archive prompt here
+set /p "zip_choice=Would you like to create a zip archive of the executable? (y/n): "
+
 :option_prompt
 REM Prompt for pyinstaller process option with default [2]
 set "option=2"
@@ -104,6 +107,17 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
+REM Create zip archive if requested
+if /i "!zip_choice!"=="y" (
+    echo Creating zip archive...
+    powershell -Command "Compress-Archive -Path '.\!newname!_%version%.exe' -DestinationPath '.\!newname!_%version%.zip' -Force"
+    if !errorlevel! EQU 0 (
+        echo Zip archive created successfully: !newname!_%version%.zip
+    ) else (
+        echo Failed to create zip archive using PowerShell.
+    )
+)
+
 REM Clean up
 echo Cleaning up temporary files and folders...
 timeout /t 1 > nul
@@ -125,6 +139,9 @@ echo ===========================================================
 echo Compilation complete. Process took %elapsed_time% seconds.
 echo.
 echo !newname!_%version%.exe created and moved to root directory.
+if /i "!zip_choice!"=="y" (
+    echo !newname!_%version%.zip created in root directory.
+)
 echo The following has been cleaned up:
 echo.
 echo dist/
