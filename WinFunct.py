@@ -52,7 +52,6 @@ def is_admin():
     except WindowsError:
         return False
 
-
 def check_admin_cmd():
     try:
         output = subprocess.check_output('whoami /groups', shell=True).decode('cp850', errors='replace')
@@ -60,11 +59,9 @@ def check_admin_cmd():
     except subprocess.CalledProcessError:
         return False
 
-
 def log_message(message):
     with open("admin_log.txt", "a") as log_file:
         log_file.write(message + "\n")
-
 
 def run_as_admin():
     if sys.platform == "win32":
@@ -77,10 +74,8 @@ def run_as_admin():
         except Exception as e:
             log_message(f"Error re-running the script with admin rights: {e}")
 
-
 def is_running_in_ide():
     return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
-
 
 def print_log():
     log_path = "admin_log.txt"
@@ -88,7 +83,6 @@ def print_log():
         with open(log_path, "r") as log_file:
             print(log_file.read())
         os.remove(log_path)
-
 
 if __name__ == "__main__":
     if not is_running_in_ide():
@@ -101,7 +95,6 @@ if __name__ == "__main__":
             print_log()
     else:
         print_log()
-
 
 def show_logo():
     print(LOGO)
@@ -1008,6 +1001,8 @@ class Application(tk.Tk, GUI):
             old_bottom_frame.destroy()
 
         # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
+
+    # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
     # ----------------------------------OPEN BUILT IN APPS----------------------------------
 
     def open_chat(self):
@@ -1761,7 +1756,7 @@ class Application(tk.Tk, GUI):
         ping_options_entry.grid(row=1, column=2, padx=5, pady=5)
 
     # ----------------------------------PING COMMAND END-------------------------------------------------
-    # ----------------------------------WIFI PASSWORD EXTRACTION-------------------------------------------------
+    # ----------------------------------WIFI PASSWORDS-------------------------------------------------
 
     def decode_output(self, output_bytes):
         """
@@ -2369,7 +2364,6 @@ class Application(tk.Tk, GUI):
             # Execute the .bat file
             subprocess.run(['clear_icon_cache.bat'], shell=True)
 
-    # ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
     # ----------------------------------FLUSH DNS-------------------------------------------------
 
     def renew_ip_config(self):
