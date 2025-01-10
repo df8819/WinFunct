@@ -1303,28 +1303,6 @@ class Application(tk.Tk, GUI):
 
     # ----------------------------------CHECK IP----------------------------------
 
-    def format_ip_info(ip_info):
-        """Format the IP information for better alignment and readability."""
-        formatted_info = ""
-
-        # Section headers
-        sections = ip_info.split("\n\n")
-        for section in sections:
-            lines = section.split("\n")
-            if lines:
-                # Add section header
-                formatted_info += f"{lines[0]}\n"
-                # Format key-value pairs with consistent alignment
-                for line in lines[1:]:
-                    if ":" in line:
-                        key, value = line.split(":", 1)
-                        formatted_info += f"{key.strip():<15}: {value.strip()}\n"
-                    else:
-                        formatted_info += f"{line}\n"
-                formatted_info += "\n"
-
-        return formatted_info.strip()
-
     def show_ip_info(self):
         print("Showing IP Information")
 
@@ -1392,10 +1370,12 @@ class Application(tk.Tk, GUI):
                 for adapter, addresses in adapters.items():
                     ipv4_addresses = [addr for addr in addresses if addr.family == 2]  # IPv4
                     if ipv4_addresses:
-                        info += f"{adapter}:\n"
+                        info += f"{adapter}\n"  # Adapter name without a colon
                         for addr in ipv4_addresses:
-                            info += f"  {addr.address}\n"
+                            info += f"  {addr.address}\n"  # Indented IP address
                         info += "\n"
+                    else:
+                        info += f"{adapter}\n  No IPv4 address found\n\n"  # Handle adapters with no IPv4
                 return info
             except Exception as e:
                 return info + f"Error fetching local IP information: {str(e)}\n\n"
