@@ -1301,88 +1301,218 @@ class Application(tk.Tk, GUI):
             else:
                 print(f"{description} not found: {path}")
 
+    # ----------------------------------CHECK IP----------------------------------
+
+    def format_ip_info(ip_info):
+        """Format the IP information for better alignment and readability."""
+        formatted_info = ""
+
+        # Section headers
+        sections = ip_info.split("\n\n")
+        for section in sections:
+            lines = section.split("\n")
+            if lines:
+                # Add section header
+                formatted_info += f"{lines[0]}\n"
+                # Format key-value pairs with consistent alignment
+                for line in lines[1:]:
+                    if ":" in line:
+                        key, value = line.split(":", 1)
+                        formatted_info += f"{key.strip():<15}: {value.strip()}\n"
+                    else:
+                        formatted_info += f"{line}\n"
+                formatted_info += "\n"
+
+        return formatted_info.strip()
+
     def show_ip_info(self):
-        print("Showing IP information")
+        print("Showing IP Information")
 
-        # Create a new window
-        ip_window = tk.Toplevel(self)
-        ip_window.title("IP Information")
-        ip_window.configure(bg=BUTTON_BG_COLOR)
+        def format_ip_info(ip_info):
+            """Format the IP information for better alignment and readability."""
+            formatted_info = ""
 
-        # Set window size and position
-        window_width, window_height = 420, 680
-        screen_width = ip_window.winfo_screenwidth()
-        screen_height = ip_window.winfo_screenheight()
-        x = (screen_width // 2) - (window_width // 2)
-        y = (screen_height // 2) - (window_height // 2)
-        ip_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
+            # Section headers
+            sections = ip_info.split("\n\n")
+            for section in sections:
+                lines = section.split("\n")
+                if lines:
+                    # Add section header
+                    formatted_info += f"{lines[0]}\n"
+                    # Format key-value pairs with consistent alignment
+                    for line in lines[1:]:
+                        if ":" in line:
+                            key, value = line.split(":", 1)
+                            formatted_info += f"{key.strip():<15}: {value.strip()}\n"
+                        else:
+                            formatted_info += f"{line}\n"
+                    formatted_info += "\n"
 
-        # Create a text widget to display IP information
-        ip_info_text = scrolledtext.ScrolledText(ip_window, wrap=tk.WORD, width=40, height=10,
-                                                 bg=UI_COLOR, fg=BUTTON_TEXT_COLOR,
-                                                 insertbackground=BUTTON_TEXT_COLOR)
-        ip_info_text.pack(expand=True, fill='both', padx=10, pady=10)
+            return formatted_info.strip()
 
-        max_retries = 5
-        retry_delay = 1
-        max_delay = 2
+        def create_ip_window():
+            # Create a new window
+            ip_window = tk.Toplevel(self)
+            ip_window.title("IP Information")
+            ip_window.configure(bg=BUTTON_BG_COLOR)
 
-        ip_info = ""
+            # Set window size and position
+            window_width, window_height = 420, 680
+            screen_width = ip_window.winfo_screenwidth()
+            screen_height = ip_window.winfo_screenheight()
+            x = (screen_width // 2) - (window_width // 2)
+            y = (screen_height // 2) - (window_height // 2)
+            ip_window.geometry(f'{window_width}x{window_height}+{x}+{y}')
 
-        # Fetch local IP information
-        try:
-            ip_info += "============= Local ============\n"
-            adapters = psutil.net_if_addrs()
-            for adapter, addresses in adapters.items():
-                for addr in addresses:
-                    if addr.family == 2:  # IPv4
-                        ip_address = addr.address
-                        ip_info += f"{adapter}:\n{ip_address}\n\n"
-        except Exception as e:
-            ip_info += f"Error fetching local IP information: {str(e)}\n\n"
+            return ip_window
 
-        # Fetch and display internet IP information with retries
-        for attempt in range(max_retries):
+        def create_text_widget(window):
+            # Create a text widget with improved styling
+            text_widget = scrolledtext.ScrolledText(
+                window,
+                wrap=tk.WORD,
+                width=40,
+                height=10,
+                bg=UI_COLOR,
+                fg=BUTTON_TEXT_COLOR,
+                insertbackground=BUTTON_TEXT_COLOR,
+                font=('Courier', 10)  # Use a monospaced font for better alignment
+            )
+            text_widget.pack(expand=True, fill='both', padx=10, pady=10)
+            return text_widget
+
+        def get_local_ip_info():
+            """Fetch local IP information with error handling"""
+            info = "============= Local ============\n"
             try:
-                ip_info += "\n============= Internet =============\n"
-                response = requests.get("https://ipapi.co/json/")
-                data = response.json()
+                adapters = psutil.net_if_addrs()
+                if not adapters:
+                    return info + "No network adapters found.\n\n"
 
-                ip_info += f"Public IP:     {data['ip']}\n"
-                ip_info += f"ISP:           {data.get('org', 'N/A')}\n"
-                ip_info += f"Country:       {data['country_name']}\n"
-                ip_info += f"Region:        {data['region']}\n"
-                ip_info += f"City:          {data['city']}\n"
-                ip_info += f"Postal Code:   {data.get('postal', 'N/A')}\n\n"
-
-                ip_info += "\n============ Topology =============\n"
-
-                ip_info += f"Latitude:      {data['latitude']}\n"
-                ip_info += f"Longitude:     {data['longitude']}\n"
-                ip_info += f"Timezone:      {data['timezone']}\n\n"
-
-                ip_info += "\n============= Additional Info =============\n"
-
-                ip_info += f"Country Code:  {data['country']}\n"
-                ip_info += f"Currency:      {data.get('currency', 'N/A')}\n"
-                ip_info += f"Languages:     {data.get('languages', 'N/A')}\n"
-
-                break  # If successful, break out of the retry loop
-            except KeyError as e:
-                if str(e) == "'ip'" and attempt < max_retries - 1:
-                    print(f"Error fetching IP information: {str(e)}. Retrying in {retry_delay} seconds...")
-                    time.sleep(retry_delay)
-                    retry_delay = min(retry_delay * 2, max_delay)  # Limit the maximum delay to 2 seconds
-                else:
-                    ip_info += f"\nError fetching internet IP information: {str(e)}\n"
-                    break
+                for adapter, addresses in adapters.items():
+                    ipv4_addresses = [addr for addr in addresses if addr.family == 2]  # IPv4
+                    if ipv4_addresses:
+                        info += f"{adapter}:\n"
+                        for addr in ipv4_addresses:
+                            info += f"  {addr.address}\n"
+                        info += "\n"
+                return info
             except Exception as e:
-                ip_info += f"\nError fetching internet IP information: {str(e)}\n"
-                break
+                return info + f"Error fetching local IP information: {str(e)}\n\n"
 
-        ip_info_text.insert(tk.END, ip_info)
-        ip_info_text.config(state='disabled')
+        def get_public_ip_info(max_retries=3, base_delay=1, timeout=5):
+            """Fetch public IP information with improved error handling and multiple API fallbacks"""
+            info = "\n============= Internet =============\n"
 
+            # List of IP API services to try
+            api_services = [
+                {"url": "https://ipapi.co/json/", "handler": handle_ipapi_response},
+                {"url": "https://ip-api.com/json/", "handler": handle_ipapi_alternative_response},
+                {"url": "https://ipinfo.io/json", "handler": handle_ipinfo_response}
+            ]
+
+            for service in api_services:
+                for attempt in range(max_retries):
+                    try:
+                        response = requests.get(
+                            service["url"],
+                            timeout=timeout,
+                            headers={'User-Agent': 'Mozilla/5.0'}
+                        )
+                        response.raise_for_status()
+                        data = response.json()
+                        return info + service["handler"](data)
+                    except requests.exceptions.Timeout:
+                        if attempt == max_retries - 1:
+                            continue  # Try next service
+                    except requests.exceptions.RequestException as e:
+                        if attempt == max_retries - 1:
+                            continue  # Try next service
+                    time.sleep(base_delay * (attempt + 1))
+
+            return info + "Unable to fetch public IP information from any service.\n"
+
+        def handle_ipapi_response(data):
+            """Handle response from ipapi.co"""
+            try:
+                info = (
+                    f"Public IP     : {data['ip']}\n"
+                    f"ISP           : {data.get('org', 'N/A')}\n"
+                    f"Country       : {data.get('country_name', 'N/A')}\n"
+                    f"Region        : {data.get('region', 'N/A')}\n"
+                    f"City          : {data.get('city', 'N/A')}\n"
+                    f"Postal Code   : {data.get('postal', 'N/A')}\n\n"
+                    f"\n============ Topology =============\n"
+                    f"Latitude      : {data.get('latitude', 'N/A')}\n"
+                    f"Longitude     : {data.get('longitude', 'N/A')}\n"
+                    f"Timezone      : {data.get('timezone', 'N/A')}\n\n"
+                    f"\n============= Additional Info =============\n"
+                    f"Country Code  : {data.get('country', 'N/A')}\n"
+                    f"Currency      : {data.get('currency', 'N/A')}\n"
+                    f"Languages     : {data.get('languages', 'N/A')}\n"
+                )
+                return info
+            except Exception as e:
+                return f"Error parsing ipapi.co response: {str(e)}\n"
+
+        def handle_ipapi_alternative_response(data):
+            """Handle response from ip-api.com"""
+            try:
+                info = (
+                    f"Public IP     : {data.get('query', 'N/A')}\n"
+                    f"ISP           : {data.get('isp', 'N/A')}\n"
+                    f"Country       : {data.get('country', 'N/A')}\n"
+                    f"Region        : {data.get('regionName', 'N/A')}\n"
+                    f"City          : {data.get('city', 'N/A')}\n"
+                    f"Postal Code   : {data.get('zip', 'N/A')}\n\n"
+                    f"\n============ Topology =============\n"
+                    f"Latitude      : {data.get('lat', 'N/A')}\n"
+                    f"Longitude     : {data.get('lon', 'N/A')}\n"
+                    f"Timezone      : {data.get('timezone', 'N/A')}\n"
+                )
+                return info
+            except Exception as e:
+                return f"Error parsing ip-api.com response: {str(e)}\n"
+
+        def handle_ipinfo_response(data):
+            """Handle response from ipinfo.io"""
+            try:
+                loc = data.get('loc', '').split(',')
+                lat, lon = loc if len(loc) == 2 else ('N/A', 'N/A')
+                info = (
+                    f"Public IP     : {data.get('ip', 'N/A')}\n"
+                    f"ISP           : {data.get('org', 'N/A')}\n"
+                    f"Country       : {data.get('country', 'N/A')}\n"
+                    f"Region        : {data.get('region', 'N/A')}\n"
+                    f"City          : {data.get('city', 'N/A')}\n"
+                    f"Postal Code   : {data.get('postal', 'N/A')}\n\n"
+                    f"\n============ Topology =============\n"
+                    f"Latitude      : {lat}\n"
+                    f"Longitude     : {lon}\n"
+                    f"Timezone      : {data.get('timezone', 'N/A')}\n"
+                )
+                return info
+            except Exception as e:
+                return f"Error parsing ipinfo.io response: {str(e)}\n"
+
+        try:
+            # Create window and widgets
+            ip_window = create_ip_window()
+            ip_info_text = create_text_widget(ip_window)
+
+            # Gather IP information
+            ip_info = get_local_ip_info()
+            ip_info += get_public_ip_info()
+
+            # Format and display IP information
+            formatted_ip_info = format_ip_info(ip_info)
+            ip_info_text.insert(tk.END, formatted_ip_info)
+            ip_info_text.config(state='disabled')
+
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred: {str(e)}")
+
+    # ----------------------------------CHECK IP END----------------------------------
     # ----------------------------------QUICK ACCESS MANAGER-------------------------------------------------
     def quick_access_manager(self):
         qa_window = tk.Toplevel(self)
