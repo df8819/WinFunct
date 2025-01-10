@@ -714,7 +714,7 @@ class GUI:
 
 
 # Main App Window
-# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable,PyBroadException
+# noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable,PyBroadException,PyMethodParameters,PyUnresolvedReferences
 class Application(tk.Tk, GUI):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
