@@ -1,32 +1,20 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Ensure the batch file runs in its own directory
+cd /d "%~dp0"
+
 :: BatchGotAdmin
 title WinFunct Terminal
 
-:-------------------------------------
-:: Check for permissions
+:: Check for admin permissions
 echo Verifying admin permissions...
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-
-if '%errorlevel%' NEQ '0' (
+net session >nul 2>&1
+if %errorlevel% NEQ 0 (
     echo Requesting administrative privileges...
-    goto UACPrompt
-) else (
-    goto gotAdmin
-)
-
-:UACPrompt
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    echo UAC.ShellExecute "%~s0", "", "", "runas", 1 >> "%temp%\getadmin.vbs"
-    "%temp%\getadmin.vbs"
-    del "%temp%\getadmin.vbs"
+    PowerShell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
     exit /B
-
-:gotAdmin
-    pushd "%CD%"
-    CD /D "%~dp0"
-:--------------------------------------
+)
 
 :: Check if Python is installed
 where python >nul 2>nul
@@ -45,23 +33,36 @@ if %errorlevel% NEQ 0 (
     exit /B 1
 )
 
-:: Attempt git pull with timeout
+:: Update checking
 echo Checking for updates...
-git pull > "%TEMP%\git_pull_output.txt" 2>&1
+git fetch origin main >nul 2>&1
 if %errorlevel% NEQ 0 (
     echo Update check failed.
     echo Continuing with application launch...
-) else (
-    findstr /C:"Already up to date." "%TEMP%\git_pull_output.txt" >nul
-    if %errorlevel% NEQ 0 (
-        echo Updates pulled. Installing new requirements...
-        pip install -r requirements.txt
-    ) else (
-        echo No updates available.
-    )
+    goto StartApp
 )
 
-del "%TEMP%\git_pull_output.txt"
+git rev-parse HEAD > "%TEMP%\current_commit.txt"
+git rev-parse origin/main > "%TEMP%\remote_commit.txt"
+
+fc "%TEMP%\current_commit.txt" "%TEMP%\remote_commit.txt" >nul 2>&1
+if %errorlevel% NEQ 0 (
+    echo Updates found. Pulling changes...
+    git pull
+    if %errorlevel% EQU 0 (
+        echo Updates installed successfully.
+        pip install -r requirements.txt
+    ) else (
+        echo Failed to pull updates.
+    )
+) else (
+    echo No updates available.
+)
+
+del "%TEMP%\current_commit.txt" 2>nul
+del "%TEMP%\remote_commit.txt" 2>nul
+
+:StartApp
 
 :: Check if the Python script exists
 if not exist "WinFunct.py" (

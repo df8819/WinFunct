@@ -46,10 +46,11 @@ from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
 # ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
+# noinspection PyBroadException
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() != 0
-    except WindowsError:
+    except:
         return False
 
 def check_admin_cmd():
@@ -59,48 +60,49 @@ def check_admin_cmd():
     except subprocess.CalledProcessError:
         return False
 
-def log_message(message):
-    with open("admin_log.txt", "a") as log_file:
-        log_file.write(message + "\n")
-
 def run_as_admin():
     if sys.platform == "win32":
-        cmd = [sys.executable] + sys.argv
-        escaped_cmd = [item.replace('"', '\\"') for item in cmd]
-        cmd_line = ' '.join(f'"{item}"' for item in escaped_cmd)
         try:
-            log_message("Initial checks completed. Running as intended...")
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, cmd_line, None, 1)
+            if sys.argv[0].endswith('.py'):
+                script_path = os.path.abspath(sys.argv[0])
+                params = ' '.join([f'"{arg}"' for arg in sys.argv[1:]])
+                cmd_line = f'"{sys.executable}" "{script_path}" {params}'
+            else:
+                cmd_line = ' '.join([f'"{arg}"' for arg in sys.argv])
+
+            ctypes.windll.shell32.ShellExecuteW(
+                None,
+                "runas",
+                sys.executable,
+                cmd_line,
+                None,
+                1
+            )
         except Exception as e:
-            log_message(f"Error re-running the script with admin rights: {e}")
+            print(f"Error elevating privileges: {e}")
+            return False
+        return True
+    return False
 
-def is_running_in_ide():
-    return any(ide_env in os.environ for ide_env in ["PYCHARM_HOSTED", "VSCode"])
-
-def print_log():
-    log_path = "admin_log.txt"
-    if os.path.exists(log_path):
-        with open(log_path, "r") as log_file:
-            print(log_file.read())
-        os.remove(log_path)
-
-if __name__ == "__main__":
-    if not is_running_in_ide():
-        if not (is_admin() or check_admin_cmd()):
-            print("Not running with administrative privileges...")
-            run_as_admin()
-            sys.exit()
+def ensure_admin():
+    if not (is_admin() or check_admin_cmd()):
+        print("Requesting administrative privileges...")
+        if run_as_admin():
+            sys.exit(0)
         else:
-            print("Running with admin rights...")
-            print_log()
-    else:
-        print_log()
+            print("Failed to obtain administrative privileges.")
+            sys.exit(1)
+    return True
 
 def show_logo():
     print(LOGO)
 
-show_logo()
-print("Awaiting user input (⌐■_■)")
+if __name__ == "__main__":
+    if ensure_admin():
+        # Your existing main application code here
+        show_logo()
+        print("Running with administrative privileges")
+        print("Awaiting user input (⌐■_■)")
 
 # Command functions
 def execute_system_command(cmd):

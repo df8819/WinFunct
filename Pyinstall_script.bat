@@ -3,18 +3,42 @@ setlocal enabledelayedexpansion
 
 cd /d "%~dp0"
 
-REM Check if Python is installed
-python --version >nul 2>&1
+REM Check for admin rights
+net session >nul 2>&1
 if %errorlevel% NEQ 0 (
-    echo Error: Python is not installed or not in the system PATH.
+    echo Requesting administrative privileges...
+    PowerShell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    exit /B
+)
+
+REM Check Python version
+for /f "tokens=2 delims= " %%a in ('python --version 2^>^&1') do set "pyver=%%a"
+if "%pyver:~0,1%" LSS "3" (
+    echo Error: Python 3.x is required ^(Found version: %pyver%^)
     pause
     exit /B 1
 )
 
-REM Check if pyinstaller is installed
-pyinstaller --version >nul 2>&1
+REM Check if pyinstaller is installed and get version
+for /f "tokens=2 delims= " %%a in ('pyinstaller --version 2^>^&1') do set "pyinstver=%%a"
 if %errorlevel% NEQ 0 (
-    echo Error: PyInstaller is not installed. Please install it using 'pip install pyinstaller'.
+    echo Installing PyInstaller...
+    pip install pyinstaller
+    if !errorlevel! NEQ 0 (
+        echo Error: Failed to install PyInstaller.
+        pause
+        exit /B 1
+    )
+)
+
+REM Validate required files exist
+if not exist "WinFunct.py" (
+    echo Error: WinFunct.py not found in current directory.
+    pause
+    exit /B 1
+)
+if not exist "WinFunct.ico" (
+    echo Error: WinFunct.ico not found in current directory.
     pause
     exit /B 1
 )
@@ -66,21 +90,31 @@ for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
 
 REM Validate the input and execute the appropriate PyInstaller command
 if "%option%"=="1" (
-    REM Create the spec file with the necessary exclusions using a Python script
     echo Creating the spec file with exclusions...
     python create_spec_file.py
-    echo Compiling WinFunct.py into a single executable using PyInstaller with the spec file...
-    pyinstaller WinFunct.spec
+    echo Compiling WinFunct.py into a single executable...
+    pyinstaller --clean ^
+                --log-level INFO ^
+                --noconfirm ^
+                WinFunct.spec
 ) else if "%option%"=="2" (
-    echo Compiling WinFunct.py into a single executable using PyInstaller without spec file...
-    pyinstaller --onefile --icon=WinFunct.ico WinFunct.py
-) else (
-    echo Invalid entry! Please select [1] or [2].
-    goto option_prompt
+    echo Compiling WinFunct.py into a single executable...
+    pyinstaller --clean ^
+                --log-level INFO ^
+                --noconfirm ^
+                --onefile ^
+                --icon=WinFunct.ico ^
+                --add-data "WinFunct.ico;." ^
+                --name "!newname!" ^
+                WinFunct.py
 )
 
+REM Add error log creation if PyInstaller fails
 if %errorlevel% NEQ 0 (
-    echo Error: PyInstaller failed to compile the script. Please check the output for details.
+    echo Error: PyInstaller failed to compile the script.
+    echo Creating error log...
+    pyinstaller --clean --onefile WinFunct.py > pyinstaller_error.log 2>&1
+    echo Error log created as pyinstaller_error.log
     pause
     exit /B 1
 )
@@ -132,6 +166,19 @@ if exist __pycache__ (
     goto retry
 )
 if exist WinFunct.spec del /F WinFunct.spec
+
+REM Additional cleanup
+echo Cleaning up additional files...
+del /F /Q *.pyc 2>nul
+del /F /Q *.pyo 2>nul
+del /F /Q *.log 2>nul
+
+REM Verify the executable was created successfully
+if not exist "!newname!_%version%.exe" (
+    echo Error: Executable was not created successfully.
+    pause
+    exit /B 1
+)
 
 echo.
 echo.

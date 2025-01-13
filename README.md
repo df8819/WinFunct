@@ -29,15 +29,15 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 **1.** Navigate to the directory of your choice, click into the file explorer's address bar, type **"cmd"** _(overwrite existing path)_ and hit Enter.
 
-**2.** Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the appeared **cmd** Window.
+**2.** Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **cmd** Window.
 
 **3.** Double click **"Install.bat"**. This will install all dependencies and update the cloned repository.
 
-**4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command will not work, as the app demands elevated rights via temporary created script.)_
+**4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command will not work, as the app demands elevated rights via PowerShell.)_
 
 **(4.1)** You may need to add an exclusion for the folder you have cloned this repo in Windows under **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**
 
-## Known Issues / Comments
+## Comments
 
 - _Thank you for using my App. Feedback is always welcome_ ✌
 - _This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave or crash from time to time_
@@ -46,6 +46,8 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 ![Image](GUI_Pics/2025-01-08-1736346243.png)
 ![Image](GUI_Pics/2025-01-08-1736346251.png)
+
+<hr style="border: 5px solid;" />
 
 ## Screenshots - Functions
 
