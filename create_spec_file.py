@@ -1,4 +1,15 @@
-spec_content = """
+# -*- mode: python ; coding: utf-8 -*-
+
+import sys
+import os
+
+# Get the name from environment variable if set
+app_name = os.getenv('APP_NAME', 'WinFunct')
+
+# Increase recursion limit
+sys.setrecursionlimit(sys.getrecursionlimit() * 5)
+
+spec_content = f"""
 # -*- mode: python ; coding: utf-8 -*-
 
 import sys
@@ -13,7 +24,7 @@ a = Analysis(
     datas=[],
     hiddenimports=[],
     hookspath=[],
-    hooksconfig={},
+    hooksconfig={{}},
     runtime_hooks=[],
     excludes=['matplotlib', 'tensorflow', 'PIL', 'numpy', 'pandas', 'scipy', 'PyQt5', 'PyQt6', 'PySide2', 'PySide6'],
     win_no_prefer_redirects=False,
@@ -31,7 +42,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='WinFunct',
+    name='{app_name}',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -51,4 +62,4 @@ exe = EXE(
 with open("WinFunct.spec", "w") as spec_file:
     spec_file.write(spec_content)
 
-print("WinFunct.spec file has been created successfully.")
+print(f"WinFunct.spec file has been created successfully with name: {app_name}")

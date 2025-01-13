@@ -69,19 +69,19 @@ REM Add zip archive prompt here
 set /p "zip_choice=Would you like to create a zip archive of the executable? (y/n): "
 
 :option_prompt
-REM Prompt for pyinstaller process option with default [2]
-set "option=2"
+REM Prompt for pyinstaller process option with default [1]
+set "option=1"
 echo.
 echo ================================================================================
-echo Please choose a PyInstaller process (Default is [2]):
+echo Please choose a PyInstaller process (Default is [1]):
 echo.
 echo [1] Includes a Python script to create and modify the spec file with exclusions.
 echo [2] Runs pyinstaller without exclusions and only with the "--onefile" argument.
 echo.
 set /p "option=Type [1] or [2] and hit Enter: "
 echo.
-REM Default to 2 if the input is empty
-if "%option%"=="" set "option=2"
+REM Default to 1 if the input is empty
+if "%option%"=="" set "option=1"
 
 REM Get start time
 for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
@@ -91,6 +91,7 @@ for /F "tokens=1-4 delims=:.," %%a in ("!time!") do (
 REM Validate the input and execute the appropriate PyInstaller command
 if "%option%"=="1" (
     echo Creating the spec file with exclusions...
+    set "APP_NAME=!newname!"
     python create_spec_file.py
     echo Compiling WinFunct.py into a single executable...
     pyinstaller --clean ^
@@ -134,7 +135,12 @@ if exist "!newname!_%version%.exe" (
     del /F "!newname!_%version%.exe"
 )
 
-move /Y "dist\!newname!.exe" "!newname!_%version%.exe"
+if "%option%"=="1" (
+    move /Y "dist\WinFunct.exe" "!newname!_%version%.exe"
+) else (
+    move /Y "dist\!newname!.exe" "!newname!_%version%.exe"
+)
+
 if %errorlevel% NEQ 0 (
     echo Error: Failed to move and rename the executable to the root folder.
     pause
