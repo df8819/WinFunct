@@ -136,7 +136,7 @@ if exist "!newname!_%version%.exe" (
 )
 
 if "%option%"=="1" (
-    move /Y "dist\WinFunct.exe" "!newname!_%version%.exe"
+    move /Y "dist\!newname!.exe" "!newname!_%version%.exe"
 ) else (
     move /Y "dist\!newname!.exe" "!newname!_%version%.exe"
 )
