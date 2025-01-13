@@ -171,7 +171,10 @@ if exist __pycache__ (
     timeout /t 1 > nul
     goto retry
 )
-if exist WinFunct.spec del /F WinFunct.spec
+
+REM Clean up all spec files
+echo Cleaning up spec files...
+del /F /Q *.spec 2>nul
 
 REM Additional cleanup
 echo Cleaning up additional files...
@@ -200,7 +203,7 @@ echo.
 echo dist/
 echo build/
 echo __pycache__/
-echo WinFunct.spec
+echo *.spec files
 echo ===========================================================
 echo.
 echo Press any key to exit...
