@@ -45,7 +45,8 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
-# ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ----------------------------------
+# --- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ---
+pass
 # noinspection PyBroadException
 def is_admin():
     try:
@@ -115,8 +116,11 @@ def load_theme_from_file():
             return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         return None
-# ---------------------------------- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ----------------------------------
-# ---------------------------------- GUI CLASSES ----------------------------------
+
+# --- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ---
+pass
+# --- GUI CLASSES ---
+
 class StyleManager:
     def __init__(self):
         self.style = ttk.Style()
@@ -712,9 +716,9 @@ class GUI:
             error_msg = f"Error executing command '{cmd}': {str(e)}"
             print(error_msg)
             messagebox.showerror("Error", error_msg)
-# ---------------------------------- GUI CLASSES END ----------------------------------
 
-
+# --- GUI CLASSES END ---
+pass
 # Main App Window
 # noinspection PyTypeChecker,RegExpRedundantEscape,PyMethodMayBeStatic,PyUnusedLocal,PyShadowingNames,PyAttributeOutsideInit,SpellCheckingInspection,PyGlobalUndefined,PyUnboundLocalVariable,PyBroadException,PyMethodParameters,PyUnresolvedReferences
 class Application(tk.Tk, GUI):
@@ -765,7 +769,7 @@ class Application(tk.Tk, GUI):
         self.clipboard_append(text)
         self.update()  # To make sure the clipboard is updated
 
-    # ----------------------------------DROPDOWN SECTION-------------------------------------------------
+    # --- DROPDOWN SECTION ---
 
     def on_function_select1(self, *args):
         selected1 = self.selected_function1.get()
@@ -850,8 +854,9 @@ class Application(tk.Tk, GUI):
             self.function_dropdown8.after(0, actions[selected8])
             self.function_dropdown8.after(0, lambda: self.selected_function8.set("GUI Options"))
 
-    # ----------------------------------DROPDOWN SECTION END---------------------------------------------
-    # ----------------------------------THEME SELECTOR FOR MAIN APP----------------------------------
+    # --- DROPDOWN SECTION END ---
+    pass
+    # --- THEME SELECTOR FOR MAIN APP ---
 
     def load_last_selected_theme(self):
         global UI_COLOR, BUTTON_BG_COLOR, BUTTON_TEXT_COLOR, BOTTOM_BORDER_COLOR, VERSION_LABEL_TEXT
@@ -1004,8 +1009,9 @@ class Application(tk.Tk, GUI):
 
         # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
 
-    # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
-    # ----------------------------------OPEN BUILT IN APPS----------------------------------
+    # --- THEME SELECTOR FOR MAIN APP END ---
+    pass
+    # --- OPEN BUILT IN APPS ---
 
     def open_chat(self):
         print("""Open JChat app.""")
@@ -1052,7 +1058,7 @@ class Application(tk.Tk, GUI):
         else:
             subprocess.Popen(['python', '-c', 'from DonutInt import Donut; Donut().run()'])
 
-    # ----------------------------------OPEN BUILT IN APPS END----------------------------------
+    # --- OPEN BUILT IN APPS END ---
 
     def show_logo(self):
         show_logo()
@@ -1303,7 +1309,7 @@ class Application(tk.Tk, GUI):
             else:
                 print(f"{description} not found: {path}")
 
-    # ----------------------------------CHECK IP----------------------------------
+    # --- CHECK IP ---
 
     def show_ip_info(self):
         print("Showing IP Information")
@@ -1494,8 +1500,10 @@ class Application(tk.Tk, GUI):
         except Exception as e:
             messagebox.showerror("Error", f"An unexpected error occurred: {str(e)}")
 
-    # ----------------------------------CHECK IP END----------------------------------
-    # ----------------------------------QUICK ACCESS MANAGER-------------------------------------------------
+    # --- CHECK IP END---
+    pass
+    # --- QUICK ACCESS MANAGER ---
+
     def quick_access_manager(self):
         qa_window = tk.Toplevel(self)
         qa_window.title("Quick Access Manager")
@@ -1619,8 +1627,9 @@ class Application(tk.Tk, GUI):
 
         qa_window.grab_set()
 
-    # ----------------------------------QUICK ACCESS MANAGER END-------------------------------------------------
-    # ----------------------------------DISK INFO-------------------------------------------------
+    # --- QUICK ACCESS MANAGER END ---
+    pass
+    # --- DISK INFO ---
 
     def show_disk_info(self):
         print("Showing Disk Information")
@@ -1791,8 +1800,9 @@ class Application(tk.Tk, GUI):
         # Automatically fetch and display the initial disk info when the window opens.
         threading.Thread(target=fetch_disk_info).start()
 
-    # ----------------------------------DISK INFO END-------------------------------------------------
-    # ----------------------------------PING COMMAND-------------------------------------------------
+    # --- DISK INFO END ---
+    pass
+    # --- PING COMMAND ---
 
     def show_ping_info(self):
         print("Showing Ping Command Window")
@@ -1867,8 +1877,9 @@ class Application(tk.Tk, GUI):
         ping_options_entry.insert(0, "-n 4 -l 32")
         ping_options_entry.grid(row=1, column=2, padx=5, pady=5)
 
-    # ----------------------------------PING COMMAND END-------------------------------------------------
-    # ----------------------------------WIFI PASSWORDS-------------------------------------------------
+    # --- PING COMMAND END ---
+    pass
+    # --- WIFI PASSWORDS ---
 
     def decode_output(self, output_bytes):
         """
@@ -2097,8 +2108,9 @@ class Application(tk.Tk, GUI):
         else:
             messagebox.showinfo("Wi-Fi Networks", "No Wi-Fi networks found.")
 
-    # ----------------------------------WIFI PASSWORDS END-------------------------------------------------
-    # ----------------------------------DISK SPEEDTEST-------------------------------------------------
+    # --- WIFI PASSWORDS END ---
+    pass
+    # --- DISK SPEEDTEST ---
 
     def run_winsat_disk(self):
         print("Running Disk speed test.")
@@ -2175,8 +2187,9 @@ class Application(tk.Tk, GUI):
                                borderwidth=BORDER_WIDTH, relief=BUTTON_STYLE)
         run_button.pack(pady=10)
 
-    # ----------------------------------DISK SPEEDTEST END-------------------------------------------------
-    # ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER-------------------------------------------------
+    # --- DISK SPEEDTEST END ---
+    pass
+    # --- WEBSITE/PC ONLINE STATUS CHECKER ---
 
     def run_website_checker(self):
         def on_run():
@@ -2337,8 +2350,9 @@ class Application(tk.Tk, GUI):
 
         result_text.config(state='disabled')  # Make the text widget read-only
 
-    # ----------------------------------WEBSITE/PC ONLINE STATUS CHECKER END-------------------------------------------------
-    # ----------------------------------(INTERACTIVE) SHELL COMMANDS-------------------------------------------------
+    # --- WEBSITE/PC ONLINE STATUS CHECKER END ---
+    pass
+    # --- (INTERACTIVE) SHELL COMMANDS ---
 
     def get_powershell_command(self):
         # Define potential paths for PowerShell executables
@@ -2380,8 +2394,9 @@ class Application(tk.Tk, GUI):
         thread = threading.Thread(target=run_command)
         thread.start()
 
-    # ----------------------------------(INTERACTIVE) SHELL COMMANDS END-------------------------------------------------
-    # ------------------------------------------FFMPEG INSTALLER SCRIPT-----------------------------------------------
+    # --- (INTERACTIVE) SHELL COMMANDS END ---
+    pass
+    # --- FFMPEG INSTALLER SCRIPT ---
 
     def install_ffmpeg(self):
         # Check if Chocolatey is installed
@@ -2407,7 +2422,7 @@ class Application(tk.Tk, GUI):
         thread = threading.Thread(target=run_ffmpeg_script)
         thread.start()
 
-    # ------------------------------------------FFMPEG INSTALLER SCRIPT END-----------------------------------------------
+    # --- FFMPEG INSTALLER SCRIPT END ---
 
     def confirm_shutdown(self):
         # if tk.messagebox.askyesno("Shutdown", "Are you sure you want to shut down your PC?"):
@@ -2476,7 +2491,7 @@ class Application(tk.Tk, GUI):
             # Execute the .bat file
             subprocess.run(['clear_icon_cache.bat'], shell=True)
 
-    # ----------------------------------FLUSH DNS-------------------------------------------------
+    # --- FLUSH DNS ---
 
     def renew_ip_config(self):
         if messagebox.askyesno("Renew IP Configuration",
@@ -2503,8 +2518,9 @@ class Application(tk.Tk, GUI):
         else:
             print(f"Command was cancelled.")
 
-    # ----------------------------------FLUSH DNS END-------------------------------------------------
-    # ----------------------------------ADGUARD HOME INSTALL HELPER-------------------------------------------------
+    # --- FLUSH DNS END ---
+    pass
+    # --- ADGUARD HOME INSTALL HELPER ---
 
     def agh_curl(self):
         print("Executing 'AdGuard Home' install helper.")
@@ -2592,8 +2608,9 @@ https://dns.cloudflare.com/dns-query"""
         # Create the AGH window in a separate thread
         threading.Thread(target=create_agh_window, daemon=True).start()
 
-    # ----------------------------------ADGUARD HOME INSTALL HELPER END-------------------------------------------------
-    # ----------------------------------CHECKSUM HELPER-------------------------------------------------
+    # --- ADGUARD HOME INSTALL HELPER END ---
+    pass
+    # --- CHECKSUM HELPER ---
 
     def get_file_checksum(self):
         print("Running file checksum helper.")
@@ -2700,8 +2717,9 @@ https://dns.cloudflare.com/dns-query"""
         # algo_window.grab_set()
         # self.wait_window(algo_window)
 
-    # ----------------------------------CHECKSUM HELPER END-------------------------------------------------
-    # ----------------------------------SYSTEM INFO COMPARE-------------------------------------------------
+    # --- CHECKSUM HELPER END ---
+    pass
+    # --- SYSTEM INFO COMPARE ---
 
     def get_installed_software(self):
         software_list = []
@@ -3074,7 +3092,7 @@ https://dns.cloudflare.com/dns-query"""
 
             htmlfile.write('</table></body></html>')
 
-    # ----------------------------------SYSTEM INFO COMPARE END-------------------------------------------------
+    # --- SYSTEM INFO COMPARE END ---
 
     def netstat_output(self):
         print("Executing Network Shell command to extract apps with active internet connection.")
@@ -3181,7 +3199,7 @@ https://dns.cloudflare.com/dns-query"""
 
         threading.Thread(target=run_netstat, daemon=True).start()
 
-    # -----------------------------------------------GODMODE--------------------------------------------------
+    # --- GODMODE ---
 
     def open_godmode(self):
         print("""Executing:\n'explorer shell:::{ED7BA470-8E54-465E-825C-99712043E01C}' command in cmd\nto summon the Windows 'godmode' options window.""")
@@ -3251,8 +3269,9 @@ https://dns.cloudflare.com/dns-query"""
             # Change back to the original directory
             os.chdir(root_dir)
 
-    # -----------------------------------------------GODMODE END--------------------------------------------------
-    # -----------------------------------------------LOGOFF USER(S)--------------------------------------------------
+    # --- GODMODE END ---
+    pass
+    # --- LOGOFF USER(S) ---
 
     def logoff_user(self, username, session_id):
         print(f"Attempting to log off user: {username}")
@@ -3402,8 +3421,9 @@ https://dns.cloudflare.com/dns-query"""
 
         window.mainloop()
 
-    # -----------------------------------------------LOGOFF USER(S) END--------------------------------------------------
-    # -----------------------------------------------LINK SUMMARY--------------------------------------------------
+    # --- LOGOFF USER(S) END ---
+    pass
+    # --- LINK SUMMARY ---
 
     def open_links_window(self):
         print("Open Link summary.")
@@ -3483,7 +3503,7 @@ https://dns.cloudflare.com/dns-query"""
                 webbrowser.open_new_tab(link)
         window.destroy()  # Close the window
 
-    # -----------------------------------------------LINK SUMMARY END--------------------------------------------------
+    # --- LINK SUMMARY END ---
 
 
 app = Application()
