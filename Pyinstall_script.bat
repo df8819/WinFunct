@@ -134,7 +134,7 @@ if exist "!newname!_%version%.exe" (
     del /F "!newname!_%version%.exe"
 )
 
-move /Y "dist\WinFunct.exe" "!newname!_%version%.exe"
+move /Y "dist\!newname!.exe" "!newname!_%version%.exe"
 if %errorlevel% NEQ 0 (
     echo Error: Failed to move and rename the executable to the root folder.
     pause
