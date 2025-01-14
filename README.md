@@ -45,7 +45,8 @@ Windows --> "Virus & threat protection settings > Manage settings > Add or remov
 
 ## Screenshot - Main App
 Change GUI colors in App:  
-\*GUI Options\* --> [1] Theme Selector
+\*GUI Options\* --> [1] Theme Selector  
+You can add your own colors and variants by adding entries to "UI_themes.json"
 
 ![Image](GUI_Pics/2025-01-14-1736867539.png)
 <!--
