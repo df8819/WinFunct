@@ -47,9 +47,9 @@ Windows --> "Virus & threat protection settings > Manage settings > Add or remov
 Change GUI colors in App:  
 \*GUI Options\* --> [1] Theme Selector
 
-![Image](GUI_Pics/2025-01-08-1736346243.png)
+![Image](GUI_Pics/2025-01-14-1736867539.png)
 <!--
-![Image](GUI_Pics/2025-01-08-1736346251.png)
+![Image](GUI_Pics/2025-01-14-1736867664.png)
 
 <hr style="border: 5px solid;" />
 
