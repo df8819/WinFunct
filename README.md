@@ -33,7 +33,7 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 **3.** Double click **"Install.bat"**. This will install all dependencies and update the cloned repository.
 
-**4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command will not work, as the app demands elevated rights via PowerShell.)_
+**4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command only works, when cmd is run as admin.)_
 
 **(4.1)** You may need to add an exclusion for the folder you have cloned this repo in Windows under **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**
 
@@ -45,6 +45,7 @@ This app combines a lot of useful functions or scripts for managing Windows:
 ## Screenshots - Main App
 
 ![Image](GUI_Pics/2025-01-08-1736346243.png)
+<!--
 ![Image](GUI_Pics/2025-01-08-1736346251.png)
 
 <hr style="border: 5px solid;" />
@@ -60,3 +61,4 @@ This app combines a lot of useful functions or scripts for managing Windows:
 ![Image](GUI_Pics/2024-12-01-1733044966.png)
 ![Image](GUI_Pics/2024-12-01-1733044984.png)
 ![Image](GUI_Pics/2024-12-01-1733045009.png)
+-->
