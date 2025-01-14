@@ -35,7 +35,8 @@ This app combines a lot of useful functions or scripts for managing Windows:
 
 **4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command only works, when cmd is run as admin.)_
 
-**(4.1)** You may need to add an exclusion for the folder you have cloned this repo into. Windows --> **"Virus & threat protection settings > Manage settings > Add or remove exclusions"**
+_(4.1) You may need to add an exclusion for the folder you have cloned this repo into.  
+Windows --> "Virus & threat protection settings > Manage settings > Add or remove exclusions"_
 
 ## Comments
 
