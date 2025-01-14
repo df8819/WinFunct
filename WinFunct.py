@@ -1948,10 +1948,10 @@ class Application(tk.Tk, GUI):
         Retrieve all Wi-Fi profiles from the system
         """
         output = self.execute_wifi_command(["netsh", "wlan", "show", "profiles"])
-        print("Raw output:", repr(output))  # Debug print
+        print("Raw output:", repr(output))
 
         if not output:
-            print("Debug: No output case")  # Debug print
+            print("Debug: No output case")
             return "Could not retrieve WiFi profiles. No output from the command."
 
         # Check for no wireless interface message
@@ -1960,22 +1960,23 @@ class Application(tk.Tk, GUI):
         print("Message in output?", has_no_adapter)
 
         if has_no_adapter:
-            print("Debug: No adapter case detected - returning no adapter message")  # Debug print
+            print("Debug: No adapter case detected - returning no adapter message")
             return "No WiFi adapter detected. Please ensure your WiFi adapter is installed and enabled."
 
-        print("Debug: Proceeding to profile search")  # Debug print
+        # print("Debug: Proceeding to profile search")
 
-        pattern = '|'.join(profile_headers)
-        print("Debug: Using regex pattern:", pattern)  # Debug print
+        # Changed this part to look specifically for "All User Profile"
+        profiles = re.findall(r"All User Profile\s*:\s*([^\r\n]+)", output)
+        # print("Debug: Found profiles:", profiles)
 
-        profiles = re.findall(rf"{pattern}\s*([^\r\n]+)", output)
-        print("Debug: Found profiles:", profiles)  # Debug print
+        # Clean up the profile names (remove leading/trailing whitespace)
+        profiles = [profile.strip() for profile in profiles if profile.strip()]
 
         if not profiles:
-            print("Debug: No profiles found - returning no profiles message")  # Debug print
+            print("Debug: No profiles found - returning no profiles message")
             return "No WiFi profiles found."
 
-        print("Debug: Returning profiles:", profiles)  # Debug print
+        # print("Debug: Returning profiles:", profiles)
         return profiles
 
     def show_wifi_networks(self):
