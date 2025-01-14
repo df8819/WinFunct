@@ -44,6 +44,8 @@ Windows --> "Virus & threat protection settings > Manage settings > Add or remov
 - _This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave or maybe crash from time to time_
 
 ## Screenshot - Main App
+Change GUI colors in App:  
+\*GUI Options\* --> [1] Theme Selector
 
 ![Image](GUI_Pics/2025-01-08-1736346243.png)
 <!--
