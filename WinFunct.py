@@ -3,6 +3,7 @@ import base64
 import csv
 import ctypes
 import json
+import locale
 import logging
 import os
 import re
@@ -36,7 +37,7 @@ from config import (
     WINFUNCT_LINK, AdGuardClipBoard, ADGUARD_LINK,
     links, batch_script, chkdsk_help_content, ping_help_content,
     system_management_options, network_security_options,
-    troubleshooting_options, advanced_tools_options
+    troubleshooting_options, advanced_tools_options, no_adapter_messages, profile_headers,
 )
 from HashStuffInt import HashStuff
 from JChatInt import JChat
@@ -1881,60 +1882,117 @@ class Application(tk.Tk, GUI):
     pass
     # --- WIFI PASSWORDS ---
 
+    def _setup_encoding(self):
+        """Configure environment for proper character handling"""
+        if os.name == 'nt':
+            kernel32 = ctypes.windll.kernel32
+            kernel32.SetConsoleCP(65001)
+            kernel32.SetConsoleOutputCP(65001)
+            self.system_encoding = locale.getpreferredencoding()
+
+    def execute_wifi_command(self, command, timeout=10):
+        """
+        Execute wifi-related command with proper encoding and error handling
+        """
+        try:
+            startupinfo = None
+            if os.name == 'nt':
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+            process = subprocess.run(
+                command,
+                capture_output=True,
+                timeout=timeout,
+                startupinfo=startupinfo,
+                check=True
+            )
+            return self.decode_output(process.stdout)
+        except subprocess.SubprocessError:
+            return None
+
     def decode_output(self, output_bytes):
         """
         Attempt to decode command output using multiple encodings
         """
         encodings = [
-            'utf-8', 'cp1252', 'iso-8859-1', 'cp850', 'cp437',
-            'ascii', 'latin1'
+            getattr(self, 'system_encoding', 'utf-8'),
+            'utf-8',
+            'utf-16',
+            'cp1252',
+            'iso-8859-1',
+            'cp850',
+            'cp437',
+            'ascii',
+            'latin1'
         ]
 
-        for encoding in encodings:
+        # Try system encoding first
+        try:
+            return output_bytes.decode(encodings[0])
+        except UnicodeDecodeError:
+            pass
+
+        # Try other encodings
+        for encoding in encodings[1:]:
             try:
                 return output_bytes.decode(encoding)
             except UnicodeDecodeError:
                 continue
 
+        # Fallback with ignore parameter
         return output_bytes.decode('utf-8', errors='ignore')
 
     def get_wifi_profiles(self):
         """
         Retrieve all Wi-Fi profiles from the system
         """
-        commands = [
-            ["netsh", "wlan", "show", "profiles"],
-            ["netsh", "wlan", "show", "profile"]
-        ]
+        output = self.execute_wifi_command(["netsh", "wlan", "show", "profiles"])
+        print("Raw output:", repr(output))  # Debug print
 
-        for cmd in commands:
-            try:
-                output = subprocess.check_output(
-                    cmd,
-                    stderr=subprocess.STDOUT,
-                    timeout=10,
-                    shell=True  # Keeping shell=True for compatibility
-                )
-                output_text = self.decode_output(output)
-                if "Profile" in output_text:
-                    return output_text
-            except:
-                continue
-        return None
+        if not output:
+            print("Debug: No output case")  # Debug print
+            return "Could not retrieve WiFi profiles. No output from the command."
+
+        # Check for no wireless interface message
+        print("Checking for no adapter message...")
+        has_no_adapter = any(msg in output for msg in no_adapter_messages)
+        print("Message in output?", has_no_adapter)
+
+        if has_no_adapter:
+            print("Debug: No adapter case detected - returning no adapter message")  # Debug print
+            return "No WiFi adapter detected. Please ensure your WiFi adapter is installed and enabled."
+
+        print("Debug: Proceeding to profile search")  # Debug print
+
+        pattern = '|'.join(profile_headers)
+        print("Debug: Using regex pattern:", pattern)  # Debug print
+
+        profiles = re.findall(rf"{pattern}\s*([^\r\n]+)", output)
+        print("Debug: Found profiles:", profiles)  # Debug print
+
+        if not profiles:
+            print("Debug: No profiles found - returning no profiles message")  # Debug print
+            return "No WiFi profiles found."
+
+        print("Debug: Returning profiles:", profiles)  # Debug print
+        return profiles
 
     def show_wifi_networks(self):
+        self._setup_encoding()
         print("Extracting Wifi profiles...")
         try:
             cmd_output = self.get_wifi_profiles()
+            if isinstance(cmd_output, str) and "No WiFi adapter" in cmd_output:
+                messagebox.showinfo("Info", cmd_output)
+                return
+
             if not cmd_output:
                 messagebox.showerror("Error", "Could not retrieve WiFi profiles")
                 return
 
-            # Enhanced pattern for profile detection
-            networks = re.findall(
-                r"(?:Profile|Profil|Perfil|プロファイル|配置文件)\s*[:：]\s*([^\r\n]+)",
-                cmd_output
-            )
+                # If we get here, cmd_output should be a list of profiles
+            networks = cmd_output
 
         except subprocess.TimeoutExpired:
             messagebox.showerror("Error", "Command timed out. Network service might be unresponsive.")

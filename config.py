@@ -1,5 +1,5 @@
 # File for variables/configs - Less clutter in main file
-
+pass
 # WinFunct Logo
 LOGO = f"""
    ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒  
@@ -32,9 +32,9 @@ BOTTOM_BORDER_COLOR = "#5b5b5b"  # Bottom border color
 VERSION_LABEL_TEXT = "#5f5f5f"  # Label text color
 
 # UI STYLE section
-BUTTON_STYLE = "raised"  # flat, solid, raised, sunken, ridge, groove
+BUTTON_STYLE = "solid"  # flat, solid, raised, sunken, ridge, groove
 # noinspection SpellCheckingInspection
-BORDER_WIDTH = "1"  # thiccness in pixel
+BORDER_WIDTH = "2"  # thiccness in pixel
 
 # GitHub repo link
 WINFUNCT_LINK = "https://github.com/df8819/WinFunct"
@@ -261,7 +261,7 @@ advanced_tools_options = [
     ("ARP Scan", "powershell.exe arp -a"),
 ]
 
-# Helper window for the show_disk_info method
+# --- DISK INFO ---
 chkdsk_help_content = """
 Parameter                      Description
 ==========================================================================================================
@@ -369,3 +369,89 @@ Parameter                      Description
 ----------------------------------------------------------------------------------------------------------
 /?                             Displays help at the command prompt.
 """
+# --- DISK INFO END ---
+pass
+# --- WIFI PASSWORDS ---
+no_adapter_messages = [
+    "There is no wireless interface on the system",  # English
+    "Es gibt keine drahtlose Schnittstelle im System",  # German
+    "Il n'y a pas d'interface sans fil sur le système",  # French
+    "No hay interfaz inalámbrica en el sistema",  # Spanish
+    "システムにワイヤレス インターフェイスがありません",  # Japanese
+    "系统中没有无线接口",  # Chinese Simplified
+    "系統中沒有無線介面",  # Chinese Traditional
+    "시스템에 무선 인터페이스가 없습니다",  # Korean
+    "Não há interface sem fio no sistema",  # Portuguese
+    "Non c'è un'interfaccia wireless sul sistema",  # Italian
+    "Er is geen draadloze interface op het systeem",  # Dutch
+    "Det finns inget trådlöst gränssnitt på systemet",  # Swedish
+    "Системе не имеет беспроводного интерфейса",  # Russian
+    "Systemet har ingen trådløs grænseflade",  # Danish
+    "Системата няма безжичен интерфейс",  # Bulgarian
+    "Συστήματος δεν έχει ασύρματη διεπαφή",  # Greek
+    "Sistemde kablosuz arabirim yok",  # Turkish
+    "Nu există interfață wireless pe sistem",  # Romanian
+    "Nincs vezeték nélküli interfész a rendszeren",  # Hungarian
+    "Systém nemá bezdrátové rozhraní",  # Czech
+    "System nie ma interfejsu bezprzewodowego",  # Polish
+    "Systemet har ingen trådløst grensesnitt",  # Norwegian
+    "Järjestelmässä ei ole langatonta liitäntää",  # Finnish
+    "Nav bezvadu interfeisa sistēmā",  # Latvian
+    "Süsteemis pole juhtmevaba liidest",  # Estonian
+    "Sistemoje nėra belaidžio tinklo sąsajos",  # Lithuanian
+    "Không có giao diện không dây trên hệ thống",  # Vietnamese
+    "ระบบไม่มีอินเทอร์เฟซไร้สาย",  # Thai
+    "Sistem tidak memiliki antarmuka nirkabel",  # Indonesian
+    "Walang wireless interface sa system",  # Filipino
+    "سیستم هیچ رابط بی‌سیمی ندارد",  # Persian
+    "لا يوجد واجهة لاسلكية على النظام",  # Arabic
+    "אין ממשק אלחוטי במערכת"  # Hebrew
+]
+
+profile_headers = [
+    r"Profile\s*[:：]",  # English
+    r"Profil\s*[:：]",  # German/French
+    r"Perfil\s*[:：]",  # Spanish/Portuguese
+    r"プロファイル\s*[:：]",  # Japanese
+    r"配置文件\s*[:：]",  # Chinese Simplified
+    r"設定檔案\s*[:：]",  # Chinese Traditional
+    r"프로파일\s*[:：]",  # Korean
+    r"Profilo\s*[:：]",  # Italian
+    r"Profiel\s*[:：]",  # Dutch
+    r"Profil\s*[:：]",  # Swedish/Danish/Norwegian
+    r"Профиль\s*[:：]",  # Russian
+    r"Προφίλ\s*[:：]",  # Greek
+    r"Profil\s*[:：]",  # Turkish
+    r"Profil\s*[:：]",  # Romanian
+    r"Profil\s*[:：]",  # Hungarian
+    r"Profil\s*[:：]",  # Czech
+    r"Profil\s*[:：]",  # Polish
+    r"Profiili\s*[:：]",  # Finnish
+    r"Profils\s*[:：]",  # Latvian
+    r"Profiil\s*[:：]",  # Estonian
+    r"Profilis\s*[:：]",  # Lithuanian
+    r"Hồ sơ\s*[:：]",  # Vietnamese
+    r"โปรไฟล์\s*[:：]",  # Thai
+    r"Profil\s*[:：]",  # Indonesian
+    r"Profile\s*[:：]",  # Filipino
+    r"پروفایل\s*[:：]",  # Persian
+    r"ملف التعريف\s*[:：]",  # Arabic
+    r"פרופיל\s*[:：]",  # Hebrew
+    r"Perfíl\s*[:：]",  # Galician
+    r"Profilis\s*[:：]",  # Lithuanian
+    r"Profilis\s*[:：]",  # Latvian
+    r"Profiil\s*[:：]",  # Estonian
+    r"Profil\s*[:：]",  # Croatian
+    r"Профіль\s*[:：]",  # Ukrainian
+    r"Профил\s*[:：]",  # Bulgarian
+    r"Prófíll\s*[:：]",  # Icelandic
+    r"Profiel\s*[:：]",  # Afrikaans
+    r"Próifíl\s*[:：]",  # Irish
+    r"Proffil\s*[:：]",  # Welsh
+    r"Profilo\s*[:：]",  # Maltese
+    r"Profil\s*[:：]",  # Albanian
+    r"Профил\s*[:：]",  # Macedonian
+    r"Профил\s*[:：]",  # Serbian
+    r"Profil\s*[:：]"   # Slovak
+]
+# --- WIFI PASSWORDS END ---
