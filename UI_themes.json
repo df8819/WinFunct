@@ -17,6 +17,14 @@
 "VERSION_LABEL_TEXT": "#5f5f5f"
 },
 {
+"name": "High Contrast",
+"UI_COLOR": "#000000",
+"BUTTON_BG_COLOR": "#007079",
+"BUTTON_TEXT_COLOR": "#ffffff",
+"BOTTOM_BORDER_COLOR": "#ca00ca",
+"VERSION_LABEL_TEXT": "#00e611"
+},
+{
 "name": "Dark Grays",
 "UI_COLOR": "#2A2A2A",
 "BUTTON_BG_COLOR": "#4D5057",
