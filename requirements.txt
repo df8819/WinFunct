@@ -1,20 +1,12 @@
-# Library for making HTTP requests
+# Core HTTP and API Libraries
 requests
-
-# Windows Management Instrumentation (WMI) module for Python
-wmi
-
-# OpenAI API library for Python
 openai
 
-# Cross-platform clipboard module for Python
-pyperclip
-
-# Cross-platform library for retrieving information about running processes and system utilization
+# System and Windows Management
+wmi
+pywin32
+winshell
 psutil
 
-# PyWin32 library for Windows COM support
-pywin32
-
-# Winshell library for creating shortcuts and other shell tasks
-winshell
+# Cross-platform clipboard module
+pyperclip
