@@ -37,7 +37,7 @@ if !LAST_ERROR! NEQ 0 (
 
 :: Install required Python packages
 echo Installing required Python packages...
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 set "LAST_ERROR=!errorlevel!"
 if !LAST_ERROR! NEQ 0 (
     echo Error: Failed to install required Python packages. Please check your Python environment and requirements.txt file.
