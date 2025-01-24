@@ -198,19 +198,20 @@ system_management_options = [
 
 # Network & Security Tools
 network_security_options = [
-    # Security Tools
-    ("Security Center", "start ms-settings:windowsdefender"),
-    ("Security Policy", "secpol.msc"),
-    ("Windows Firewall", "firewall.cpl"),
-    ("Firewall Advanced", "wf.msc"),
-    ("Credential Manager", "control /name Microsoft.CredentialManager"),
-
     # Network Management
     ("Network Adapters", "ncpa.cpl"),
     ("Network Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
     ("VPN Settings", "start ms-settings:network-vpn"),
     ("Wi-Fi Settings", "start ms-settings:network-wifi"),
     ("Ethernet Settings", "start ms-settings:network-ethernet"),
+
+    # Security Tools
+    ("Security Center", "start ms-settings:windowsdefender"),
+    ("Security Policy", "secpol.msc"),
+    ("Windows Firewall", "firewall.cpl"),
+    ("Firewall Advanced", "wf.msc"),
+    ("Password Manager", "rundll32.exe keymgr.dll,KRShowKeyMgr"),
+    ("Credential Manager", "control /name Microsoft.CredentialManager"),
 
     # Remote Access
     ("Remote Desktop", "mstsc"),
