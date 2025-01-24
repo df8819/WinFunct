@@ -45,6 +45,13 @@ if !LAST_ERROR! NEQ 0 (
     exit /B 1
 )
 
+:: Prompt for desktop shortcut creation
+echo.
+echo ************************************************
+echo.
+set /p CREATE_SHORTCUT="Do you want to create a Desktop Shortcut? (y/n): "
+if /i "%CREATE_SHORTCUT%" NEQ "y" goto SkipShortcut
+
 :: Create PowerShell script to create shortcut
 set "PS_SCRIPT=CreateShortcut.ps1"
 (
@@ -72,18 +79,20 @@ if !LAST_ERROR! NEQ 0 (
     exit /B 1
 )
 
+:SkipShortcut
+
 :: Success message
 echo.
 echo.
-echo ***********************************************
-echo *                                             *
-echo *    Installation/Update complete.            *
-echo *                                             *
-echo *    Thank you for using WinFunct :)          *
-echo *                                             *
-echo ***********************************************
+echo ******************************************
+echo *                                        *
+echo *    Installation/Update complete.       *
+echo *                                        *
+echo *    Thank you for using WinFunct :)     *
+echo *                                        *
+echo ******************************************
 echo.
-echo Desktop Shortcut created.
+if /i "%CREATE_SHORTCUT%"=="y" echo Desktop Shortcut created.
 echo Press any key to exit the WinFunct installer...
 pause > nul 2>&1
 exit /B 0
