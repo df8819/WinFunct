@@ -178,88 +178,88 @@ if defined status_!status_code! (
 # System Management Tools
 system_management_options = [
     # Core System Management
+    ("Control Panel", "control"),
+    ("Disk Manager", "diskmgmt.msc"),
     ("PC Manager", "compmgmt.msc"),
     ("Programs/Features", "appwiz.cpl"),
-    ("Disk Manager", "diskmgmt.msc"),
     ("Services Manager", "services.msc"),
     ("Task Manager", "taskmgr"),
-    ("Control Panel", "control"),
 
     # System Information
+    ("Computer Name", "SystemPropertiesComputerName"),
     ("System Info", "msinfo32"),
     ("Windows Version", "winver"),
-    ("Computer Name", "SystemPropertiesComputerName"),
 
     # User Management
-    ("User Account Control", "useraccountcontrolsettings"),
     ("Group Policy", "gpedit.msc"),
     ("Shared Folders", "fsmgmt.msc"),
+    ("User Account Control", "useraccountcontrolsettings"),
 ]
 
 # Network & Security Tools
 network_security_options = [
     # Network Management
+    ("Ethernet Settings", "start ms-settings:network-ethernet"),
     ("Network Adapters", "ncpa.cpl"),
     ("Network Sharing", "control /name Microsoft.NetworkAndSharingCenter"),
     ("VPN Settings", "start ms-settings:network-vpn"),
     ("Wi-Fi Settings", "start ms-settings:network-wifi"),
-    ("Ethernet Settings", "start ms-settings:network-ethernet"),
 
     # Security Tools
+    ("Credential Manager", "control /name Microsoft.CredentialManager"),
+    ("Password Manager", "rundll32.exe keymgr.dll,KRShowKeyMgr"),
+    ("Firewall Advanced", "wf.msc"),
     ("Security Center", "start ms-settings:windowsdefender"),
     ("Security Policy", "secpol.msc"),
     ("Windows Firewall", "firewall.cpl"),
-    ("Firewall Advanced", "wf.msc"),
-    ("Password Manager", "rundll32.exe keymgr.dll,KRShowKeyMgr"),
-    ("Credential Manager", "control /name Microsoft.CredentialManager"),
 
     # Remote Access
-    ("Remote Desktop", "mstsc"),
     ("RDP Settings", "start ms-settings:remotedesktop"),
     ("Remote Connections", "control /name Microsoft.RemoteAppAndDesktopConnections"),
+    ("Remote Desktop", "mstsc"),
 ]
 
 # Troubleshooting Tools
 troubleshooting_options = [
     # System Diagnostics
+    ("DirectX Diagnostics", "dxdiag"),
     ("Event Viewer", "eventvwr.msc"),
     ("Performance Monitor", "perfmon"),
-    ("Resource Monitor", "resmon"),
     ("Reliability Monitor", "perfmon /rel"),
-    ("DirectX Diagnostics", "dxdiag"),
+    ("Resource Monitor", "resmon"),
 
     # System Recovery
-    ("System Restore", "rstrui"),
     ("System Config", "msconfig"),
+    ("System Restore", "rstrui"),
     ("Windows Update", "start ms-settings:windowsupdate"),
 
     # Optimization
-    ("Disk Cleanup", "cleanmgr"),
-    ("Optimize Drives", "dfrgui"),
-    ("Memory Diagnostics", "MdSched"),
     ("Device Manager", "devmgmt.msc"),
+    ("Disk Cleanup", "cleanmgr"),
+    ("Memory Diagnostics", "MdSched"),
+    ("Optimize Drives", "dfrgui"),
 ]
 
 # Advanced Tools
 advanced_tools_options = [
     # System Configuration
-    ("Registry Editor", "regedit"),
     ("Advanced Settings", "SystemPropertiesAdvanced"),
     ("Environment Variables", "rundll32.exe sysdm.cpl,EditEnvironmentVariables"),
+    ("Registry Editor", "regedit"),
     ("Windows Features", "optionalfeatures"),
 
     # Development & Special Tools
-    ("ODBC Manager", "odbcad32"),
-    ("Hyper-V Manager", "C:\\Windows\\System32\\virtmgmt.msc"),
     ("Edit Hosts File", "notepad C:\\Windows\\System32\\drivers\\etc\\hosts"),
+    ("Hyper-V Manager", "C:\\Windows\\System32\\virtmgmt.msc"),
     ("Mobility Center", "mblctr"),
+    ("ODBC Manager", "odbcad32"),
 
     # Network Diagnostics Commands
-    ("IP Configuration", "netsh interface ip show config"),
+    ("ARP Scan", "powershell.exe arp -a"),
     ("DNS Configuration", "netsh interface ip show dns"),
     ("Display DNS Cache", "ipconfig /displaydns"),
+    ("IP Configuration", "netsh interface ip show config"),
     ("Network Stats", "netstat -s"),
-    ("ARP Scan", "powershell.exe arp -a"),
 ]
 
 # --- DISK INFO ---
