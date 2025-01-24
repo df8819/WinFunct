@@ -362,16 +362,16 @@ class GUI:
         main_buttons = [
             ("AdGuard Install Helper", self.agh_curl),
             ("Autostart Locations", self.open_autostart_locations),
+            ("Backup and Restore", self.create_backup_window),
+            ("Clear Icon Cache", self.icon_cache),
+            ("Create CTT Shortcut", self.create_ctt_shortcut),
             ("Flush/Renew DNS", self.renew_ip_config),
             ("Logoff Local User(s)", self.logoff_users),
             ("Open Link Summary", self.open_links_window),
-            ("Verify File Checksum", self.get_file_checksum),
-            ("Wi-Fi Profile Info", self.show_wifi_networks),
-            ("Clear Icon Cache", self.icon_cache),
             ("Quick Access Manager", self.quick_access_manager),
-            ("Create CTT Shortcut", self.create_ctt_shortcut),
             ("Restore System Health", self.restore_health),
-            ("Backup and Restore", self.create_backup_window)
+            ("Verify File Checksum", self.get_file_checksum),
+            ("Wi-Fi Profile Info", self.show_wifi_networks)
         ]
 
         # Calculate rows needed for buttons (using first 3 columns)
