@@ -1,52 +1,72 @@
 ![Image](WinFunct.ico)
 
+# WinFunct - Windows Management Tool
+
 ## Description / Features
 
-This app combines a lot of useful functions or scripts for managing Windows:
+This app combines a variety of useful functions and scripts for managing Windows:
 
-- Extract Wifi passwords, disk speedtest, release/renew DNS, website online checker or logoff users.
+### Core Functions
+- Extract Wi-Fi passwords, disk speedtest, release/renew DNS, website online checker, or logoff users.
+- Execute ChrisTitusTech's beloved WinUtils, the MAS script, or run a checksum verifier with all encryption algorithms selectable.
 
-- Execute ChrisTitusTech's beloved WinUtils, the MAS script or run a checksum verifier with all encryption algorithms selectable.
+### Advanced Tools
+- Link opener for useful resources, Win "Godmode" settings, system info extraction/comparison, or checking what apps have an active internet connection.
 
-- Link opener for a bunch of useful stuff, Win "Godmode" settings, system info extraction/comparison or checking what apps have an active internet connection.
+### Tabs & Features
+- **Options Tab**: A settings dump for stuff that's usually annoying to find or hidden in Windows.
+- **Apps Tab**: Fun stuff like a Python ChatGPT GUI, hash cracker, password/passphrase generator 👍
 
-- **Options Tab** is a settings dump for stuff that's usually annoying to find or sort of hidden in Windows.
-
-- **Apps Tab** has some fun stuff like my old python ChatGPT GUI, a hash cracker or a password/passphrase generator 👍
-
+---
 
 ## Requirements
-#### Release version:
+
+### Release Version
 - Download the latest [Release](https://github.com/df8819/WinFunct/releases), which has no other dependencies.
 
-#### Cloned repository:
+### Cloned Repository
 - [Python 3.x](https://www.python.org/downloads/)
-- [Git for Windows](https://git-scm.com/downloads/)
+- [Git for Windows](https://git-scm.com/downloads)
+
+---
 
 ## Usage
 
-- Either download the latest [Release](https://github.com/df8819/WinFunct/releases), unpack the .zip file, right-click WinFunct.exe and select **Run as administrator** or:
+### Method 1: Download the Latest Release
+1. Download the latest release from [GitHub](https://github.com/df8819/WinFunct/releases).  
+1.1. (Unpack the `.zip` file if downloaded as .zip.)
+3. Right-click `WinFunct.exe` and select **Run as administrator**.
 
-**1.** Navigate to the directory of your choice, click into the file explorer's address bar, type **"cmd"** _(overwrite existing path)_ and hit Enter.
+### Method 2: Clone the Repository
+1. Open Command Prompt in your desired directory:
+   - Navigate to the directory of your choice.
+   - Click into the file explorer's address bar, type `cmd`, and hit Enter.
+2. Clone the repository with the command:  
+   ```bash
+   git clone https://github.com/df8819/WinFunct.git
+   ```
+3. Double-click **"Install.bat"** to install all dependencies and update the cloned repository.
+4. Double-click **"Run.bat"** to launch the application.
 
-**2.** Clone the repository with the command: `git clone https://github.com/df8819/WinFunct.git` in the **cmd** Window.
+### Note:
+- You may need to add an exclusion for the folder in Windows Defender:  
+  `Windows > Virus & threat protection settings > Manage settings > Add or remove exclusions`
 
-**3.** Double click **"Install.bat"**. This will install all dependencies and update the cloned repository.
-
-**4.** Double click **"Run.bat"**. _(The typical `python WinFunct.py` cmd command only works, when cmd is run as admin.)_
-
-_(4.1) You may need to add an exclusion for the folder you have cloned this repo into.  
-Windows --> "Virus & threat protection settings > Manage settings > Add or remove exclusions"_
+---
 
 ## Comments
 
-- _Thank you for using my App. Feedback is always welcome_ ✌
-- _This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave or maybe crash from time to time_
+- Thank you for using my app! Feedback is always welcome ✌️
+- This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave or maybe crash from time to time.
 
-## Screenshot - Main App
-Change GUI colors in App:  
-\*GUI Options\* --> [1] Theme Selector  
-You can add your own colors and variants by adding entries to "UI_themes.json"
+---
+
+## Screenshots
+
+### Main App
+Change GUI colors in the app:  
+`*GUI Options* > [1] Theme Selector`  
+You can add your own colors and variants by editing `"UI_themes.json"`.
 
 ![Image](GUI_Pics/2025-01-14-1736867539.png)
 <!--
