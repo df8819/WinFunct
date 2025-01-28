@@ -3,7 +3,6 @@ from tkinter import colorchooser, messagebox
 import json
 
 
-# noinspection PyUnresolvedReferences,PyMethodMayBeStatic
 class UISelector:
     def __init__(self, master, current_theme, update_callback):
         self.theme_dropdown = None
@@ -12,16 +11,21 @@ class UISelector:
         self.window = tk.Toplevel(master)
         self.window.title("Theme Selector")
         self.window.geometry("380x230")
-        self.window.configure(bg=current_theme["UI_COLOR"])
 
-        self.current_theme = current_theme
+        # Set initial background color based on the current theme
+        self.current_theme = current_theme.copy()
         self.update_callback = update_callback
+
+        # Define the elements of the theme that can be customized
         self.theme_elements = [
             "UI_COLOR", "BUTTON_BG_COLOR", "BUTTON_TEXT_COLOR",
             "BOTTOM_BORDER_COLOR", "VERSION_LABEL_TEXT"
         ]
 
+        # Load themes from JSON file
         self.themes = self.load_themes_from_json()
+
+        # Create UI widgets and layout
         self.create_widgets()
 
     def load_themes_from_json(self):
@@ -31,7 +35,8 @@ class UISelector:
                 if 'themes' in data and isinstance(data['themes'], list):
                     return data['themes']
                 else:
-                    messagebox.showwarning("Invalid Format", "UI_themes.json is not in the correct format. Starting with empty theme list.")
+                    messagebox.showwarning("Invalid Format",
+                                           "UI_themes.json is not in the correct format. Starting with empty theme list.")
                     return []
         except FileNotFoundError:
             messagebox.showerror("Error", "UI_themes.json file not found.")
@@ -42,44 +47,56 @@ class UISelector:
 
     def create_widgets(self):
         for i, element in enumerate(self.theme_elements):
-            tk.Label(self.window, text=element, bg=self.current_theme["UI_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=i, column=0, padx=5, pady=5)
-            entry = tk.Entry(self.window, bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"], insertbackground=self.current_theme["BUTTON_TEXT_COLOR"])
+            tk.Label(self.window, text=element, bg=self.current_theme["UI_COLOR"],
+                     fg=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=i, column=0, padx=5, pady=5)
+            entry = tk.Entry(self.window, bg=self.current_theme["BUTTON_BG_COLOR"],
+                             fg=self.current_theme["BUTTON_TEXT_COLOR"],
+                             insertbackground=self.current_theme["BUTTON_TEXT_COLOR"])
             entry.insert(0, self.current_theme.get(element, ""))
             entry.grid(row=i, column=1, padx=5, pady=5)
             tk.Button(self.window, text="Pick", command=lambda e=entry: self.pick_color(e),
                       bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
-                      activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"],
+                      activebackground=self.current_theme["UI_COLOR"],
+                      activeforeground=self.current_theme["BUTTON_TEXT_COLOR"],
                       width=7).grid(row=i, column=2, padx=5, pady=5)
 
         self.theme_var = tk.StringVar(self.window)
         self.theme_var.set("Select a theme")
-        self.theme_dropdown = tk.OptionMenu(self.window, self.theme_var, "Select a theme", *[theme['name'] for theme in self.themes], command=self.on_theme_select)
-        self.theme_dropdown.config(width=20, bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
-                                   activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"])
-        self.theme_dropdown["menu"].config(bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"])
+        self.theme_dropdown = tk.OptionMenu(self.window, self.theme_var, "Select a theme",
+                                            *[theme['name'] for theme in self.themes], command=self.on_theme_select)
+        self.theme_dropdown.config(width=20, bg=self.current_theme["BUTTON_BG_COLOR"],
+                                   fg=self.current_theme["BUTTON_TEXT_COLOR"],
+                                   activebackground=self.current_theme["UI_COLOR"],
+                                   activeforeground=self.current_theme["BUTTON_TEXT_COLOR"])
+        self.theme_dropdown["menu"].config(bg=self.current_theme["BUTTON_BG_COLOR"],
+                                           fg=self.current_theme["BUTTON_TEXT_COLOR"])
         self.theme_dropdown.grid(row=len(self.theme_elements), column=0, columnspan=2, pady=10, padx=5, sticky="ew")
 
         tk.Button(self.window, text="Set UI", command=self.set_ui, width=10,
                   bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"],
-                  activebackground=self.current_theme["UI_COLOR"], activeforeground=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=len(self.theme_elements), column=2, pady=10, padx=5, sticky="e")
-        self.center_window()
+                  activebackground=self.current_theme["UI_COLOR"],
+                  activeforeground=self.current_theme["BUTTON_TEXT_COLOR"]).grid(row=len(self.theme_elements), column=2,
+                                                                                 pady=10, padx=5, sticky="e")
+
+        # Apply the initial theme configuration
+        self.update_ui()
+
+        # Bind the window to center it after all widgets are created
+        self.window.bind("<Map>", lambda event: self.center_window())
 
     def center_window(self):
-        # Get the window size
-        window_width = self.window.winfo_width()
-        window_height = self.window.winfo_height()
+        # Calculate window dimensions and screen dimensions
+        window_width = self.window.winfo_reqwidth()
+        window_height = self.window.winfo_reqheight()
+        screen_width = self.master.winfo_screenwidth()
+        screen_height = self.master.winfo_screenheight()
 
-        # Get the screen size
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
-
-        # Calculate position
+        # Calculate position to center the window on the screen
         x = (screen_width - window_width) // 2
         y = (screen_height - window_height) // 2
 
         # Set the window position
         self.window.geometry(f'+{x}+{y}')
-        self.window.deiconify()  # Show the window
 
     def pick_color(self, entry):
         color = colorchooser.askcolor()[1]
@@ -106,8 +123,10 @@ class UISelector:
                 widget.configure(bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"])
             elif isinstance(widget, tk.Button):
                 widget.configure(bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"])
-        self.theme_dropdown.configure(bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"])
-        self.theme_dropdown["menu"].configure(bg=self.current_theme["BUTTON_BG_COLOR"], fg=self.current_theme["BUTTON_TEXT_COLOR"])
+        self.theme_dropdown.configure(bg=self.current_theme["BUTTON_BG_COLOR"],
+                                      fg=self.current_theme["BUTTON_TEXT_COLOR"])
+        self.theme_dropdown["menu"].configure(bg=self.current_theme["BUTTON_BG_COLOR"],
+                                              fg=self.current_theme["BUTTON_TEXT_COLOR"])
 
     def on_theme_select(self, theme_name):
         selected_theme = next((theme for theme in self.themes if theme['name'] == theme_name), None)
