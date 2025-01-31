@@ -258,7 +258,6 @@ advanced_tools_options = [
     # Network Diagnostics Commands
     ("ARP Scan", "powershell.exe arp -a"),
     ("DNS Configuration", "netsh interface ip show dns"),
-    ("Display DNS Cache", "ipconfig /displaydns"),
     ("IP Configuration", "netsh interface ip show config"),
     ("Network Stats", "netstat -s"),
 ]
