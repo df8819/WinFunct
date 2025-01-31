@@ -13,7 +13,7 @@ net session >nul 2>&1
 if %errorlevel% NEQ 0 (
     echo Requesting administrative privileges...
     PowerShell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
-    exit /B
+    exit
 )
 
 :: Check if Python is installed
@@ -21,16 +21,15 @@ where python >nul 2>nul
 if %errorlevel% NEQ 0 (
     echo Python is not installed or not in the system PATH.
     echo Please install Python and add it to your system PATH.
-    pause
-    exit /B 1
+    exit 1
 )
 
 :: Check if git is installed
 where git >nul 2>nul
 if %errorlevel% NEQ 0 (
     echo Git is not installed or not in the system PATH.
-    python WinFunct.py
-    exit /B 1
+    start "" pythonw WinFunct.py
+    exit 1
 )
 
 :: Update checking
@@ -68,18 +67,19 @@ del "%TEMP%\remote_commit.txt" 2>nul
 if not exist "WinFunct.py" (
     echo Error: WinFunct.py not found in the current directory.
     echo Please ensure the script is in the same folder as this batch file.
-    pause
-    exit /B 1
+    exit 1
 )
 
 :: Running the Python script with admin privileges
 echo Starting WinFunct application...
-python WinFunct.py
+echo.
+echo ...You can close this window now
+start "" pythonw WinFunct.py
 if %errorlevel% NEQ 0 (
     echo Error: Failed to execute the Python application.
     echo Error code: %errorlevel%
-    exit /B %errorlevel%
+    exit %errorlevel%
 )
 
-echo Python application executed successfully.
-exit /B 0
+:: Force-close this window, even if launched by double-click
+exit

@@ -57,6 +57,7 @@ links = {
         "WireShark": "https://www.wireshark.org/download.html",
         "Advanced IP Scanner": "https://www.advanced-ip-scanner.com/de/",
         "PuTTY (SSH)": "https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html",
+        "MobaXterm": "https://mobaxterm.mobatek.net/download.html",
         "TCPView": "https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview",
         "NetManSet": "https://www.netsetman.com/en/freeware",
     },

@@ -60,7 +60,7 @@ set "PS_SCRIPT=CreateShortcut.ps1"
     echo $ShortcutPath = Join-Path -Path $DesktopPath -ChildPath 'WinFunct.lnk'
     echo $Shortcut = $WshShell.CreateShortcut($ShortcutPath^)
     echo $Shortcut.TargetPath = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-    echo $Shortcut.Arguments = "-ExecutionPolicy Bypass -NoProfile -Command ""& '$PSScriptRoot\Run.bat'"""
+    echo $Shortcut.Arguments = "-WindowStyle Hidden -ExecutionPolicy Bypass -NoProfile -Command ""& '$PSScriptRoot\Run.bat'"""
     echo $Shortcut.WorkingDirectory = $PSScriptRoot
     echo $Shortcut.IconLocation = "$PSScriptRoot\WinFunct.ico"
     echo $Shortcut.Save(^)
