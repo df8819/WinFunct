@@ -96,13 +96,13 @@ def ensure_admin():
             sys.exit(1)
     return True
 
-def show_logo():
-    print(LOGO)
+# def show_logo():
+#     print(LOGO)
 
 if __name__ == "__main__":
     if ensure_admin():
         # Your existing main application code here
-        show_logo()
+        # show_logo()
         print("Running with administrative privileges")
         print("Awaiting user input (⌐■_■)")
 
