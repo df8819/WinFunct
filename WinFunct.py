@@ -147,6 +147,8 @@ class StyleManager:
     def configure_frame_styles(self):
         self.style.configure('Custom.TFrame',
                            background=UI_COLOR)
+        self.style.configure('BottomFrame.TFrame',
+                             background=BOTTOM_BORDER_COLOR)
 
     def configure_button_styles(self):
         self.style.configure('Custom.TButton',
@@ -222,8 +224,11 @@ class WidgetFactory:
         btn.pack(fill="both", expand=True)
         return btn
 
-    def create_fixed_height_frame(self, parent, height):
-        frame = ttk.Frame(parent, style='Custom.TFrame', height=height)
+    def create_fixed_height_frame(self, parent, height, style='Custom.TFrame'):
+        """
+        Create a frame with a fixed height. You can optionally specify a custom ttk style.
+        """
+        frame = ttk.Frame(parent, style=style, height=height)
         frame.pack(fill="x", padx=3, pady=3)
         frame.pack_propagate(False)
         return frame
@@ -246,6 +251,29 @@ class LayoutManager:
 
 # noinspection PyUnresolvedReferences,PyMethodMayBeStatic,PyUnusedLocal
 class GUI:
+    class StdoutRedirector:
+        def __init__(self, text_widget):
+            self.text_widget = text_widget
+
+        def write(self, message):
+            self.text_widget.after(0, self._append_text, message)
+
+        def _append_text(self, message):
+            self.text_widget.configure(state='normal')
+            self.text_widget.insert('end', message)
+            self.text_widget.see('end')
+            self.text_widget.configure(state='disabled')
+
+        def flush(self):
+            pass
+
+    class StderrRedirector(StdoutRedirector):
+        def _append_text(self, message):
+            self.text_widget.configure(state='normal')
+            self.text_widget.tag_configure('error', foreground='red')
+            self.text_widget.insert('end', message, 'error')
+            self.text_widget.see('end')
+            self.text_widget.configure(state='disabled')
     def __init__(self):
         self.main_frame = None
         self.style_manager = StyleManager()
@@ -283,6 +311,11 @@ class GUI:
         self.bottom_frame = None
         self.frames = {}
 
+        # Terminal Output Window
+        self.output_frame = None
+        self.output_text = None
+        self.output_scrollbar = None
+
     # Create Widgets and Dropdowns
     def create_widgets(self):
         # Initialize styles
@@ -307,8 +340,38 @@ class GUI:
         self._create_options_tab()
         self._create_functions_tab()
         self._create_fun_tab()
+        self._create_output_text()
         self._create_bottom_frame()
         self._create_version_label()
+
+    def _create_output_text(self):
+        # Destroy existing output widgets if they exist
+        if self.output_frame:
+            self.output_frame.destroy()
+
+        # Create new output frame
+        self.output_frame = ttk.Frame(self.main_frame, style='Custom.TFrame')
+        self.output_frame.pack(fill='both', expand=True, padx=5, pady=5)
+
+        # Create Text widget
+        self.output_text = tk.Text(
+            self.output_frame,
+            wrap='word',
+            bg=UI_COLOR,
+            fg=BUTTON_TEXT_COLOR,
+            insertbackground=BUTTON_TEXT_COLOR,
+            state='disabled'
+        )
+        self.output_text.pack(side='left', fill='both', expand=True)
+
+        # Scrollbar
+        self.output_scrollbar = ttk.Scrollbar(self.output_frame, command=self.output_text.yview)
+        self.output_scrollbar.pack(side='right', fill='y')
+        self.output_text['yscrollcommand'] = self.output_scrollbar.set
+
+        # Redirect stdout/stderr
+        sys.stdout = self.StdoutRedirector(self.output_text)
+        sys.stderr = self.StderrRedirector(self.output_text)
 
     def _create_dropdowns(self, parent, dropdown_configs):
         """
@@ -540,7 +603,11 @@ class GUI:
     # Create Bottom Frame and Label
     def _create_bottom_frame(self):
         # Create main bottom container with fixed height
-        self.bottom_frame = self.widget_factory.create_fixed_height_frame(self.main_frame, height=80)
+        self.bottom_frame = self.widget_factory.create_fixed_height_frame(
+            self.main_frame,
+            height=80,
+            style='BottomFrame.TFrame'  # Use the new bottom-frame style
+        )
 
         # Create a content frame inside bottom_frame that will handle the grid layout
         content_frame = self.widget_factory.create_frame(self.bottom_frame)
@@ -697,17 +764,37 @@ class GUI:
         """Execute the command associated with an option button"""
         try:
             if hasattr(self, cmd):
-                # If it's a class method, execute it
                 method = getattr(self, cmd)
                 method()
             else:
-                # If it's a system command, run it with elevated privileges if needed
                 try:
-                    subprocess.Popen(cmd, shell=True)
+                    # Run command and capture output
+                    proc = subprocess.Popen(
+                        cmd,
+                        shell=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        bufsize=1,
+                        universal_newlines=True,
+                        creationflags=subprocess.CREATE_NO_WINDOW  # Windows only
+                    )
+
+                    # Read output in a thread
+                    from threading import Thread
+                    def read_output():
+                        while True:
+                            line = proc.stdout.readline()
+                            if not line and proc.poll() is not None:
+                                break
+                            if line:
+                                sys.stdout.write(line)
+                        proc.stdout.close()
+
+                    Thread(target=read_output, daemon=True).start()
+
                 except WindowsError as we:
-                    # Handle "Access Denied" error
                     if we.winerror == 5:
-                        # Try running with elevated privileges
                         ctypes.windll.shell32.ShellExecuteW(
                             None, "runas", cmd, None, None, 1
                         )
@@ -735,7 +822,7 @@ class Application(tk.Tk, GUI):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "900x430"
+        self.resolution_main = "900x800"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -755,6 +842,12 @@ class Application(tk.Tk, GUI):
         # Load the last selected theme after the main UI is initialized & Center window
         self.after(100, self.load_last_selected_theme)
         self.after(100, self.center_window)
+
+        print(LOGO)
+        print(
+"  ...Awaiting user input (⌐■_■)"
+        )
+        print("")
 
     def center_window(self):
         # Using Tcl method to center
@@ -929,15 +1022,15 @@ class Application(tk.Tk, GUI):
         self.apply_theme()
 
     def apply_theme(self):
-        # First update basic tk widgets
+        # 1) Update basic tk widgets (root window, main frame, etc.) with new colors
         self.configure(bg=UI_COLOR)
         self.main_frame.configure(bg=BOTTOM_BORDER_COLOR)
 
-        # Reconfigure all ttk styles
+        # 2) Let StyleManager reconfigure ttk styles
         self.style_manager = StyleManager()
         self.style_manager.configure_base_styles()
 
-        # Update traditional tk widgets
+        # 3) Define an internal function that just updates colors on existing widgets
         def update_widget_colors(widget):
             if isinstance(widget, tk.Button):
                 widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
@@ -950,11 +1043,27 @@ class Application(tk.Tk, GUI):
                 widget.configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR,
                                  activebackground=UI_COLOR, activeforeground=BUTTON_TEXT_COLOR)
                 widget["menu"].configure(bg=BUTTON_BG_COLOR, fg=BUTTON_TEXT_COLOR)
+            # Update output text colors
+            if self.output_text:
+                self.output_text.configure(
+                    bg=UI_COLOR,
+                    fg=BUTTON_TEXT_COLOR,
+                    insertbackground=BUTTON_TEXT_COLOR
+                )
 
-            for child in widget.winfo_children():
-                update_widget_colors(child)
+                # Recurse into child widgets
+                for child in widget.winfo_children():
+                    update_widget_colors(child)
 
-        update_widget_colors(self)
+                    # 4) Update widget colors (recursive pass)
+            update_widget_colors(self)
+
+            # 5) If you have a version label, update it here
+            if hasattr(self, 'version_label'):
+                self.version_label.configure(fg=VERSION_LABEL_TEXT, bg=UI_COLOR)
+
+                # 6) Now that colors are updated, re-create critical widgets as needed
+            self._recreate_ttk_widgets()
 
         # Update version label
         if hasattr(self, 'version_label'):
@@ -968,6 +1077,13 @@ class Application(tk.Tk, GUI):
 
     def _recreate_ttk_widgets(self):
         """Recreate critical ttk widgets that need immediate theme update"""
+        # Store current output content
+        current_output = self.output_text.get("1.0", "end") if self.output_text else ""
+
+        # Destroy old output before recreating
+        if self.output_frame:
+            self.output_frame.destroy()
+
         # Store current tab selection
         current_tab = self.tabs.select()
 
@@ -992,6 +1108,13 @@ class Application(tk.Tk, GUI):
         self._create_functions_tab()
         self._create_fun_tab()
 
+        # Recreate output with preserved content
+        self._create_output_text()
+        if current_output:
+            self.output_text.configure(state='normal')
+            self.output_text.insert("1.0", current_output)
+            self.output_text.configure(state='disabled')
+
         # Remove old notebook
         old_tabs.destroy()
 
@@ -1007,8 +1130,6 @@ class Application(tk.Tk, GUI):
         # Clean up old bottom frame if it exists
         if old_bottom_frame:
             old_bottom_frame.destroy()
-
-        # ----------------------------------THEME SELECTOR FOR MAIN APP END----------------------------------
 
     # --- THEME SELECTOR FOR MAIN APP END ---
     pass
