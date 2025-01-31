@@ -470,8 +470,8 @@ class GUI:
                 'var_name': 'selected_function5',
                 'widget_name': 'function_dropdown5',
                 'default': '*IP & Online Status*',
-                'options': ['*IP & Online Status*', '[1] PC online status', '[2] Website online status',
-                            '[3] Current IP info', '[4] Apps with internet connection', '[5] Execute <ping> command'],
+                'options': ['*IP & Online Status*', '[1] PC online status', '[2] Online Status',
+                            '[3] IP info', '[4] App Connections', '[5] <ping> command'],
                 'callback': 'on_function_select5'
             },
             {
@@ -822,7 +822,7 @@ class Application(tk.Tk, GUI):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "900x800"
+        self.resolution_main = "865x800"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -908,10 +908,10 @@ class Application(tk.Tk, GUI):
         selected5 = self.selected_function5.get()
         actions = {
             "[1] PC online status": lambda: self.check_internet(),
-            "[2] Website online status": lambda: self.run_website_checker(),
-            "[3] Current IP info": lambda: self.show_ip_info(),
-            "[4] Apps with internet connection": lambda: self.netstat_output(),
-            "[5] Execute <ping> command": lambda: self.show_ping_info()
+            "[2] Online Status": lambda: self.run_website_checker(),
+            "[3] IP info": lambda: self.show_ip_info(),
+            "[4] App Connections": lambda: self.netstat_output(),
+            "[5] <ping> command": lambda: self.show_ping_info()
         }
         if selected5 in actions:
             self.function_dropdown5.after(0, actions[selected5])

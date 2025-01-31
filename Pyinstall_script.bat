@@ -69,14 +69,13 @@ REM Add zip archive prompt here
 set /p "zip_choice=Would you like to create a zip archive of the executable? (y/n): "
 
 :option_prompt
-REM Prompt for pyinstaller process option with default [1]
-set "option=1"
+REM Prompt for PyInstaller process option with default [1]
 echo.
 echo ================================================================================
 echo Please choose a PyInstaller process (Default is [1]):
 echo.
 echo [1] Includes a Python script to create and modify the spec file with exclusions.
-echo [2] Runs pyinstaller without exclusions and only with the "--onefile" argument.
+echo [2] Runs PyInstaller without exclusions and only with the "--onefile" argument.
 echo.
 set /p "option=Type [1] or [2] and hit Enter: "
 echo.
@@ -158,7 +157,7 @@ if /i "!zip_choice!"=="y" (
     )
 )
 
-REM Clean up
+REM Clean up temporary files and folders...
 echo Cleaning up temporary files and folders...
 timeout /t 1 > nul
 if exist dist rmdir /S /Q dist

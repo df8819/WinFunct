@@ -15,6 +15,7 @@ spec_content = f"""
 import sys
 sys.setrecursionlimit(sys.getrecursionlimit() * 5)
 
+
 block_cipher = None
 
 a = Analysis(
@@ -49,7 +50,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,  # Set to False for windowed application
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
