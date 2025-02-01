@@ -68,7 +68,7 @@ Change GUI colors in the app:
 `*GUI Options* > [1] Theme Selector`  
 You can add your own colors and variants by editing `"UI_themes.json"`.
 
-![Image](GUI_Pics/2025-01-14-1736867539.png)
+![Image](GUI_Pics/2025-02-01-1738399354.png)
 <!--
 ![Image](GUI_Pics/2025-02-01-1738399354.png)
 
