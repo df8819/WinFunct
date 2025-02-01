@@ -46,7 +46,7 @@ from DonutInt import Donut
 from ColorPickerInt import SimpleColorPicker
 from UISelectorInt import UISelector
 
-# --- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME ---
+# --- START WITH ADMIN RIGHTS / LOAD THEME ---
 pass
 # noinspection PyBroadException
 def is_admin():
@@ -118,7 +118,7 @@ def load_theme_from_file():
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 
-# --- START WITH ADMIN RIGHTS / SHOW LOGO / LOAD THEME END ---
+# --- START WITH ADMIN RIGHTS / LOAD THEME END ---
 pass
 # --- GUI CLASSES ---
 
@@ -274,6 +274,7 @@ class GUI:
             self.text_widget.insert('end', message, 'error')
             self.text_widget.see('end')
             self.text_widget.configure(state='disabled')
+
     def __init__(self):
         self.main_frame = None
         self.style_manager = StyleManager()
@@ -351,7 +352,7 @@ class GUI:
 
         # Create new output frame
         self.output_frame = ttk.Frame(self.main_frame, style='Custom.TFrame')
-        self.output_frame.pack(fill='both', expand=True, padx=5, pady=5)
+        self.output_frame.pack(fill='both', expand=True, padx=3, pady=3)
 
         # Create Text widget
         self.output_text = tk.Text(

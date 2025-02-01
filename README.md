@@ -70,7 +70,7 @@ You can add your own colors and variants by editing `"UI_themes.json"`.
 
 ![Image](GUI_Pics/2025-01-14-1736867539.png)
 <!--
-![Image](GUI_Pics/2025-01-14-1736867664.png)
+![Image](GUI_Pics/2025-02-01-1738399354.png)
 
 <hr style="border: 5px solid;" />
 
