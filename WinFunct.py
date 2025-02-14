@@ -434,6 +434,7 @@ class GUI:
             ("Open Link Summary", self.open_links_window),
             ("Quick Access Manager", self.quick_access_manager),
             ("Restore System Health", self.restore_health),
+            ("Set PS to Unrestricted", self.set_ps_unrestricted),
             ("Verify File Checksum", self.get_file_checksum),
             ("Wi-Fi Profile Info", self.show_wifi_networks)
         ]
@@ -461,8 +462,8 @@ class GUI:
                 'var_name': 'selected_function6',
                 'widget_name': 'function_dropdown6',
                 'default': '*Interactive Shells*',
-                'options': ['*Interactive Shells*', '[1] CTT Winutils', '[2] Activate Win/Office',
-                            '[3] Install/Upd. FFMPEG'],
+                'options': ['*Interactive Shells*', '[1] CTT Winutils', '[2] MTT Winhance', '[3] Activate Win/Office',
+                            '[4] Install/Upd. FFMPEG'],
                 'callback': 'on_function_select6'
             },
             {
@@ -490,7 +491,7 @@ class GUI:
                 'var_name': 'selected_function4',
                 'widget_name': 'function_dropdown4',
                 'default': '*Admin Shells*',
-                'options': ['*Admin Shells*', '[1] cmd', '[2] PowerShell'],
+                'options': ['*Admin Shells*', '[1] cmd as Admin', '[2] PowerShell as Admin'],
                 'callback': 'on_function_select4'
             },
             {
@@ -508,7 +509,7 @@ class GUI:
                 'var_name': 'selected_function3',
                 'widget_name': 'function_dropdown3',
                 'default': '*God Mode*',
-                'options': ['*God Mode*', '[1] Simple God mode', '[2] Super God mode'],
+                'options': ['*God Mode*', '[1] Windows God mode', '[2] ThioJoe God mode'],
                 'callback': 'on_function_select3'
             }
         ]
@@ -823,7 +824,7 @@ class Application(tk.Tk, GUI):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "865x800"
+        self.resolution_main = "865x830"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -888,8 +889,8 @@ class Application(tk.Tk, GUI):
     def on_function_select3(self, *args):
         selected3 = self.selected_function3.get()
         actions = {
-            "[1] Simple God mode": lambda: self.open_godmode(),
-            "[2] Super God mode": lambda: self.open_super_godmode()
+            "[1] Windows God mode": lambda: self.open_godmode(),
+            "[2] ThioJoe God mode": lambda: self.open_super_godmode()
         }
         if selected3 in actions:
             self.function_dropdown3.after(0, actions[selected3])
@@ -898,8 +899,8 @@ class Application(tk.Tk, GUI):
     def on_function_select4(self, *args):
         selected4 = self.selected_function4.get()
         actions = {
-            "[1] cmd": lambda: self.open_cmd_as_admin(),
-            "[2] PowerShell": lambda: self.open_ps_as_admin()
+            "[1] cmd as Admin": lambda: self.open_cmd_as_admin(),
+            "[2] PowerShell as Admin": lambda: self.open_ps_as_admin()
         }
         if selected4 in actions:
             self.function_dropdown4.after(0, actions[selected4])
@@ -922,8 +923,9 @@ class Application(tk.Tk, GUI):
         selected6 = self.selected_function6.get()
         actions = {
             "[1] CTT Winutils": lambda: self.activate_wui(),
-            "[2] Activate Win/Office": lambda: self.activate_win(),
-            "[3] Install/Upd. FFMPEG": lambda: self.install_ffmpeg()
+            "[2] MTT Winhance": lambda: self.activate_winhance(),
+            "[3] Activate Win/Office": lambda: self.activate_win(),
+            "[4] Install/Upd. FFMPEG": lambda: self.install_ffmpeg()
         }
         if selected6 in actions:
             self.function_dropdown6.after(0, actions[selected6])
@@ -1184,8 +1186,8 @@ class Application(tk.Tk, GUI):
     # --- OPEN BUILT IN APPS END ---
 
     def show_logo(self):
-        show_logo()
-
+        print(LOGO)
+        
     def open_app_root_folder(self):
         print("Open root folder location.")
         app_root = os.path.dirname(sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__))
@@ -1196,6 +1198,33 @@ class Application(tk.Tk, GUI):
             subprocess.Popen(['open', app_root])
         else:  # Linux and other Unix-like systems
             subprocess.Popen(['xdg-open', app_root])
+
+    def set_ps_unrestricted(self):
+        print("Setting Execution Policy to 'Unrestricted' to allow Scripts in PowerShell.")
+        try:
+            # Run PowerShell command to set execution policy
+            command = "Set-ExecutionPolicy Unrestricted -Force -Scope CurrentUser"
+            process = subprocess.run(
+                ["powershell", "-Command", command],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+
+            # Check if the command was successful
+            if process.returncode == 0:
+                # Show success message using messagebox
+                messagebox.showinfo("Success", "Execution Policy set to 'Unrestricted'")
+                return True
+            else:
+                # Show error message if command failed
+                messagebox.showerror("Error", f"Failed to set Execution Policy\nError: {process.stderr}")
+                return False
+
+        except subprocess.CalledProcessError as e:
+            # Handle any exceptions that occur during execution
+            messagebox.showerror("Error", f"Failed to set Execution Policy\nError: {str(e)}")
+            return False
 
     def open_ps_as_admin(self):
         print("Open PowerShell window as admin.")
@@ -1285,12 +1314,11 @@ class Application(tk.Tk, GUI):
 
             if user_choice and install_pwsh():
                 messagebox.showinfo("Installation Successful",
-                                    "PowerShell 7 has been installed successfully.")
+                                    "PowerShell 7 has been installed successfully.\n\n Please restart this App and PowerShell!")
                 threaded_run(True)
             else:
                 message = ("Failed to install PowerShell 7. " if user_choice
                            else "Using PowerShell 5.1 instead.")
-                messagebox.showinfo("Using PowerShell 5.1", message)
                 threaded_run(False)
 
     def open_cmd_as_admin(self):
@@ -1348,8 +1376,29 @@ class Application(tk.Tk, GUI):
 
     def restore_health(self):
         print("Restoring System Health")
-        thread = threading.Thread(target=self._restore_health_thread)
-        thread.start()
+        # Initial confirmation message with detailed information
+        info_text = """
+This will perform the following system health restoration steps:
+
+        1. Component Store Cleanup (DISM cleanup-image)
+           - Removes unused Windows update files
+           - Frees up disk space
+
+        2. System Image Repair (DISM restorehealth)
+           - Scans and repairs Windows system files
+           - Fixes corruption issues
+
+        3. Optional System File Check (SFC scan)
+           - Verifies system file integrity
+           - Repairs corrupted system files
+
+This process may take some time. Do you want to continue?
+        """
+
+        if messagebox.askyesno("System Health Restoration", info_text):
+            print("Restoring System Health")
+            thread = threading.Thread(target=self._restore_health_thread)
+            thread.start()
 
     def _restore_health_thread(self):
         try:
@@ -2552,7 +2601,7 @@ class Application(tk.Tk, GUI):
         return "pwsh.exe"
 
     def activate_win(self):
-        print("Activating Microsoft Products")
+        print("Opening MAS (Microsoft Activation Scripts)")
 
         def run_command():
             powershell = self.get_powershell_command()
@@ -2564,11 +2613,23 @@ class Application(tk.Tk, GUI):
         thread.start()
 
     def activate_wui(self):
-        print("Opening Windows Utility Improved")
+        print("Opening CTT Windows Utility Improved")
 
         def run_command():
             powershell = self.get_powershell_command()
             command = [powershell, '-Command', 'irm christitus.com/win | iex']
+            subprocess.run(command, shell=True)
+
+        # Run the command in a separate thread to avoid freezing the UI
+        thread = threading.Thread(target=run_command)
+        thread.start()
+
+    def activate_winhance(self):
+        print("Opening MTT Windows Enhancement Utility")
+
+        def run_command():
+            powershell = self.get_powershell_command()
+            command = [powershell, '-Command', 'irm "https://github.com/memstechtips/Winhance/raw/main/Winhance.ps1" | iex']
             subprocess.run(command, shell=True)
 
         # Run the command in a separate thread to avoid freezing the UI
@@ -3404,7 +3465,7 @@ https://dns.cloudflare.com/dns-query"""
             return os.path.dirname(os.path.abspath(__file__))
 
     def open_super_godmode(self):
-        print("Executing 'Windows-Super-God-Mode' Script")
+        print("Executing ThioJoe's 'Windows-Super-God-Mode' Script")
         repo_url = "https://github.com/ThioJoe/Windows-Super-God-Mode"
         repo_name = "Windows-Super-God-Mode"
         bat_file = "SuperGodMode-EasyLauncher.bat"
