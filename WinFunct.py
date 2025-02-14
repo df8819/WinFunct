@@ -1187,7 +1187,7 @@ class Application(tk.Tk, GUI):
 
     def show_logo(self):
         print(LOGO)
-        
+
     def open_app_root_folder(self):
         print("Open root folder location.")
         app_root = os.path.dirname(sys.executable if getattr(sys, 'frozen', False) else os.path.abspath(__file__))
