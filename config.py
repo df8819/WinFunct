@@ -213,6 +213,7 @@ network_security_options = [
     ("Security Center", "start ms-settings:windowsdefender"),
     ("Security Policy", "secpol.msc"),
     ("Windows Firewall", "firewall.cpl"),
+    ("Internet Options", "control inetcpl.cpl"),
 
     # Remote Access
     ("RDP Settings", "start ms-settings:remotedesktop"),
