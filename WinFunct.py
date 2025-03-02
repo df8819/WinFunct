@@ -353,7 +353,7 @@ class GUI:
 
         # Set minimum height for output frame
         self.output_frame.pack_propagate(False)
-        self.output_frame.configure(height=220)  # Minimum height in pixels
+        self.output_frame.configure(height=215)  # Minimum height in pixels
 
         # Create Text widget
         self.output_text = tk.Text(
@@ -363,7 +363,7 @@ class GUI:
             fg=BUTTON_TEXT_COLOR,
             insertbackground=BUTTON_TEXT_COLOR,
             state='disabled',
-            height=16  # This is in text lines, not pixels
+            height=14  # This is in text lines, not pixels
         )
         self.output_text.pack(side='left', fill='both', expand=True)
 
@@ -826,9 +826,9 @@ class Application(tk.Tk, GUI):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "865x670"
+        self.resolution_main = "865x650"
         # Set minimum window size
-        self.minsize(865, 670)
+        self.minsize(865, 650)
         # Rest of the main GUI
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
@@ -846,6 +846,9 @@ class Application(tk.Tk, GUI):
         # Initialize GUI components using the GUI class method
         super().create_widgets()
 
+        # Configure row/column weights for proper scaling
+        self._configure_grid_weights()
+
         # Load the last selected theme after the main UI is initialized & Center window
         self.after(100, self.load_last_selected_theme)
         self.after(100, self.center_window)
@@ -855,6 +858,36 @@ class Application(tk.Tk, GUI):
 # "  ...Awaiting user input (⌐■_■)"
 #         )
 #         print("")
+
+    def _configure_grid_weights(self):
+        """Configure grid weights for all grid containers to ensure proper scaling"""
+        # Configure main containers that use grid
+        for container in [self.bottom_frame]:
+            if hasattr(container, 'grid_slaves') and container.grid_slaves():
+                rows = max([int(child.grid_info()["row"]) for child in container.grid_slaves()]) + 1
+                cols = max([int(child.grid_info()["column"]) for child in container.grid_slaves()]) + 1
+
+                for i in range(rows):
+                    container.grid_rowconfigure(i, minsize=40, weight=1)
+                for i in range(cols):
+                    container.grid_columnconfigure(i, minsize=100, weight=1)
+
+    def _setup_resize_handler(self, root):
+        """Set up a handler for window resize events"""
+
+        def on_resize(event):
+            # Ensure minimum sizes for critical components
+            if self.output_frame and event.widget == root:
+                # Ensure output frame has minimum height
+                if self.output_frame.winfo_height() < 200:
+                    self.output_frame.configure(height=200)
+
+                # Ensure bottom frame has minimum height
+                if self.bottom_frame and self.bottom_frame.winfo_height() < 80:
+                    self.bottom_frame.configure(height=80)
+
+        # Bind to window resize event
+        root.bind("<Configure>", on_resize)
 
     def center_window(self):
         # Using Tcl method to center
