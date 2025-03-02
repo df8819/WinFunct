@@ -2661,11 +2661,35 @@ This process may take some time. Do you want to continue?
 
         def run_command():
             powershell = self.get_powershell_command()
-            command = [powershell, '-Command', 'irm https://get.activated.win | iex']
-            subprocess.run(command, shell=True)
+
+            # Try the primary link first
+            try:
+                print("Trying primary activation link...")
+                primary_command = [powershell, '-Command', 'irm https://get.activated.win | iex']
+                result = subprocess.run(primary_command, shell=True, capture_output=True, text=True)
+
+                # Check if the command failed or returned an error
+                if result.returncode != 0 or "Error" in result.stderr or "Exception" in result.stderr:
+                    raise Exception("Primary link failed")
+
+                print("Activation script executed successfully.")
+
+            except Exception as e:
+                # If primary link fails, try the backup link
+                print(f"Primary link failed: {str(e)}")
+                print("Trying backup activation link...")
+
+                try:
+                    backup_command = [powershell, '-Command', 'irm https://massgrave.dev/get | iex']
+                    subprocess.run(backup_command, shell=True)
+                    print("Backup activation script executed.")
+                except Exception as backup_error:
+                    print(f"Backup link also failed: {str(backup_error)}")
+                    print("Please check your internet connection or try again later.")
 
         # Run the command in a separate thread to avoid freezing the UI
         thread = threading.Thread(target=run_command)
+        thread.daemon = True  # Make thread a daemon so it exits when the main program exits
         thread.start()
 
     def activate_wui(self):
