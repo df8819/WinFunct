@@ -193,23 +193,18 @@ class WidgetFactory:
 
     def create_button(self, parent, text, command, row=None, column=None, **kwargs):
         """
-        Create a button with proper frame wrapping and grid/pack layout
-
-        Args:
-            parent: Parent widget
-            text: Button text
-            command: Button command callback
-            row: Grid row position (optional)
-            column: Grid column position (optional)
-            **kwargs: Additional button configuration options
+        Create a button with proper frame wrapping and grid/pack layout with minimum size
         """
         # Remove sticky from kwargs if present since it's not valid for Button
-        if 'sticky' in kwargs:
-            del kwargs['sticky']
+        sticky = kwargs.pop('sticky', "nsew") if 'sticky' in kwargs else "nsew"
 
         btn_frame = ttk.Frame(parent, style='Custom.TFrame')
         if row is not None and column is not None:
-            btn_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+            btn_frame.grid(row=row, column=column, padx=5, pady=5, sticky=sticky)
+
+            # Set minimum size for the frame
+            btn_frame.grid_propagate(False)
+            btn_frame.configure(width=100, height=40)  # Minimum button size
 
         # Ensure command is properly wrapped
         if callable(command):
@@ -352,9 +347,13 @@ class GUI:
         if self.output_frame:
             self.output_frame.destroy()
 
-        # Create new output frame
+        # Create new output frame with minimum height
         self.output_frame = ttk.Frame(self.main_frame, style='Custom.TFrame')
         self.output_frame.pack(fill='both', expand=True, padx=3, pady=3)
+
+        # Set minimum height for output frame
+        self.output_frame.pack_propagate(False)
+        self.output_frame.configure(height=220)  # Minimum height in pixels
 
         # Create Text widget
         self.output_text = tk.Text(
@@ -364,7 +363,7 @@ class GUI:
             fg=BUTTON_TEXT_COLOR,
             insertbackground=BUTTON_TEXT_COLOR,
             state='disabled',
-            height=16
+            height=16  # This is in text lines, not pixels
         )
         self.output_text.pack(side='left', fill='both', expand=True)
 
