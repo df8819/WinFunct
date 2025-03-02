@@ -379,10 +379,6 @@ class GUI:
     def _create_dropdowns(self, parent, dropdown_configs):
         """
         Create dropdown menus with proper initialization and event binding
-
-        Args:
-            parent: Parent widget
-            dropdown_configs: List of dropdown configuration dictionaries
         """
         for config in dropdown_configs:
             var_name = config['var_name']
@@ -392,9 +388,13 @@ class GUI:
             row = config.get('row', 0)
             column = config.get('column', 0)
 
-            # Create frame for dropdown
+            # Create frame for dropdown with minimum size
             dropdown_frame = ttk.Frame(parent, style='Custom.TFrame')
             dropdown_frame.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+
+            # Set minimum size for dropdown frame
+            dropdown_frame.grid_propagate(False)
+            dropdown_frame.configure(width=150, height=40)  # Minimum dropdown size
 
             # Initialize StringVar
             string_var = tk.StringVar(value=config['default'])
@@ -406,7 +406,7 @@ class GUI:
                 textvariable=string_var,
                 values=options,
                 state="readonly",
-                style='Custom.TCombobox'  # Add this line
+                style='Custom.TCombobox'
             )
             dropdown.pack(fill="both", expand=True)
 
@@ -827,6 +827,9 @@ class Application(tk.Tk, GUI):
 
         # Initial window setup
         self.resolution_main = "865x670"
+        # Set minimum window size
+        self.minsize(865, 670)
+        # Rest of the main GUI
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
