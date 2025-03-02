@@ -232,9 +232,22 @@ class WidgetFactory:
 
 # noinspection PyMethodMayBeStatic
 class LayoutManager:
-    def create_grid_container(self, parent, columns=5):
+    def create_grid_container(self, parent, columns=5, min_width=400, min_height=200):
+        """
+        Create a grid container with configurable minimum size.
+
+        Args:
+            parent: The parent widget.
+            columns: Number of columns in the grid.
+            min_width: Minimum width of the container.
+            min_height: Minimum height of the container.
+        """
         container = tk.Frame(parent, bg=UI_COLOR, padx=15, pady=15)
         container.pack(expand=True, fill="both")
+
+        # Set minimum size for the container
+        container.pack_propagate(False)
+        container.configure(width=min_width, height=min_height)
 
         # Configure grid weights
         for i in range(columns):
@@ -421,8 +434,13 @@ class GUI:
 
     # Create Tabs and Buttons
     def _create_functions_tab(self):
-        # Create main container
-        main_container = self.layout_manager.create_grid_container(self.frames['functions'])
+        # Create main container with a minimum size
+        main_container = self.layout_manager.create_grid_container(
+            self.frames['functions'],
+            columns=5,
+            min_width=600,  # Set minimum width
+            min_height=400  # Set minimum height
+        )
 
         # Button configurations
         main_buttons = [
@@ -828,7 +846,7 @@ class Application(tk.Tk, GUI):
         # Initial window setup
         self.resolution_main = "865x650"
         # Set minimum window size
-        self.minsize(865, 650)
+        self.minsize(200, 100)
         # Rest of the main GUI
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
