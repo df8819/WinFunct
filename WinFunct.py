@@ -103,8 +103,10 @@ if __name__ == "__main__":
     if ensure_admin():
         # Your existing main application code here
         # show_logo()
-        print("Running with administrative privileges")
-        print("Awaiting user input (⌐■_■)")
+        # print("Running with administrative privileges")
+        # print("Awaiting user input (⌐■_■)")
+        print("")
+
 
 # Command functions
 def execute_system_command(cmd):
@@ -361,7 +363,8 @@ class GUI:
             bg=UI_COLOR,
             fg=BUTTON_TEXT_COLOR,
             insertbackground=BUTTON_TEXT_COLOR,
-            state='disabled'
+            state='disabled',
+            height=16
         )
         self.output_text.pack(side='left', fill='both', expand=True)
 
@@ -824,7 +827,7 @@ class Application(tk.Tk, GUI):
         self.load_last_selected_theme()
 
         # Initial window setup
-        self.resolution_main = "865x830"
+        self.resolution_main = "865x670"
         self.geometry(self.resolution_main)
         self.title("Windows Functionalities (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.configure(bg=UI_COLOR)
@@ -846,10 +849,10 @@ class Application(tk.Tk, GUI):
         self.after(100, self.center_window)
 
         print(LOGO)
-        print(
-"  ...Awaiting user input (⌐■_■)"
-        )
-        print("")
+#         print(
+# "  ...Awaiting user input (⌐■_■)"
+#         )
+#         print("")
 
     def center_window(self):
         # Using Tcl method to center
