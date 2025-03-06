@@ -259,6 +259,7 @@ advanced_tools_options = [
     ("DNS Configuration", "netsh interface ip show dns"),
     ("IP Configuration", "netsh interface ip show config"),
     ("Network Stats", "netstat -s"),
+    ("Boot Loader Info", "bcdedit"),
 ]
 
 # --- DISK INFO ---
