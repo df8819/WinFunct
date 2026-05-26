@@ -186,8 +186,8 @@ class Application(tk.Tk):
         left.pack(side="left", padx=8, pady=6)
 
         power_btns = [
-            ("Shutdown", "shutdown /s /t 1"),
-            ("Reboot", "shutdown /r /t 1"),
+            ("Shutdown", "shutdown /s /f /t 1"),
+            ("Reboot", "shutdown /r /f /t 1"),
             ("BIOS/UEFI", "shutdown /r /fw /t 1"),
             ("Hibernate", "shutdown /h"),
         ]
@@ -201,7 +201,7 @@ class Application(tk.Tk):
         right.pack(side="right", padx=8, pady=6)
 
         ttk.Button(right, text="Theme Selector", width=14, command=self._open_theme_selector).grid(row=0, column=0, padx=4, pady=4)
-        ttk.Button(right, text="Open Root Folder", width=14, command=lambda: os.startfile(str(get_app_root()))).grid(row=0, column=1, padx=4, pady=4)
+        ttk.Button(right, text="Root Folder", width=14, command=lambda: os.startfile(str(get_app_root()))).grid(row=0, column=1, padx=4, pady=4)
         ttk.Button(right, text="Exit", width=14, command=self.quit).grid(row=1, column=1, padx=4, pady=4)
 
     def _build_version_label(self):
