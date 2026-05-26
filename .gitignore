@@ -1,0 +1,38 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Distribution / Build
+dist/
+build/
+*.spec
+*.exe
+*.zip
+*.egg-info/
+
+# PyInstaller
+*.manifest
+*.log
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# App-generated
+last_selected_theme.json
+powershell_log.txt
