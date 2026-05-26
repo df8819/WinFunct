@@ -1,88 +1,104 @@
+# WinFunct
+
+A Windows support tool. Scripts, shortcuts and system management in one place.
+
 ![Image](WinFunct.ico)
 
-# WinFunct - Windows Management Tool
+---
 
-## Description / Features
+## What it does
 
-This app combines a variety of useful functions and scripts for managing Windows:
-
-### Core Functions
-- Extract Wi-Fi passwords, disk speedtest, release/renew DNS, website online checker, or logoff users.
-- Execute ChrisTitusTech's beloved WinUtils, the MAS script, or run a checksum verifier with all encryption algorithms selectable.
-
-### Advanced Tools
-- Link opener for useful resources, Win "Godmode" settings, system info extraction/comparison, or checking what apps have an active internet connection.
-
-### Tabs & Features
-- **Options Tab**: A settings dump for stuff that's usually annoying to find or hidden in Windows.
-- **Apps Tab**: Fun stuff like a Python ChatGPT GUI, hash cracker, password/passphrase generator 👍
+- **Scripts tab** — Wi-Fi password extraction, DNS flush/renew, disk speedtest, system health restore, checksum verifier, user logoff, and more.
+- **Options tab** — Quick buttons for stuff that's buried in Windows: Device Manager, Group Policy, Firewall, Registry, Environment Variables, etc.
+- **Interactive shells** — Launch CTT WinUtils, MAS activation, or PowerShell/cmd as admin from one dropdown.
+- **Theming** — Switch between dark/light themes on the fly. Add your own in `UI_themes.json`. Useless but I like it.
 
 ---
 
-## Requirements
+## Install
 
-### Release Version
-- Download the latest [Release](https://github.com/df8819/WinFunct/releases), which has no other dependencies.
+### Option A (User friendly): Download the exe
 
-### Cloned Repository
-- [Python 3.x](https://www.python.org/downloads/)
-- [Git for Windows](https://git-scm.com/downloads)
+Grab the latest [Release](https://github.com/df8819/WinFunct/releases). Right-click → Run as administrator. Done.
 
----
+### Option B (Dev friendly): Clone and run
 
-## Usage
+```bash
+git clone https://github.com/df8819/WinFunct.git
+cd WinFunct
+```
 
-### Method 1: Download the Latest Release
-1. Download the latest release from [GitHub](https://github.com/df8819/WinFunct/releases).  
-1.1. (Unpack the `.zip` file if downloaded as .zip.)
-3. Right-click `WinFunct.exe` and select **Run as administrator**.
+Then either:
+- Double-click `Install.bat` (installs deps + optional desktop shortcut)
+- Double-click `Run.bat` (auto-updates from git, launches the app)
 
-### Method 2: Clone the Repository
-1. Open Command Prompt in your desired directory:
-   - Navigate to the directory of your choice.
-   - Click into the file explorer's address bar, type `cmd`, and hit Enter.
-2. Clone the repository with the command:  
-   ```bash
-   git clone https://github.com/df8819/WinFunct.git
-   ```
-3. Double-click **"Install.bat"** to install all dependencies and update the cloned repository.
-4. Double-click **"Run.bat"** to launch the application.
+Or manually:
+```bash
+pip install -r requirements.txt
+python main.py
+```
 
-### Note:
-- You may need to add an exclusion for the folder in Windows Defender:  
-  `Windows > Virus & threat protection settings > Manage settings > Add or remove exclusions`
+### Requirements (clone only)
+- Python 3.10+
+- Git (optional, for auto-updates)
+- Windows 10/11
 
 ---
 
-## Comments
+## Building an exe
 
-- Thank you for using my app! Feedback is always welcome ✌️
-- This is my 'learning by doing' app. It provides useful functions, but expect some of them to misbehave or maybe crash from time to time.
+Double-click `Pyinstall_script.bat` or run manually:
+
+```bash
+pip install pyinstaller
+pyinstaller --onefile --icon=WinFunct.ico --add-data "UI_themes.json;." --add-data "gui;gui" --add-data "core;core" --add-data "config.py;." --name WinFunct main.py
+```
+
+---
+
+## Project structure
+
+```
+WinFunct/
+├── main.py              # Entry point
+├── config.py            # Constants, links, option lists
+├── requirements.txt
+├── UI_themes.json       # Theme presets
+├── gui/
+│   ├── app.py           # Main window
+│   ├── styles.py        # Theme engine
+│   ├── widgets.py       # Reusable widget helpers
+│   ├── theme_selector.py
+│   └── dialogs.py       # All popup windows
+├── core/
+│   ├── admin.py         # UAC elevation
+│   ├── system.py        # System info, DISM, icon cache
+│   ├── network.py       # IP, Wi-Fi, ping, netstat
+│   ├── disk.py          # Disk info, speedtest
+│   └── utils.py         # Shared helpers
+├── Run.bat
+├── Install.bat
+└── Pyinstall_script.bat
+```
 
 ---
 
 ## Screenshots
 
-### Main App
-Change GUI colors in the app:  
-`*GUI Options* > [1] Theme Selector`  
-You can add your own colors and variants by editing `"UI_themes.json"`.
+![Scripts tab](GUI_Pics/placeholder_scripts.png)
+![Options tab](GUI_Pics/placeholder_options.png)
+![Theme selector](GUI_Pics/placeholder_theme.png)
 
-![Image](GUI_Pics/2025-02-01-1738399354.png)
-<!--
-![Image](GUI_Pics/2025-02-01-1738399354.png)
+---
 
-<hr style="border: 5px solid;" />
+## Notes
 
-## Screenshots - Functions
+- Some functions need admin rights — the app self-elevates on launch.
+- Add Windows Defender exclusion for the folder if you get false positives.
+- Custom themes: edit `UI_themes.json`, pick colors in the Theme Selector.
 
-![Image](GUI_Pics/2024-12-01-1733044625.png)
-![Image](GUI_Pics/2024-12-01-1733044650.png)
-![Image](GUI_Pics/2024-12-01-1733044732.png)
-![Image](GUI_Pics/2024-12-01-1733044831.png)
-![Image](GUI_Pics/2024-12-01-1733044887.png)
-![Image](GUI_Pics/2024-12-01-1733044899.png)
-![Image](GUI_Pics/2024-12-01-1733044966.png)
-![Image](GUI_Pics/2024-12-01-1733044984.png)
-![Image](GUI_Pics/2024-12-01-1733045009.png)
--->
+---
+
+## License
+
+Do whatever you want with it. Feedback welcome ✌️

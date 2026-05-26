@@ -1,98 +1,62 @@
 @echo off
 setlocal enabledelayedexpansion
-
-:: Change to the script's directory
 cd /d "%~dp0"
 
-:: Initialize error level variable
-set "LAST_ERROR=0"
-
-:: Check if Git is installed
+:: Check Git
 git --version >nul 2>&1
-set "LAST_ERROR=!errorlevel!"
-if !LAST_ERROR! NEQ 0 (
-    echo Error: Git is not installed or not in the system PATH.
+if %errorlevel% NEQ 0 (
+    echo Error: Git is not installed or not in PATH.
     pause
-    exit /B 2
+    exit /B 1
 )
 
-:: Pull the latest updates from Git
-echo Pulling latest updates from Git...
+:: Pull latest
+echo Pulling latest updates...
 git pull
-set "LAST_ERROR=!errorlevel!"
-if !LAST_ERROR! NEQ 0 (
-    echo Error: Failed to pull updates from Git. Please check your network connection and repository status.
+if %errorlevel% NEQ 0 (
+    echo Error: git pull failed.
     pause
     exit /B 1
 )
 
-:: Check if Python is installed
+:: Check Python
 python --version >nul 2>&1
-set "LAST_ERROR=!errorlevel!"
-if !LAST_ERROR! NEQ 0 (
-    echo Error: Python is not installed or not in the system PATH.
+if %errorlevel% NEQ 0 (
+    echo Error: Python is not installed or not in PATH.
     pause
-    exit /B 3
+    exit /B 1
 )
 
-:: Install required Python packages
-echo Installing required Python packages...
+:: Install deps
+echo Installing dependencies...
 python -m pip install -r requirements.txt
-set "LAST_ERROR=!errorlevel!"
-if !LAST_ERROR! NEQ 0 (
-    echo Error: Failed to install required Python packages. Please check your Python environment and requirements.txt file.
+if %errorlevel% NEQ 0 (
+    echo Error: pip install failed.
     pause
     exit /B 1
 )
 
-:: Prompt for desktop shortcut creation
+:: Desktop shortcut
 echo.
-echo ************************************************
-echo.
-set /p CREATE_SHORTCUT="Do you want to create a Desktop Shortcut? (y/n): "
-if /i "%CREATE_SHORTCUT%" NEQ "y" goto SkipShortcut
+set /p CREATE_SHORTCUT="Create a Desktop Shortcut? (y/n): "
+if /i "%CREATE_SHORTCUT%" NEQ "y" goto Done
 
-:: Create PowerShell script to create shortcut
-set "PS_SCRIPT=CreateShortcut.ps1"
-(
-    echo $WshShell = New-Object -ComObject WScript.Shell
-    echo $DesktopPath = [Environment]::GetFolderPath('Desktop'^)
-    echo $ShortcutPath = Join-Path -Path $DesktopPath -ChildPath 'WinFunct.lnk'
-    echo $Shortcut = $WshShell.CreateShortcut($ShortcutPath^)
-    echo $Shortcut.TargetPath = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-    echo $Shortcut.Arguments = "-WindowStyle Hidden -ExecutionPolicy Bypass -NoProfile -Command ""& '$PSScriptRoot\Run.bat'"""
-    echo $Shortcut.WorkingDirectory = $PSScriptRoot
-    echo $Shortcut.IconLocation = "$PSScriptRoot\WinFunct.ico"
-    echo $Shortcut.Save(^)
-) > "%PS_SCRIPT%"
+powershell -ExecutionPolicy Bypass -Command ^
+    "$ws = New-Object -ComObject WScript.Shell; ^
+     $s = $ws.CreateShortcut([IO.Path]::Combine([Environment]::GetFolderPath('Desktop'), 'WinFunct.lnk')); ^
+     $s.TargetPath = '%~dp0Run.bat'; ^
+     $s.WorkingDirectory = '%~dp0'; ^
+     $s.IconLocation = '%~dp0WinFunct.ico'; ^
+     $s.Save()"
 
-:: Execute PowerShell script to create shortcut
-powershell.exe -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
-set "LAST_ERROR=!errorlevel!"
-
-:: Clean up temporary PowerShell script
-if exist "%PS_SCRIPT%" del "%PS_SCRIPT%"
-
-if !LAST_ERROR! NEQ 0 (
-    echo Error: Failed to create desktop shortcut.
-    pause
-    exit /B 1
+if %errorlevel% NEQ 0 (
+    echo Failed to create shortcut.
+) else (
+    echo Shortcut created.
 )
 
-:SkipShortcut
-
-:: Success message
+:Done
 echo.
-echo.
-echo ******************************************
-echo *                                        *
-echo *    Installation/Update complete.       *
-echo *                                        *
-echo *    Thank you for using WinFunct :)     *
-echo *                                        *
-echo ******************************************
-echo.
-if /i "%CREATE_SHORTCUT%"=="y" echo Desktop Shortcut created.
-echo Press any key to exit the WinFunct installer...
-pause > nul 2>&1
+echo Installation complete.
+pause
 exit /B 0

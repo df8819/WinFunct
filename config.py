@@ -1,45 +1,31 @@
-# File for variables/configs - Less clutter in main file
-pass
-# WinFunct Logo
-LOGO = f"""   ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒  
-  █████████ ░█████████▓ ██████████████████████████████████████████████████ 
-  ▓█      █▒██       █▓▓█      █ █                  █                   █▓ 
-   █░     ███        ▓██▓     █▓▓█             ░▒▒▒▓█░▒▒▒░        ▒▒▒▒▒▓█  
-   █▓     ██         ▓█▓     ██ ██     ████████████████████     ░████████  
-   ██     █▓         ▒█     ██  █▓     ██▓▓▓▓▓█▓         ▓█     ██         
-   ██                      ▓█░ ▓█             █          ██     ██         
-   ██          █▓          █▓  ██     █████████          █▒     █░         
-   ▓█         ▓█▓         ██   █▓     █▓▓▓▓▓▓▓          ▓█     ▓█          
-   ▓█        ▒██▓        ██   ▒█     ▓█                 ██     ██          
-    █░       █▓▓█       ▓█    ██     ██   ╔════════╗    █░     █▓          
-    ██████████ ▓█▓███████▓    ██▓▓█▓▓█▓   ║WinFunct║   ▓█▓▓▓█▓██           
+"""WinFunct v2.000 Configuration"""
+
+VERSION_NUMBER = "2.000"
+VERSION = f"WinFunct v{VERSION_NUMBER} — Use at your own risk"
+
+LOGO = f"""   ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒
+  █████████ ░█████████▓ ██████████████████████████████████████████████████
+  ▓█      █▒██       █▓▓█      █ █                  █                   █▓
+   █░     ███        ▓██▓     █▓▓█             ░▒▒▒▓█░▒▒▒░        ▒▒▒▒▒▓█
+   █▓     ██         ▓█▓     ██ ██     ████████████████████     ░████████
+   ██     █▓         ▒█     ██  █▓     ██▓▓▓▓▓█▓         ▓█     ██
+   ██                      ▓█░ ▓█             █          ██     ██
+   ██          █▓          █▓  ██     █████████          █▒     █░
+   ▓█         ▓█▓         ██   █▓     █▓▓▓▓▓▓▓          ▓█     ▓█
+   ▓█        ▒██▓        ██   ▒█     ▓█                 ██     ██
+    █░       █▓▓█       ▓█    ██     ██   ╔════════╗    █░     █▓
+    ██████████ ▓█▓███████▓    ██▓▓█▓▓█▓   ║WinFunct║   ▓█▓▓▓█▓██
      ▓▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓▓░     ▒▓▓▓▓▓▓▓    ╚════════╝    ▓▓▓▓▓▓▓            """
 
-# WinFunct version number
-VERSION_NUMBER = "1.702"
-
-# Use the version number in different strings
-VERSION = f"Use at your own risk and responsibility - v{VERSION_NUMBER}"
-VERSION_SHORT = f"v{VERSION_NUMBER}"
-
-# UI COLOR section
-UI_COLOR = "#e4e4e4"  # General App/Tab/Button Background
-BUTTON_BG_COLOR = "#d4d4d4"  # Background color for buttons
-BUTTON_TEXT_COLOR = "#000000"  # Text color
-BOTTOM_BORDER_COLOR = "#5b5b5b"  # Bottom border color
-VERSION_LABEL_TEXT = "#5f5f5f"  # Label text color
-
-# UI STYLE section
-BUTTON_STYLE = "solid"  # flat, solid, raised, sunken, ridge, groove
-# noinspection SpellCheckingInspection
-BORDER_WIDTH = "2"  # thiccness in pixel
-
-# GitHub repo link
+# Links
 WINFUNCT_LINK = "https://github.com/df8819/WinFunct"
 ADGUARD_LINK = "https://github.com/AdguardTeam/AdGuardHome"
 
-# The curl-command to copy to the clipboard
-AdGuardClipBoard = 'curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v'
+# Keep: links, batch_script, system_management_options, etc.
+# (same content as before, just without the removed apps)
+
+# ... (paste the links dict, batch_script, option lists, chkdsk_help_content,
+#      ping_help_content, no_adapter_messages from original config.py unchanged)
 
 # Links for the "Link Opener" window
 links = {
@@ -156,7 +142,7 @@ if defined status_!status_code! (
 )
 
 echo Domain/URL:        %website%
-echo Server IP:         !server_ip!    
+echo Server IP:         !server_ip!
 echo Status Code:       !status_code!
 echo Response Time:     !response_time! seconds
 echo Request Timestamp: %date% %time%
@@ -407,52 +393,5 @@ no_adapter_messages = [
     "سیستم هیچ رابط بی‌سیمی ندارد",  # Persian
     "لا يوجد واجهة لاسلكية على النظام",  # Arabic
     "אין ממשק אלחוטי במערכת"  # Hebrew
-]
-
-profile_headers = [
-    r"Profile\s*[:：]",  # English
-    r"Profil\s*[:：]",  # German/French
-    r"Perfil\s*[:：]",  # Spanish/Portuguese
-    r"プロファイル\s*[:：]",  # Japanese
-    r"配置文件\s*[:：]",  # Chinese Simplified
-    r"設定檔案\s*[:：]",  # Chinese Traditional
-    r"프로파일\s*[:：]",  # Korean
-    r"Profilo\s*[:：]",  # Italian
-    r"Profiel\s*[:：]",  # Dutch
-    r"Profil\s*[:：]",  # Swedish/Danish/Norwegian
-    r"Профиль\s*[:：]",  # Russian
-    r"Προφίλ\s*[:：]",  # Greek
-    r"Profil\s*[:：]",  # Turkish
-    r"Profil\s*[:：]",  # Romanian
-    r"Profil\s*[:：]",  # Hungarian
-    r"Profil\s*[:：]",  # Czech
-    r"Profil\s*[:：]",  # Polish
-    r"Profiili\s*[:：]",  # Finnish
-    r"Profils\s*[:：]",  # Latvian
-    r"Profiil\s*[:：]",  # Estonian
-    r"Profilis\s*[:：]",  # Lithuanian
-    r"Hồ sơ\s*[:：]",  # Vietnamese
-    r"โปรไฟล์\s*[:：]",  # Thai
-    r"Profil\s*[:：]",  # Indonesian
-    r"Profile\s*[:：]",  # Filipino
-    r"پروفایل\s*[:：]",  # Persian
-    r"ملف التعريف\s*[:：]",  # Arabic
-    r"פרופיל\s*[:：]",  # Hebrew
-    r"Perfíl\s*[:：]",  # Galician
-    r"Profilis\s*[:：]",  # Lithuanian
-    r"Profilis\s*[:：]",  # Latvian
-    r"Profiil\s*[:：]",  # Estonian
-    r"Profil\s*[:：]",  # Croatian
-    r"Профіль\s*[:：]",  # Ukrainian
-    r"Профил\s*[:：]",  # Bulgarian
-    r"Prófíll\s*[:：]",  # Icelandic
-    r"Profiel\s*[:：]",  # Afrikaans
-    r"Próifíl\s*[:：]",  # Irish
-    r"Proffil\s*[:：]",  # Welsh
-    r"Profilo\s*[:：]",  # Maltese
-    r"Profil\s*[:：]",  # Albanian
-    r"Профил\s*[:：]",  # Macedonian
-    r"Профил\s*[:：]",  # Serbian
-    r"Profil\s*[:：]"   # Slovak
 ]
 # --- WIFI PASSWORDS END ---

@@ -1,12 +1,6 @@
-# Core HTTP and API Libraries
 requests
-openai
-
-# System and Windows Management
 wmi
 pywin32
 winshell
 psutil
-
-# Cross-platform clipboard module
 pyperclip
