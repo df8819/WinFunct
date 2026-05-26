@@ -116,7 +116,7 @@ class Application(tk.Tk):
         sep.grid(row=0, column=1, sticky="ns", padx=8)
 
         # --- Right: Dropdowns ---
-        dd_frame = tk.LabelFrame(outer, text="Quick Actions", bg=self.theme.UI_COLOR,
+        dd_frame = tk.LabelFrame(outer, text="Select Command", bg=self.theme.UI_COLOR,
                                  fg=self.theme.BUTTON_TEXT_COLOR, padx=8, pady=8)
         dd_frame.grid(row=0, column=2, sticky="nsew")
 
@@ -179,7 +179,7 @@ class Application(tk.Tk):
 
         # Inner frame (creates border effect)
         bar = tk.Frame(border_frame, bg=self.theme.UI_COLOR)
-        bar.pack(fill="both", expand=True, padx=1, pady=1)
+        bar.pack(fill="both", expand=True, padx=2, pady=2)
 
         # Left: power buttons
         left = tk.Frame(bar, bg=self.theme.UI_COLOR)
