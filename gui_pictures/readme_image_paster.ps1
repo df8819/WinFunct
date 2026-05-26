@@ -1,6 +1,6 @@
 $images = Get-ChildItem -Filter *.png
 foreach ($image in $images) {
-    Write-Output "![Image](GUI_Pics/$($image.Name))"
+    Write-Output "![Image](gui_pictures/$($image.Name))"
 }
 
 Write-Output "`nCopy the above lines and paste them into your README.md file."
