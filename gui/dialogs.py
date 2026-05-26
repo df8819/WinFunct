@@ -299,36 +299,97 @@ def show_checksum_dialog(parent, theme: Theme):
 
 
 def show_links_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Download Links", theme, "500x600")
+    """Clean link summary dialog with categories and open buttons."""
     import webbrowser
-    vars_map = {}
 
-    canvas = tk.Canvas(win, bg=theme.UI_COLOR, highlightthickness=0)
-    scrollbar = tk.Scrollbar(win, command=canvas.yview)
-    frame = tk.Frame(canvas, bg=theme.UI_COLOR)
-    frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-    canvas.create_window((0, 0), window=frame, anchor="nw")
+    win = _make_window(parent, "Download Links", theme, "550x500")
+    win.minsize(450, 400)
+
+    # Main container
+    main = tk.Frame(win, bg=theme.UI_COLOR)
+    main.pack(fill="both", expand=True, padx=10, pady=10)
+    main.grid_rowconfigure(0, weight=1)
+    main.grid_columnconfigure(0, weight=1)
+
+    # Scrollable canvas
+    canvas = tk.Canvas(main, bg=theme.UI_COLOR, highlightthickness=0)
+    scrollbar = ttk.Scrollbar(main, orient="vertical", command=canvas.yview)
+    scroll_frame = tk.Frame(canvas, bg=theme.UI_COLOR)
+
+    scroll_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
     canvas.configure(yscrollcommand=scrollbar.set)
-    canvas.pack(side="left", fill="both", expand=True)
-    scrollbar.pack(side="right", fill="y")
 
+    canvas.grid(row=0, column=0, sticky="nsew")
+    scrollbar.grid(row=0, column=1, sticky="ns")
+
+    # Mouse wheel scrolling
+    def _on_mousewheel(event):
+        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+    win.bind("<Destroy>", lambda e: canvas.unbind_all("<MouseWheel>"))
+
+    # Make scroll_frame expand to canvas width
+    def _on_canvas_resize(event):
+        canvas.itemconfig(canvas.find_all()[0], width=event.width)
+    canvas.bind("<Configure>", _on_canvas_resize)
+
+    # Build categories
+    vars_map = {}
     for category, items in links.items():
-        lf = tk.LabelFrame(frame, text=category, bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR)
-        lf.pack(fill="x", padx=10, pady=5)
+        lf = tk.LabelFrame(scroll_frame, text=category, bg=theme.UI_COLOR,
+                           fg=theme.BUTTON_TEXT_COLOR, font=("Segoe UI", 9, "bold"),
+                           padx=10, pady=6)
+        lf.pack(fill="x", padx=5, pady=6)
+
         for text, url in items.items():
+            row_frame = tk.Frame(lf, bg=theme.UI_COLOR)
+            row_frame.pack(fill="x", pady=2)
+
             var = tk.IntVar()
-            tk.Checkbutton(lf, text=text, variable=var, bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                           selectcolor=theme.BUTTON_BG_COLOR).pack(anchor="w", padx=5)
+            cb = tk.Checkbutton(row_frame, text=text, variable=var,
+                                bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+                                selectcolor=theme.BUTTON_BG_COLOR, anchor="w",
+                                activebackground=theme.UI_COLOR, activeforeground=theme.BUTTON_TEXT_COLOR)
+            cb.pack(side="left", fill="x", expand=True)
+
+            # Direct open button per link
+            tk.Button(row_frame, text="↗", width=2, font=("Segoe UI", 8),
+                      command=lambda u=url: webbrowser.open_new_tab(u),
+                      bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+                      relief="flat").pack(side="right", padx=2)
+
             vars_map[url] = var
 
+    # Bottom button bar (fixed, outside scroll area)
+    bar = tk.Frame(win, bg=theme.UI_COLOR)
+    bar.pack(fill="x", padx=10, pady=(0, 10))
+
     def open_selected():
+        opened = 0
         for url, var in vars_map.items():
             if var.get():
                 webbrowser.open_new_tab(url)
-        win.destroy()
+                opened += 1
+        if opened:
+            win.destroy()
 
-    tk.Button(win, text="Open Selected", command=open_selected,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="bottom", pady=10)
+    def select_all():
+        for var in vars_map.values():
+            var.set(1)
+
+    def deselect_all():
+        for var in vars_map.values():
+            var.set(0)
+
+    tk.Button(bar, text="Select All", width=12, command=select_all,
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=4)
+    tk.Button(bar, text="Deselect All", width=12, command=deselect_all,
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=4)
+    tk.Button(bar, text="Open Selected", width=14, command=open_selected,
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=4)
+    tk.Button(bar, text="Close", width=10, command=win.destroy,
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=4)
 
 
 def show_quick_access_dialog(parent, theme: Theme):
