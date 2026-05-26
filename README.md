@@ -85,7 +85,7 @@ WinFunct/
 
 ## Screenshots
 
-![Main Window](gui_pictures/Screenshot-2026-05-26 154501.png)
+![Main](gui_pictures/Screenshot-2026-05-26-154501.png)
 
 ---
 
