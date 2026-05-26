@@ -85,9 +85,7 @@ WinFunct/
 
 ## Screenshots
 
-![Scripts tab](GUI_Pics/placeholder_scripts.png)
-![Options tab](GUI_Pics/placeholder_options.png)
-![Theme selector](GUI_Pics/placeholder_theme.png)
+![Main Window](gui_pictures/Screenshot-2026-05-26 154501.png)
 
 ---
 
