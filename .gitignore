@@ -18,7 +18,6 @@ __pycache__/
 *$py.class
 *.pyo
 *.pyc
-gui/__pycache__/app.cpython-312.pyc
 
 # Distribution / Build
 dist/
