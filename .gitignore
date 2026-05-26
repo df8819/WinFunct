@@ -12,6 +12,8 @@ ENV/
 
 # Python cache
 __pycache__/
+/gui/__pycache__
+/core/__pycache__
 *.py[cod]
 *$py.class
 *.pyo

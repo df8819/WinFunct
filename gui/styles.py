@@ -78,8 +78,8 @@ class StyleManager:
                              padding=(10, 5),
                              background=t.BUTTON_BG_COLOR,
                              foreground=t.BUTTON_TEXT_COLOR,
-                             relief="flat",
-                             borderwidth=1)
+                             relief="solid", # flat, raised, sunken, ridge, groove, solid
+                             borderwidth=2)
         self.style.map("TButton",
                        background=[("active", t.UI_COLOR), ("pressed", t.BOTTOM_BORDER_COLOR)],
                        foreground=[("active", t.BUTTON_TEXT_COLOR)],

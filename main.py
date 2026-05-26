@@ -1,4 +1,4 @@
-"""WinFunct v2.000 - Windows Support Tool"""
+"""WinFunct - Windows Support Tool"""
 import sys
 import ctypes
 
