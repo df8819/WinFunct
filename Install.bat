@@ -1,29 +1,56 @@
-Pulling latest updates...
-Already up to date.
-Installing dependencies...
-Requirement already satisfied: requests in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r requirements.txt (line 1)) (2.33.1)
-Requirement already satisfied: wmi in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r requirements.txt (line 2)) (1.5.1)
-Requirement already satisfied: pywin32 in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r requirements.txt (line 3)) (311)
-Requirement already satisfied: winshell in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r requirements.txt (line 4)) (0.6)
-Requirement already satisfied: psutil in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r requirements.txt (line 5)) (7.2.2)
-Requirement already satisfied: pyperclip in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from -r requirements.txt (line 6)) (1.11.0)
-Requirement already satisfied: charset_normalizer<4,>=2 in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests->-r requirements.txt (line 1)) (3.4.6)
-Requirement already satisfied: idna<4,>=2.5 in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests->-r requirements.txt (line 1)) (3.11)
-Requirement already satisfied: urllib3<3,>=1.26 in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests->-r requirements.txt (line 1)) (2.6.3)
-Requirement already satisfied: certifi>=2023.5.7 in C:\Users\vboxuser\AppData\Local\Programs\Python\Python312\Lib\site-packages (from requests->-r requirements.txt (line 1)) (2026.2.25)
+@echo off
+setlocal enabledelayedexpansion
+cd /d "%~dp0"
 
-Create a Desktop Shortcut? (y/n): y
-^ : The term '^' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the
-spelling of the name, or if a path was included, verify that the path is correct and try again.
-At line:1 char:44
-+ $ws = New-Object -ComObject WScript.Shell; ^
-+                                            ~
-    + CategoryInfo          : ObjectNotFound: (^:String) [], CommandNotFoundException
-    + FullyQualifiedErrorId : CommandNotFoundException
+:: Check Git
+git --version >nul 2>&1
+if %errorlevel% NEQ 0 (
+    echo Error: Git is not installed or not in PATH.
+    pause
+    exit /B 1
+)
 
-'$s' is not recognized as an internal or external command,
-operable program or batch file.
-Failed to create shortcut.
+:: Pull latest
+echo Pulling latest updates...
+git pull
+if %errorlevel% NEQ 0 (
+    echo Error: git pull failed.
+    pause
+    exit /B 1
+)
 
-Installation complete.
-Press any key to continue . . .
+:: Check Python
+python --version >nul 2>&1
+if %errorlevel% NEQ 0 (
+    echo Error: Python is not installed or not in PATH.
+    pause
+    exit /B 1
+)
+
+:: Install deps
+echo Installing dependencies...
+python -m pip install -r requirements.txt
+if %errorlevel% NEQ 0 (
+    echo Error: pip install failed.
+    pause
+    exit /B 1
+)
+
+:: Desktop shortcut
+echo.
+set /p CREATE_SHORTCUT="Create a Desktop Shortcut? (y/n): "
+if /i "%CREATE_SHORTCUT%" NEQ "y" goto Done
+
+powershell -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut([IO.Path]::Combine([Environment]::GetFolderPath('Desktop'), 'WinFunct.lnk')); $s.TargetPath = '%~dp0Run.bat'; $s.WorkingDirectory = '%~dp0'; $s.IconLocation = '%~dp0WinFunct.ico'; $s.Save()"
+
+if %errorlevel% NEQ 0 (
+    echo Failed to create shortcut.
+) else (
+    echo Shortcut created.
+)
+
+:Done
+echo.
+echo Installation complete.
+pause
+exit /B 0
