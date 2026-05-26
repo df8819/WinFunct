@@ -55,15 +55,81 @@ def show_ip_info_dialog(parent, theme: Theme):
 
 
 def show_disk_info_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Disk Information", theme, "620x500")
+    """Disk info window with chkdsk, SFC, and refresh."""
+    win = _make_window(parent, "Disk Information", theme, "620x650")
+
+    # Text area for disk info
     text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.UI_COLOR,
                                      fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 10))
     text.pack(fill="both", expand=True, padx=10, pady=10)
 
     def fetch():
         info = get_disk_info()
-        win.after(0, lambda: (text.insert("end", info), text.config(state="disabled")))
+        win.after(0, lambda: (
+            text.config(state="normal"),
+            text.delete("1.0", "end"),
+            text.insert("end", info),
+            text.config(state="disabled")
+        ))
 
+    # Button frame
+    btn_frame = tk.Frame(win, bg=theme.UI_COLOR)
+    btn_frame.pack(fill="x", padx=10, pady=5)
+
+    # Row 0: SFC + chkdsk button + drive label + drive entry
+    tk.Button(btn_frame, text="System File Checker", width=20,
+              command=lambda: _run_sfc(), bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR
+              ).grid(row=0, column=0, padx=(5, 40), pady=5)
+
+    tk.Button(btn_frame, text="Execute CheckDisk", width=20,
+              command=lambda: _run_chkdsk(), bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR
+              ).grid(row=0, column=1, padx=5, pady=5)
+
+    tk.Label(btn_frame, text="Drive Letter:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR
+             ).grid(row=0, column=2, padx=5, pady=5)
+
+    drive_entry = tk.Entry(btn_frame, width=8, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+                           insertbackground=theme.BUTTON_TEXT_COLOR)
+    drive_entry.insert(0, "C:")
+    drive_entry.grid(row=0, column=3, padx=5, pady=5)
+
+    # Row 1: Refresh + Argument Helper + args label + args entry
+    tk.Button(btn_frame, text="Refresh all Disks", width=20,
+              command=lambda: threading.Thread(target=fetch, daemon=True).start(),
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR
+              ).grid(row=1, column=0, padx=(5, 40), pady=5)
+
+    tk.Button(btn_frame, text="Argument Helper", width=20,
+              command=lambda: _show_chkdsk_help(), bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR
+              ).grid(row=1, column=1, padx=5, pady=5)
+
+    tk.Label(btn_frame, text="Arguments:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR
+             ).grid(row=1, column=2, padx=5, pady=5)
+
+    args_entry = tk.Entry(btn_frame, width=8, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+                          insertbackground=theme.BUTTON_TEXT_COLOR)
+    args_entry.insert(0, "/f /r /x")
+    args_entry.grid(row=1, column=3, padx=5, pady=5)
+
+    def _run_sfc():
+        if messagebox.askyesno("Confirm", "Run 'sfc /scannow'?"):
+            subprocess.Popen("start cmd /k sfc /scannow", shell=True)
+
+    def _run_chkdsk():
+        drive = drive_entry.get().strip()
+        options = args_entry.get().strip()
+        if messagebox.askyesno("Confirm", f"Run 'chkdsk {drive} {options}'?"):
+            subprocess.Popen(f"start cmd /k chkdsk {drive} {options}", shell=True)
+
+    def _show_chkdsk_help():
+        help_win = _make_window(win, "CHKDSK Parameters", theme, "925x700")
+        help_text = scrolledtext.ScrolledText(help_win, wrap=tk.WORD, bg=theme.UI_COLOR,
+                                              fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 9))
+        help_text.pack(fill="both", expand=True, padx=10, pady=10)
+        help_text.insert("end", chkdsk_help_content)
+        help_text.config(state="disabled")
+
+    # Initial fetch
     threading.Thread(target=fetch, daemon=True).start()
 
 
