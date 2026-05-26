@@ -189,27 +189,44 @@ def show_internet_check_dialog(parent, theme: Theme):
 
 
 def show_ping_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Ping", theme, "400x120")
+    """Ping dialog with target, args, and argument helper."""
+    win = _make_window(parent, "Ping", theme, "420x160")
     frame = tk.Frame(win, bg=theme.UI_COLOR)
     frame.pack(fill="both", expand=True, padx=10, pady=10)
 
-    tk.Label(frame, text="Target:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=0, column=0)
-    target_entry = tk.Entry(frame, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+    tk.Label(frame, text="Target:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=0, column=0, padx=5, pady=5, sticky="e")
+    target_entry = tk.Entry(frame, width=25, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
                             insertbackground=theme.BUTTON_TEXT_COLOR)
     target_entry.insert(0, "8.8.8.8")
-    target_entry.grid(row=0, column=1, padx=5, pady=5)
+    target_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
-    tk.Label(frame, text="Args:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=1, column=0)
-    args_entry = tk.Entry(frame, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+    tk.Label(frame, text="Arguments:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=1, column=0, padx=5, pady=5, sticky="e")
+    args_entry = tk.Entry(frame, width=25, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
                           insertbackground=theme.BUTTON_TEXT_COLOR)
     args_entry.insert(0, "-n 4")
-    args_entry.grid(row=1, column=1, padx=5, pady=5)
+    args_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
     def run_ping():
-        subprocess.Popen(f'start cmd /k ping {target_entry.get()} {args_entry.get()}', shell=True)
+        target = target_entry.get().strip()
+        args = args_entry.get().strip()
+        if target:
+            subprocess.Popen(f'start cmd /k ping {target} {args}', shell=True)
 
-    tk.Button(frame, text="Ping", command=run_ping,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=0, column=2, rowspan=2, padx=10)
+    def show_help():
+        help_win = _make_window(win, "Ping Parameters", theme, "925x700")
+        help_text = scrolledtext.ScrolledText(help_win, wrap=tk.WORD, bg=theme.UI_COLOR,
+                                              fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 9))
+        help_text.pack(fill="both", expand=True, padx=10, pady=10)
+        help_text.insert("end", ping_help_content)
+        help_text.config(state="disabled")
+
+    btn_frame = tk.Frame(frame, bg=theme.UI_COLOR)
+    btn_frame.grid(row=2, column=0, columnspan=2, pady=10)
+
+    tk.Button(btn_frame, text="Ping", width=14, command=run_ping,
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
+    tk.Button(btn_frame, text="Argument Helper", width=14, command=show_help,
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
 
 
 def show_netstat_dialog(parent, theme: Theme):
