@@ -37,6 +37,6 @@ Desktop.ini
 .DS_Store
 
 # App-generated
-last_selected_theme.json
+*.json
 powershell_log.txt
 /Windows-Super-God-Mode/
