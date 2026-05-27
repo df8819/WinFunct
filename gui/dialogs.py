@@ -25,6 +25,7 @@ def _center(win):
     win.geometry(f"+{x}+{y}")
 
 
+# noinspection PyTypeChecker
 def _make_window(parent, title: str, theme: Theme, size: str = "450x400") -> tk.Toplevel:
     win = tk.Toplevel(parent)
     win.title(title)
@@ -171,6 +172,7 @@ def show_wifi_dialog(parent, theme: Theme):
 
 def show_internet_check_dialog(parent, theme: Theme):
     win = _make_window(parent, "Internet Status", theme, "400x220")
+    win.resizable(False, False)
     text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.UI_COLOR,
                                      fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 10))
     text.pack(fill="both", expand=True, padx=10, pady=10)
@@ -190,7 +192,8 @@ def show_internet_check_dialog(parent, theme: Theme):
 
 def show_ping_dialog(parent, theme: Theme):
     """Ping dialog with target, args, and argument helper."""
-    win = _make_window(parent, "Ping", theme, "420x160")
+    win = _make_window(parent, "Ping", theme, "260x120")
+    win.resizable(False, False)
     frame = tk.Frame(win, bg=theme.UI_COLOR)
     frame.pack(fill="both", expand=True, padx=10, pady=10)
 
@@ -246,7 +249,8 @@ def show_netstat_dialog(parent, theme: Theme):
 
 
 def show_disk_speedtest_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Disk Speedtest", theme, "350x130")
+    win = _make_window(parent, "Disk Speedtest", theme, "250x130")
+    win.resizable(False, False)
     drives = get_available_drives()
     if not drives:
         messagebox.showinfo("Disk Speedtest", "No drives found.")
@@ -266,7 +270,8 @@ def show_disk_speedtest_dialog(parent, theme: Theme):
 
 
 def show_backup_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Backup Options", theme, "380x100")
+    win = _make_window(parent, "Backup Options", theme, "280x100")
+    win.resizable(False, False)
     tk.Button(win, text="Restore Point",
               command=lambda: os.startfile(os.path.join(os.environ["WINDIR"], "system32", "SystemPropertiesProtection.exe")),
               bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=20, pady=20)
@@ -279,7 +284,8 @@ def show_checksum_dialog(parent, theme: Theme):
     path = filedialog.askopenfilename()
     if not path:
         return
-    win = _make_window(parent, "File Checksum", theme, "450x180")
+    win = _make_window(parent, "File Checksum", theme, "450x150")
+    win.resizable(False, False)
     algo_var = tk.StringVar(value="SHA256")
     tk.OptionMenu(win, algo_var, "MD5", "SHA1", "SHA256", "SHA384", "SHA512").pack(pady=5)
 
@@ -393,7 +399,8 @@ def show_links_dialog(parent, theme: Theme):
 
 
 def show_quick_access_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Quick Access Manager", theme, "380x120")
+    win = _make_window(parent, "Quick Access Manager", theme, "300x100")
+    win.resizable(False, False)
     src = Path.home() / "AppData/Roaming/Microsoft/Windows/Recent/AutomaticDestinations/f01b4d95cf55d32a.automaticDestinations-ms"
 
     def export_qa():
@@ -411,12 +418,27 @@ def show_quick_access_dialog(parent, theme: Theme):
             subprocess.Popen("explorer.exe")
             win.destroy()
 
-    tk.Button(win, text="Export", command=export_qa, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=30, pady=30)
-    tk.Button(win, text="Import", command=import_qa, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=30, pady=30)
+    tk.Button(
+        win,
+        text="Export",
+        command=export_qa,
+        bg=theme.BUTTON_BG_COLOR,
+        fg=theme.BUTTON_TEXT_COLOR,
+        width=12
+    ).pack(side="left", padx=30, pady=30)
+
+    tk.Button(
+        win,
+        text="Import",
+        command=import_qa,
+        bg=theme.BUTTON_BG_COLOR,
+        fg=theme.BUTTON_TEXT_COLOR,
+        width=12
+    ).pack(side="right", padx=30, pady=30)
 
 
 def show_website_checker_dialog(parent, theme: Theme):
-    win = _make_window(parent, "Website Checker", theme, "400x130")
+    win = _make_window(parent, "Website Checker", theme, "300x120")
     tk.Label(win, text="URL (e.g. example.com):", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=5)
     entry = tk.Entry(win, width=40, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
                      insertbackground=theme.BUTTON_TEXT_COLOR)
@@ -438,7 +460,7 @@ def show_website_checker_dialog(parent, theme: Theme):
         win.after(2000, lambda: os.unlink(tmp.name))
         win.destroy()
 
-    tk.Button(win, text="Check", command=check, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=10)
+    tk.Button(win, text="Check", command=check, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR, width=12).pack(pady=10)
 
 
 def show_logoff_dialog(parent, theme: Theme):
@@ -474,4 +496,4 @@ def show_logoff_dialog(parent, theme: Theme):
         win.destroy()
 
     tk.Button(win, text="Logoff Selected", command=logoff,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=10)
+              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR, width=16).pack(pady=10)

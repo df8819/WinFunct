@@ -27,6 +27,7 @@ from core.system import (
 from core.utils import get_app_root, get_powershell_path
 
 
+# noinspection PyTypeChecker
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -38,7 +39,7 @@ class Application(tk.Tk):
 
         # Window setup
         self.title("WinFunct v2.000 (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
-        self.geometry("780x400")
+        self.geometry("800x400")
         # self.minsize(750, 450)
         self.configure(bg=self.theme.UI_COLOR)
         self.resizable(False, False)

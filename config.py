@@ -1,7 +1,7 @@
 """WinFunct v2.000 Configuration"""
 
 VERSION_NUMBER = "2.000"
-VERSION = f"WinFunct v{VERSION_NUMBER} — Use at your own risk"
+VERSION = f"WinFunct v{VERSION_NUMBER} — Use at your own risk and responsibility"
 
 LOGO = f"""   ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒
   █████████ ░█████████▓ ██████████████████████████████████████████████████
@@ -65,15 +65,15 @@ links = {
         "Partition Manager": "https://www.paragon-software.com/free/pm-express/#features",
         "LinuxLive USB Creator": "https://www.linuxliveusb.com/downloads/?stable",
         "Rufus USB Creator": "https://rufus.ie/en/",
-        "AnyBurn": "http://www.anyburn.com/download.php",
-        "Drive SnapShot": "http://drivesnapshot.de/de/index.htm",
+        "AnyBurn": "https://www.anyburn.com/download.php",
+        "Drive SnapShot": "https://drivesnapshot.de/de/index.htm",
     },
     "Productivity": {
         "PicPick": "https://picpick.app/en/download/",
         "Notepad++": "https://notepad-plus-plus.org/downloads/v8.5.8/",
         "Notepad++ Dark Theme": "https://github.com/60ss/Npp-1-Dark",
         "Total Commander": "https://www.ghisler.com/ddownload.htm",
-        "Posy Cursors": "http://www.michieldb.nl/other/cursors",
+        "Posy Cursors": "https://www.michieldb.nl/other/cursors",
         "Bitwarden": "https://bitwarden.com/download/",
         "FFMPEG GUI": "https://jeanslack.github.io/Videomass/Pages/Packages/Windows.html",
     },
