@@ -117,7 +117,7 @@ class Application(tk.Tk):
         sep.grid(row=0, column=1, sticky="ns", padx=8)
 
         # --- Right: Dropdowns ---
-        dd_frame = tk.LabelFrame(outer, text="Select Command", bg=self.theme.UI_COLOR,
+        dd_frame = tk.LabelFrame(outer, text="Select Command", bg=self.theme.PANEL_COLOR,
                                  fg=self.theme.BUTTON_TEXT_COLOR, padx=8, pady=8)
         dd_frame.grid(row=0, column=2, sticky="nsew")
 

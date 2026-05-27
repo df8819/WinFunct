@@ -1,6 +1,6 @@
 """WinFunct Configuration"""
 
-VERSION_NUMBER = "2.001"
+VERSION_NUMBER = "2.002"
 VERSION = f"WinFunct v{VERSION_NUMBER} — Use at your own risk and responsibility"
 
 LOGO = f"""   ▒▓▓▓▓▓▓    ▓▓▓▓▓▓▓░   ▒▓▓▓▓▓▒░ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒

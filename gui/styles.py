@@ -8,11 +8,15 @@ from typing import Optional
 
 @dataclass
 class Theme:
-    UI_COLOR: str = "#C8C6C0"
-    BUTTON_BG_COLOR: str = "#B7B4AC"
+    UI_COLOR: str = "#F3F4F6"
+    PANEL_COLOR: str = "#EAEBEE"
+    BUTTON_BG_COLOR: str = "#D2D5DB"
     BUTTON_TEXT_COLOR: str = "#111111"
-    BOTTOM_BORDER_COLOR: str = "#0A5FAF"
-    VERSION_LABEL_TEXT: str = "#5E5A54"
+    INPUT_BG_COLOR: str = "#FFFFFF"
+    INPUT_TEXT_COLOR: str = "#1C1C1E"
+    ACCENT_COLOR: str = "#0A84FF"
+    BOTTOM_BORDER_COLOR: str = "#0A84FF"
+    VERSION_LABEL_TEXT: str = "#7D7F85"
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -64,13 +68,14 @@ class StyleManager:
         # Notebook tabs
         self.style.configure("TNotebook", background=t.UI_COLOR)
         self.style.configure("TNotebook.Tab", padding=[10, 7],
-                             background=t.BUTTON_BG_COLOR, foreground=t.BUTTON_TEXT_COLOR)
+                             background=t.PANEL_COLOR, foreground=t.BUTTON_TEXT_COLOR)
         self.style.map("TNotebook.Tab",
                        background=[("selected", t.UI_COLOR)],
                        foreground=[("selected", t.BUTTON_TEXT_COLOR)])
 
         # Frames
         self.style.configure("TFrame", background=t.UI_COLOR)
+        self.style.configure("Panel.TFrame", background=t.PANEL_COLOR)
         self.style.configure("Bottom.TFrame", background=t.BOTTOM_BORDER_COLOR)
 
         # Buttons
@@ -78,22 +83,52 @@ class StyleManager:
                              padding=(10, 5),
                              background=t.BUTTON_BG_COLOR,
                              foreground=t.BUTTON_TEXT_COLOR,
-                             relief="solid", # flat, raised, sunken, ridge, groove, solid
+                             relief="solid",
                              borderwidth=2)
         self.style.map("TButton",
-                       background=[("active", t.UI_COLOR), ("pressed", t.BOTTOM_BORDER_COLOR)],
+                       background=[("active", t.ACCENT_COLOR), ("pressed", t.ACCENT_COLOR)],
                        foreground=[("active", t.BUTTON_TEXT_COLOR)],
                        relief=[("pressed", "sunken")])
 
+        # Accent Button (for primary actions)
+        self.style.configure("Accent.TButton",
+                             padding=(10, 5),
+                             background=t.ACCENT_COLOR,
+                             foreground=t.BUTTON_TEXT_COLOR,
+                             relief="solid",
+                             borderwidth=2)
+        self.style.map("Accent.TButton",
+                       background=[("active", t.BUTTON_BG_COLOR), ("pressed", t.BUTTON_BG_COLOR)],
+                       foreground=[("active", t.BUTTON_TEXT_COLOR)])
+
         # Combobox
         self.style.configure("TCombobox",
-                             fieldbackground=t.BUTTON_BG_COLOR,
-                             background=t.BUTTON_BG_COLOR,
-                             foreground=t.BUTTON_TEXT_COLOR,
-                             arrowcolor=t.BUTTON_TEXT_COLOR)
+                             fieldbackground=t.INPUT_BG_COLOR,
+                             background=t.INPUT_BG_COLOR,
+                             foreground=t.INPUT_TEXT_COLOR,
+                             arrowcolor=t.INPUT_TEXT_COLOR)
         self.style.map("TCombobox",
-                       fieldbackground=[("readonly", t.BUTTON_BG_COLOR)],
-                       foreground=[("readonly", t.BUTTON_TEXT_COLOR)])
+                       fieldbackground=[("readonly", t.INPUT_BG_COLOR)],
+                       foreground=[("readonly", t.INPUT_TEXT_COLOR)])
+
+        # Entry
+        self.style.configure("TEntry",
+                             fieldbackground=t.INPUT_BG_COLOR,
+                             foreground=t.INPUT_TEXT_COLOR,
+                             insertcolor=t.INPUT_TEXT_COLOR)
 
         # Separator
-        self.style.configure("TSeparator", background=t.BOTTOM_BORDER_COLOR)
+        self.style.configure("TSeparator", background=t.ACCENT_COLOR)
+
+        # Treeview
+        self.style.configure("Treeview",
+                             background=t.PANEL_COLOR,
+                             foreground=t.BUTTON_TEXT_COLOR,
+                             fieldbackground=t.PANEL_COLOR)
+        self.style.configure("Treeview.Heading",
+                             background=t.BUTTON_BG_COLOR,
+                             foreground=t.BUTTON_TEXT_COLOR)
+
+        # LabelFrame
+        self.style.configure("TLabelframe", background=t.UI_COLOR)
+        self.style.configure("TLabelframe.Label", background=t.UI_COLOR, foreground=t.BUTTON_TEXT_COLOR)

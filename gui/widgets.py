@@ -8,15 +8,21 @@ class WidgetFactory:
 
     @staticmethod
     def button(parent, text: str, command, **grid_kwargs) -> ttk.Button:
-        """Create a ttk Button and optionally grid it."""
         btn = ttk.Button(parent, text=text, command=command)
         if grid_kwargs:
             btn.grid(**grid_kwargs)
         return btn
 
     @staticmethod
+    def accent_button(parent, text: str, command, **grid_kwargs) -> ttk.Button:
+        """Primary action button using accent style."""
+        btn = ttk.Button(parent, text=text, command=command, style="Accent.TButton")
+        if grid_kwargs:
+            btn.grid(**grid_kwargs)
+        return btn
+
+    @staticmethod
     def dropdown(parent, values: list[str], default: str, on_select, **grid_kwargs) -> ttk.Combobox:
-        """Create a readonly Combobox with callback."""
         var = tk.StringVar(value=default)
         combo = ttk.Combobox(parent, textvariable=var, values=values, state="readonly")
         if grid_kwargs:
@@ -33,12 +39,11 @@ class WidgetFactory:
 
     @staticmethod
     def labeled_entry(parent, label: str, default: str, theme, row: int, col: int = 0) -> tk.Entry:
-        """Create a Label + Entry pair on a grid."""
         tk.Label(parent, text=label, bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(
             row=row, column=col, padx=5, pady=4, sticky="e"
         )
-        entry = tk.Entry(parent, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                         insertbackground=theme.BUTTON_TEXT_COLOR)
+        entry = tk.Entry(parent, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                         insertbackground=theme.INPUT_TEXT_COLOR)
         entry.insert(0, default)
         entry.grid(row=row, column=col + 1, padx=5, pady=4, sticky="ew")
         return entry
@@ -55,7 +60,6 @@ class GridContainer:
             self.frame.grid_columnconfigure(i, weight=1, uniform="col")
 
     def add_button(self, text: str, command, index: int):
-        """Add a button at the given linear index."""
         row, col = divmod(index, self.columns)
         self.frame.grid_rowconfigure(row, weight=1, uniform="row")
         btn = ttk.Button(self.frame, text=text, command=command)
@@ -63,7 +67,6 @@ class GridContainer:
         return btn
 
     def add_dropdown(self, values: list[str], default: str, on_select, index: int):
-        """Add a dropdown at the given linear index."""
         row, col = divmod(index, self.columns)
         self.frame.grid_rowconfigure(row, weight=1, uniform="row")
         return WidgetFactory.dropdown(

@@ -37,8 +37,8 @@ def _make_window(parent, title: str, theme: Theme, size: str = "450x400") -> tk.
 
 def show_ip_info_dialog(parent, theme: Theme):
     win = _make_window(parent, "IP Information", theme, "430x500")
-    text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.UI_COLOR,
-                                     fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 10))
+    text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.PANEL_COLOR,
+                                     fg=theme.INPUT_TEXT_COLOR, font=("Consolas", 10))
     text.pack(fill="both", expand=True, padx=10, pady=10)
 
     def fetch():
@@ -60,8 +60,8 @@ def show_disk_info_dialog(parent, theme: Theme):
     win = _make_window(parent, "Disk Information", theme, "620x650")
 
     # Text area for disk info
-    text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.UI_COLOR,
-                                     fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 10))
+    text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.PANEL_COLOR,
+                                     fg=theme.INPUT_TEXT_COLOR, font=("Consolas", 10))
     text.pack(fill="both", expand=True, padx=10, pady=10)
 
     def fetch():
@@ -89,8 +89,8 @@ def show_disk_info_dialog(parent, theme: Theme):
     tk.Label(btn_frame, text="Drive Letter:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR
              ).grid(row=0, column=2, padx=5, pady=5)
 
-    drive_entry = tk.Entry(btn_frame, width=8, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                           insertbackground=theme.BUTTON_TEXT_COLOR)
+    drive_entry = tk.Entry(btn_frame, width=8, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                           insertbackground=theme.INPUT_TEXT_COLOR)
     drive_entry.insert(0, "C:")
     drive_entry.grid(row=0, column=3, padx=5, pady=5)
 
@@ -107,8 +107,8 @@ def show_disk_info_dialog(parent, theme: Theme):
     tk.Label(btn_frame, text="Arguments:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR
              ).grid(row=1, column=2, padx=5, pady=5)
 
-    args_entry = tk.Entry(btn_frame, width=8, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                          insertbackground=theme.BUTTON_TEXT_COLOR)
+    args_entry = tk.Entry(btn_frame, width=8, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                          insertbackground=theme.INPUT_TEXT_COLOR)
     args_entry.insert(0, "/f /r /x")
     args_entry.grid(row=1, column=3, padx=5, pady=5)
 
@@ -124,8 +124,8 @@ def show_disk_info_dialog(parent, theme: Theme):
 
     def _show_chkdsk_help():
         help_win = _make_window(win, "CHKDSK Parameters", theme, "925x700")
-        help_text = scrolledtext.ScrolledText(help_win, wrap=tk.WORD, bg=theme.UI_COLOR,
-                                              fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 9))
+        help_text = scrolledtext.ScrolledText(help_win, wrap=tk.WORD, bg=theme.PANEL_COLOR,
+                                              fg=theme.INPUT_TEXT_COLOR, font=("Consolas", 9))
         help_text.pack(fill="both", expand=True, padx=10, pady=10)
         help_text.insert("end", chkdsk_help_content)
         help_text.config(state="disabled")
@@ -144,7 +144,8 @@ def show_wifi_dialog(parent, theme: Theme):
     win = _make_window(parent, "Wi-Fi Networks", theme, "420x350")
     tk.Label(win, text="Select a network:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=5)
 
-    listbox = tk.Listbox(win, bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR)
+    listbox = tk.Listbox(win, bg=theme.PANEL_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                         selectbackground=theme.ACCENT_COLOR)
     listbox.pack(fill="both", expand=True, padx=10, pady=5)
     for p in profiles:
         listbox.insert(tk.END, p)
@@ -165,7 +166,7 @@ def show_wifi_dialog(parent, theme: Theme):
     btn_frame = tk.Frame(win, bg=theme.UI_COLOR)
     btn_frame.pack(fill="x", padx=10, pady=10)
     tk.Button(btn_frame, text="Copy Password", command=extract_single,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
+              bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
     tk.Button(btn_frame, text="Close", command=win.destroy,
               bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=5)
 
@@ -173,8 +174,8 @@ def show_wifi_dialog(parent, theme: Theme):
 def show_internet_check_dialog(parent, theme: Theme):
     win = _make_window(parent, "Internet Status", theme, "400x220")
     win.resizable(False, False)
-    text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.UI_COLOR,
-                                     fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 10))
+    text = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg=theme.PANEL_COLOR,
+                                     fg=theme.INPUT_TEXT_COLOR, font=("Consolas", 10))
     text.pack(fill="both", expand=True, padx=10, pady=10)
 
     def run():
@@ -198,14 +199,14 @@ def show_ping_dialog(parent, theme: Theme):
     frame.pack(fill="both", expand=True, padx=10, pady=10)
 
     tk.Label(frame, text="Target:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=0, column=0, padx=5, pady=5, sticky="e")
-    target_entry = tk.Entry(frame, width=25, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                            insertbackground=theme.BUTTON_TEXT_COLOR)
+    target_entry = tk.Entry(frame, width=25, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                            insertbackground=theme.INPUT_TEXT_COLOR)
     target_entry.insert(0, "8.8.8.8")
     target_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
     tk.Label(frame, text="Arguments:", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).grid(row=1, column=0, padx=5, pady=5, sticky="e")
-    args_entry = tk.Entry(frame, width=25, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                          insertbackground=theme.BUTTON_TEXT_COLOR)
+    args_entry = tk.Entry(frame, width=25, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                          insertbackground=theme.INPUT_TEXT_COLOR)
     args_entry.insert(0, "-n 4")
     args_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
@@ -217,8 +218,8 @@ def show_ping_dialog(parent, theme: Theme):
 
     def show_help():
         help_win = _make_window(win, "Ping Parameters", theme, "925x700")
-        help_text = scrolledtext.ScrolledText(help_win, wrap=tk.WORD, bg=theme.UI_COLOR,
-                                              fg=theme.BUTTON_TEXT_COLOR, font=("Consolas", 9))
+        help_text = scrolledtext.ScrolledText(help_win, wrap=tk.WORD, bg=theme.PANEL_COLOR,
+                                              fg=theme.INPUT_TEXT_COLOR, font=("Consolas", 9))
         help_text.pack(fill="both", expand=True, padx=10, pady=10)
         help_text.insert("end", ping_help_content)
         help_text.config(state="disabled")
@@ -227,7 +228,7 @@ def show_ping_dialog(parent, theme: Theme):
     btn_frame.grid(row=2, column=0, columnspan=2, pady=10)
 
     tk.Button(btn_frame, text="Ping", width=14, command=run_ping,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
+              bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
     tk.Button(btn_frame, text="Argument Helper", width=14, command=show_help,
               bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=5)
 
@@ -266,7 +267,7 @@ def show_disk_speedtest_dialog(parent, theme: Theme):
         win.destroy()
 
     tk.Button(win, text="Run Test", command=run,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=10)
+              bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=10)
 
 
 def show_backup_dialog(parent, theme: Theme):
@@ -289,7 +290,8 @@ def show_checksum_dialog(parent, theme: Theme):
     algo_var = tk.StringVar(value="SHA256")
     tk.OptionMenu(win, algo_var, "MD5", "SHA1", "SHA256", "SHA384", "SHA512").pack(pady=5)
 
-    result_text = tk.Text(win, height=3, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR, wrap=tk.WORD)
+    result_text = tk.Text(win, height=3, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR, wrap=tk.WORD,
+                          insertbackground=theme.INPUT_TEXT_COLOR)
     result_text.pack(fill="x", padx=10, pady=5)
 
     def compute():
@@ -301,7 +303,7 @@ def show_checksum_dialog(parent, theme: Theme):
             win.after(0, lambda: messagebox.showerror("Error", str(e)))
 
     tk.Button(win, text="Compute", command=lambda: threading.Thread(target=compute, daemon=True).start(),
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=5)
+              bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=5)
 
 
 def show_links_dialog(parent, theme: Theme):
@@ -343,20 +345,20 @@ def show_links_dialog(parent, theme: Theme):
     # Build categories
     vars_map = {}
     for category, items in links.items():
-        lf = tk.LabelFrame(scroll_frame, text=category, bg=theme.UI_COLOR,
+        lf = tk.LabelFrame(scroll_frame, text=category, bg=theme.PANEL_COLOR,
                            fg=theme.BUTTON_TEXT_COLOR, font=("Segoe UI", 9, "bold"),
                            padx=10, pady=6)
         lf.pack(fill="x", padx=5, pady=6)
 
         for text, url in items.items():
-            row_frame = tk.Frame(lf, bg=theme.UI_COLOR)
+            row_frame = tk.Frame(lf, bg=theme.PANEL_COLOR)
             row_frame.pack(fill="x", pady=2)
 
             var = tk.IntVar()
             cb = tk.Checkbutton(row_frame, text=text, variable=var,
-                                bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                                selectcolor=theme.BUTTON_BG_COLOR, anchor="w",
-                                activebackground=theme.UI_COLOR, activeforeground=theme.BUTTON_TEXT_COLOR)
+                                bg=theme.PANEL_COLOR, fg=theme.BUTTON_TEXT_COLOR,
+                                selectcolor=theme.INPUT_BG_COLOR, anchor="w",
+                                activebackground=theme.PANEL_COLOR, activeforeground=theme.BUTTON_TEXT_COLOR)
             cb.pack(side="left", fill="x", expand=True)
 
             # Direct open button per link
@@ -393,7 +395,7 @@ def show_links_dialog(parent, theme: Theme):
     tk.Button(bar, text="Deselect All", width=12, command=deselect_all,
               bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="left", padx=4)
     tk.Button(bar, text="Open Selected", width=14, command=open_selected,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=4)
+              bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=4)
     tk.Button(bar, text="Close", width=10, command=win.destroy,
               bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(side="right", padx=4)
 
@@ -431,7 +433,7 @@ def show_quick_access_dialog(parent, theme: Theme):
         win,
         text="Import",
         command=import_qa,
-        bg=theme.BUTTON_BG_COLOR,
+        bg=theme.ACCENT_COLOR,
         fg=theme.BUTTON_TEXT_COLOR,
         width=12
     ).pack(side="right", padx=30, pady=30)
@@ -440,8 +442,8 @@ def show_quick_access_dialog(parent, theme: Theme):
 def show_website_checker_dialog(parent, theme: Theme):
     win = _make_window(parent, "Website Checker", theme, "300x120")
     tk.Label(win, text="URL (e.g. example.com):", bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR).pack(pady=5)
-    entry = tk.Entry(win, width=40, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR,
-                     insertbackground=theme.BUTTON_TEXT_COLOR)
+    entry = tk.Entry(win, width=40, bg=theme.INPUT_BG_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                     insertbackground=theme.INPUT_TEXT_COLOR)
     entry.pack(pady=5)
     entry.focus_set()
 
@@ -460,7 +462,7 @@ def show_website_checker_dialog(parent, theme: Theme):
         win.after(2000, lambda: os.unlink(tmp.name))
         win.destroy()
 
-    tk.Button(win, text="Check", command=check, bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR, width=12).pack(pady=10)
+    tk.Button(win, text="Check", command=check, bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR, width=12).pack(pady=10)
 
 
 def show_logoff_dialog(parent, theme: Theme):
@@ -483,7 +485,8 @@ def show_logoff_dialog(parent, theme: Theme):
         return
 
     win = _make_window(parent, "Logoff Users", theme, "350x250")
-    listbox = tk.Listbox(win, selectmode=tk.MULTIPLE, bg=theme.UI_COLOR, fg=theme.BUTTON_TEXT_COLOR)
+    listbox = tk.Listbox(win, selectmode=tk.MULTIPLE, bg=theme.PANEL_COLOR, fg=theme.INPUT_TEXT_COLOR,
+                         selectbackground=theme.ACCENT_COLOR)
     listbox.pack(fill="both", expand=True, padx=10, pady=10)
     for name, sid in users:
         listbox.insert(tk.END, f"{name} (Session {sid})")
@@ -496,4 +499,4 @@ def show_logoff_dialog(parent, theme: Theme):
         win.destroy()
 
     tk.Button(win, text="Logoff Selected", command=logoff,
-              bg=theme.BUTTON_BG_COLOR, fg=theme.BUTTON_TEXT_COLOR, width=16).pack(pady=10)
+              bg=theme.ACCENT_COLOR, fg=theme.BUTTON_TEXT_COLOR, width=16).pack(pady=10)
