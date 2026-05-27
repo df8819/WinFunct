@@ -1,4 +1,4 @@
-"""WinFunct v2.000 Configuration"""
+"""WinFunct Configuration"""
 
 VERSION_NUMBER = "2.001"
 VERSION = f"WinFunct v{VERSION_NUMBER} — Use at your own risk and responsibility"

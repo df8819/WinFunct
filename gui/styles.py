@@ -8,11 +8,11 @@ from typing import Optional
 
 @dataclass
 class Theme:
-    UI_COLOR: str = "#e4e4e4"
-    BUTTON_BG_COLOR: str = "#d4d4d4"
-    BUTTON_TEXT_COLOR: str = "#000000"
-    BOTTOM_BORDER_COLOR: str = "#5b5b5b"
-    VERSION_LABEL_TEXT: str = "#5f5f5f"
+    UI_COLOR: str = "#C8C6C0"
+    BUTTON_BG_COLOR: str = "#B7B4AC"
+    BUTTON_TEXT_COLOR: str = "#111111"
+    BOTTOM_BORDER_COLOR: str = "#0A5FAF"
+    VERSION_LABEL_TEXT: str = "#5E5A54"
 
     def to_dict(self) -> dict:
         return asdict(self)

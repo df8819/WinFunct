@@ -8,7 +8,7 @@ from tkinter import messagebox, filedialog, ttk
 import tkinter as tk
 
 from config import (
-    LOGO, VERSION, WINFUNCT_LINK,
+    LOGO, VERSION, VERSION_NUMBER, WINFUNCT_LINK,
     links, system_management_options, network_security_options,
     troubleshooting_options, advanced_tools_options,
 )
@@ -38,7 +38,7 @@ class Application(tk.Tk):
         self.style_mgr.apply()
 
         # Window setup
-        self.title("WinFunct v2.000 (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
+        self.title(f"WinFunct v{VERSION_NUMBER} (ﾉ◕◡◕)ﾉ*:･ﾟ✧")
         self.geometry("800x400")
         # self.minsize(750, 450)
         self.configure(bg=self.theme.UI_COLOR)

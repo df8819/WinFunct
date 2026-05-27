@@ -1,108 +1,100 @@
 {
-"themes": [
-{
-"name": "Pale Blues",
-"UI_COLOR": "#121b23",
-"BUTTON_BG_COLOR": "#385572",
-"BUTTON_TEXT_COLOR": "#F5F5F0",
-"BOTTOM_BORDER_COLOR": "#6d95bc",
-"VERSION_LABEL_TEXT": "#476a8d"
-},
-{
-"name": "Classic Gray",
-"UI_COLOR": "#e4e4e4",
-"BUTTON_BG_COLOR": "#d4d4d4",
-"BUTTON_TEXT_COLOR": "#000000",
-"BOTTOM_BORDER_COLOR": "#0077C8",
-"VERSION_LABEL_TEXT": "#5f5f5f"
-},
-{
-"name": "High Contrast",
-"UI_COLOR": "#000000",
-"BUTTON_BG_COLOR": "#007079",
-"BUTTON_TEXT_COLOR": "#ffffff",
-"BOTTOM_BORDER_COLOR": "#ca00ca",
-"VERSION_LABEL_TEXT": "#00e611"
-},
-{
-"name": "Dark Grays",
-"UI_COLOR": "#2A2A2A",
-"BUTTON_BG_COLOR": "#4D5057",
-"BUTTON_TEXT_COLOR": "#F0F0F0",
-"BOTTOM_BORDER_COLOR": "#6D7684",
-"VERSION_LABEL_TEXT": "#8792A6"
-},
-{
-"name": "Deep Blues",
-"UI_COLOR": "#272A2A",
-"BUTTON_BG_COLOR": "#475664",
-"BUTTON_TEXT_COLOR": "#F5FFFF",
-"BOTTOM_BORDER_COLOR": "#3894E0",
-"VERSION_LABEL_TEXT": "#0473D8"
-},
-{
-"name": "Earthy Tones",
-"UI_COLOR": "#2A2727",
-"BUTTON_BG_COLOR": "#4E4540",
-"BUTTON_TEXT_COLOR": "#F5F5F0",
-"BOTTOM_BORDER_COLOR": "#A86335",
-"VERSION_LABEL_TEXT": "#B86B3A"
-},
-{
-"name": "Dark Mint",
-"UI_COLOR": "#0e1b1a",
-"BUTTON_BG_COLOR": "#2f575b",
-"BUTTON_TEXT_COLOR": "#F5F5F0",
-"BOTTOM_BORDER_COLOR": "#289199",
-"VERSION_LABEL_TEXT": "#82b9bf"
-},
-{
-"name": "SciFi Blues",
-"UI_COLOR": "#163565",
-"BUTTON_BG_COLOR": "#3667AF",
-"BUTTON_TEXT_COLOR": "#F5F5F0",
-"BOTTOM_BORDER_COLOR": "#85E2FB",
-"VERSION_LABEL_TEXT": "#49FDAC"
-},
-{
-"name": "PyCharm Inspired",
-"UI_COLOR": "#1E1F22",
-"BUTTON_BG_COLOR": "#444447",
-"BUTTON_TEXT_COLOR": "#FFFFFF",
-"BOTTOM_BORDER_COLOR": "#BA7047",
-"VERSION_LABEL_TEXT": "#4CA1ED"
-},
-{
-"name": "Muted Greens",
-"UI_COLOR": "#272A27",
-"BUTTON_BG_COLOR": "#47564A",
-"BUTTON_TEXT_COLOR": "#F5FFF5",
-"BOTTOM_BORDER_COLOR": "#38E06F",
-"VERSION_LABEL_TEXT": "#04D858"
-},
-{
-"name": "Night Violet",
-"UI_COLOR": "#180c14",
-"BUTTON_BG_COLOR": "#582c49",
-"BUTTON_TEXT_COLOR": "#F5FFF5",
-"BOTTOM_BORDER_COLOR": "#b12eb1",
-"VERSION_LABEL_TEXT": "#7d227d"
-},
-{
-"name": "OG Steam",
-"UI_COLOR": "#2f3128",
-"BUTTON_BG_COLOR": "#575a4b",
-"BUTTON_TEXT_COLOR": "#ffffff",
-"BOTTOM_BORDER_COLOR": "#ff8f20",
-"VERSION_LABEL_TEXT": "#bf6000"
-},
-{
-"name": "iOS Ripoff",
-"UI_COLOR": "#F7F7F7",
-"BUTTON_BG_COLOR": "#C8C8CE",
-"BUTTON_TEXT_COLOR": "#030303",
-"BOTTOM_BORDER_COLOR": "#0089FF",
-"VERSION_LABEL_TEXT": "#7E7E7E"
-}
-]
+  "themes": [
+    {
+      "name": "Pale Blues",
+      "UI_COLOR": "#18232D",
+      "BUTTON_BG_COLOR": "#4A647D",
+      "BUTTON_TEXT_COLOR": "#F2F6F8",
+      "BOTTOM_BORDER_COLOR": "#7FA8D6",
+      "VERSION_LABEL_TEXT": "#9CB9D4"
+    },
+    {
+      "name": "Windows 95",
+      "UI_COLOR": "#C8C6C0",
+      "BUTTON_BG_COLOR": "#B7B4AC",
+      "BUTTON_TEXT_COLOR": "#111111",
+      "BOTTOM_BORDER_COLOR": "#0A5FAF",
+      "VERSION_LABEL_TEXT": "#5E5A54"
+    },
+    {
+      "name": "Dark Grays",
+      "UI_COLOR": "#25282D",
+      "BUTTON_BG_COLOR": "#4E545C",
+      "BUTTON_TEXT_COLOR": "#F1F3F5",
+      "BOTTOM_BORDER_COLOR": "#7C8796",
+      "VERSION_LABEL_TEXT": "#9AA7BA"
+    },
+    {
+      "name": "Earthy Tones",
+      "UI_COLOR": "#312926",
+      "BUTTON_BG_COLOR": "#6A5549",
+      "BUTTON_TEXT_COLOR": "#F7F1E8",
+      "BOTTOM_BORDER_COLOR": "#C77745",
+      "VERSION_LABEL_TEXT": "#D19062"
+    },
+    {
+      "name": "Dark Mint",
+      "UI_COLOR": "#162220",
+      "BUTTON_BG_COLOR": "#416466",
+      "BUTTON_TEXT_COLOR": "#F2F7F5",
+      "BOTTOM_BORDER_COLOR": "#36A8A7",
+      "VERSION_LABEL_TEXT": "#8FC8C4"
+    },
+    {
+      "name": "SciFi Blues",
+      "UI_COLOR": "#1E3A5A",
+      "BUTTON_BG_COLOR": "#4A78B8",
+      "BUTTON_TEXT_COLOR": "#F4FAFF",
+      "BOTTOM_BORDER_COLOR": "#90E6FF",
+      "VERSION_LABEL_TEXT": "#6CFFD0"
+    },
+    {
+      "name": "Muted Greens",
+      "UI_COLOR": "#2B322D",
+      "BUTTON_BG_COLOR": "#506353",
+      "BUTTON_TEXT_COLOR": "#F3FAF3",
+      "BOTTOM_BORDER_COLOR": "#4FCF7A",
+      "VERSION_LABEL_TEXT": "#74D98F"
+    },
+    {
+      "name": "OG Steam",
+      "UI_COLOR": "#353A31",
+      "BUTTON_BG_COLOR": "#5A6154",
+      "BUTTON_TEXT_COLOR": "#F1F3EC",
+      "BOTTOM_BORDER_COLOR": "#C97A2B",
+      "VERSION_LABEL_TEXT": "#A86422"
+    },
+    {
+      "name": "iOS Ripoff",
+      "UI_COLOR": "#F3F4F6",
+      "BUTTON_BG_COLOR": "#D2D5DB",
+      "BUTTON_TEXT_COLOR": "#111111",
+      "BOTTOM_BORDER_COLOR": "#0A84FF",
+      "VERSION_LABEL_TEXT": "#7D7F85"
+    },
+    {
+      "name": "Apricot Glow",
+      "UI_COLOR": "#F6E7DA",
+      "BUTTON_BG_COLOR": "#E3C2A8",
+      "BUTTON_TEXT_COLOR": "#2A1E18",
+      "BOTTOM_BORDER_COLOR": "#D98952",
+      "VERSION_LABEL_TEXT": "#A96A3F"
+    },
+    {
+      "name": "Velvet Violet",
+      "UI_COLOR": "#241C2B",
+      "BUTTON_BG_COLOR": "#66537A",
+      "BUTTON_TEXT_COLOR": "#F7F3FA",
+      "BOTTOM_BORDER_COLOR": "#B38BE0",
+      "VERSION_LABEL_TEXT": "#C7A8EA"
+    },
+    {
+      "name": "Rose Quartz",
+      "UI_COLOR": "#F4E6EA",
+      "BUTTON_BG_COLOR": "#D8AEBB",
+      "BUTTON_TEXT_COLOR": "#2A1C22",
+      "BOTTOM_BORDER_COLOR": "#C86F8D",
+      "VERSION_LABEL_TEXT": "#A85D76"
+    }
+  ]
 }

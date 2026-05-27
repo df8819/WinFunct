@@ -38,5 +38,6 @@ Desktop.ini
 
 # App-generated
 *.json
+*.old
 powershell_log.txt
 /Windows-Super-God-Mode/
