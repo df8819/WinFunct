@@ -5,6 +5,8 @@ from pathlib import Path
 from tkinter import ttk
 from typing import Optional
 
+from core.utils import get_app_root
+
 
 @dataclass
 class Theme:
@@ -26,8 +28,8 @@ class Theme:
         return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
 
 
-THEME_FILE = Path("last_selected_theme.json")
-THEMES_FILE = Path("UI_themes.json")
+THEME_FILE = get_app_root() / "last_selected_theme.json"
+THEMES_FILE = get_app_root() / "UI_themes.json"
 
 
 def load_saved_theme() -> Theme:

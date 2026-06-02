@@ -1,5 +1,6 @@
 """Main Application window."""
 import os
+import requests
 import subprocess
 import threading
 import webbrowser
@@ -349,8 +350,27 @@ class Application(tk.Tk):
                 subprocess.Popen(f'cmd /c "{bat}"', shell=True, cwd=str(repo_path))
 
     def _open_theme_selector(self):
+        from gui.styles import THEMES_FILE
+        if not THEMES_FILE.exists():
+            if messagebox.askyesno("Missing Themes", "Theme presets file not found.\nDownload from GitHub?"):
+                threading.Thread(target=self._download_themes_file, daemon=True).start()
+                return
         from gui.theme_selector import ThemeSelector
         ThemeSelector(self, self.theme, self._apply_new_theme)
+
+    def _download_themes_file(self):
+        import requests
+        from gui.styles import THEMES_FILE
+        url = "https://raw.githubusercontent.com/df8819/WinFunct/main/UI_themes.json"
+        try:
+            r = requests.get(url, timeout=10)
+            r.raise_for_status()
+            THEMES_FILE.write_text(r.text, encoding="utf-8")
+            self.after(0, lambda: (
+                self._open_theme_selector()
+            ))
+        except Exception as e:
+            self.after(0, lambda: messagebox.showerror("Download Failed", f"Could not download themes:\n{e}"))
 
     def _apply_new_theme(self, new_theme: Theme):
         self.theme = new_theme
