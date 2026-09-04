@@ -3,6 +3,8 @@ import os
 import requests
 import subprocess
 import threading
+import ctypes
+import shutil
 import webbrowser
 from pathlib import Path
 from tkinter import messagebox, filedialog, ttk
@@ -239,13 +241,23 @@ class Application(tk.Tk):
     def _on_shell_select(self, value: str):
         ps = get_powershell_path()
         cmds = {
-            "CTT Winutils": f'"{ps}" -Command "irm christitus.com/win | iex"',
-            "MTT Winhance": f'"{ps}" -Command "irm https://github.com/memstechtips/Winhance/raw/main/Winhance.ps1 | iex"',
-            "Activate Win/Office": f'"{ps}" -Command "irm https://get.activated.win | iex"',
-            "Install/Upd. FFMPEG": f'"{ps}" -Command "iex (irm ffmpeg.tc.ht)"',
+            "CTT Winutils": "irm christitus.com/win | iex",
+            "MTT Winhance": "irm https://github.com/memstechtips/Winhance/raw/main/Winhance.ps1 | iex",
+            "Activate Win/Office": "irm https://get.activated.win | iex",
+            "Install/Upd. FFMPEG": "iex (irm ffmpeg.tc.ht)",
         }
-        if cmd := cmds.get(value):
-            threading.Thread(target=lambda: subprocess.run(cmd, shell=True), daemon=True).start()
+        ps_cmd = cmds.get(value)
+        if not ps_cmd:
+            return
+        if not Path(ps).exists() and not shutil.which(ps):
+            messagebox.showerror("Shell", f"PowerShell not found: {ps}")
+            return
+
+        args = f'-NoExit -NoProfile -ExecutionPolicy Bypass -Command "{ps_cmd}"'
+        ret = ctypes.windll.shell32.ShellExecuteW(None, "runas", ps, args, None, 1)  # SW_SHOWNORMAL
+        if ret <= 32:
+            messagebox.showerror("Shell", f"Launch failed (ShellExecuteW={ret}).\n"
+                                          "Check cmd.exe/powershell.exe ACLs and ASR rules.")
 
     def _on_network_select(self, value: str):
         actions = {

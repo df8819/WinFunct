@@ -56,4 +56,4 @@ def ensure_admin() -> bool:
         sys.exit(0)
     else:
         print("  ✗ Failed to obtain admin privileges.")
-        return True
+        return False

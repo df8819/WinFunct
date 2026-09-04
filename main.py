@@ -17,6 +17,8 @@ def setup_console():
 
 
 def main():
+    if sys.platform != "win32":
+        sys.exit("WinFunct requires Windows (uses WMI, winreg, ShellExecuteW).")
     setup_console()
     print(LOGO)
     print("  Checking privileges...")
