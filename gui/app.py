@@ -27,8 +27,7 @@ from core.system import (
     get_system_info, save_system_info_html, save_system_info_csv,
     flush_dns, restore_system_health, clear_icon_cache, open_autostart_locations,
 )
-from core.utils import get_app_root, get_powershell_path
-
+from core.utils import get_app_root, get_powershell_path, shell_exec
 
 # noinspection PyTypeChecker
 class Application(tk.Tk):
@@ -239,25 +238,36 @@ class Application(tk.Tk):
             ctypes.windll.shell32.ShellExecuteW(None, "runas", "cmd.exe", f"/c {cmd}", None, 1)
 
     def _on_shell_select(self, value: str):
-        ps = get_powershell_path()
-        cmds = {
-            "CTT Winutils": "irm christitus.com/win | iex",
-            "MTT Winhance": "irm https://github.com/memstechtips/Winhance/raw/main/Winhance.ps1 | iex",
+        ps_cmd = {
+            "CTT Winutils":        "irm christitus.com/win | iex",
+            "MTT Winhance":        "irm https://github.com/memstechtips/Winhance/raw/main/Winhance.ps1 | iex",
             "Activate Win/Office": "irm https://get.activated.win | iex",
             "Install/Upd. FFMPEG": "iex (irm ffmpeg.tc.ht)",
-        }
-        ps_cmd = cmds.get(value)
+        }.get(value)
         if not ps_cmd:
             return
-        if not Path(ps).exists() and not shutil.which(ps):
+
+        ps = get_powershell_path()
+        if not (Path(ps).exists() or shutil.which(ps)):
             messagebox.showerror("Shell", f"PowerShell not found: {ps}")
             return
 
-        args = f'-NoExit -NoProfile -ExecutionPolicy Bypass -Command "{ps_cmd}"'
-        ret = ctypes.windll.shell32.ShellExecuteW(None, "runas", ps, args, None, 1)  # SW_SHOWNORMAL
-        if ret <= 32:
-            messagebox.showerror("Shell", f"Launch failed (ShellExecuteW={ret}).\n"
-                                          "Check cmd.exe/powershell.exe ACLs and ASR rules.")
+        argv = [ps, "-NoExit", "-NoProfile", "-ExecutionPolicy", "Bypass",
+                "-Command", ps_cmd]
+        print(f"  Launching: {value}")
+        try:
+            subprocess.Popen(argv, creationflags=subprocess.CREATE_NEW_CONSOLE)
+            return
+        except OSError as e:
+            print(f"  Popen failed: {e}")
+
+        args = " ".join(f'"{a}"' if " " in a else a for a in argv[1:])
+        if shell_exec("runas", ps, args, self.winfo_id()) <= 32:
+            messagebox.showerror(
+                "Shell",
+                f"Could not launch PowerShell for '{value}'.\n"
+                "See the console window for the error code."
+            )
 
     def _on_network_select(self, value: str):
         actions = {
