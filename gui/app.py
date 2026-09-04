@@ -247,6 +247,19 @@ class Application(tk.Tk):
         if not ps_cmd:
             return
 
+        import sys, ctypes
+        print(f"  DIAG exe={sys.executable}")
+        print(f"  DIAG base_prefix={sys.base_prefix}")
+        print(f"  DIAG is_admin={ctypes.windll.shell32.IsUserAnAdmin()}")
+        print(f"  DIAG cwd={os.getcwd()}")
+        try:
+            p = subprocess.Popen([get_powershell_path()],
+                                 creationflags=subprocess.CREATE_NEW_CONSOLE)
+            print(f"  DIAG bare-popen OK pid={p.pid}")
+            p.kill()
+        except OSError as e:
+            print(f"  DIAG bare-popen FAIL winerror={e.winerror}")
+
         ps = get_powershell_path()
         if not (Path(ps).exists() or shutil.which(ps)):
             messagebox.showerror("Shell", f"PowerShell not found: {ps}")
